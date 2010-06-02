@@ -6,6 +6,7 @@ gato_past:
   topic: gato
   location: Alkek 155
   cancelled: false
+  seats: 20
 
 
 gato:
@@ -14,6 +15,7 @@ gato:
   topic: gato
   location: Alkek 155
   cancelled: false
+  seats: 20
 
 gato_cancelled:
   time: 2035-08-02 15:00:00
@@ -21,6 +23,7 @@ gato_cancelled:
   topic: gato
   location: Alkek 155
   cancelled: true
+  seats: 20
 
 gato_2:
   time: 2035-09-02 15:00:00
@@ -28,6 +31,7 @@ gato_2:
   topic: gato
   location: Alkek 155
   cancelled: false
+  seats: 20
 
 tracs:
   time: 2035-06-02 9:00:00
@@ -35,3 +39,4 @@ tracs:
   topic: tracs
   location: JCK 1100
   cancelled: false
+  seats: 15
