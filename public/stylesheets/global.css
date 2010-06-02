@@ -19,3 +19,9 @@ dd {
 dt {
 	font-weight: bold;
 }
+
+label {
+	display:block;
+	width: 100%;
+	font-weight: bold;
+}

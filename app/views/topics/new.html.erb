@@ -1,0 +1,18 @@
+<h1>Create a New Topic</h1>
+
+<% form_for( @topic ) do |f| %>
+	<%= f.label :name, "Topic Name:" %>
+	<%= f.text_field :name %>
+	
+	<%= f.label :description, "Description of Topic: "%>
+	<%= f.text_area :description %>
+	
+	<%= f.label :minutes, "Class time in Minutes:" %>
+	<%= f.text_field :minutes, :size => 3 %>
+	
+	<%= f.label :url, "URL with More Information on Class:" %>
+	<%= f.text_field :url %>
+	
+	<br/>
+	<%= submit_tag "Create New Topic"%>
+<% end %>

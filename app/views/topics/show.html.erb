@@ -9,14 +9,14 @@
 		<dt>Additional Info:</dt>
 		<dd><%= link_to @topic.url, @topic.url %></dd>
 	<% end %>
-	<% if @topic.sessions %>
-		<dt>Upcoming Sessions:</dt>
-		<dd>
+	<dt>Upcoming Sessions:</dt>
+	<dd>
+		<% if @topic.sessions.length > 0 %>
 			<% @topic.upcoming_sessions.each do |session| %>
 				Session: <%= link_to session.time, session %><br/>
 			<% end %>
-		</dd>
-	<% else %>
-		No sessions scheduled at this time.
-	<% end %>
+		<% else %>
+			There are no sessions scheduled at this time.
+		<% end %>
+	</dd>
 </dl>

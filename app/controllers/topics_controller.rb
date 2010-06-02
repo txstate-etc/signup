@@ -8,5 +8,15 @@ class TopicsController < ApplicationController
     @topic = Topic.find( params[:id] )
     @page_title = @topic.name
   end
+  
+  def new
+    @topic = Topic.new
+  end
+  
+  def create
+    @topic = Topic.new( params[ :topic ] )
+    @topic.save
+    redirect_to topics_path
+  end
 
 end
