@@ -1,0 +1,10 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+whitten:
+  name: Whitten Smart
+  login: ws32
+
+jimmy:
+  name: Jimmy Rico
+  login: sr02
+  

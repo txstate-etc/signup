@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+gato:
+  name: Introduction to Gato
+  description: All about our Content Management System.
+  url: http://gato.its.txstate.edu
+  minutes: 60
+
+tracs:
+  name: Teaching with TRACS
+  description: An introduction to our LMS for faculty.
+  url: http://tracs.txstate.edu
+  minutes: 120

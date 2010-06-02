@@ -1,0 +1,11 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+bill:
+  name: Bill Bryson
+  login: bb32
+  session: gato
+
+ron:
+  name: Ron Bowden
+  login: rb32
+  session: tracs
