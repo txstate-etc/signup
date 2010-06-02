@@ -1,0 +1,2 @@
+This is just a placeholder to ensure that Mercurial doesn't remove
+the otherwise empty directory.
