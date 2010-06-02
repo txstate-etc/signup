@@ -1,0 +1,22 @@
+<h1>Course Name: <%=h @topic.name %></h1>
+
+<dl>
+	<dt>Description:</dt>
+	<dd><%=h @topic.description %></dd>
+	<dt>Duration:</dt>
+	<dd><%=h @topic.minutes %> minutes</dd>
+	<% if @topic.url %>
+		<dt>Additional Info:</dt>
+		<dd><%= link_to @topic.url, @topic.url %></dd>
+	<% end %>
+	<% if @topic.sessions %>
+		<dt>Upcoming Sessions:</dt>
+		<dd>
+			<% @topic.upcoming_sessions.each do |session| %>
+				Session: <%= link_to session.time, session %><br/>
+			<% end %>
+		</dd>
+	<% else %>
+		No sessions scheduled at this time.
+	<% end %>
+</dl>

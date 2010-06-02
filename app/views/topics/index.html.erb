@@ -1,0 +1,9 @@
+<h1>Available Course Topics</h1>
+<ul id="topic-list">
+	<% @topics.each do |topic| %>
+		<li>
+			<%= link_to topic.name, topic %>
+		</li>
+	<% end %>
+</ul>
+	

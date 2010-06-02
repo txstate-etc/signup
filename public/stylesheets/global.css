@@ -1,0 +1,21 @@
+ul {
+	list-style-type: square;
+	line-height: 1.5em;
+}
+
+
+a, a:visited {
+	color: #501214;
+}
+
+body {
+	font-family: sans-serif;
+}
+
+dd {
+	margin-bottom: 1em;
+}
+
+dt {
+	font-weight: bold;
+}

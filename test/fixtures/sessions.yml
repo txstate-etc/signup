@@ -1,21 +1,36 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
-gato:
+gato_past:
   time: 2010-06-02 12:00:00
   instructor: whitten
   topic: gato
   location: Alkek 155
   cancelled: false
 
-gato_2:
-  time: 2010-08-02 15:00:00
+
+gato:
+  time: 2035-06-02 12:00:00
+  instructor: whitten
+  topic: gato
+  location: Alkek 155
+  cancelled: false
+
+gato_cancelled:
+  time: 2035-08-02 15:00:00
   instructor: whitten
   topic: gato
   location: Alkek 155
   cancelled: true
 
+gato_2:
+  time: 2035-09-02 15:00:00
+  instructor: whitten
+  topic: gato
+  location: Alkek 155
+  cancelled: false
+
 tracs:
-  time: 2010-06-02 9:00:00
+  time: 2035-06-02 9:00:00
   instructor: jimmy
   topic: tracs
   location: JCK 1100

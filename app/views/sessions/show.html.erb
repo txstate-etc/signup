@@ -1,0 +1,28 @@
+<h1><%=h @session.time %>: <%=h @session.topic.name %></h1>
+
+<dl>
+	<dt>Time:</dt>
+	<dd><%=h @session.time %></dd>
+	<dt>Location:</dt>
+	<dd><%=h @session.location %></dd>
+	<dt>Instructor:</dt>
+	<dd><%=h @session.instructor.name %></dd>
+	<dt>Description:</dt>
+	<dd><%=h @session.topic.description %></dd>
+	<dt>Duration:</dt>
+	<dd><%=h @session.topic.minutes %> minutes</dd>
+	<% if @session.topic.url %>
+		<dt>Additional Info:</dt>
+		<dd><%= link_to @session.topic.url, @session.topic.url %></dd>
+	<% end %>
+	<dt>Registration:</dt>
+	<dd>
+		<% if @session.reservations.length == 1 %>
+			There is currently 1 person registered for this session.
+		<% elsif @session.reservations.length == 0 %>
+			Nobody has registered for this session yet.
+		<% else %>
+			There are currently <%=h @session.reservations.length %> people registered for this session.
+		<% end %>
+	</dd>
+</dl>
