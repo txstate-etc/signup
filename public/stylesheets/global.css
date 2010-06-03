@@ -25,3 +25,10 @@ label {
 	width: 100%;
 	font-weight: bold;
 }
+
+#notification {
+	padding: 1em;
+	background-color: #33ff33;
+	border: 2px solid black;
+	font-weight: bold;
+}
