@@ -16,9 +16,13 @@ class TopicsController < ApplicationController
   
   def create
     @topic = Topic.new( params[ :topic ] )
-    @topic.save
-    flash[ :notice ] = "Topic \"" + @topic.name + "\" added."
-    redirect_to topics_path
+    if @topic.save
+      flash[ :notice ] = "Topic \"" + @topic.name + "\" added."
+      redirect_to topics_path
+    else
+      @page_title = "Create New Topic"
+      render :action => 'new'
+    end
   end
 
 end
