@@ -10,18 +10,26 @@ class TopicsController < ApplicationController
   end
   
   def new
-    @topic = Topic.new
-    @page_title = "Create New Topic"
+    if user_is_admin?
+      @topic = Topic.new
+      @page_title = "Create New Topic"
+    else
+      redirect_to topics_path
+    end
   end
   
   def create
-    @topic = Topic.new( params[ :topic ] )
-    if @topic.save
-      flash[ :notice ] = "Topic \"" + @topic.name + "\" added."
-      redirect_to topics_path
+    if user_is_admin?
+      @topic = Topic.new( params[ :topic ] )
+      if @topic.save
+        flash[ :notice ] = "Topic \"" + @topic.name + "\" added."
+        redirect_to topics_path
+      else
+        @page_title = "Create New Topic"
+        render :action => 'new'
+      end
     else
-      @page_title = "Create New Topic"
-      render :action => 'new'
+      redirect_to topics_path
     end
   end
 

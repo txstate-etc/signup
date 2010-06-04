@@ -1,8 +1,68 @@
 require 'test_helper'
 
 class SessionsControllerTest < ActionController::TestCase
-  # Replace this with your real tests.
-  test "the truth" do
-    assert true
+  fixtures :admins
+  fixtures :instructors
+  fixtures :sessions
+
+  test "Login Required for All Actions" do
+    get :show, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs )
+    assert_response :redirect
+    
+    get :new, :topic_id => sessions( :tracs ).topic_id
+    assert_response :redirect
+    
+    get :create, :topic_id => sessions( :tracs ).topic_id
+    assert_response :redirect
+
+    delete :destroy, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs )
+    assert_response :redirect    
   end
+  
+  test "Admins can do anything" do
+    login_as( admins( :sean ).login )
+    get :show, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs )
+    assert_response :success
+    
+    get :new, :topic_id => sessions( :tracs ).topic_id
+    assert_response :success
+    
+    get :create, :topic_id => sessions( :tracs ).topic_id, :session => { :topic_id => sessions( :tracs ).topic_id }
+    assert_response :success
+
+    delete :destroy, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs )
+    assert_response :redirect    
+  end
+  
+  test "Instructors can delete sessions" do
+    login_as( instructors( :whitten ).login )
+    get :show, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs )
+    assert_response :success
+    
+    get :new, :topic_id => sessions( :tracs ).topic_id
+    assert_response :redirect
+    
+    get :create, :topic_id => sessions( :tracs ).topic_id, :session => { :topic_id => sessions( :tracs ).topic_id }
+    assert_response :redirect
+
+    delete :destroy, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs )
+    assert_response :redirect    
+  end
+  
+  test "Regular users should be able to view, but not make changes" do
+    login_as( 'nobodyspecial' )
+    get :show, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs )
+    assert_response :success
+    
+    get :new, :topic_id => sessions( :tracs ).topic_id
+    assert_response :redirect
+    
+    get :create, :topic_id => sessions( :tracs ).topic_id, :session => { :topic_id => sessions( :tracs ).topic_id }
+    assert_response :redirect
+
+    delete :destroy, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs )
+    assert_response :redirect    
+  end
+  
+  
 end

@@ -1,8 +1,67 @@
 require 'test_helper'
 
 class TopicsControllerTest < ActionController::TestCase
-  # Replace this with your real tests.
-  test "the truth" do
-    assert true
+  fixtures :admins
+  fixtures :instructors
+  fixtures :topics
+  
+  test "Login Required for All Actions" do
+    get :index
+    assert_response :redirect
+    
+    get :show, :id => topics( :gato )
+    assert_response :redirect
+    
+    get :new
+    assert_response :redirect
+    
+    get :create
+    assert_response :redirect
+  end
+
+  test "Admins should be able to do anything." do
+    login_as( admins( :sean ).login )
+    get :index
+    assert_response :success
+  
+    get :show, :id => topics( :gato )
+    assert_response :success
+      
+    get :new
+    assert_response :success
+  
+    get :create
+    assert_response :success  
+  end
+
+  test "Once logged as instructor, should be able to view topics, but not modify them." do
+    login_as( instructors( :whitten ).login )
+    get :index
+    assert_response :success
+  
+    get :show, :id => topics( :gato )
+    assert_response :success
+    
+    get :new
+    assert_response :redirect
+  
+    get :create
+    assert_response :redirect  
+  end
+
+  test "Once logged as nobody special, should be able to view topics, but not modify them." do
+    login_as( 'nobodyspecial' )
+    get :index
+    assert_response :success
+  
+    get :show, :id => topics( :gato )
+    assert_response :success
+    
+    get :new
+    assert_response :redirect
+  
+    get :create
+    assert_response :redirect  
   end
 end
+

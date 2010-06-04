@@ -19,4 +19,6 @@
 	</dd>
 </dl>
 
-<div class="newLink"><%= link_to "Create New Session", new_topic_session_path( @topic ) %></div>
+<% if user_is_admin? %>
+	<div class="newLink"><%= link_to "Create New Session", new_topic_session_path( @topic ) %></div>
+<% end %>

@@ -34,3 +34,9 @@
 		<% end %>
 	</dd>
 </dl>
+
+<% if user_is_admin? or user_is_instructor?( @session ) %>
+	<div class="deleteLink">
+		<%= link_to "Cancel Session", [@session.topic, @session], :confirm => "Are you sure you want to cancel this class? All registered attendees will be notified that the session has been cancelled.", :method => :delete %>
+	</div>
+<% end %>

@@ -10,20 +10,39 @@ class SessionsController < ApplicationController
   
   def new
     topic = Topic.find( params[ :topic_id ] )
-    @session = Session.new
-    @session.topic = topic
-    @page_name = "Create New Session"
+    if user_is_admin?
+      @session = Session.new
+      @session.topic = topic
+      @page_name = "Create New Session"
+    else
+      redirect_to topic
+    end
   end
   
   def create
-    @session = Session.new( params[ :session ] )
-    if @session.save
-      flash[ :notice ] = "Session added."
-      redirect_to @session.topic
+    if user_is_admin?
+      @session = Session.new( params[ :session ] )
+      if @session.save
+        flash[ :notice ] = "Session added."
+        redirect_to @session.topic
+      else
+        @page_title = "Create New Session"
+        render :action => 'new'
+      end
     else
-      @page_title = "Create New Session"
-      render :action => 'new'
+      redirect_to @session.topic
     end
+  end
+  
+  def destroy
+    session = Session.find( params[ :id ] )
+    if user_is_admin? or user_is_instructor?( session )
+      session.cancelled = true
+      session.save
+      # TODO: Add logic to notify attendees that session was cancelled.
+      flash[ :notice ] = "Session cancelled."
+    end
+    redirect_to session.topic
   end
 
 end
