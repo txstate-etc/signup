@@ -1,8 +1,8 @@
 class CreateAdmins < ActiveRecord::Migration
   def self.up
     create_table :admins do |t|
-      t.string :login
-      t.string :name
+      t.string :login, :null => false
+      t.string :name, :null => false
 
       t.timestamps
     end

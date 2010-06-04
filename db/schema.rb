@@ -9,43 +9,43 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100602210751) do
+ActiveRecord::Schema.define(:version => 20100602175700) do
 
   create_table "admins", :force => true do |t|
-    t.string   "login"
-    t.string   "name"
+    t.string   "login",      :null => false
+    t.string   "name",       :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "instructors", :force => true do |t|
-    t.string   "name"
+    t.string   "name",       :null => false
     t.string   "login"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "reservations", :force => true do |t|
-    t.string   "name"
-    t.string   "login"
-    t.integer  "session_id"
+    t.string   "name",       :null => false
+    t.string   "login",      :null => false
+    t.integer  "session_id", :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "sessions", :force => true do |t|
-    t.datetime "time"
-    t.integer  "instructor_id"
-    t.integer  "topic_id"
-    t.string   "location"
-    t.boolean  "cancelled"
+    t.datetime "time",                             :null => false
+    t.integer  "instructor_id",                    :null => false
+    t.integer  "topic_id",                         :null => false
+    t.string   "location",                         :null => false
+    t.boolean  "cancelled",     :default => false, :null => false
+    t.integer  "seats"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "seats"
   end
 
   create_table "topics", :force => true do |t|
-    t.string   "name"
+    t.string   "name",        :null => false
     t.text     "description"
     t.string   "url"
     t.integer  "minutes"
