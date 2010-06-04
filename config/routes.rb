@@ -41,6 +41,5 @@ ActionController::Routing::Routes.draw do |map|
   # map.connect ':controller/:action/:id'
   # map.connect ':controller/:action/:id.:format'
   
-  map.resources :topics
-  map.resources :sessions
+  map.resources :topics, :has_many => :sessions
 end

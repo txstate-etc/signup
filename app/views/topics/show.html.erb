@@ -11,10 +11,12 @@
 	<dd>
 		<% if @topic.sessions.length > 0 %>
 			<% @topic.upcoming_sessions.each do |session| %>
-				Session: <%= link_to session.time, session %><br/>
+				Session: <%= link_to session.time, [ @topic, session ] %><br/>
 			<% end %>
 		<% else %>
 			There are no sessions scheduled at this time.
 		<% end %>
 	</dd>
 </dl>
+
+<div class="newLink"><%= link_to "Create New Session", new_topic_session_path( @topic ) %></div>

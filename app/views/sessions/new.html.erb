@@ -1,0 +1,19 @@
+<%= error_messages_for 'session' %>
+
+<% form_for( [ @session.topic, @session ] ) do |f| %>
+	<%= f.label :name, "Topic Name:" %>
+	<%= f.hidden_field :topic_id %>
+	<%=h @session.topic.name %>
+	
+	<%= f.label :time, "Session Time:" %>
+	<%= f.datetime_select :time %>
+	
+	<%= f.label :instructor_id, "Instructor:" %>
+	<%= f.collection_select :instructor_id, Instructor.all, :id, :name, { :include_blank => true } %>
+	
+	<%= f.label :location, "Location:" %>
+	<%= f.text_field :location %>
+	
+	<br/>
+	<%= submit_tag "Create New Topic"%>
+<% end %>

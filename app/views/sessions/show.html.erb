@@ -16,19 +16,21 @@
 	<dt>Registration:</dt>
 	<dd>
 		<% if @numberRegistered == 0 %>
-		Nobody has registered for this session yet.
+			Nobody has registered for this session yet.
 		<% elsif @numberRegistered == 1 %>
 			There is currently 1 person registered for this session.
 		<% else %>
 			There are currently <%=h @numberRegistered %> people registered for this session.
 		<% end %>
 		
-		<% if @seatsRemaining == 0 %>
-			Registration for this class is full.
-		<% elsif @seatsRemaining == 1 %>
-			There is one seat still available for this session. <!-- TODO: Registration link -->
-		<% else %>
-			There are <%=h @seatsRemaining %> seats still available for this session. <!-- TODO: Registration link -->
+		<% if @seatsRemaining != nil %>
+			<% if @seatsRemaining == 0 %>
+				Registration for this class is full.
+			<% elsif @seatsRemaining == 1 %>
+				There is one seat still available for this session. <!-- TODO: Registration link -->
+			<% else %>
+				There are <%=h @seatsRemaining %> seats still available for this session. <!-- TODO: Registration link -->
+			<% end %>
 		<% end %>
 	</dd>
 </dl>
