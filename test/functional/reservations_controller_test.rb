@@ -25,4 +25,11 @@ class ReservationsControllerTest < ActionController::TestCase
     assert Reservation.count == 4
   end
   
+  test "Show what training sessions user is registered for" do
+    login_as( reservations( :bill ).login )
+    get :index
+    assert assigns( :reservations ).size == 1
+    assert_response :success
+  end
+  
 end

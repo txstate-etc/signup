@@ -46,4 +46,6 @@ ActionController::Routing::Routes.draw do |map|
       session.resources :reservations
     end
   end
+  
+  map.resources :reservations, :only => [ :index ]
 end

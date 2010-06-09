@@ -1,0 +1,7 @@
+<ul id="reservation-list">
+	<% @reservations.each do |reservation| %>
+		<li>
+			<%=h reservation.session.time %>: <%= link_to reservation.session.topic.name, reservation.session %>
+		</li>
+	<% end %>
+</ul>

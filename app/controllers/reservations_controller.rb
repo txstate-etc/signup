@@ -20,4 +20,8 @@ class ReservationsController < ApplicationController
     end
   end
   
+  def index
+    @page_title = "Your Reservations"
+    @reservations = Reservation.find( :all, :conditions => ["login = ? AND sessions.time > ?", current_user, Time.now ], :include => [ :session ] )
+  end
 end
