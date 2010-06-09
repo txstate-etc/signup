@@ -40,3 +40,29 @@ tracs:
   location: JCK 1100
   cancelled: false
   seats: 15
+
+tracs_tiny:
+  time: 2035-06-02 9:00:00
+  instructor: jimmy
+  topic: tracs
+  location: JCK 1100
+  cancelled: false
+  seats: 1
+  
+tracs_tiny_full:
+  time: 2035-06-02 9:00:00
+  instructor: jimmy
+  topic: tracs
+  location: JCK 1100
+  cancelled: false
+  seats: 1
+  
+gato_huge:
+  time: 2035-06-02 12:00:00
+  instructor: whitten
+  topic: gato
+  location: Alkek 155
+  cancelled: false
+
+
+    

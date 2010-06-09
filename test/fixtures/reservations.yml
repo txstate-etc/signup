@@ -9,3 +9,8 @@ ron:
   name: Ron Bowden
   login: rb32
   session: tracs
+
+joey:
+  name: Joey Tester
+  login: jt1234
+  session: tracs_tiny_full
