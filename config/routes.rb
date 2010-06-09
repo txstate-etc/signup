@@ -41,5 +41,9 @@ ActionController::Routing::Routes.draw do |map|
   # map.connect ':controller/:action/:id'
   # map.connect ':controller/:action/:id.:format'
   
-  map.resources :topics, :has_many => :sessions
+  map.resources :topics, :shallow => true do |topic|
+    topic.resources :sessions do |session|
+      session.resources :reservations
+    end
+  end
 end

@@ -9,9 +9,9 @@
 	<% end %>
 	<dt>Upcoming Sessions:</dt>
 	<dd>
-		<% if @topic.sessions.length > 0 %>
+		<% if @topic.upcoming_sessions.size > 0 %>
 			<% @topic.upcoming_sessions.each do |session| %>
-				Session: <%= link_to session.time, [ @topic, session ] %><br/>
+				Session: <%= link_to session.time, session %><br/>
 			<% end %>
 		<% else %>
 			There are no sessions scheduled at this time.

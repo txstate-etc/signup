@@ -27,9 +27,17 @@
 			<% if @seatsRemaining == 0 %>
 				Registration for this class is full.
 			<% elsif @seatsRemaining == 1 %>
-				There is one seat still available for this session. <!-- TODO: Registration link -->
+				There is one seat still available for this session.
 			<% else %>
-				There are <%=h @seatsRemaining %> seats still available for this session. <!-- TODO: Registration link -->
+				There are <%=h @seatsRemaining %> seats still available for this session.
+			<% end %>
+		<% end %>
+		
+		<% if @current_user_registered %>
+			You are registered for this session.
+		<% else %>		
+			<% if @session.space_is_available? %>
+				<%= link_to "Register", new_session_reservation_path( @session ) %>
 			<% end %>
 		<% end %>
 	</dd>
@@ -37,6 +45,6 @@
 
 <% if user_is_admin? or user_is_instructor?( @session ) %>
 	<div class="deleteLink">
-		<%= link_to "Cancel Session", [@session.topic, @session], :confirm => "Are you sure you want to cancel this class? All registered attendees will be notified that the session has been cancelled.", :method => :delete %>
+		<%= link_to "Cancel Session", @session, :confirm => "Are you sure you want to cancel this class? All registered attendees will be notified that the session has been cancelled.", :method => :delete %>
 	</div>
 <% end %>

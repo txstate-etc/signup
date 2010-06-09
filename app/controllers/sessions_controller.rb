@@ -6,6 +6,7 @@ class SessionsController < ApplicationController
     if ( @session.seats )
       @seatsRemaining = @session.seats - @numberRegistered
     end
+    @current_user_registered = Reservation.find_by_login_and_session_id( current_user, @session.id ) != nil
   end
   
   def new

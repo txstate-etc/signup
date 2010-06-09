@@ -1,0 +1,19 @@
+<%= error_messages_for 'reservation' %>
+
+	<div class="reservationContainer">
+		<% form_for( [ @session, @reservation ] ) do |f| %>
+		<div class="reservationCard">
+			<h2>Your Reservation</h2>
+			<dl>
+				<dt>What:</dt>
+				<dd><%=h @session.topic.name %></dd>
+				<dt>When:</dt>
+				<dd><%=h @session.time %></dd>
+				<dt>Who:</dt>
+				<dd><%=h current_user_name %> (<%=h current_user_email %>)</dd>
+			</dl>
+		</div>
+
+		<%= submit_tag "Confirm Reservation", :class => "confirm" %>
+		<% end %>
+		<div class="buttonLink delete"><%= link_to "Cancel Reservation", @session.topic %></div>

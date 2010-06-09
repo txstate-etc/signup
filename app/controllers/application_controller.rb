@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
     end
   end
   
-  helper_method :current_user, :user_is_admin?, :user_is_instructor?
+  helper_method :current_user, :user_is_admin?, :user_is_instructor?, :current_user_email, :current_user_name
   private
   def current_user
     session[ :user ]
@@ -38,6 +38,16 @@ class ApplicationController < ActionController::Base
   
   def user_is_instructor?( session )
     current_user == session.instructor.login
+  end
+  
+  # include whatever logic is needed to get the email address for the current user
+  def current_user_email
+    session[ :user ] + "@txstate.edu"
+  end
+  
+  #include whatever logic is needed to get the current user's human-readable name, e.g. "John Smith"
+  def current_user_name
+    session[ :user ]
   end
   
 end
