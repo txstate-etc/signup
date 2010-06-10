@@ -24,4 +24,13 @@ class ReservationsController < ApplicationController
     @page_title = "Your Reservations"
     @reservations = Reservation.find( :all, :conditions => ["login = ? AND sessions.time > ?", current_user, Time.now ], :include => [ :session ] )
   end
+  
+  def destroy
+    @reservation = Reservation.find( params[ :id ] )
+    if @reservation.login == current_user
+      @reservation.destroy
+      flash[ :notice ] = "Your reservation has been cancelled."
+    end
+    redirect_to reservations_path
+  end
 end

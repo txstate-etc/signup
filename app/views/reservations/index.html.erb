@@ -1,7 +1,13 @@
-<ul id="reservation-list">
-	<% @reservations.each do |reservation| %>
-		<li>
-			<%=h reservation.session.time %>: <%= link_to reservation.session.topic.name, reservation.session %>
-		</li>
-	<% end %>
-</ul>
+<% if @reservations.size == 0 %>
+	You don't have any upcoming reservations. Why don't you <%= link_to "take a look at the available topics", topics_path %>
+	and see what looks interesting?
+<% else %>
+	<ul id="reservation-list">
+		<% @reservations.each do |reservation| %>
+			<li>
+				<%=h reservation.session.time %>: <%= link_to reservation.session.topic.name, reservation.session %>
+				<%= link_to "(cancel)", reservation, :method => :delete, :confirm => "Are you sure you want to cancel your reservation for \"" + reservation.session.topic.name + "\"?"%>
+			</li>
+		<% end %>
+	</ul>
+<% end %>

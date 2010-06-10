@@ -13,9 +13,12 @@ class ReservationsControllerTest < ActionController::TestCase
     
     get :create, :session_id => reservations( :bill ).session_id
     assert_response :redirect
+    
+    delete :destroy, :id => reservations( :bill )
+    assert_response :redirect
   end
   
-  test "Admins can do anything" do
+  test "Try making reservations" do
     login_as( admins( :sean ).login )
     get :new, :session_id => reservations( :bill ).session_id
     assert_response :success
@@ -23,6 +26,17 @@ class ReservationsControllerTest < ActionController::TestCase
     get :create, :session_id => reservations( :bill ).session_id, :session => { :session_id => reservations( :bill ).session_id }
     assert_redirected_to reservations( :bill ).session
     assert Reservation.count == 4
+  end
+  
+  test "Users should only be able to delete their own reservations" do
+    login_as( reservations( :bill ).login )
+    delete :destroy, :id => reservations( :bill )
+    assert_response :redirect
+    assert_equal Reservation.count, 2
+    
+    delete :destroy, :id => reservations( :joey )
+    assert_response :redirect
+    assert_equal Reservation.count, 2, "Bill was able to delete Joey's reservation"
   end
   
   test "Show what training sessions user is registered for" do
