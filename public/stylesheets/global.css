@@ -85,6 +85,7 @@ div.reservationContainer input {
 	border: 3px outset black;
 	color: white;
 	height: 3em;
+	margin-bottom: 1em;
 }
 
 .buttonLink a {
@@ -96,3 +97,9 @@ div.reservationContainer input {
 	font-weight: bold;
 }
 
+div.navigation {
+	background-color: #8c734a;
+	text-align: right;
+	padding: .5em;
+	margin-bottom: 1em;
+}

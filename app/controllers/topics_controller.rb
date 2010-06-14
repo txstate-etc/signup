@@ -1,7 +1,7 @@
 class TopicsController < ApplicationController
   def index
     @topics = Topic.find( :all, { :order => "name asc"} )
-    @page_title = "Available Course Topics"
+    @page_title = "Available Topics"
   end
   
   def show

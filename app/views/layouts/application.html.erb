@@ -6,6 +6,7 @@
 		<title><%= @page_title %></title>
 	</head>
 	<body>
+		<div class="navigation"><%=h current_user %> | <%= link_to "Your Reservations", reservations_path %> | <%= link_to "Available Topics", topics_path %></div>
 		<% unless flash[ :notice ].blank? %>
 			<div id="notification"><%=h flash[ :notice ] %></div>
 		<% end %>
