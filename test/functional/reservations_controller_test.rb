@@ -6,7 +6,6 @@ class ReservationsControllerTest < ActionController::TestCase
   fixtures :reservations
   fixtures :topics
 
-  # Replace this with your real tests.
   test "Login Required for All Actions" do
     get :new, :session_id => reservations( :bill ).session_id
     assert_response :redirect
@@ -44,6 +43,13 @@ class ReservationsControllerTest < ActionController::TestCase
     get :index
     assert assigns( :reservations ).size == 1
     assert_response :success
+  end
+  
+  test "Try downloading a reservation as ICS" do
+    login_as( reservations( :bill ).login )
+    get :download, :id => reservations( :bill )
+    assert_response :success
+    assert_equal @response.content_type, 'text/calendar'
   end
   
 end

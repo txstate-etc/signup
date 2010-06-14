@@ -1,3 +1,5 @@
+require 'ri_cal'
+
 class ReservationsController < ApplicationController
   def new
     @session = Session.find( params[ :session_id ] )
@@ -33,4 +35,21 @@ class ReservationsController < ApplicationController
     end
     redirect_to reservations_path
   end
+  
+  def download
+    reservation = Reservation.find( params[ :id ] )
+    
+    calendar = RiCal.Calendar do
+      event do
+        summary reservation.session.topic.name
+        description reservation.session.topic.description
+        dtstart reservation.session.time
+        dtend reservation.session.time + reservation.session.topic.minutes * 60
+        location reservation.session.location
+      end
+    end
+    
+    send_data(calendar.export, :type => 'text/calendar', :disposition => 'inline; filename=training.ics', :filename=>'training.ics')
+  end
+  
 end

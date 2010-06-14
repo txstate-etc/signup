@@ -34,7 +34,9 @@
 		<% end %>
 		
 		<% if @reservation %>
-			You are registered for this session. <%= link_to "(cancel)", @reservation, :method => :delete, :confirm => "Are you sure you want to cancel your reservation for \"" + @reservation.session.topic.name + "\"?"%>
+			You are registered for this session. 
+			<%= link_to "(cancel)", @reservation, :method => :delete, :confirm => "Are you sure you want to cancel your reservation for \"" + @reservation.session.topic.name + "\"?"%>
+			<%= link_to "(download)", { :controller => :reservations, :action => :download, :id => @reservation.id } %>
 		<% else %>		
 			<% if @session.space_is_available? %>
 				<%= link_to "Register", new_session_reservation_path( @session ) %>

@@ -48,4 +48,5 @@ ActionController::Routing::Routes.draw do |map|
   end
   
   map.resources :reservations, :only => [ :index ]
+  map.connect 'reservations/download/:id', :controller => :reservations, :action => :download
 end
