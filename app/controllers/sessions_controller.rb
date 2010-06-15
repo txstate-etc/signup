@@ -1,3 +1,5 @@
+require 'ri_cal'
+
 class SessionsController < ApplicationController
   def show
     @session = Session.find( params[:id] )
@@ -44,6 +46,14 @@ class SessionsController < ApplicationController
       flash[ :notice ] = "Session cancelled."
     end
     redirect_to session.topic
+  end
+  
+  def download
+    calendar = RiCal.Calendar
+    Session.find( :all ).each do |session|
+      calendar.add_subcomponent( session.to_event )
+    end
+    send_data(calendar.export, :type => 'text/calendar')
   end
 
 end

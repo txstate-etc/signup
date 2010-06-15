@@ -24,7 +24,7 @@ class Session < ActiveRecord::Base
   def to_event
     event = RiCal.Event 
     event.summary = topic.name
-    event.description = topic.description
+    event.description = topic.description + "\n\nInstructor: " + instructor.name
     event.dtstart = time
     event.dtend = time + topic.minutes * 60
     event.location = location

@@ -64,5 +64,10 @@ class SessionsControllerTest < ActionController::TestCase
     assert_response :redirect    
   end
   
-  
+  test "Should be able to download subscribable calendar without credentials" do
+    get :download
+    assert_response :success
+    assert_equal @response.content_type, 'text/calendar'
+  end
+    
 end
