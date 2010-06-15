@@ -1,0 +1,19 @@
+Hi there <%= @reservation.name %>,
+
+Your reservation for <%= @reservation.session.topic.name %> has been confirmed. If you need
+to cancel your reservation for any reason, you can do so from the Training Reservation System:
+
+<%= @url %>
+
+----
+
+Your Reservation
+
+What: <%= @reservation.session.topic.name %>
+When: <%= @reservation.session.time %>
+Who:  <%= @reservation.name %>
+
+----
+
+You can use the attached ICS file to add the session to your calendar software.
+

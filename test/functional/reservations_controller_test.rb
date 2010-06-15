@@ -27,6 +27,17 @@ class ReservationsControllerTest < ActionController::TestCase
     assert Reservation.count == 4
   end
   
+  test "Verify that confirmation emails are sent when a reservation is made" do
+    login_as( admins( :sean ).login )
+    assert_difference 'ActionMailer::Base.deliveries.size', +1 do
+      get :create, :session_id => reservations( :bill ).session_id, :session => { :session_id => reservations( :bill ).session_id }
+    end
+    
+    confirmation_email = ActionMailer::Base.deliveries.first
+    assert_equal confirmation_email.subject, "Reservation Confirmation For: sm51"
+    assert_equal confirmation_email.to[0], "sm51@txstate.edu"
+  end
+  
   test "Users should only be able to delete their own reservations" do
     login_as( reservations( :bill ).login )
     delete :destroy, :id => reservations( :bill )

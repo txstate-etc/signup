@@ -14,6 +14,8 @@ class ReservationsController < ApplicationController
     @reservation.login = current_user
     @reservation.name = current_user_name
     if @reservation.save
+      url = url_for( :host => request.host, :port => request.port, :controller => :reservations )
+      ReservationMailer.deliver_confirm( @reservation, url )
       flash[ :notice ] = "Your reservation has been confirmed."
       redirect_to @reservation.session
     else
@@ -38,18 +40,7 @@ class ReservationsController < ApplicationController
   
   def download
     reservation = Reservation.find( params[ :id ] )
-    
-    calendar = RiCal.Calendar do
-      event do
-        summary reservation.session.topic.name
-        description reservation.session.topic.description
-        dtstart reservation.session.time
-        dtend reservation.session.time + reservation.session.topic.minutes * 60
-        location reservation.session.location
-      end
-    end
-    
-    send_data(calendar.export, :type => 'text/calendar', :disposition => 'inline; filename=training.ics', :filename=>'training.ics')
+    send_data(reservation.to_cal, :type => 'text/calendar', :disposition => 'inline; filename=training.ics', :filename=>'training.ics')
   end
   
 end
