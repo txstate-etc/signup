@@ -43,3 +43,6 @@ end
 CASClient::Frameworks::Rails::Filter.configure(
   :cas_base_url => "https://llavero.its.txstate.edu/cas"
 )
+
+ActiveSupport::CoreExtensions::Date::Conversions::DATE_FORMATS.merge!(:default => "%a %m/%d/%Y")
+ActiveSupport::CoreExtensions::Time::Conversions::DATE_FORMATS.merge!(:default => "%a %m/%d/%Y %I:%M%p")

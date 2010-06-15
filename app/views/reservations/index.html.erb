@@ -5,8 +5,17 @@
 	<ul id="reservation-list">
 		<% @reservations.each do |reservation| %>
 			<li>
-				<%=h reservation.session.time %>: <%= link_to reservation.session.topic.name, reservation.session %>
-				<%= link_to "(cancel)", reservation, :method => :delete, :confirm => "Are you sure you want to cancel your reservation for \"" + reservation.session.topic.name + "\"?"%>
+				<div>
+					<div class="reservation-name">
+						<%= link_to reservation.session.time, reservation.session %>: <%= link_to reservation.session.topic.name, reservation.session.topic %>
+					</div>
+					<div class="button-link confirm">
+						<%= link_to "download to calendar", { :controller => :reservations, :action => :download, :id => reservation.id } %>
+					</div>
+					<div class="button-link delete">
+						<%= link_to "cancel reservation", reservation, :method => :delete, :confirm => "Are you sure you want to cancel your reservation for \"" + reservation.session.topic.name + "\"?"%>
+					</div>
+				<div>
 			</li>
 		<% end %>
 	</ul>

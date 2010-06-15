@@ -11,7 +11,7 @@
 	<dd><%=h @session.topic.description %></dd>
 	<dt>Duration:</dt>
 	<dd><%=h @session.topic.minutes %> minutes</dd>
-	<% if @session.topic.url %>
+	<% if !@session.topic.url.blank? %>
 		<dt>Additional Info:</dt>
 		<dd><%= link_to @session.topic.url, @session.topic.url %></dd>
 	<% end %>
@@ -34,21 +34,28 @@
 				There are <%=h @seatsRemaining %> seats still available for this session.
 			<% end %>
 		<% end %>
-		
-		<% if @reservation %>
-			You are registered for this session. 
-			<%= link_to "(cancel)", @reservation, :method => :delete, :confirm => "Are you sure you want to cancel your reservation for \"" + @reservation.session.topic.name + "\"?"%>
-			<%= link_to "(download)", { :controller => :reservations, :action => :download, :id => @reservation.id } %>
-		<% else %>		
-			<% if @session.space_is_available? %>
-				<%= link_to "Register", new_session_reservation_path( @session ) %>
-			<% end %>
-		<% end %>
 	</dd>
 </dl>
 
+<% if @reservation %>
+	<p>You are registered for this session. </p>
+	<div class="button-link confirm">
+		<%= link_to "download to calendar", { :controller => :reservations, :action => :download, :id => @reservation.id } %>
+	</div>
+	<div class="button-link delete">
+		<%= link_to "cancel reservation", @reservation, :method => :delete, :confirm => "Are you sure you want to cancel your reservation for \"" + @reservation.session.topic.name + "\"?"%>
+	</div>
+	
+<% else %>		
+	<% if @session.space_is_available? %>
+		<div class="button-link confirm">
+			<%= link_to "Register", new_session_reservation_path( @session ) %>
+		</div>
+	<% end %>
+<% end %>
+
 <% if user_is_admin? or user_is_instructor?( @session ) %>
-	<div class="deleteLink">
-		<%= link_to "Cancel Session", @session, :confirm => "Are you sure you want to cancel this class? All registered attendees will be notified that the session has been cancelled.", :method => :delete %>
+	<div class="button-link delete">
+		<%= link_to "cancel session", @session, :confirm => "Are you sure you want to cancel this class? All registered attendees will be notified that the session has been cancelled.", :method => :delete %>
 	</div>
 <% end %>

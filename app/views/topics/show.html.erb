@@ -3,7 +3,7 @@
 	<dd><%=h @topic.description %></dd>
 	<dt>Duration:</dt>
 	<dd><%=h @topic.minutes %> minutes</dd>
-	<% if @topic.url %>
+	<% if !@topic.url.blank? %>
 		<dt>Additional Info:</dt>
 		<dd><%= link_to @topic.url, @topic.url %></dd>
 	<% end %>
@@ -11,7 +11,7 @@
 	<dd>
 		<% if @topic.upcoming_sessions.size > 0 %>
 			<% @topic.upcoming_sessions.each do |session| %>
-				Session: <%= link_to session.time, session %><br/>
+				<%= link_to session.time, session %><br/>
 			<% end %>
 		<% else %>
 			There are no sessions scheduled at this time.
@@ -20,5 +20,5 @@
 </dl>
 
 <% if user_is_admin? %>
-	<div class="newLink"><%= link_to "Create New Session", new_topic_session_path( @topic ) %></div>
+	<div class="button-link confirm"><%= link_to "Create New Session", new_topic_session_path( @topic ) %></div>
 <% end %>
