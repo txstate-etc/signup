@@ -16,16 +16,4 @@ class Reservation < ActiveRecord::Base
     errors.add_to_base("You cannot register for this class, as it has already occurred.") if session.time < Time.now
   end
   
-  def to_cal
-    calendar = RiCal.Calendar
-    event = RiCal.Event 
-    event.summary = session.topic.name
-    event.description = session.topic.description
-    event.dtstart = session.time
-    event.dtend = session.time + session.topic.minutes * 60
-    event.location = session.location
-    calendar.add_subcomponent( event )
-    return calendar.export
-  end
-    
 end

@@ -14,7 +14,7 @@ class ReservationMailer < ActionMailer::Base
     part :content_type => "text/html",
       :body => render_message( "confirm-as-html", :reservation => reservation, :url => url )
     
-    attachment :content_type => "text/calendar", :body => reservation.to_cal
+    attachment :content_type => "text/calendar", :body => reservation.session.to_cal
   end
 
 end

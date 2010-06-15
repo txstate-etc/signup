@@ -1,5 +1,3 @@
-require 'ri_cal'
-
 class ReservationsController < ApplicationController
   def new
     @session = Session.find( params[ :session_id ] )
@@ -40,7 +38,7 @@ class ReservationsController < ApplicationController
   
   def download
     reservation = Reservation.find( params[ :id ] )
-    send_data(reservation.to_cal, :type => 'text/calendar', :disposition => 'inline; filename=training.ics', :filename=>'training.ics')
+    send_data(reservation.session.to_cal, :type => 'text/calendar', :disposition => 'inline; filename=training.ics', :filename=>'training.ics')
   end
   
 end
