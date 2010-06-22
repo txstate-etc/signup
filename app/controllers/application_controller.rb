@@ -23,6 +23,7 @@ class ApplicationController < ActionController::Base
       return true
     else
       CASClient::Frameworks::Rails::Filter.filter( self )
+      session[ :user ] = User.find(:first, :conditions => ['login = ?', session[ :cas_user ] ] )
     end
   end
   
