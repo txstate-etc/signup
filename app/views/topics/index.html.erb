@@ -6,6 +6,6 @@
 	<% end %>
 </ul>
 	
-<% if user_is_admin? %>
+<% if current_user.admin? %>
 	<div class="button-link confirm"><%= link_to "Create New Topic", new_topic_path %></div>
 <% end %>

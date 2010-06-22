@@ -1,4 +1,4 @@
-Hi there <%= @reservation.name %>,
+Hi there <%= @reservation.user.name %>,
 
 Your reservation for <%= @reservation.session.topic.name %> has been confirmed. If you need
 to cancel your reservation for any reason, you can do so from the Training Reservation System:
@@ -11,7 +11,7 @@ Your Reservation
 
 What: <%= @reservation.session.topic.name %>
 When: <%= @reservation.session.time %>
-Who:  <%= @reservation.name %>
+Who:  <%= @reservation.user.name %>
 
 ----
 

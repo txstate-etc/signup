@@ -19,34 +19,16 @@ class ApplicationController < ActionController::Base
     return true if session[ :user ]
     
     if session[ :cas_user ]
-      session[ :user ] = session[ :cas_user ]
+      session[ :user ] = User.find(:first, :conditions => ['login = ?', session[ :cas_user ] ] )
       return true
     else
       CASClient::Frameworks::Rails::Filter.filter( self )
     end
   end
   
-  helper_method :current_user, :user_is_admin?, :user_is_instructor?, :current_user_email, :current_user_name
+  helper_method :current_user
   private
   def current_user
-    session[ :user ]
-  end
-  
-  def user_is_admin?
-    Admin.find( :first, :conditions => ["login = ?", current_user ] ) != nil
-  end
-  
-  def user_is_instructor?( session )
-    current_user == session.instructor.login
-  end
-  
-  # include whatever logic is needed to get the email address for the current user
-  def current_user_email
-    session[ :user ] + "@txstate.edu"
-  end
-  
-  #include whatever logic is needed to get the current user's human-readable name, e.g. "John Smith"
-  def current_user_name
     session[ :user ]
   end
   

@@ -10,7 +10,7 @@ class TopicsController < ApplicationController
   end
   
   def new
-    if user_is_admin?
+    if current_user.admin?
       @topic = Topic.new
       @page_title = "Create New Topic"
     else
@@ -19,7 +19,7 @@ class TopicsController < ApplicationController
   end
   
   def create
-    if user_is_admin?
+    if current_user.admin?
       @topic = Topic.new( params[ :topic ] )
       if @topic.save
         flash[ :notice ] = "Topic \"" + @topic.name + "\" added."

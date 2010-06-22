@@ -2,8 +2,8 @@ class ReservationMailer < ActionMailer::Base
   
 
   def confirm( reservation, url )
-    subject    'Reservation Confirmation For: ' + reservation.name
-    recipients reservation.login + "@txstate.edu"
+    subject    'Reservation Confirmation For: ' + reservation.user.name
+    recipients reservation.user.email
     from       'nobody@txstate.edu'
     content_type 'multipart/alternative'
     

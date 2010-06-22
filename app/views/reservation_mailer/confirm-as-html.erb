@@ -40,7 +40,7 @@
 </head>
 
 <body>
-	<p>Hi there <%= @reservation.name %>,</p>
+	<p>Hi there <%= @reservation.user.name %>,</p>
 
 <p>Your reservation for <%= @reservation.session.topic.name %> has been confirmed. If you need
 to cancel your reservation for any reason, you can do so from the <a href="<%= @url %>">Training Reservation System</a>.</p>
@@ -54,7 +54,7 @@ to cancel your reservation for any reason, you can do so from the <a href="<%= @
 			<dt>When:</dt>
 			<dd><%=h @reservation.session.time %></dd>
 			<dt>Who:</dt>
-			<dd><%=h @reservation.name %></dd>
+			<dd><%=h @reservation.user.name %></dd>
 		</dl>
 	</div>
 </div>

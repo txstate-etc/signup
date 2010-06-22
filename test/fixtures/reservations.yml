@@ -1,16 +1,13 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
-bill:
-  name: Bill Bryson
-  login: bb32
+plainuser1:
+  user: plainuser1
   session: gato
 
-ron:
-  name: Ron Bowden
-  login: rb32
+plainuser2:
+  user: plainuser2
   session: tracs
 
-joey:
-  name: Joey Tester
-  login: jt1234
+plainuser3:
+  user: plainuser3
   session: tracs_tiny_full

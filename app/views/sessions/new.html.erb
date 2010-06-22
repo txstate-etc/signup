@@ -9,7 +9,7 @@
 	<%= f.datetime_select :time %>
 	
 	<%= f.label :instructor_id, "Instructor:" %>
-	<%= f.collection_select :instructor_id, Instructor.all, :id, :name, { :include_blank => true } %>
+	<%= f.collection_select :instructor_id, User.find_all_by_instructor( true ), :id, :name, { :include_blank => true } %>
 	
 	<%= f.label :location, "Location:" %>
 	<%= f.text_field :location %>

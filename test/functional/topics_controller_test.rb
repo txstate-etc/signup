@@ -20,7 +20,7 @@ class TopicsControllerTest < ActionController::TestCase
   end
 
   test "Admins should be able to do anything." do
-    login_as( admins( :sean ).login )
+    login_as( users( :admin1 ) )
     get :index
     assert_response :success
   
@@ -35,7 +35,7 @@ class TopicsControllerTest < ActionController::TestCase
   end
 
   test "Once logged as instructor, should be able to view topics, but not modify them." do
-    login_as( instructors( :whitten ).login )
+    login_as( users( :instructor1 ) )
     get :index
     assert_response :success
   
@@ -50,7 +50,7 @@ class TopicsControllerTest < ActionController::TestCase
   end
 
   test "Once logged as nobody special, should be able to view topics, but not modify them." do
-    login_as( 'nobodyspecial' )
+    login_as( users( :plainuser1 ) )
     get :index
     assert_response :success
   

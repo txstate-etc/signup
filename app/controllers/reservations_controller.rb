@@ -9,8 +9,7 @@ class ReservationsController < ApplicationController
     @reservation = Reservation.new
     @session = Session.find( params[ :session_id ])
     @reservation.session = @session
-    @reservation.login = current_user
-    @reservation.name = current_user_name
+    @reservation.user = current_user
     if @reservation.save
       url = url_for( :host => request.host, :port => request.port, :controller => :reservations )
       ReservationMailer.deliver_confirm( @reservation, url )
@@ -24,12 +23,12 @@ class ReservationsController < ApplicationController
   
   def index
     @page_title = "Your Reservations"
-    @reservations = Reservation.find( :all, :conditions => ["login = ? AND sessions.time > ?", current_user, Time.now ], :include => [ :session ] )
+    @reservations = Reservation.find( :all, :conditions => ["user_id = ? AND sessions.time > ?", current_user.id, Time.now ], :include => [ :session ] )
   end
   
   def destroy
     @reservation = Reservation.find( params[ :id ] )
-    if @reservation.login == current_user
+    if @reservation.user == current_user
       @reservation.destroy
       flash[ :notice ] = "Your reservation has been cancelled."
     end

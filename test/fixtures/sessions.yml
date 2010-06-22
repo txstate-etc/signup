@@ -2,7 +2,7 @@
 
 gato_past:
   time: 2010-06-02 12:00:00
-  instructor: whitten
+  instructor: instructor1
   topic: gato
   location: Alkek 155
   cancelled: false
@@ -11,7 +11,7 @@ gato_past:
 
 gato:
   time: 2035-06-02 12:00:00
-  instructor: whitten
+  instructor: instructor1
   topic: gato
   location: Alkek 155
   cancelled: false
@@ -19,7 +19,7 @@ gato:
 
 gato_cancelled:
   time: 2035-08-02 15:00:00
-  instructor: whitten
+  instructor: instructor1
   topic: gato
   location: Alkek 155
   cancelled: true
@@ -27,7 +27,7 @@ gato_cancelled:
 
 gato_2:
   time: 2035-09-02 15:00:00
-  instructor: whitten
+  instructor: instructor1
   topic: gato
   location: Alkek 155
   cancelled: false
@@ -35,7 +35,7 @@ gato_2:
 
 tracs:
   time: 2035-06-02 9:00:00
-  instructor: jimmy
+  instructor: instructor2
   topic: tracs
   location: JCK 1100
   cancelled: false
@@ -43,7 +43,7 @@ tracs:
 
 tracs_tiny:
   time: 2035-06-02 9:00:00
-  instructor: jimmy
+  instructor: instructor2
   topic: tracs
   location: JCK 1100
   cancelled: false
@@ -51,7 +51,7 @@ tracs_tiny:
   
 tracs_tiny_full:
   time: 2035-06-02 9:00:00
-  instructor: jimmy
+  instructor: instructor2
   topic: tracs
   location: JCK 1100
   cancelled: false
@@ -59,7 +59,7 @@ tracs_tiny_full:
   
 gato_huge:
   time: 2035-06-02 12:00:00
-  instructor: whitten
+  instructor: instructor1
   topic: gato
   location: Alkek 155
   cancelled: false

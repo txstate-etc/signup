@@ -20,7 +20,7 @@ class SessionsControllerTest < ActionController::TestCase
   end
   
   test "Admins can do anything" do
-    login_as( admins( :sean ).login )
+    login_as( users( :admin1 ) )
     get :show, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs )
     assert_response :success
     
@@ -35,7 +35,7 @@ class SessionsControllerTest < ActionController::TestCase
   end
   
   test "Instructors can delete sessions" do
-    login_as( instructors( :whitten ).login )
+    login_as( users( :instructor1 ) )
     get :show, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs )
     assert_response :success
     
@@ -50,7 +50,7 @@ class SessionsControllerTest < ActionController::TestCase
   end
   
   test "Regular users should be able to view, but not make changes" do
-    login_as( 'nobodyspecial' )
+    login_as( users( :plainuser1 ) )
     get :show, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs )
     assert_response :success
     

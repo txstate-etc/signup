@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100602175700) do
+ActiveRecord::Schema.define(:version => 20100622155005) do
 
   create_table "admins", :force => true do |t|
     t.string   "login",      :null => false
@@ -26,8 +26,7 @@ ActiveRecord::Schema.define(:version => 20100602175700) do
   end
 
   create_table "reservations", :force => true do |t|
-    t.string   "name",       :null => false
-    t.string   "login",      :null => false
+    t.integer  "user_id",    :null => false
     t.integer  "session_id", :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -49,6 +48,16 @@ ActiveRecord::Schema.define(:version => 20100602175700) do
     t.text     "description"
     t.string   "url"
     t.integer  "minutes"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "users", :force => true do |t|
+    t.string   "login",                         :null => false
+    t.string   "email",                         :null => false
+    t.string   "name",                          :null => false
+    t.boolean  "admin",      :default => false, :null => false
+    t.boolean  "instructor", :default => false, :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -8,12 +8,12 @@ class SessionsController < ApplicationController
     if ( @session.seats )
       @seatsRemaining = @session.seats - @numberRegistered
     end
-    @reservation = Reservation.find_by_login_and_session_id( current_user, @session.id )
+    @reservation = Reservation.find_by_user_id_and_session_id( current_user.id, @session.id )
   end
   
   def new
     topic = Topic.find( params[ :topic_id ] )
-    if user_is_admin?
+    if current_user.admin?
       @session = Session.new
       @session.topic = topic
       @page_name = "Create New Session"
@@ -23,7 +23,7 @@ class SessionsController < ApplicationController
   end
   
   def create
-    if user_is_admin?
+    if current_user.admin?
       @session = Session.new( params[ :session ] )
       if @session.save
         flash[ :notice ] = "Session added."
@@ -39,7 +39,7 @@ class SessionsController < ApplicationController
   
   def destroy
     session = Session.find( params[ :id ] )
-    if user_is_admin? or user_is_instructor?( session )
+    if current_user.admin? or session.instructor == current_user
       session.cancelled = true
       session.save
       # TODO: Add logic to notify attendees that session was cancelled.

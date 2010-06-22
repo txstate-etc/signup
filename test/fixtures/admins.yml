@@ -1,9 +1,0 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
-
-sean:
-  login: sm51
-  name: Sean McMains
-
-jeff:
-  login: js38
-  name: Jeff Snider
