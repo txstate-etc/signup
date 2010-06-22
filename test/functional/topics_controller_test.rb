@@ -63,5 +63,12 @@ class TopicsControllerTest < ActionController::TestCase
     get :create
     assert_response :redirect  
   end
+  
+  test "Should be able to download a topic's calendar" do
+    get :download, :id => topics( :gato ).id
+    assert_response :success
+    assert_equal @response.content_type, 'text/calendar'
+  end
+  
 end
 
