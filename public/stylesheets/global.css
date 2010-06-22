@@ -147,3 +147,22 @@ div#container h1 {
 	margin-top: 0px;
 	text-align: center;
 }
+
+div.calendar-link {
+	margin-left: auto;
+	width: 30%;
+	background-color: #cccccc;
+	background-image: url('../images/calendar_icon.gif');
+	background-repeat: no-repeat;
+	background-position: 4% 50%;
+	margin-bottom: 1em;
+}
+
+
+div.calendar-link a {
+	display: block;
+	padding-left: 20%;
+	padding-top: .5em;
+	padding-bottom: .5em;
+}
+

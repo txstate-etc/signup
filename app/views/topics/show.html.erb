@@ -19,6 +19,8 @@
 	</dd>
 </dl>
 
+<div class="calendar-link"><%= link_to "Subscribe to Calendar", :protocol => "webcal", :host => request.host, :port => request.port, :action => 'download' %></div>
+
 <% if current_user.admin? %>
 	<div class="button-link confirm"><%= link_to "Create New Session", new_topic_session_path( @topic ) %></div>
 <% end %>

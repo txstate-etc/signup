@@ -50,6 +50,7 @@ class SessionsController < ApplicationController
   
   def download
     calendar = RiCal.Calendar
+    calendar.add_x_property 'X-WR-CALNAME', 'All Training Sessions'
     Session.find( :all ).each do |session|
       calendar.add_subcomponent( session.to_event )
     end

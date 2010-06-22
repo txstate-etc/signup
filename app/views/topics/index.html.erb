@@ -5,6 +5,8 @@
 		</li>
 	<% end %>
 </ul>
+
+<div class="calendar-link"><%= link_to "Subscribe to Calendar", :protocol => "webcal", :controller => 'sessions', :host => request.host, :port => request.port, :action => 'download' %></div>
 	
 <% if current_user.admin? %>
 	<div class="button-link confirm"><%= link_to "Create New Topic", new_topic_path %></div>
