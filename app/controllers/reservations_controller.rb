@@ -31,6 +31,8 @@ class ReservationsController < ApplicationController
     if @reservation.user == current_user
       @reservation.destroy
       flash[ :notice ] = "Your reservation has been cancelled."
+    else
+      flash[ :error ] = "Reservations can only be cancelled by their owner." + current_user.to_s + " & " + @reservation.user.to_s
     end
     redirect_to reservations_path
   end

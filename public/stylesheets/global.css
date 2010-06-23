@@ -29,6 +29,14 @@ label {
 	margin-bottom: 1em;
 }
 
+#error {
+	padding: 1em;
+	background-color: #ff3333;
+	border: 2px solid black;
+	font-weight: bold;
+	margin-bottom: 1em;
+}
+
 div.fieldWithErrors label {
 	color: #bb0000;
 }

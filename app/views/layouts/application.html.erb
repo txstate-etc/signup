@@ -11,6 +11,9 @@
 		<% unless flash[ :notice ].blank? %>
 			<div id="notification"><%=h flash[ :notice ] %></div>
 		<% end %>
+		<% unless flash[ :error ].blank? %>
+			<div id="error"><%=h flash[ :error ] %></div>
+		<% end %>
 		<div id="container">
 		<h1><%= @page_title %></h1>
 		<%= yield %>
