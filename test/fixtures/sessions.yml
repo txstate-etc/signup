@@ -50,7 +50,7 @@ tracs_tiny:
   seats: 1
   
 tracs_tiny_full:
-  time: 2035-06-02 9:00:00
+  time: 2035-06-15 9:00:00
   instructor: instructor2
   topic: tracs
   location: JCK 1100

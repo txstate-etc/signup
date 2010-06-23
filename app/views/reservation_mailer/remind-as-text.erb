@@ -1,0 +1,22 @@
+Hi there <%= @reservation.user.name %>,
+
+Just a friendly reminder: the "<%= @reservation.session.topic.name %>"
+class you signed up for is coming up! If your plans have changed 
+and you can no longer make it to the class, or you need to cancel 
+your reservation for any other reason, please do so from the 
+Training Reservation System.
+
+<%= @url %>
+
+----
+
+Your Reservation
+
+What: <%= @reservation.session.topic.name %>
+When: <%= @reservation.session.time %>
+Who:  <%= @reservation.user.name %>
+
+----
+
+You can use the attached ICS file to add the session to your calendar software.
+

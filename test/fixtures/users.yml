@@ -17,7 +17,7 @@ plainuser2:
 plainuser3:
     login: pu34567
     email: pu34567@dev.nul
-    name: Plain User2
+    name: Plain User3
     admin: false
     instructor: false
 

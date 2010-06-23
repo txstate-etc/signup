@@ -30,4 +30,13 @@ class Session < ActiveRecord::Base
     event.location = location
     return event
   end
+  
+  def self.send_reminders( start_time, end_time )
+    session_list = Session.find( :all, :conditions => ['time >= ? AND time <= ? AND cancelled = 0', start_time, end_time ] )
+    session_list.each do |session|
+      session.reservations.each do |reservation|
+        ReservationMailer.deliver_remind( reservation, nil )
+      end
+    end
+  end
 end

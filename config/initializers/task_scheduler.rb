@@ -1,0 +1,13 @@
+require 'rubygems'
+require 'rufus/scheduler'
+
+scheduler = Rufus::Scheduler.start_new
+
+# send out email reminders for classes that are 3 days
+# out every night at 10:00pm.
+scheduler.cron '0 22 * * *' do
+  days_ahead = 3
+  start_date = ( DateTime.now + days_ahead ).at_beginning_of_day
+  end_date = ( DateTime.now + days_ahead ).end_of_day
+  Session.send_reminders( start_date, end_date )
+end
