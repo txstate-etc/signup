@@ -11,3 +11,9 @@ scheduler.cron '0 22 * * *' do
   end_date = ( DateTime.now + days_ahead ).end_of_day
   Session.send_reminders( start_date, end_date )
 end
+
+# update Users table nightly at 11:00pm
+
+scheduler.cron '0 21 * * *' do
+  User.import_all
+end
