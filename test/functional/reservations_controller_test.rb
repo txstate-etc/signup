@@ -23,7 +23,7 @@ class ReservationsControllerTest < ActionController::TestCase
     
     get :create, :session_id => reservations( :plainuser1 ).session_id, :session => { :session_id => reservations( :plainuser1 ).session_id }
     assert_redirected_to reservations( :plainuser1 ).session
-    assert Reservation.count == 4
+    assert_equal 7, Reservation.count, "Couldn't create reservation"
   end
   
   test "Verify that confirmation emails are sent when a reservation is made" do
@@ -41,17 +41,17 @@ class ReservationsControllerTest < ActionController::TestCase
     login_as( users( :plainuser1 ) )
     delete :destroy, :id => reservations( :plainuser1 )
     assert_response :redirect
-    assert_equal Reservation.count, 2
+    assert_equal 5, Reservation.count
     
     delete :destroy, :id => reservations( :plainuser3 )
     assert_response :redirect
-    assert_equal Reservation.count, 2, "One user was able to delete another's reservation."
+    assert_equal 5, Reservation.count, "One user was able to delete another's reservation."
   end
   
   test "Show what training sessions user is registered for" do
     login_as( users( :plainuser1 ) )
     get :index
-    assert assigns( :reservations ).size == 1
+    assert_equal 2,  assigns( :reservations ).size, "Number of upcoming sessions for Plainuser1 was incorrect."
     assert_response :success
   end
   

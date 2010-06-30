@@ -64,5 +64,11 @@ gato_huge:
   location: Alkek 155
   cancelled: false
 
-
+gato_overbooked:
+    time: 2035-07-01 17:00:00
+    instructor: instructor1
+    topic: gato
+    location: JCK 1100
+    cancelled: false
+    seats: 2
     

@@ -8,7 +8,7 @@ class TopicTest < ActiveSupport::TestCase
     assert_equal( upcoming_tracs.length, 3, "TRACS should have 3 upcoming session")
     
     upcoming_gato = Topic.find( topics( :gato ) ).upcoming_sessions
-    assert_equal( upcoming_gato.length, 3, "Gato should have 3 upcoming sessions")
+    assert_equal( upcoming_gato.length, 4, "Gato should have 4 upcoming sessions")
   end
 
 end

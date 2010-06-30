@@ -14,6 +14,14 @@ class Session < ActiveRecord::Base
     return false
   end
   
+  def confirmed_reservations
+    self.seats ? reservations[ 0, self.seats ] : reservations
+  end
+  
+  def waiting_list
+    self.seats ? reservations[ self.seats, reservations.size - self.seats ] : nil
+  end
+  
   def to_cal
     calendar = RiCal.Calendar
     event = self.to_event
@@ -34,7 +42,7 @@ class Session < ActiveRecord::Base
   def self.send_reminders( start_time, end_time )
     session_list = Session.find( :all, :conditions => ['time >= ? AND time <= ? AND cancelled = 0', start_time, end_time ] )
     session_list.each do |session|
-      session.reservations.each do |reservation|
+      session.confirmed_reservations.each do |reservation|
         ReservationMailer.deliver_remind( reservation, nil )
       end
     end

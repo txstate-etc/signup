@@ -5,6 +5,8 @@ class Reservation < ActiveRecord::Base
   validates_uniqueness_of :user_id, :scope => [ :session_id ], :message => "This user has already registered for this session."
   validate_on_create :session_not_cancelled, :space_available, :not_in_past
   
+  default_scope :order => "reservations.created_at"
+  
   def session_not_cancelled
     errors.add_to_base("You cannot register for this session, as it has been cancelled.") if session.cancelled
   end

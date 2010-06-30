@@ -11,3 +11,16 @@ plainuser2:
 plainuser3:
   user: plainuser3
   session: tracs_tiny_full
+  
+overbooked_plainuser1:
+    user: plainuser1
+    session: gato_overbooked
+    
+overbooked_plainuser2:
+    user: plainuser2
+    session: gato_overbooked
+
+overbooked_plainuser3:
+    user: plainuser3
+    session: gato_overbooked
+

@@ -1,9 +1,7 @@
 require 'test_helper'
 
 class TopicsControllerTest < ActionController::TestCase
-  fixtures :admins
-  fixtures :instructors
-  fixtures :topics
+  fixtures :topics, :users
   
   test "Login Required for All Actions" do
     get :index

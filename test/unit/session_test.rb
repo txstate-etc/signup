@@ -13,11 +13,17 @@ class SessionTest < ActiveSupport::TestCase
     assert session.space_is_available?    
   end
   
+  test "Should distinguish waiting list vs. reservations correctly" do
+    session = Session.find( sessions( :gato_overbooked ) )
+    assert_equal 2, session.confirmed_reservations.size, "Wrong number of reservations"
+    assert_equal 1, session.waiting_list.size, "Wrong number on waiting list"
+  end
+  
   test "Try reminder emails for year 2035" do
     start_date = DateTime.parse( '1 January 2035' )
     end_date = DateTime.parse( '31 December 2035' )
     
-    assert_difference 'ActionMailer::Base.deliveries.size', +3 do
+    assert_difference 'ActionMailer::Base.deliveries.size', +5 do
       Session.send_reminders( start_date, end_date )
     end
   end

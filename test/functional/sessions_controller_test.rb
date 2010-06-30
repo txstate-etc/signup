@@ -1,9 +1,7 @@
 require 'test_helper'
 
 class SessionsControllerTest < ActionController::TestCase
-  fixtures :admins
-  fixtures :instructors
-  fixtures :sessions
+  fixtures :sessions, :users
 
   test "Login Required for All Actions" do
     get :show, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs )
