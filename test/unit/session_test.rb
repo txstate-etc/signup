@@ -15,8 +15,16 @@ class SessionTest < ActiveSupport::TestCase
   
   test "Should distinguish waiting list vs. reservations correctly" do
     session = Session.find( sessions( :gato_overbooked ) )
-    assert_equal 2, session.confirmed_reservations.size, "Wrong number of reservations"
-    assert_equal 1, session.waiting_list.size, "Wrong number on waiting list"
+    assert_equal 2, session.confirmed_reservations.size, "Wrong number of reservations for Gato"
+    assert_equal 1, session.waiting_list.size, "Wrong number on waiting list for Gato"
+    
+    session = Session.find( sessions( :tracs ) )
+    assert_equal 1, session.confirmed_reservations.size, "Wrong number of reservations for TRACS"
+    assert_equal 0, session.waiting_list.size, "Wrong number on waiting list for TRACS"
+    
+    session = Session.find( sessions( :gato_cancelled ) )
+    assert_equal 0, session.confirmed_reservations.size, "Wrong number of reservations for cancelled class"
+    assert_equal 0, session.waiting_list.size, "Wrong number on waiting list for cancelled class"
   end
   
   test "Try reminder emails for year 2035" do

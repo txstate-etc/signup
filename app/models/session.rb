@@ -19,7 +19,7 @@ class Session < ActiveRecord::Base
   end
   
   def waiting_list
-    self.seats ? reservations[ self.seats, reservations.size - self.seats ] : nil
+    self.seats && confirmed_reservations.size == self.seats ? reservations[ self.seats, reservations.size - self.seats ] : []
   end
   
   def to_cal

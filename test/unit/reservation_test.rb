@@ -31,4 +31,10 @@ class ReservationTest < ActiveSupport::TestCase
     reservation = Reservation.new( :session => sessions( :gato ),  :user => users( :plainuser2 ) )
     assert reservation.save, reservation.errors.to_s
   end
+  
+  test "Make sure confirmed? works correctly" do
+    assert reservations( :overbooked_plainuser1 ).confirmed?
+    assert reservations( :overbooked_plainuser2 ).confirmed?
+    assert reservations( :overbooked_plainuser3 ).on_waiting_list?
+  end
 end
