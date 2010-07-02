@@ -11,9 +11,13 @@ class ReservationsController < ApplicationController
     @reservation.session = @session
     @reservation.user = current_user
     if @reservation.save
-      url = url_for( :host => request.host, :port => request.port, :controller => :reservations )
-      ReservationMailer.deliver_confirm( @reservation, url )
-      flash[ :notice ] = "Your reservation has been confirmed."
+      if @reservation.confirmed?
+        url = url_for( :host => request.host, :port => request.port, :controller => :reservations )
+        ReservationMailer.deliver_confirm( @reservation, url )
+        flash[ :notice ] = "Your reservation has been confirmed."
+      else
+        flash[ :notice ] = "You have been added to the waiting list."
+      end
       redirect_to @reservation.session
     else
       @page_title = "Make a Reservation"
@@ -23,7 +27,9 @@ class ReservationsController < ApplicationController
   
   def index
     @page_title = "Your Reservations"
-    @reservations = Reservation.find( :all, :conditions => ["user_id = ? AND sessions.time > ?", current_user.id, Time.now ], :include => [ :session ] )
+    reservations = Reservation.find( :all, :conditions => ["user_id = ? AND sessions.time > ?", current_user.id, Time.now ], :include => [ :session ] )
+    @confirmed_reservations = reservations.find_all{ |reservation| reservation.confirmed? }
+    @waiting_list_signups = reservations.find_all{ |reservation| !reservation.confirmed? }
   end
   
   def destroy

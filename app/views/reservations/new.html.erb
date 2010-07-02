@@ -1,20 +1,34 @@
 <%= error_messages_for 'reservation' %>
 
 	<div class="reservationContainer">
+		
+		<% if !@session.space_is_available? %>
+		<div class="notice">NOTICE: This class is full! However, you can still put yourself on the waiting
+			list. If space becomes available in the class, you will be automatically
+			registered and notified by email.</div>
+		<% end %>
 		<% form_for( [ @session, @reservation ] ) do |f| %>
-		<div class="reservationCard">
-			<h2>Your Reservation</h2>
-			<dl>
-				<dt>What:</dt>
-				<dd><%=h @session.topic.name %></dd>
-				<dt>When:</dt>
-				<dd><%=h @session.time %></dd>
-				<dt>Who:</dt>
-				<dd><%=h current_user.name %> (<%=h current_user.email %>)</dd>
-			</dl>
-		</div>
+			<div class="reservationCard">
+				<% if @session.space_is_available? %>
+					<h2>Your Reservation</h2>
+				<% else %>
+					<h2>Waiting List Signup</h2>
+				<% end %>
+				<dl>
+					<dt>What:</dt>
+					<dd><%=h @session.topic.name %></dd>
+					<dt>When:</dt>
+					<dd><%=h @session.time %></dd>
+					<dt>Who:</dt>
+					<dd><%=h current_user.name %> (<%=h current_user.email %>)</dd>
+				</dl>
+			</div>
 
-		<%= submit_tag "Confirm Reservation", :class => "confirm submit-button" %>
+			<% if @session.space_is_available? %>
+				<%= submit_tag "Confirm Reservation", :class => "confirm submit-button" %>
+			<% else %>
+				<%= submit_tag "Confirm Waiting List Signup", :class => "tentative submit-button" %>
+			<% end %>
 		<% end %>
 		<div class="button-link delete"><%= link_to "Cancel Reservation", @session.topic %></div>
 	</div>

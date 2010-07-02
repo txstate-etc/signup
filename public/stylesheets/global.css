@@ -63,6 +63,11 @@ div.reservationContainer {
 	margin-right: auto;
 }
 
+div.notice {
+	font-style: italic;
+	padding-bottom: 1em;
+}
+
 input.submit-button {
 	width: 100%;
 	height: 3em;
@@ -82,6 +87,10 @@ input.submit-button {
 
 .delete {
 	background-color: #660000;
+}
+
+.tentative {
+	background-color: #666600;
 }
 
 
@@ -124,13 +133,13 @@ ul#topic-list li a {
 	font-size: 150%;
 }
 
-ul#reservation-list {
+ul.reservation-list {
 	margin-left: 0px;
 	padding-left: 0px;
 	list-style-type: none;
 }
 
-ul#reservation-list li {
+ul.reservation-list li {
 	padding: 1em;
 	background-color: #cccccc;
 	margin-bottom: 1em;
@@ -141,6 +150,13 @@ div.reservation-name {
 	font-weight: bold;
 	font-size: 150%;
 	margin-bottom: 1em;
+}
+
+div.reservation-group {
+	border: 1px solid black;
+	padding-left: 1em;
+	padding-right: 1em;
+	margin-bottom: 2em;
 }
 
 div#container {

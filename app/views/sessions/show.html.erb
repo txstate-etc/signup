@@ -17,28 +17,39 @@
 	<% end %>
 	<dt>Registration:</dt>
 	<dd>
-		<% if @numberRegistered == 0 %>
+		<% if @session.confirmed_reservations.size == 0 %>
 			Nobody has registered for this session yet.
-		<% elsif @numberRegistered == 1 %>
+		<% elsif @session.confirmed_reservations.size == 1 %>
 			There is currently 1 person registered for this session.
 		<% else %>
-			There are currently <%=h @numberRegistered %> people registered for this session.
+			There are currently <%=h @session.confirmed_reservations.size %> people registered for this session.
 		<% end %>
 		
-		<% if @seatsRemaining != nil %>
-			<% if @seatsRemaining == 0 %>
+		<% if @session.seats_remaining != nil %>
+			<% if @session.seats_remaining == 0 %>
 				Registration for this class is full.
-			<% elsif @seatsRemaining == 1 %>
+				<% if @session.waiting_list.size == 0 %>
+					There is currently nobody on the waiting list.				
+				<% elsif @session.waiting_list.size == 1 %>
+					There is one person on the waiting list.
+				<% else %>
+					There are <%=h @session.waiting_list.size %> people on the waiting list.
+				<% end %>
+			<% elsif @session.seats_remaining == 1 %>
 				There is one seat still available for this session.
 			<% else %>
-				There are <%=h @seatsRemaining %> seats still available for this session.
+				There are <%=h @session.seats_remaining %> seats still available for this session.
 			<% end %>
 		<% end %>
 	</dd>
 </dl>
 
 <% if @reservation %>
-	<p>You are registered for this session. </p>
+	<% if @reservation.confirmed? %>
+		<p>You are registered for this session. </p>
+	<% else %>
+		<p>You are on the waiting list for this session.</p>
+	<% end %>
 	<div class="button-link confirm">
 		<%= link_to "download to calendar", { :controller => :reservations, :action => :download, :id => @reservation.id } %>
 	</div>
@@ -51,10 +62,37 @@
 		<div class="button-link confirm">
 			<%= link_to "Register", new_session_reservation_path( @session ) %>
 		</div>
+		
+	<% else %>
+		<div class="button-link tentative">
+			<%= link_to "add to waiting list", new_session_reservation_path( @session ) %>
+		</div>
 	<% end %>
 <% end %>
 
 <% if current_user.admin? or @session.instructor == current_user %>
+	<% if @session.confirmed_reservations.size > 0 %>
+		<div class="notice">
+			<h2>Reservations:</h2>
+			<ul>
+			<% @session.confirmed_reservations.each do |reservation| %>
+				<li><%=h reservation.user.name %> &lt;<%=h reservation.user.email %>&gt;</li>
+			<% end%>
+			</ul>
+		</div>
+	<% end %>
+
+	<% if @session.waiting_list.size > 0 %>
+		<div class="notice">
+			<h2>Waiting List:</h2>
+			<ul>
+			<% @session.waiting_list.each do |reservation| %>
+				<li><%=h reservation.user.name %> &lt;<%=h reservation.user.email %>&gt;</li>
+			<% end%>
+			</ul>
+		</div>
+	<% end %>
+
 	<div class="button-link delete">
 		<%= link_to "cancel session", @session, :confirm => "Are you sure you want to cancel this class? All registered attendees will be notified that the session has been cancelled.", :method => :delete %>
 	</div>

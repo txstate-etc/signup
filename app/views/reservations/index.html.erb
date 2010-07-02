@@ -1,22 +1,51 @@
-<% if @reservations.size == 0 %>
+<% if @confirmed_reservations.size == 0  && @waiting_list_signups.size == 0 %>
 	You don't have any upcoming reservations. Why don't you <%= link_to "take a look at the available topics", topics_path %>
 	and see what looks interesting?
 <% else %>
-	<ul id="reservation-list">
-		<% @reservations.each do |reservation| %>
-			<li>
-				<div>
-					<div class="reservation-name">
-						<%= link_to reservation.session.time, reservation.session %>: <%= link_to reservation.session.topic.name, reservation.session.topic %>
+	<% if @confirmed_reservations.size > 0 %>
+		<div class="reservation-group">
+			<h2>Confirmed Reservations</h2>
+			<ul class="reservation-list">
+				<% @confirmed_reservations.each do |reservation| %>
+					<li>
+						<div>
+							<div class="reservation-name">
+								<%= link_to reservation.session.time, reservation.session %>: <%= link_to reservation.session.topic.name, reservation.session.topic %>
+							</div>
+							<div class="button-link confirm">
+								<%= link_to "download to calendar", { :controller => :reservations, :action => :download, :id => reservation.id } %>
+							</div>
+							<div class="button-link delete">
+								<%= link_to "cancel reservation", reservation, :method => :delete, :confirm => "Are you sure you want to cancel your reservation for \"" + reservation.session.topic.name + "\"?"%>
+							</div>
+						</div>
+					</li>
+				<% end %>
+			</ul>
+		</div>
+	<% end %>
+
+	<% if @waiting_list_signups.size > 0 %>
+	<div class="reservation-group">
+		<h2>Waiting List Signups</h2>
+		<ul class="reservation-list">
+			<% @waiting_list_signups.each do |reservation| %>
+				<li>
+					<div>
+						<div class="reservation-name">
+							<%= link_to reservation.session.time, reservation.session %>: <%= link_to reservation.session.topic.name, reservation.session.topic %>
+						</div>
+						<div class="button-link confirm">
+							<%= link_to "download to calendar", { :controller => :reservations, :action => :download, :id => reservation.id } %>
+						</div>
+						<div class="button-link delete">
+							<%= link_to "remove name from waiting list", reservation, :method => :delete, :confirm => "Are you sure you want to remove your name from the waiting list for \"" + reservation.session.topic.name + "\"?"%>
+						</div>
 					</div>
-					<div class="button-link confirm">
-						<%= link_to "download to calendar", { :controller => :reservations, :action => :download, :id => reservation.id } %>
-					</div>
-					<div class="button-link delete">
-						<%= link_to "cancel reservation", reservation, :method => :delete, :confirm => "Are you sure you want to cancel your reservation for \"" + reservation.session.topic.name + "\"?"%>
-					</div>
-				<div>
-			</li>
-		<% end %>
-	</ul>
+				</li>
+			<% end %>
+		</ul>
+	</div>
+	<% end %>
+
 <% end %>

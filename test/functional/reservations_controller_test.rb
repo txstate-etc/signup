@@ -73,7 +73,7 @@ class ReservationsControllerTest < ActionController::TestCase
   test "Show what training sessions user is registered for" do
     login_as( users( :plainuser1 ) )
     get :index
-    assert_equal 2,  assigns( :reservations ).size, "Number of upcoming sessions for Plainuser1 was incorrect."
+    assert_equal 2,  assigns( :confirmed_reservations ).size, "Number of upcoming sessions for Plainuser1 was incorrect."
     assert_response :success
   end
   

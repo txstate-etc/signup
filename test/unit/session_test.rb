@@ -47,5 +47,14 @@ class SessionTest < ActiveSupport::TestCase
     assert_equal reminder_email.subject, "Reminder: " + topics( :tracs ).name
     assert_equal reminder_email.to[0], users( :plainuser3 ).email
   end
+  
+  test "Should compute seats remaining correctly" do
+    assert_equal 0, sessions( :gato_overbooked ).seats_remaining
+    assert_equal 1, sessions( :tracs_tiny ).seats_remaining
+    assert_equal 0, sessions( :tracs_tiny_full ).seats_remaining
+    assert_equal nil, sessions( :gato_huge ).seats_remaining
+    assert_equal 19, sessions( :gato ).seats_remaining
+    assert_equal 20, sessions( :gato_2 ).seats_remaining
+  end
 
 end

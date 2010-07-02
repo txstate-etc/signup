@@ -3,16 +3,12 @@ class Reservation < ActiveRecord::Base
   belongs_to :user
   validates_presence_of :user_id, :session_id
   validates_uniqueness_of :user_id, :scope => [ :session_id ], :message => "This user has already registered for this session."
-  validate_on_create :session_not_cancelled, :space_available, :not_in_past
+  validate_on_create :session_not_cancelled, :not_in_past
   
   default_scope :order => "reservations.created_at"
   
   def session_not_cancelled
     errors.add_to_base("You cannot register for this session, as it has been cancelled.") if session.cancelled
-  end
-  
-  def space_available
-    errors.add_to_base("This class is full.") unless session.space_is_available?
   end
   
   def not_in_past

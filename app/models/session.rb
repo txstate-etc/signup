@@ -18,6 +18,10 @@ class Session < ActiveRecord::Base
     self.seats ? reservations[ 0, self.seats ] : reservations
   end
   
+  def seats_remaining
+    seats - confirmed_reservations.size if seats
+  end
+  
   def waiting_list
     self.seats && confirmed_reservations.size == self.seats ? reservations[ self.seats, reservations.size - self.seats ] : []
   end

@@ -4,10 +4,6 @@ class SessionsController < ApplicationController
   def show
     @session = Session.find( params[:id] )
     @page_title = @session.time.to_s + ": " + @session.topic.name
-    @numberRegistered = @session.reservations.length
-    if ( @session.seats )
-      @seatsRemaining = @session.seats - @numberRegistered
-    end
     @reservation = Reservation.find_by_user_id_and_session_id( current_user.id, @session.id )
   end
   

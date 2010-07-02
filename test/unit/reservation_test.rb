@@ -13,11 +13,14 @@ class ReservationTest < ActiveSupport::TestCase
     assert !reservation.save
   end
   
-  test "Shouldn't be able to make a reservation if the class is already filled up" do
+  test "Should go on waiting list if the class is already filled up" do
     reservation = Reservation.new( :session => sessions( :tracs_tiny ),  :user => users( :plainuser1 ) )
     assert reservation.save
     reservation = Reservation.new( :session => sessions( :tracs_tiny ),  :user => users( :plainuser2 ) )
-    assert !reservation.save    
+    assert reservation.save  
+    
+    assert_equal 1, sessions( :tracs_tiny ).confirmed_reservations.size
+    assert_equal 1, sessions( :tracs_tiny ).waiting_list.size
   end
   
   test "The same person shouldn't be able to register for a class more than once" do
