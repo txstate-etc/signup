@@ -19,4 +19,19 @@ class Reservation < ActiveRecord::Base
     errors.add_to_base("You cannot register for this class, as it has already occurred.") if session.time < Time.now
   end
   
+  def after_destroy
+    if !session.space_is_available?
+      new_confirmed_reservation = session.confirmed_reservations.last
+      ReservationMailer.deliver_promotion_notice( new_confirmed_reservation, nil )
+    end
+  end
+  
+  def confirmed?
+    session.reservations.index( self ) < session.seats
+  end
+  
+  def on_waiting_list?
+    !confirmed?
+  end
+  
 end
