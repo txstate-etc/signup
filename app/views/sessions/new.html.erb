@@ -11,6 +11,9 @@
 	<%= f.label :instructor_id, "Instructor:" %>
 	<%= f.collection_select :instructor_id, User.find_all_by_instructor( true ), :id, :name, { :include_blank => true } %>
 	
+	<%= f.label :seats, "Seats Available (blank for no limit):" %>
+	<%= f.text_field :seats, :size => 4 %>
+	
 	<%= f.label :location, "Location:" %>
 	<%= f.text_field :location %>
 	
