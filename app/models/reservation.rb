@@ -23,7 +23,7 @@ class Reservation < ActiveRecord::Base
   end
   
   def confirmed?
-    session.reservations.index( self ) < session.seats
+    session.seats ? session.reservations.index( self ) < session.seats : true
   end
   
   def on_waiting_list?

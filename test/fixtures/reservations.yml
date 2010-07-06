@@ -27,3 +27,6 @@ overbooked_plainuser3:
     session: gato_overbooked
     created_at: 2032-06-02 9:00:00
 
+gato_huge_plainuser1:
+    user: plainuser1
+    session: gato_huge

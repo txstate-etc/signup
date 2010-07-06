@@ -31,7 +31,7 @@ class SessionTest < ActiveSupport::TestCase
     start_date = DateTime.parse( '1 January 2035' )
     end_date = DateTime.parse( '31 December 2035' )
     
-    assert_difference 'ActionMailer::Base.deliveries.size', +5 do
+    assert_difference 'ActionMailer::Base.deliveries.size', +6 do
       Session.send_reminders( start_date, end_date )
     end
   end

@@ -39,5 +39,9 @@ class ReservationTest < ActiveSupport::TestCase
     assert reservations( :overbooked_plainuser1 ).confirmed?
     assert reservations( :overbooked_plainuser2 ).confirmed?
     assert reservations( :overbooked_plainuser3 ).on_waiting_list?
+    
+    # make sure everyone's confirmed in sessions without seat limits
+    assert reservations( :gato_huge_plainuser1 ).confirmed?
+    assert !reservations( :gato_huge_plainuser1 ).on_waiting_list?
   end
 end
