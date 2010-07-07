@@ -17,29 +17,13 @@
 	<% end %>
 	<dt>Registration:</dt>
 	<dd>
-		<% if @session.confirmed_reservations.size == 0 %>
-			Nobody has registered for this session yet.
-		<% elsif @session.confirmed_reservations.size == 1 %>
-			There is currently 1 person registered for this session.
-		<% else %>
-			There are currently <%=h @session.confirmed_reservations.size %> people registered for this session.
-		<% end %>
-		
-		<% if @session.seats_remaining != nil %>
-			<% if @session.seats_remaining == 0 %>
-				Registration for this class is full.
-				<% if @session.waiting_list.size == 0 %>
-					There is currently nobody on the waiting list.				
-				<% elsif @session.waiting_list.size == 1 %>
-					There is one person on the waiting list.
-				<% else %>
-					There are <%=h @session.waiting_list.size %> people on the waiting list.
-				<% end %>
-			<% elsif @session.seats_remaining == 1 %>
-				There is one seat still available for this session.
-			<% else %>
-				There are <%=h @session.seats_remaining %> seats still available for this session.
-			<% end %>
+		<%=h @session.confirmed_reservations.size %>
+		<% if @session.seats %>
+			/ <%=h @session.seats %>
+		<% end %> 
+		registered
+		<% if @session.waiting_list.size > 0 %>
+			(<%=h @session.waiting_list.size %> waiting)
 		<% end %>
 	</dd>
 </dl>
