@@ -9,6 +9,14 @@ class Session < ActiveRecord::Base
   
   default_scope :order => 'time'
   
+  def cancel!
+    self.cancelled = true
+    self.save
+    confirmed_reservations.each do |reservation|
+      ReservationMailer.deliver_cancellation_notice( reservation )
+    end
+  end
+  
   def space_is_available?
     return true if self.seats == nil
     return true if self.seats > Reservation.count( :conditions => ["session_id = ?", self.id ] )
@@ -48,7 +56,7 @@ class Session < ActiveRecord::Base
     session_list = Session.find( :all, :conditions => ['time >= ? AND time <= ? AND cancelled = 0', start_time, end_time ] )
     session_list.each do |session|
       session.confirmed_reservations.each do |reservation|
-        ReservationMailer.deliver_remind( reservation, nil )
+        ReservationMailer.deliver_remind( reservation )
       end
     end
   end

@@ -1,0 +1,22 @@
+Hi there <%= @reservation.user.name %>,
+
+Sad news: the session on "<%= @reservation.session.topic.name %>" for which you
+had signed up has been cancelled.
+
+If you'd like to sign up to take the class at a different time, you can
+see a list of times it is offered here:
+
+<%= url_for :action => "show", :controller => "topics", :id => @reservation.session.topic.id, :only_path => false %>
+
+----
+
+The Cancelled Reservation
+
+What: <%= @reservation.session.topic.name %>
+When: <%= @reservation.session.time %>
+Who:  <%= @reservation.user.name %>
+
+----
+
+Our sincere apologies for the inconvenience.
+

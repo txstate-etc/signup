@@ -40,18 +40,17 @@
 </head>
 
 <body>
-	<p>Good news, <%= @reservation.user.name %>!</p>
+	<p>Hi there <%= @reservation.user.name %>,</p>
 
-<p>	You were on the waiting list for "<%= @reservation.session.topic.name %>",
-	and space has become available! You have automatically been enrolled in the
-	class, and need take no additional action to attend.</p>
+<p>Sad news: the session on "<%= @reservation.session.topic.name %>" for which you
+	had signed up has been cancelled.</p>
 	
-<p>	If you won't be able to make it to this session after all, you can cancel
-	your reservation <%= link_to "here", :controller => "reservations", :only_path => false %>.</p>
+<p>If you'd like to sign up to take the class at a different time, you can
+	see a list of times it is offered <%= link_to "here", :action => "show", :controller => "topics", :id => @reservation.session.topic.id, :only_path => false %>.</p>
 
 <div class="reservationContainer">
 	<div class="reservationCard">
-		<h2>Your Reservation</h2>
+		<h2>The Cancelled Reservation:</h2>
 		<dl>
 			<dt>What:</dt>
 			<dd><%=h @reservation.session.topic.name %></dd>
@@ -63,7 +62,7 @@
 	</div>
 </div>
 
-<p>You can use the attached ICS file to add the session to your calendar software.</p>
+<p>Our sincere apologies for the inconvenience.</p>
 </body>
 
 </html>

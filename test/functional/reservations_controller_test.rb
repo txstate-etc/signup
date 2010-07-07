@@ -21,9 +21,10 @@ class ReservationsControllerTest < ActionController::TestCase
     get :new, :session_id => reservations( :plainuser1 ).session_id
     assert_response :success
     
-    get :create, :session_id => reservations( :plainuser1 ).session_id, :session => { :session_id => reservations( :plainuser1 ).session_id }
+    assert_difference 'Reservation.count', + 1, "Couldn't create reservation" do
+      get :create, :session_id => reservations( :plainuser1 ).session_id, :session => { :session_id => reservations( :plainuser1 ).session_id }
+    end
     assert_redirected_to reservations( :plainuser1 ).session
-    assert_equal 8, Reservation.count, "Couldn't create reservation"
   end
   
   test "Verify that confirmation emails are sent when a reservation is made" do
@@ -39,13 +40,15 @@ class ReservationsControllerTest < ActionController::TestCase
   
   test "Users should only be able to delete their own reservations" do
     login_as( users( :plainuser1 ) )
-    delete :destroy, :id => reservations( :plainuser1 )
+    assert_difference 'Reservation.count', -1 do
+      delete :destroy, :id => reservations( :plainuser1 )
+    end
     assert_response :redirect
-    assert_equal 6, Reservation.count
     
-    delete :destroy, :id => reservations( :plainuser3 )
+    assert_difference 'Reservation.count', 0, "One user was able to delete another's reservation." do
+      delete :destroy, :id => reservations( :plainuser3 )
+    end
     assert_response :redirect
-    assert_equal 6, Reservation.count, "One user was able to delete another's reservation."
   end
   
   test "Deleting a reservation with no waiting list shouldn't trigger any emails" do
@@ -75,6 +78,13 @@ class ReservationsControllerTest < ActionController::TestCase
     get :index
     assert_equal 3,  assigns( :confirmed_reservations ).size, "Number of upcoming sessions for Plainuser1 was incorrect."
     assert_response :success
+  end
+  
+  test "Cancelled sessions shouldn't show up on a user's reservation list" do
+    login_as( users( :plainuser3 ) )
+    get :index
+    assert_equal 1,  assigns( :confirmed_reservations ).size, "Number of upcoming sessions for Plainuser3 was incorrect."
+    assert_response :success    
   end
   
   test "Try downloading a reservation as ICS" do

@@ -36,18 +36,17 @@ class SessionsController < ApplicationController
   def destroy
     session = Session.find( params[ :id ] )
     if current_user.admin? or session.instructor == current_user
-      session.cancelled = true
-      session.save
-      # TODO: Add logic to notify attendees that session was cancelled.
-      flash[ :notice ] = "Session cancelled."
+      session.cancel!
+    else
     end
+    flash[ :notice ] = "The session has been cancelled and the attendees notified."
     redirect_to session.topic
   end
   
   def download
     calendar = RiCal.Calendar
     calendar.add_x_property 'X-WR-CALNAME', 'All Training Sessions'
-    Session.find( :all ).each do |session|
+    Session.find_all_by_cancelled( false ).each do |session|
       calendar.add_subcomponent( session.to_event )
     end
     send_data(calendar.export, :type => 'text/calendar')

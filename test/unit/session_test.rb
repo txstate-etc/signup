@@ -23,7 +23,7 @@ class SessionTest < ActiveSupport::TestCase
     assert_equal 0, session.waiting_list.size, "Wrong number on waiting list for TRACS"
     
     session = Session.find( sessions( :gato_cancelled ) )
-    assert_equal 0, session.confirmed_reservations.size, "Wrong number of reservations for cancelled class"
+    assert_equal 1, session.confirmed_reservations.size, "Wrong number of reservations for cancelled class"
     assert_equal 0, session.waiting_list.size, "Wrong number on waiting list for cancelled class"
   end
   

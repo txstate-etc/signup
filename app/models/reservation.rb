@@ -18,7 +18,7 @@ class Reservation < ActiveRecord::Base
   def after_destroy
     if !session.space_is_available?
       new_confirmed_reservation = session.confirmed_reservations.last
-      ReservationMailer.deliver_promotion_notice( new_confirmed_reservation, nil )
+      ReservationMailer.deliver_promotion_notice( new_confirmed_reservation )
     end
   end
   

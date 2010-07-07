@@ -1,9 +1,9 @@
 Hi there <%= @reservation.user.name %>,
 
 Your reservation for <%= @reservation.session.topic.name %> has been confirmed. If you need
-to cancel your reservation for any reason, you can do so from the Training Reservation System:
+to cancel your reservation for any reason, you can do so here:
 
-<%= @url %>
+<%= url_for :controller => "reservations", :only_path => false %>
 
 ----
 

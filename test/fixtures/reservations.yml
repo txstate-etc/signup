@@ -30,3 +30,7 @@ overbooked_plainuser3:
 gato_huge_plainuser1:
     user: plainuser1
     session: gato_huge
+
+gato_cancelled_plainuser3:
+    user: plainuser3
+    session: gato_cancelled

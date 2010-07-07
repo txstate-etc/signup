@@ -24,5 +24,8 @@ config.action_view.cache_template_loading            = true
 # Disable delivery errors, bad email addresses will be ignored
 # config.action_mailer.raise_delivery_errors = false
 
+# TODO: You'll want to change this for your installation
+config.action_mailer.default_url_options = { :host => "localhost", :port => "3000" }
+
 # Enable threaded mode
 # config.threadsafe!
