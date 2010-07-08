@@ -10,5 +10,13 @@ class TopicTest < ActiveSupport::TestCase
     upcoming_gato = Topic.find( topics( :gato ) ).upcoming_sessions
     assert_equal( upcoming_gato.length, 4, "Gato should have 4 upcoming sessions")
   end
+  
+  test "Verify CSV" do
+    csv = topics( :tracs ).to_csv
+    assert_equal 3, csv.split(/\n/).size, "CSV for TRACS should have 3 lines"
+    
+    csv = topics( :gato ).to_csv
+    assert_equal 7, csv.split(/\n/).size, "CSV for overbooked Gato should have 7 lines"
+  end
 
 end

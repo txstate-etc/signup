@@ -8,7 +8,18 @@ class TopicsController < ApplicationController
   
   def show
     @topic = Topic.find( params[:id] )
-    @page_title = @topic.name
+
+    respond_to do |wants|
+      wants.html do
+        @page_title = @topic.name
+      end
+      
+      wants.csv do
+        send_data @topic.to_csv,
+          :type => 'text/csv; charset=iso-8859-1; header=present',
+          :disposition => "attachment; filename=users.csv"
+      end
+    end
   end
   
   def new
