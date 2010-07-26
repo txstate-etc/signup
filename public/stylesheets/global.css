@@ -14,7 +14,7 @@ dt {
 	font-weight: bold;
 }
 
-label {
+label.field-label {
 	margin-top: 1em;
 	display:block;
 	width: 100%;
@@ -195,4 +195,20 @@ div.download-calendar {
 
 div.download-csv {
 	background-image: url('../images/csv_icon.gif');
+}
+
+div.admin-options {
+	background-color: #dddddd;
+	padding-bottom: 1em;
+	clear: both;
+}
+
+div.admin-options h2 {
+	text-align: center;
+}
+
+span.radio-span {
+	border: 1px dashed black; 
+	background-color: #ffffff; 
+	margin: 0.18em
 }

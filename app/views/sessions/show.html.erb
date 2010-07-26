@@ -55,20 +55,38 @@
 <% end %>
 
 <% if current_user.admin? or @session.instructor == current_user %>
+<div class="admin-options">
+	<h2>Instructor/Admin Options</h2>
 	<% if @session.confirmed_reservations.size > 0 %>
 		<div class="notice">
-			<h2>Reservations:</h2>
-			<ul>
-			<% @session.confirmed_reservations.each do |reservation| %>
-				<li><%=h reservation.user.name %> &lt;<%=h reservation.user.email %>&gt;</li>
-			<% end%>
-			</ul>
+			<h3>Reservations:</h3>
+			<% form_for @session, :url => { :action => "update" } do |session_form| %>
+				<ul style="line-height: 1.5em">
+				<% @session.confirmed_reservations.each do |reservation| %>
+					<% session_form.fields_for :reservations, reservation do |reservation_fields|%>
+						<li><span class="radio-span">
+							<%= reservation_fields.radio_button :attended, Reservation::ATTENDANCE_UNKNOWN %>
+							<%= reservation_fields.label :attended_0, '?' %>
+							</span><span class="radio-span">
+							<%= reservation_fields.radio_button :attended, Reservation::ATTENDANCE_ATTENDED %>
+							<%= reservation_fields.label :attended_2, 'Attended' %>
+							</span><span class="radio-span">
+							<%= reservation_fields.radio_button :attended, Reservation::ATTENDANCE_MISSED %>
+							<%= reservation_fields.label :attended_1, 'Missed' %>
+							</span>
+							<%=h reservation.user.name %> &lt;<%=h reservation.user.email %>&gt;
+						</li>
+					<% end %>
+				<% end%>
+				</ul>
+				<%= submit_tag "Record Attendance" %>
+			<% end %>
 		</div>
 	<% end %>
 
 	<% if @session.waiting_list.size > 0 %>
 		<div class="notice">
-			<h2>Waiting List:</h2>
+			<h3>Waiting List:</h3>
 			<ul>
 			<% @session.waiting_list.each do |reservation| %>
 				<li><%=h reservation.user.name %> &lt;<%=h reservation.user.email %>&gt;</li>
@@ -80,4 +98,5 @@
 	<div class="button-link delete">
 		<%= link_to "cancel session", @session, :confirm => "Are you sure you want to cancel this class? All registered attendees will be notified that the session has been cancelled.", :method => :delete %>
 	</div>
+</div>
 <% end %>

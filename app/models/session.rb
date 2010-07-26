@@ -6,6 +6,7 @@ class Session < ActiveRecord::Base
   belongs_to :instructor, :class_name => "User"
   validates_presence_of :time, :instructor_id, :topic_id, :location
   validates_numericality_of :seats, :only_integer => true, :allow_nil => true
+  accepts_nested_attributes_for :reservations
   
   default_scope :order => 'time'
   

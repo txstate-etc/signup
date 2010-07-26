@@ -1,16 +1,16 @@
 <%= error_messages_for 'topic' %>
 
 <% form_for( @topic ) do |f| %>
-	<%= f.label :name, "Topic Name:" %>
+	<%= f.label :name, "Topic Name:", :class => 'field-label' %>
 	<%= f.text_field :name %>
 	
-	<%= f.label :description, "Description of Topic: "%>
+	<%= f.label :description, "Description of Topic:", :class => 'field-label' %>
 	<%= f.text_area :description %>
 	
-	<%= f.label :minutes, "Class time in Minutes:" %>
+	<%= f.label :minutes, "Class time in Minutes:", :class => 'field-label' %>
 	<%= f.text_field :minutes, :size => 3 %>
 	
-	<%= f.label :url, "URL with More Information on Class:" %>
+	<%= f.label :url, "URL with More Information on Class:", :class => 'field-label' %>
 	<%= f.text_field :url %>
 	
 	<br/><br/>

@@ -1,4 +1,9 @@
 class Reservation < ActiveRecord::Base
+  
+  ATTENDANCE_UNKNOWN = 0
+  ATTENDANCE_MISSED = 1
+  ATTENDANCE_ATTENDED = 2
+  
   belongs_to :session
   belongs_to :user
   validates_presence_of :user_id, :session_id
