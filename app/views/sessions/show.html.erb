@@ -94,6 +94,25 @@
 			</ul>
 		</div>
 	<% end %>
+	
+	<% form_for @session, :url => { :action => "update" } do |f| %>
+		<% field_set_tag 'Update Details:' do %>
+			<%= f.label :time, "Session Time:", :class => 'field-label' %>
+			<%= f.datetime_select :time %>
+
+			<%= f.label :instructor_id, "Instructor:", :class => 'field-label' %>
+			<%= f.collection_select :instructor_id, User.find_all_by_instructor( true ), :id, :name, { :include_blank => true } %>
+
+			<%= f.label :seats, "Seats Available (blank for no limit):", :class => 'field-label' %>
+			<%= f.text_field :seats, :size => 4 %>
+
+			<%= f.label :location, "Location:", :class => 'field-label' %>
+			<%= f.text_field :location %>
+
+			<br/><%= submit_tag "Make Changes" %>
+		<% end %>
+		
+	<% end %>
 
 	<div class="button-link delete">
 		<%= link_to "cancel session", @session, :confirm => "Are you sure you want to cancel this class? All registered attendees will be notified that the session has been cancelled.", :method => :delete %>

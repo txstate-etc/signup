@@ -65,5 +65,24 @@ class ReservationMailer < ActionMailer::Base
       :body => render_message( "cancellation-notice-as-html", :reservation => reservation )
     
   end
+  
+  def update_notice( reservation )
+    subject    'Class Details Updated: ' + reservation.session.topic.name
+    recipients reservation.user.email
+    from       'nobody@txstate.edu'
+    content_type 'multipart/alternative'
+    
+    url = url_for( :controller => "reservations" )
+    
+    part :content_type => "text/plain",
+      :body => render_message( "update-notice-as-text", :reservation => reservation ),
+      :transfer_encoding => "base64"
+    
+    part :content_type => "text/html",
+      :body => render_message( "update-notice-as-html", :reservation => reservation )
+    
+  end
+  
+  
 
 end

@@ -27,6 +27,24 @@ class SessionTest < ActiveSupport::TestCase
     assert_equal 0, session.waiting_list.size, "Wrong number on waiting list for cancelled class"
   end
   
+  test "Users should be updated when location or time of a class changes" do
+    assert_difference 'ActionMailer::Base.deliveries.size', +2 do
+      sessions( :gato_overbooked ).location = "The Third Circle of Hell"
+      sessions( :gato_overbooked ).save
+    end
+
+    assert_difference 'ActionMailer::Base.deliveries.size', +2 do
+      sessions( :gato_overbooked ).time = Time.now()
+      sessions( :gato_overbooked ).save
+    end
+    
+    assert_difference 'ActionMailer::Base.deliveries.size', +0 do
+      sessions( :gato_overbooked ).instructor = users( :instructor1 )
+      sessions( :gato_overbooked ).save
+    end
+    
+  end
+  
   test "Try reminder emails for year 2035" do
     start_date = DateTime.parse( '1 January 2035' )
     end_date = DateTime.parse( '31 December 2035' )

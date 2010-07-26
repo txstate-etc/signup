@@ -10,6 +10,15 @@ class Session < ActiveRecord::Base
   
   default_scope :order => 'time'
   
+  def after_update
+    send_update = time_changed? || location_changed?
+    if send_update
+      confirmed_reservations.each do |reservation|
+        ReservationMailer.deliver_update_notice( reservation )
+      end
+    end
+  end
+  
   def cancel!
     self.cancelled = true
     self.save
