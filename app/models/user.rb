@@ -34,7 +34,7 @@ class User < ActiveRecord::Base
     begin
       # Build the list
       records = records_updated = new_records = 0
-      ldap.search(:base => base_dn, :filter => filter ) do |entry|
+      ldap.search(:base => base_dn, :filter => filter, :return_result => false ) do |entry|
         name = entry.givenName.to_s.strip + " " + entry.sn.to_s.strip
         login = entry.name.to_s.strip
         email = login + "@txstate.edu"
