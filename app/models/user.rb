@@ -49,13 +49,14 @@ class User < ActiveRecord::Base
           new_records = new_records + 1
         else
           # update timestamp so that we can delete old records later
-          user.touch
+          user.active = true
+          user.save
         end
         records = records + 1
       end
       
-      # delete records that haven't been updated for 7 days
-      records_deleted = User.destroy_all( ["updated_at < ?", Date.today - 7 ] ).size
+      # mark inactive records that haven't been updated for 7 days
+      records_deleted = User.update_all( 'active = true', ["updated_at < ?", Date.today - 7 ] ).size
       
       logger.info( "LDAP Import Complete: " + Time.now.to_s )
       logger.info( "Total Records Processed: " + records.to_s )
