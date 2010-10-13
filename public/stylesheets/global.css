@@ -16,6 +16,7 @@ dt {
 
 label.field-label {
 	margin-top: 1em;
+	margin-bottom: 0.5em;
 	display:block;
 	width: 100%;
 	font-weight: bold;
@@ -210,5 +211,6 @@ div.admin-options h2 {
 span.radio-span {
 	border: 1px dashed black; 
 	background-color: #ffffff; 
-	margin: 0.18em
+	margin: 0.18em;
+	padding: 0.18em;
 }

@@ -1,8 +1,13 @@
 require 'fastercsv'
 
+SURVEY_NONE = 0
+SURVEY_INTERNAL = 1
+SURVEY_EXTERNAL = 2
+
 class Topic < ActiveRecord::Base
   has_many :sessions
   validates_presence_of :name, :description, :minutes
+  validates_presence_of :survey_url, :if => Proc.new{ |topic| topic.survey_type == SURVEY_EXTERNAL }, :message => "must be specified to use an external survey."
   
   def upcoming_sessions
     sessions.find( :all, :conditions => [ "time > ? AND cancelled = false", Time.now ] )
