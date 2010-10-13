@@ -9,6 +9,7 @@ class Reservation < ActiveRecord::Base
   validates_presence_of :user_id, :session_id
   validates_uniqueness_of :user_id, :scope => [ :session_id ], :message => "This user has already registered for this session."
   validate_on_create :session_not_cancelled, :not_in_past
+  has_one :survey_response
   
   default_scope :order => "reservations.created_at"
   

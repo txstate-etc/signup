@@ -70,4 +70,8 @@ class Session < ActiveRecord::Base
       end
     end
   end
+  
+  def survey_responses
+    Reservation.all( :joins => :survey_response, :include => :survey_response, :conditions => [ 'session_id = ?', self ] ).collect{|reservation| reservation.survey_response}
+  end
 end

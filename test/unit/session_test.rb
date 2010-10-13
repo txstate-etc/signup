@@ -74,5 +74,10 @@ class SessionTest < ActiveSupport::TestCase
     assert_equal 19, sessions( :gato ).seats_remaining
     assert_equal 20, sessions( :gato_2 ).seats_remaining
   end
+  
+  test "Should find survey responses correctly" do
+    assert_equal 2, sessions( :gato_past ).survey_responses.size
+    assert_equal 0, sessions( :gato ).survey_responses.size
+  end
 
 end
