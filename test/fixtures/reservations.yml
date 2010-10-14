@@ -42,3 +42,7 @@ gato_past_plainuser1:
 gato_past_plainuser2:
     user: plainuser2
     session: gato_past
+    
+gato_past_plainuser3:
+    user: plainuser3
+    session: gato_past

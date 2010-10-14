@@ -16,7 +16,7 @@ class TopicTest < ActiveSupport::TestCase
     assert_equal 3, csv.split(/\n/).size, "CSV for TRACS should have 3 lines"
     
     csv = topics( :gato ).to_csv
-    assert_equal 9, csv.split(/\n/).size, "CSV for Gato should have 9 lines"
+    assert_equal 10, csv.split(/\n/).size, "CSV for Gato should have 10 lines"
   end
   
   test "Should find survey responses correctly" do

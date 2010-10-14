@@ -1,0 +1,67 @@
+<%= error_messages_for 'survey_response' %>
+
+<% form_for( @survey_response ) do |f| %>
+	<%= f.hidden_field :reservation_id %>
+	<div class="survey-options">
+		<label class="field-label">Class Rating (1 is worst, 5 is best):</label>
+		<span class="radio-span">
+			<%= f.radio_button :class_rating, 1 %>
+			<%= f.label :class_rating_1, '1' %>
+		</span>
+
+		<span class="radio-span">
+			<%= f.radio_button :class_rating, 2 %>
+			<%= f.label :class_rating_2, '2' %>
+		</span>
+	
+		<span class="radio-span">
+			<%= f.radio_button :class_rating, 3 %>
+			<%= f.label :class_rating_3, '3' %>
+		</span>
+		
+		<span class="radio-span">
+			<%= f.radio_button :class_rating, 4 %>
+			<%= f.label :class_rating_4, '4' %>
+		</span>
+		
+		<span class="radio-span">
+			<%= f.radio_button :class_rating, 5 %>
+			<%= f.label :class_rating_5, '5' %>
+		</span>
+	</div>
+	
+	<div class="survey-options">
+		<label class="field-label">Instructor Rating (1 is worst, 5 is best):</label>
+		<span class="radio-span">
+			<%= f.radio_button :instructor_rating, 1 %>
+			<%= f.label :instructor_rating_1, '1' %>
+		</span>
+
+		<span class="radio-span">
+			<%= f.radio_button :instructor_rating, 2 %>
+			<%= f.label :instructor_rating_2, '2' %>
+		</span>
+	
+		<span class="radio-span">
+			<%= f.radio_button :instructor_rating, 3 %>
+			<%= f.label :instructor_rating_3, '3' %>
+		</span>
+		
+		<span class="radio-span">
+			<%= f.radio_button :instructor_rating, 4 %>
+			<%= f.label :instructor_rating_4, '4' %>
+		</span>
+		
+		<span class="radio-span">
+			<%= f.radio_button :instructor_rating, 5 %>
+			<%= f.label :instructor_rating_5, '5' %>
+		</span>
+	</div>
+	
+	<%= f.label :comments, "Additional Comments:", :class => 'field-label' %>
+	<%= f.text_field :comments %>
+	
+	<br/><br/>
+	
+	<%= submit_tag "Submit Survey Response", :class => "confirm submit-button" %>
+<% end %>

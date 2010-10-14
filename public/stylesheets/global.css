@@ -38,7 +38,7 @@ label.field-label {
 	margin-bottom: 1em;
 }
 
-div.fieldWithErrors label {
+.fieldWithErrors label {
 	color: #bb0000;
 }
 
