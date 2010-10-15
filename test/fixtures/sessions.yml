@@ -8,6 +8,30 @@ gato_past:
   cancelled: false
   seats: 20
 
+tracs_past:
+    time: 2010-06-05 12:00:00
+    instructor: instructor1
+    topic: tracs
+    location: Alkek 155
+    cancelled: false
+    seats: 20
+
+no_survey_topic_past:
+  time: 2010-06-06 12:00:00
+  instructor: instructor1
+  topic: no_survey_topic
+  location: Alkek 155
+  cancelled: false
+  seats: 20
+
+gato_past_surveys_sent:
+  time: 2010-06-01 12:00:00
+  instructor: instructor1
+  topic: gato
+  location: Alkek 155
+  cancelled: false
+  seats: 20
+  survey_sent: true
 
 gato:
   time: 2035-06-02 12:00:00

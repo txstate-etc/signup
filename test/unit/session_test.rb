@@ -66,6 +66,18 @@ class SessionTest < ActiveSupport::TestCase
     assert_equal reminder_email.to[0], users( :plainuser3 ).email
   end
   
+  test "Sessions with automatic or external surveys should get emails" do
+    assert_difference 'ActionMailer::Base.deliveries.size', +4 do
+      assert_difference 'Session.all(:conditions => ["survey_sent = ?", false]).size', -2 do
+        Session.send_surveys
+      end
+    end
+    
+    ActionMailer::Base.deliveries.last(3).each do |survey_email|
+      assert_match 'localhost', survey_email.body, "URLs not being constructed properly"
+    end
+  end
+  
   test "Should compute seats remaining correctly" do
     assert_equal 0, sessions( :gato_overbooked ).seats_remaining
     assert_equal 1, sessions( :tracs_tiny ).seats_remaining

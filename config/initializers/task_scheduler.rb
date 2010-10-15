@@ -21,6 +21,12 @@ scheduler.cron '1 0 * * *' do
   Session.send_reminders( start_date, end_date )
 end
 
+# send out survey emails
+# every morning at 12:10am.
+scheduler.cron '10 0 * * *' do
+  Session.send_surveys
+end
+
 
 # update Users table nightly at 11:00pm
 

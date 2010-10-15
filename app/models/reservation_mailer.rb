@@ -83,6 +83,19 @@ class ReservationMailer < ActionMailer::Base
     
   end
   
-  
+  def survey_mail( reservation )
+    subject    'Feedback Requested: ' + reservation.session.topic.name
+    recipients reservation.user.email
+    from       'nobody@txstate.edu'
+    content_type 'multipart/alternative'
+    
+    part :content_type => "text/plain",
+      :body => render_message( "survey-mail-as-text", :reservation => reservation ),
+      :transfer_encoding => "base64"
+    
+    part :content_type => "text/html",
+      :body => render_message( "survey-mail-as-html", :reservation => reservation )
+    
+  end  
 
 end

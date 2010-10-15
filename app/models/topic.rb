@@ -1,10 +1,10 @@
 require 'fastercsv'
 
-SURVEY_NONE = 0
-SURVEY_INTERNAL = 1
-SURVEY_EXTERNAL = 2
-
 class Topic < ActiveRecord::Base
+  SURVEY_NONE = 0
+  SURVEY_INTERNAL = 1
+  SURVEY_EXTERNAL = 2
+
   has_many :sessions
   validates_presence_of :name, :description, :minutes
   validates_presence_of :survey_url, :if => Proc.new{ |topic| topic.survey_type == SURVEY_EXTERNAL }, :message => "must be specified to use an external survey."

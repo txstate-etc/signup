@@ -1,0 +1,22 @@
+Hi there <%= @reservation.user.name %>,
+
+Our records show that you were registered for the recent class 
+"<%= @reservation.session.topic.name %>".
+	
+Now that the class has concluded, we'd love to get your feedback!
+
+<% if @reservation.session.topic.survey_type == 1 %>
+We've prepared a very quick, 3 question survey that won't take 
+more than 2 minutes of your time -- we promise! Please use this
+URL to take the survey, and accept our thanks.
+
+<%= url_for :controller => "survey_responses", :action => "new", :only_path => false %>?reservation_id=<%= @reservation.id %>
+<% else %>	
+The instructor for this course has set up a survey to collect 
+feedback on this course. Please use this URL to complete the 
+survey. Thank you!
+
+<%=h @reservation.session.topic.survey_url%>
+<% end %>
+
+Thanks in advance for your feedback!

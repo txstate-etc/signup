@@ -13,7 +13,7 @@ class TopicTest < ActiveSupport::TestCase
   
   test "Verify CSV" do
     csv = topics( :tracs ).to_csv
-    assert_equal 3, csv.split(/\n/).size, "CSV for TRACS should have 3 lines"
+    assert_equal 4, csv.split(/\n/).size, "CSV for TRACS should have 3 lines"
     
     csv = topics( :gato ).to_csv
     assert_equal 10, csv.split(/\n/).size, "CSV for Gato should have 10 lines"

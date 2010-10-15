@@ -5,9 +5,18 @@ gato:
   description: All about our Content Management System.
   url: http://gato.its.txstate.edu
   minutes: 60
+  survey_type: 1
 
 tracs:
   name: Teaching with TRACS
   description: An introduction to our LMS for faculty.
   url: http://tracs.txstate.edu
   minutes: 120
+  survey_type: 2
+  survey_url: http://localhost/null
+  
+no_survey_topic:
+  name: Topic with No Survey
+  description: Topic with No Survey
+  minutes: 30
+  survey_type: 0

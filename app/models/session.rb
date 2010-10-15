@@ -71,6 +71,17 @@ class Session < ActiveRecord::Base
     end
   end
   
+  def self.send_surveys
+    session_list = Session.all( :joins => :topic, :conditions => ['time < ? AND survey_sent = ? AND survey_type != ? AND cancelled = ?', DateTime.now, false, Topic::SURVEY_NONE, false ], :readonly => false)
+    session_list.each do |session|
+      session.confirmed_reservations.each do |reservation|
+        ReservationMailer.deliver_survey_mail( reservation )
+      end
+      session.survey_sent = true
+      session.save
+    end
+  end
+  
   def survey_responses
     Reservation.all( :joins => :survey_response, :include => :survey_response, :conditions => [ 'session_id = ?', self ] ).collect{|reservation| reservation.survey_response}
   end

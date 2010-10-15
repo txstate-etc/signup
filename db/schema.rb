@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101012191854) do
+ActiveRecord::Schema.define(:version => 20101014192829) do
 
   create_table "messages", :force => true do |t|
     t.text     "body"
@@ -38,6 +38,7 @@ ActiveRecord::Schema.define(:version => 20101012191854) do
     t.integer  "seats"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "survey_sent",   :default => false
   end
 
   create_table "survey_responses", :force => true do |t|
