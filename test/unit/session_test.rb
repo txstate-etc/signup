@@ -91,5 +91,10 @@ class SessionTest < ActiveSupport::TestCase
     assert_equal 2, sessions( :gato_past ).survey_responses.size
     assert_equal 0, sessions( :gato ).survey_responses.size
   end
-
+  
+  test "Should compute average ratings correctly" do
+    assert_equal 3.0, topics( :gato ).average_rating
+    assert_equal 3.0, topics( :gato ).average_instructor_rating
+  end
+  
 end

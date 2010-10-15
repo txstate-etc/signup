@@ -214,3 +214,21 @@ span.radio-span {
 	margin: 0.18em;
 	padding: 0.18em;
 }
+
+div#stats {
+	background-color: white;
+	margin: 1em;
+	padding-left: 1em;
+	padding-right: 1em;
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+	-webkit-border-radius: 1em;
+}
+
+.comment {
+	font-style: italic;
+}
+
+#display-comments {
+	margin-top: 1em;
+}

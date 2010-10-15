@@ -24,4 +24,8 @@ class TopicTest < ActiveSupport::TestCase
     assert_equal 0, topics( :tracs ).survey_responses.size
   end
 
+  test "Should compute average ratings correctly" do
+    assert_equal 3.0, topics( :gato ).average_rating
+    assert_equal 3.0, topics( :gato ).average_instructor_rating
+  end
 end

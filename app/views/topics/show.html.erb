@@ -25,6 +25,7 @@
 <div class="admin-options">
 	<h2>Admin Options</h2>
 	<div class="download-link download-csv"><%= link_to "Download CSV", :format => :csv %></div>
+	<%= render :partial => "survey_responses/survey_summary", :locals => { :model_object => @topic }%>
 	<div class="button-link confirm"><%= link_to "Create New Session", new_topic_session_path( @topic ) %></div>
 </div>
 <% end %>
