@@ -10,7 +10,7 @@
 
 <% if current_user.admin? %>
 <div class="admin-options">
-	<h2>Admin Options</h2>
+	<h2><%= image_tag('advancedsettings.png') %> Admin Options</h2>
 	<div class="button-link confirm"><%= link_to "Create New Topic", new_topic_path %></div>
 </div>
 <% end %>

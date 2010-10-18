@@ -12,6 +12,7 @@ class TopicsController < ApplicationController
     respond_to do |wants|
       wants.html do
         @page_title = @topic.name
+        @title_image = 'bell.png'
       end
       
       wants.csv do

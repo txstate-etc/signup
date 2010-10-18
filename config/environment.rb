@@ -48,8 +48,8 @@ CASClient::Frameworks::Rails::Filter.configure(
   :cas_base_url => "https://llavero.its.txstate.edu/cas"
 )
 
-ActiveSupport::CoreExtensions::Date::Conversions::DATE_FORMATS.merge!(:default => "%a %m/%d/%Y")
-ActiveSupport::CoreExtensions::Time::Conversions::DATE_FORMATS.merge!(:default => "%a %m/%d/%Y %I:%M%p")
+ActiveSupport::CoreExtensions::Date::Conversions::DATE_FORMATS.merge!(:default => "%A %m/%d/%Y")
+ActiveSupport::CoreExtensions::Time::Conversions::DATE_FORMATS.merge!(:default => "%l:%M%p %A, %B %d, %Y")
 
 # Change error display to use a SPAN instead of a DIV
 ActionView::Base.field_error_proc = Proc.new { |html_tag, instance| "<span class=\"fieldWithErrors\">#{html_tag}</span>" }

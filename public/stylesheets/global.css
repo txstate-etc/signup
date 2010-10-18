@@ -4,6 +4,7 @@ a, a:visited {
 
 body {
 	font-family: sans-serif;
+	margin: 0px;
 }
 
 dd {
@@ -129,9 +130,33 @@ ul#topic-list {
 ul#topic-list li a {
 	display: block;
 	padding: .5em;
+	padding-left:45px;
 	background-color: #cccccc;
 	border: 1px solid white;
 	font-size: 150%;
+	background-image: url('../images/bell.png');
+	background-repeat:no-repeat;
+	background-position: 5px 50%;
+	text-decoration: none;
+}
+
+ul#session-list {
+	margin-left: 0px;
+	padding-left: 0px;
+	list-style-type: none;
+}
+
+ul#session-list li a {
+	display: block;
+	padding: .5em;
+	padding-left:45px;
+	background-color: #cccccc;
+	border: 1px solid white;
+	font-size: 150%;
+	background-image: url('../images/date.png');
+	background-repeat:no-repeat;
+	background-position: 5px 50%;
+	text-decoration: none;
 }
 
 ul.reservation-list {
@@ -175,17 +200,17 @@ div#container h1 {
 
 div.download-link {
 	margin-left: auto;
-	width: 30%;
+	width: 40%;
 	background-color: #cccccc;
 	background-repeat: no-repeat;
-	background-position: 4% 50%;
+	background-position: 10px 50%;
 	margin-bottom: 1em;
 }
 
 
 div.download-link a {
 	display: block;
-	padding-left: 20%;
+	padding-left: 35px;
 	padding-top: .5em;
 	padding-bottom: .5em;
 }
@@ -202,6 +227,8 @@ div.admin-options {
 	background-color: #dddddd;
 	padding-bottom: 1em;
 	clear: both;
+	margin-left:0px;
+	margin-right:0px;
 }
 
 div.admin-options h2 {
@@ -215,7 +242,7 @@ span.radio-span {
 	padding: 0.18em;
 }
 
-div#stats {
+.admin-section {
 	background-color: white;
 	margin: 1em;
 	padding-left: 1em;
@@ -231,4 +258,14 @@ div#stats {
 
 #display-comments {
 	margin-top: 1em;
+}
+
+.big-calendar-image {
+	float:left;
+	margin-right:1em;
+}
+
+.title-image {
+	vertical-align: top;
+	margin-right: 10px;
 }

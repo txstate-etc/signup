@@ -56,9 +56,9 @@
 
 <% if current_user.admin? or @session.instructor == current_user %>
 <div class="admin-options">
-	<h2>Instructor/Admin Options</h2>
+	<h2><%= image_tag('advancedsettings.png') %> Instructor/Admin Options</h2>
 	<% if @session.confirmed_reservations.size > 0 %>
-		<div class="notice">
+		<div class="admin-section">
 			<h3>Reservations:</h3>
 			<% form_for @session, :url => { :action => "update" } do |session_form| %>
 				<ul style="line-height: 1.5em">
@@ -85,7 +85,7 @@
 	<% end %>
 
 	<% if @session.waiting_list.size > 0 %>
-		<div class="notice">
+		<div class="admin-section">
 			<h3>Waiting List:</h3>
 			<ul>
 			<% @session.waiting_list.each do |reservation| %>
@@ -95,8 +95,9 @@
 		</div>
 	<% end %>
 	
-	<% form_for @session, :url => { :action => "update" } do |f| %>
-		<% field_set_tag 'Update Details:' do %>
+	<div class="admin-section">
+		<h3>Update Details:</h3>
+		<% form_for @session, :url => { :action => "update" } do |f| %>
 			<%= f.label :time, "Session Time:", :class => 'field-label' %>
 			<%= f.datetime_select :time %>
 
@@ -111,8 +112,7 @@
 
 			<br/><%= submit_tag "Make Changes" %>
 		<% end %>
-		
-	<% end %>
+	</div>
 	
 	<%= render :partial => "survey_responses/survey_summary", :locals => { :model_object => @session }%>
 
