@@ -3,9 +3,9 @@ require 'test_helper'
 class SessionsControllerTest < ActionController::TestCase
   fixtures :sessions, :users
 
-  test "Login Required for All Actions" do
+  test "Login Required for actions that modify records" do
     get :show, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
-    assert_response :redirect
+    assert_response :success
     
     get :new, :topic_id => sessions( :tracs ).topic_id
     assert_response :redirect
@@ -64,6 +64,16 @@ class SessionsControllerTest < ActionController::TestCase
     delete :destroy, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
     assert_response :redirect    
     assert !sessions( :tracs ).cancelled
+  end
+  
+  test "Session page should show whether a user is registered" do
+    login_as( users( :plainuser1 ) )
+    get :show, :topic_id => sessions( :gato ).topic_id, :id => sessions( :gato ).id
+    assert_match /You are registered for this session/, @response.body
+
+    login_as( users( :plainuser2 ) )
+    get :show, :topic_id => sessions( :gato ).topic_id, :id => sessions( :gato ).id
+    assert_no_match /You are registered for this session/, @response.body
   end
   
   test "Should be able to download subscribable calendar without credentials" do

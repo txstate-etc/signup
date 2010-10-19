@@ -1,4 +1,6 @@
 class SurveyResponsesController < ApplicationController
+  before_filter :authenticate
+  
   def new
     reservation = Reservation.find( params[ :reservation_id ] )
     if current_user == reservation.user

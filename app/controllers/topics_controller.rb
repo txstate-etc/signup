@@ -1,6 +1,8 @@
 require 'ri_cal'
 
 class TopicsController < ApplicationController
+  before_filter :authenticate, :except => [ :download, :show, :index ]
+  
   def index
     @topics = Topic.find( :all, { :order => "name asc"} )
     @page_title = "Available Topics"
@@ -24,7 +26,7 @@ class TopicsController < ApplicationController
   end
   
   def new
-    if current_user.admin?
+    if current_user && current_user.admin?
       @topic = Topic.new
       @page_title = "Create New Topic"
     else
@@ -33,7 +35,7 @@ class TopicsController < ApplicationController
   end
   
   def create
-    if current_user.admin?
+    if current_user && current_user.admin?
       @topic = Topic.new( params[ :topic ] )
       if @topic.save
         flash[ :notice ] = "Topic \"" + @topic.name + "\" added."

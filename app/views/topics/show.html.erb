@@ -21,7 +21,7 @@
 
 <div class="download-link download-calendar"><%= link_to "Subscribe to Calendar", :protocol => "webcal", :host => request.host, :port => request.port, :action => 'download' %></div>
 
-<% if current_user.admin? %>
+<% if current_user && current_user.admin? %>
 <div class="admin-options">
 	<h2><%= image_tag('advancedsettings.png') %> Admin Options</h2>
 	<div class="download-link download-csv"><%= link_to "Download CSV", :format => :csv %></div>

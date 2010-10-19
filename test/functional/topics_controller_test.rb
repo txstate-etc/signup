@@ -3,12 +3,12 @@ require 'test_helper'
 class TopicsControllerTest < ActionController::TestCase
   fixtures :topics, :users
   
-  test "Login Required for All Actions" do
+  test "Login Required only for New and Create actions" do
     get :index
-    assert_response :redirect
+    assert_response :success
     
     get :show, :id => topics( :gato )
-    assert_response :redirect
+    assert_response :success
     
     get :new
     assert_response :redirect

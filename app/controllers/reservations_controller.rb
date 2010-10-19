@@ -1,4 +1,6 @@
 class ReservationsController < ApplicationController
+  before_filter :authenticate, :except => :download
+  
   def new
     @session = Session.find( params[ :session_id ] )
     @reservation = Reservation.new

@@ -7,9 +7,6 @@ class ApplicationController < ActionController::Base
 
   # Scrub sensitive parameters from your log
   # filter_parameter_logging :password
-
-  # authentication stuff
-  before_filter :authenticate, :except => :download
   
   # this is responible for putting the login ID of the current
   # user into session[ :user ]. It's set up to work with CAS, 

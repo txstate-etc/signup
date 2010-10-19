@@ -54,7 +54,7 @@
 	<% end %>
 <% end %>
 
-<% if current_user.admin? or @session.instructor == current_user %>
+<% if ( current_user && current_user.admin? ) or @session.instructor == current_user %>
 <div class="admin-options">
 	<h2><%= image_tag('advancedsettings.png') %> Instructor/Admin Options</h2>
 	<% if @session.confirmed_reservations.size > 0 %>

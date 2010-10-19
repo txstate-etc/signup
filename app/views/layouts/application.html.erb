@@ -8,7 +8,7 @@
 		<title><%= @page_title %></title>
 	</head>
 	<body>
-		<div class="navigation"><%=h current_user.name %> | <%= link_to "Your&nbsp;Reservations", reservations_path %> | <%= link_to "Available&nbsp;Topics", topics_path %></div>
+		<div class="navigation"><% if current_user %><%=h current_user.name %> |<% end %> <%= link_to "Your&nbsp;Reservations", reservations_path %> | <%= link_to "Available&nbsp;Topics", topics_path %></div>
 		<% unless flash[ :notice ].blank? %>
 			<div id="notification"><%=h flash[ :notice ] %></div>
 		<% end %>

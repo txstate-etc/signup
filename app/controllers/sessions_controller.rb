@@ -1,16 +1,18 @@
 require 'ri_cal'
 
 class SessionsController < ApplicationController
+  before_filter :authenticate, :except => [ :download, :show ]
+  
   def show
     @session = Session.find( params[:id] )
     @page_title = @session.time.to_s + ": " + @session.topic.name
     @title_image = 'date.png'
-    @reservation = Reservation.find_by_user_id_and_session_id( current_user.id, @session.id )
+    @reservation = Reservation.find_by_user_id_and_session_id( current_user.id, @session.id ) if current_user
   end
   
   def new
     topic = Topic.find( params[ :topic_id ] )
-    if current_user.admin?
+    if current_user && current_user.admin?
       @session = Session.new
       @session.topic = topic
       @page_name = "Create New Session"
@@ -20,7 +22,7 @@ class SessionsController < ApplicationController
   end
   
   def create
-    if current_user.admin?
+    if current_user && current_user.admin?
       @session = Session.new( params[ :session ] )
       if @session.save
         flash[ :notice ] = "Session added."
@@ -43,7 +45,7 @@ class SessionsController < ApplicationController
   
   def destroy
     session = Session.find( params[ :id ] )
-    if current_user.admin? or session.instructor == current_user
+    if (current_user && current_user.admin? ) or session.instructor == current_user
       session.cancel!
     else
     end
