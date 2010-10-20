@@ -10,6 +10,10 @@ class Session < ActiveRecord::Base
   
   default_scope :order => 'time'
   
+  def to_param
+    "#{id}-#{topic.name.parameterize}"
+  end
+  
   def after_update
     send_update = time_changed? || location_changed?
     if send_update
