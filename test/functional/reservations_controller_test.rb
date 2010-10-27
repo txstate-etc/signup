@@ -4,6 +4,7 @@ class ReservationsControllerTest < ActionController::TestCase
   fixtures :users
   fixtures :reservations
   fixtures :topics
+  fixtures :sessions
 
   test "Login Required for All Actions" do
     get :new, :session_id => reservations( :plainuser1 ).session_id
@@ -17,25 +18,34 @@ class ReservationsControllerTest < ActionController::TestCase
   end
   
   test "Try making reservations" do
-    login_as( users( :admin1 ) )
-    get :new, :session_id => reservations( :plainuser1 ).session_id
+    login_as( users( :plainuser3 ) )
+    get :new, :session_id => sessions( :gato )
     assert_response :success
     
     assert_difference 'Reservation.count', + 1, "Couldn't create reservation" do
-      get :create, :session_id => reservations( :plainuser1 ).session_id, :session => { :session_id => reservations( :plainuser1 ).session_id }
+      get :create, :session_id => sessions( :gato ), :session => { :session_id => sessions( :gato ) }
     end
-    assert_redirected_to reservations( :plainuser1 ).session
+    assert_redirected_to sessions( :gato )
+  end
+  
+  test "Admin should be able to make a reservation on someone else's behalf" do
+    login_as( users( :admin1 ) )
+    assert_difference 'Reservation.count', +1, "Admin couldn't create reservation" do
+      get :create, :session_id => sessions( :gato ), :session => { :session_id => sessions( :gato) }, :user_login => users( :plainuser3 ).login
+    end
+    assert_redirected_to sessions( :gato )
+    assert_equal assigns( :reservation ).user, users( :plainuser3 ), "Admin made reservation for plainuser3, but it wasn't recorded as plainuser3"
   end
   
   test "Verify that confirmation emails are sent when a reservation is made" do
-    login_as( users( :admin1 ) )
+    login_as( users( :plainuser3 ) )
     assert_difference 'ActionMailer::Base.deliveries.size', +1 do
-      get :create, :session_id => reservations( :plainuser1 ).session_id, :session => { :session_id => reservations( :plainuser1 ).session_id }
+      get :create, :session_id => sessions( :gato ), :session => { :session_id => sessions( :gato ) }
     end
     
     confirmation_email = ActionMailer::Base.deliveries.last
-    assert_equal confirmation_email.subject, "Reservation Confirmation For: Admin1"
-    assert_equal confirmation_email.to[0], "a12345@dev.nul"
+    assert_equal confirmation_email.subject, "Reservation Confirmation For: Plain User3"
+    assert_equal confirmation_email.to[0], "pu34567@dev.nul"
   end
   
   test "Users should only be able to delete their own reservations" do

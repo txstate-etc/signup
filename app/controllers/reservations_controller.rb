@@ -11,7 +11,13 @@ class ReservationsController < ApplicationController
     @reservation = Reservation.new
     @session = Session.find( params[ :session_id ])
     @reservation.session = @session
-    @reservation.user = current_user
+    admin_is_enrolling_someone_else = params[ :user_login ] && current_user.admin?
+    if admin_is_enrolling_someone_else
+      @reservation.user = User.find_by_login( params[ :user_login ] )
+    else
+      @reservation.user = current_user
+    end
+    
     if @reservation.save
       if @reservation.confirmed?
         ReservationMailer.deliver_confirm( @reservation )
@@ -21,8 +27,13 @@ class ReservationsController < ApplicationController
       end
       redirect_to @reservation.session
     else
-      @page_title = "Make a Reservation"
-      render :action => 'new'
+      if admin_is_enrolling_someone_else
+        flash[ :error ] = "Unable to make reservation for " + params[ :user_login ]
+        redirect_to @reservation.session
+      else
+        @page_title = "Make a Reservation"
+        render :action => 'new'
+      end
     end
   end
   

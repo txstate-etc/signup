@@ -114,6 +114,17 @@
 		<% end %>
 	</div>
 	
+	<% if @session.time > Time.now %>
+		<div class="admin-section">
+			<h3>Enroll Another Person:</h3>
+			<%= form_tag :controller => :reservations, :action => :create, :session_id => @session.id %>
+				<%= label_tag "user_login", "Login ID:", :class => 'field-label' %>
+				<%= text_field_tag "user_login", nil, :size => 7 %><br/>
+				<%= submit_tag "Enroll" %>
+			</form>
+		</div>
+	<% end %>
+	
 	<%= render :partial => "survey_responses/survey_summary", :locals => { :model_object => @session }%>
 
 	<div class="button-link delete">
