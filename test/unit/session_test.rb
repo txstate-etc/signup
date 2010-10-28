@@ -97,4 +97,8 @@ class SessionTest < ActiveSupport::TestCase
     assert_equal 3.0, topics( :gato ).average_instructor_rating
   end
   
+  test "ICS version should include URL if present" do
+    assert_match topics( :gato ).url, sessions( :gato ).to_cal.to_s
+  end
+  
 end
