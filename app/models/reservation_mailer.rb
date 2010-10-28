@@ -97,5 +97,19 @@ class ReservationMailer < ActionMailer::Base
       :body => render_message( "survey-mail-as-html", :reservation => reservation )
     
   end  
+  
+  def accommodation_notice( reservation )
+    subject    'Special Accommodations Needed for: ' + reservation.session.topic.name
+    recipients reservation.session.instructor.email
+    from       'nobody@txstate.edu'
+    content_type 'multipart/alternative'
+    
+    part :content_type => "text/plain",
+      :body => render_message( "accommodation-notice-as-text", :reservation => reservation ),
+      :transfer_encoding => "base64"
+    
+    part :content_type => "text/html",
+      :body => render_message( "accommodation-notice-as-html", :reservation => reservation )
+  end
 
 end

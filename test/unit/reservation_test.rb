@@ -44,4 +44,13 @@ class ReservationTest < ActiveSupport::TestCase
     assert reservations( :gato_huge_plainuser1 ).confirmed?
     assert !reservations( :gato_huge_plainuser1 ).on_waiting_list?
   end
+  
+  test "Instructor should receive email if special accomodations are needed" do
+    assert_difference 'ActionMailer::Base.deliveries.size', +1 do
+      reservation = Reservation.new( :session => sessions( :gato ),  :user => users( :plainuser2 ), :special_accommodations => "I'd like an eggplant" )
+      reservation.save
+    end
+    assert_equal ActionMailer::Base.deliveries.last.to.size, 1
+    assert_equal ActionMailer::Base.deliveries.last.to[0], sessions( :gato ).instructor.email
+  end
 end
