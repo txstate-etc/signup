@@ -28,6 +28,14 @@ class ReservationsControllerTest < ActionController::TestCase
     assert_redirected_to sessions( :gato )
   end
   
+  test "Ensure special accommodations are recorded" do
+    login_as( users( :plainuser3 ) )
+    accommodation = "I need a seeing-eye buffalo"
+    
+    get :create, :session_id => sessions( :gato ), :session => { :session_id => sessions( :gato ) }, :reservation => { :special_accommodations => accommodation }
+    assert_equal assigns( :reservation ).special_accommodations, accommodation
+  end
+  
   test "Admin should be able to make a reservation on someone else's behalf" do
     login_as( users( :admin1 ) )
     assert_difference 'Reservation.count', +1, "Admin couldn't create reservation" do

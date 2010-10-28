@@ -75,6 +75,9 @@
 							<%= reservation_fields.label :attended_1, 'Missed' %>
 							</span>
 							<%=h reservation.user.name %> &lt;<%=h reservation.user.email %>&gt;
+							<% if !reservation.special_accommodations.blank? %>
+								<span class="special-accommodations">(<%=h reservation.special_accommodations %>)</span>
+							<% end %>
 						</li>
 					<% end %>
 				<% end%>
