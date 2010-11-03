@@ -1,0 +1,10 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+its:
+  name: ITS
+
+tr:
+  name: Technology Resources
+  
+library:
+  name: Library

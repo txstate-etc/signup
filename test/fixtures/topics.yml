@@ -6,6 +6,7 @@ gato:
   url: http://gato.its.txstate.edu
   minutes: 60
   survey_type: 1
+  department: its
 
 tracs:
   name: Teaching with TRACS
@@ -14,9 +15,11 @@ tracs:
   minutes: 120
   survey_type: 2
   survey_url: http://localhost/null
+  department: its
   
 no_survey_topic:
   name: Topic with No Survey
   description: Topic with No Survey
   minutes: 30
   survey_type: 0
+  department: tr
