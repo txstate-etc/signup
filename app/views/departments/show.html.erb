@@ -1,0 +1,11 @@
+<% if @department.topics.size > 0 %>
+<ul id="topic-list">
+	<% @department.topics.each do |topic| %>
+		<li>
+			<%= link_to topic.name, topic %>
+		</li>
+	<% end %>
+</ul>
+<% else %>
+	<div class="notice">This department does not currently have any topics available.</div>
+<% end %>

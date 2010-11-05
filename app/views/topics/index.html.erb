@@ -6,6 +6,8 @@
 	<% end %>
 </ul>
 
+<div class="notice">You can also browse topics <%= link_to 'by department', departments_path %>.</div>
+
 <div class="download-link download-calendar"><%= link_to "Subscribe to Calendar", :protocol => "webcal", :controller => 'sessions', :host => request.host, :port => request.port, :action => 'download' %></div>
 
 <% if current_user && current_user.admin? %>
