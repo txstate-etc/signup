@@ -1,6 +1,6 @@
 <dl>
 	<dt>Description:</dt>
-	<dd><%=h @topic.description %></dd>
+	<dd><%= simple_format( h( @topic.description ) ) %></dd>
 	<dt>Duration:</dt>
 	<dd><%=h @topic.minutes %> minutes</dd>
 	<dt>Department:</dt>

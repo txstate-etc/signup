@@ -274,3 +274,8 @@ span.radio-span {
 	font-style: italic;
 	font-size: 80%;
 }
+
+p {
+	margin-top:0em;
+	margin-bottom:1em;
+}

@@ -8,7 +8,7 @@
 	<dt>Instructor:</dt>
 	<dd><%=h @session.instructor.name %></dd>
 	<dt>Description:</dt>
-	<dd><%=h @session.topic.description %></dd>
+	<dd><%= simple_format( h( @session.topic.description ) ) %></dd>
 	<dt>Duration:</dt>
 	<dd><%=h @session.topic.minutes %> minutes</dd>
 	<dt>Department:</dt>
