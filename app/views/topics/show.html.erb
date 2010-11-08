@@ -3,6 +3,8 @@
 	<dd><%=h @topic.description %></dd>
 	<dt>Duration:</dt>
 	<dd><%=h @topic.minutes %> minutes</dd>
+	<dt>Department:</dt>
+	<dd><%=link_to @topic.department.name, @topic.department %></dd>
 	<% if !@topic.url.blank? %>
 		<dt>Additional Info:</dt>
 		<dd><%= link_to @topic.url, @topic.url %></dd>

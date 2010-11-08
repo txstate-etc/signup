@@ -11,6 +11,8 @@
 	<dd><%=h @session.topic.description %></dd>
 	<dt>Duration:</dt>
 	<dd><%=h @session.topic.minutes %> minutes</dd>
+	<dt>Department:</dt>
+	<dd><%=link_to @session.topic.department.name, @session.topic.department %></dd>
 	<% if !@session.topic.url.blank? %>
 		<dt>Additional Info:</dt>
 		<dd><%= link_to @session.topic.url, @session.topic.url %></dd>

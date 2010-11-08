@@ -7,7 +7,7 @@ class Topic < ActiveRecord::Base
 
   belongs_to :department
   has_many :sessions
-  validates_presence_of :name, :description, :minutes
+  validates_presence_of :name, :description, :minutes, :department
   validates_presence_of :survey_url, :if => Proc.new{ |topic| topic.survey_type == SURVEY_EXTERNAL }, :message => "must be specified to use an external survey."
   
   def to_param
