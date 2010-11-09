@@ -76,9 +76,10 @@
 							<%= reservation_fields.radio_button :attended, Reservation::ATTENDANCE_MISSED %>
 							<%= reservation_fields.label :attended_1, 'Missed' %>
 							</span>
-							<%=h reservation.user.name %> &lt;<%=h reservation.user.email %>&gt;
+							<%= link_to reservation.user.name, 'mailto:' + reservation.user.email %>
+							<%=h ', ' + reservation.user.department if !reservation.user.department.blank? %>
 							<% if !reservation.special_accommodations.blank? %>
-								<span class="special-accommodations">(<%=h reservation.special_accommodations %>)</span>
+								: <span class="special-accommodations">(<%=h reservation.special_accommodations %>)</span>
 							<% end %>
 						</li>
 					<% end %>
