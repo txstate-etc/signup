@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101102201713) do
+ActiveRecord::Schema.define(:version => 20101109163441) do
 
   create_table "departments", :force => true do |t|
     t.string   "name"
@@ -78,6 +78,7 @@ ActiveRecord::Schema.define(:version => 20101102201713) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "active",     :default => true
+    t.string   "department"
   end
 
   add_index "users", ["active"], :name => "index_users_on_active"

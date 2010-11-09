@@ -38,9 +38,12 @@ class User < ActiveRecord::Base
         name = entry.givenName.to_s.strip + " " + entry.sn.to_s.strip
         login = entry.name.to_s.strip
         email = login + "@txstate.edu"
-        user = User.find_or_initialize_by_login :name => name, :login => login, :email => email
-        if user.name != name
+        department = nil
+        department = entry.department.to_s if entry.respond_to?( :department )
+        user = User.find_or_initialize_by_login :name => name, :login => login, :email => email, :department => department
+        if user.name != name || user.department != department
           user.name = name
+          user.department = department
           user.save
           logger.info( "Updated: " + email )
           records_updated = records_updated + 1
@@ -56,7 +59,7 @@ class User < ActiveRecord::Base
       end
       
       # mark inactive records that haven't been updated for 7 days
-      records_deleted = User.update_all( 'active = true', ["updated_at < ?", Date.today - 7 ] ).size
+      records_deleted = User.update_all( 'active = false', ["updated_at < ?", Date.today - 7 ] ).size
       
       logger.info( "LDAP Import Complete: " + Time.now.to_s )
       logger.info( "Total Records Processed: " + records.to_s )
