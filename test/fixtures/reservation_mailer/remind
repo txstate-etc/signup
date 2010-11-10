@@ -1,3 +1,27 @@
+Hi there Plain User1,
+
+Just a friendly reminder: the "Introduction to Gato"
+class you signed up for is coming up! If your plans have changed 
+and you can no longer make it to the class, or you need to cancel 
+your reservation for any other reason, please do so from the 
+Training Reservation System.
+
+http://localhost:3000/reservations
+
+----
+
+Your Reservation
+
+What: Introduction to Gato
+When:  7:00AM Saturday, June 02, 2035
+Where: Alkek 155
+Who:  Plain User1
+Description: All about our Content Management System.
+
+----
+
+You can use the attached ICS file to add the session to your calendar software.
+
 <html>
 
 <head>
@@ -45,27 +69,27 @@
 </head>
 
 <body>
-	<p>Hi there <%= @reservation.user.name %>,</p>
+	<p>Hi there Plain User1,</p>
 
-<p>Just a friendly reminder: the "<%= @reservation.session.topic.name %>" class you signed up
+<p>Just a friendly reminder: the "Introduction to Gato" class you signed up
 for is coming up! If your plans have changed and you can no longer make it to the class,
 or you need to cancel your reservation for any other reason, 
-please do so <%= link_to "here", :controller => "reservations", :only_path => false %>.</p>
+please do so <a href="http://localhost:3000/reservations">here</a>.</p>
 
 <div class="reservationContainer">
 	<div class="reservationCard">
 		<h2>Your Reservation</h2>
 		<dl>
 			<dt>What:</dt>
-			<dd><%=h @reservation.session.topic.name %></dd>
+			<dd>Introduction to Gato</dd>
 			<dt>When:</dt>
-			<dd><%=h @reservation.session.time %></dd>
+			<dd> 7:00AM Saturday, June 02, 2035</dd>
 			<dt>Where:</dt>
-			<dd><%=h @reservation.session.location %></dd>
+			<dd>Alkek 155</dd>
 			<dt>Who:</dt>
-			<dd><%=h @reservation.user.name %></dd>
+			<dd>Plain User1</dd>
       <dt>Description:</dt>
-      <dd><%=h @reservation.session.topic.description %></dd>
+      <dd>All about our Content Management System.</dd>
 		</dl>
 	</div>
 </div>
@@ -75,3 +99,4 @@ please do so <%= link_to "here", :controller => "reservations", :only_path => fa
 
 </html>
 
+Attachment: (unnamed)

@@ -19,6 +19,10 @@
 		font-weight: bold;
 	}
 
+  div.reservationCard dd {
+    padding-bottom: 0.5em;
+  }
+  
 	div.reservationContainer {
 		width: 50%;
 		margin-left: auto;
@@ -57,6 +61,8 @@ to cancel your reservation for any reason, you can do so <%= link_to "here", :co
 			<dd><%=h @reservation.session.location %></dd>
 			<dt>Who:</dt>
 			<dd><%=h @reservation.user.name %></dd>
+			<dt>Description:</dt>
+      <dd><%=h @reservation.session.topic.description %></dd>
 		</dl>
 	</div>
 </div>
