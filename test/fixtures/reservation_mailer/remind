@@ -1,7 +1,10 @@
 Hi there Plain User1,
 
-Your reservation for Introduction to Gato has been confirmed. If you need
-to cancel your reservation for any reason, you can do so here:
+Just a friendly reminder: the "Introduction to Gato"
+class you signed up for is coming up! If your plans have changed 
+and you can no longer make it to the class, or you need to cancel 
+your reservation for any other reason, please do so from the 
+Training Reservation System.
 
 http://localhost:3000/reservations
 
@@ -40,11 +43,11 @@ You can use the attached ICS file to add the session to your calendar software.
 		font-weight: bold;
 	}
 
-  div.reservationCard dd {
+	div.reservationCard dd {
     padding-bottom: 0.5em;
   }
   
-	div.reservationContainer {
+  div.reservationContainer {
 		width: 50%;
 		margin-left: auto;
 		margin-right: auto;
@@ -61,14 +64,17 @@ You can use the attached ICS file to add the session to your calendar software.
 		border: 3px outset black;
 		cursor: pointer;
 	}
+		
 	</style>
 </head>
 
 <body>
 	<p>Hi there Plain User1,</p>
 
-<p>Your reservation for Introduction to Gato has been confirmed. If you need
-to cancel your reservation for any reason, you can do so <a href="http://localhost:3000/reservations">here</a>.</p>
+<p>Just a friendly reminder: the "Introduction to Gato" class you signed up
+for is coming up! If your plans have changed and you can no longer make it to the class,
+or you need to cancel your reservation for any other reason, 
+please do so <a href="http://localhost:3000/reservations">here</a>.</p>
 
 <div class="reservationContainer">
 	<div class="reservationCard">
@@ -82,7 +88,7 @@ to cancel your reservation for any reason, you can do so <a href="http://localho
 			<dd>Alkek 155</dd>
 			<dt>Who:</dt>
 			<dd>Plain User1</dd>
-			<dt>Description:</dt>
+      <dt>Description:</dt>
       <dd>All about our Content Management System.</dd>
 		</dl>
 	</div>

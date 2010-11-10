@@ -1,23 +1,24 @@
 Hi there Plain User1,
 
-Your reservation for Introduction to Gato has been confirmed. If you need
-to cancel your reservation for any reason, you can do so here:
+Sad news: the session on "Introduction to Gato" for which you
+had signed up has been cancelled.
 
-http://localhost:3000/reservations
+If you'd like to sign up to take the class at a different time, you can
+see a list of times it is offered here:
+
+http://localhost:3000/topics/419328395
 
 ----
 
-Your Reservation
+The Cancelled Reservation
 
 What: Introduction to Gato
 When:  7:00AM Saturday, June 02, 2035
-Where: Alkek 155
 Who:  Plain User1
-Description: All about our Content Management System.
 
 ----
 
-You can use the attached ICS file to add the session to your calendar software.
+Our sincere apologies for the inconvenience.
 
 <html>
 
@@ -40,10 +41,6 @@ You can use the attached ICS file to add the session to your calendar software.
 		font-weight: bold;
 	}
 
-  div.reservationCard dd {
-    padding-bottom: 0.5em;
-  }
-  
 	div.reservationContainer {
 		width: 50%;
 		margin-left: auto;
@@ -67,30 +64,28 @@ You can use the attached ICS file to add the session to your calendar software.
 <body>
 	<p>Hi there Plain User1,</p>
 
-<p>Your reservation for Introduction to Gato has been confirmed. If you need
-to cancel your reservation for any reason, you can do so <a href="http://localhost:3000/reservations">here</a>.</p>
+<p>Sad news: the session on "Introduction to Gato" for which you
+	had signed up has been cancelled.</p>
+	
+<p>If you'd like to sign up to take the class at a different time, you can
+	see a list of times it is offered <a href="http://localhost:3000/topics/419328395">here</a>.</p>
 
 <div class="reservationContainer">
 	<div class="reservationCard">
-		<h2>Your Reservation</h2>
+		<h2>The Cancelled Reservation:</h2>
 		<dl>
 			<dt>What:</dt>
 			<dd>Introduction to Gato</dd>
 			<dt>When:</dt>
 			<dd> 7:00AM Saturday, June 02, 2035</dd>
-			<dt>Where:</dt>
-			<dd>Alkek 155</dd>
 			<dt>Who:</dt>
 			<dd>Plain User1</dd>
-			<dt>Description:</dt>
-      <dd>All about our Content Management System.</dd>
 		</dl>
 	</div>
 </div>
 
-<p>You can use the attached ICS file to add the session to your calendar software.</p>
+<p>Our sincere apologies for the inconvenience.</p>
 </body>
 
 </html>
 
-Attachment: (unnamed)
