@@ -21,6 +21,8 @@
 					<dd><%=h @session.time %></dd>
 					<dt>Who:</dt>
 					<dd><%=h current_user.name %> (<%=h current_user.email %>)</dd>
+					<dt>Special Accommodations Needed (optional):</dt>
+					<dd><%= f.text_area :special_accommodations, :cols => 40, :rows => 4 %>
 				</dl>
 			</div>
 

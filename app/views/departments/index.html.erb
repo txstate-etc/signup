@@ -1,0 +1,7 @@
+<ul id="department-list">
+	<% @departments.each do |department| %>
+		<li>
+			<%= link_to department.name, department %>
+		</li>
+	<% end %>
+</ul>

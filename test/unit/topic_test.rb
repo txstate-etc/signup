@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class TopicTest < ActiveSupport::TestCase
-  fixtures :topics
+  fixtures :topics, :departments
   
   def test_upcoming_sessions
     upcoming_tracs = Topic.find( topics( :tracs ) ).upcoming_sessions
@@ -27,5 +27,9 @@ class TopicTest < ActiveSupport::TestCase
   test "Should compute average ratings correctly" do
     assert_equal 3.0, topics( :gato ).average_rating
     assert_equal 3.0, topics( :gato ).average_instructor_rating
+  end
+  
+  test "Verify relationship to Departments" do
+    assert_equal departments( :its ), topics( :gato ).department
   end
 end

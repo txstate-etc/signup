@@ -1,0 +1,13 @@
+Hi there <%=h @reservation.session.instructor.name %>,
+
+<%= @reservation.user.name %>, one of the students in your upcoming 
+"<%= @reservation.session.topic.name %>" class, has requested special
+accommodations for his/her needs:
+	
+<%= @reservation.special_accommodations %>
+
+If you have any questions about this request, you can reach 
+<%=h @reservation.user.name %> at:
+
+<%= @reservation.user.email %>
+

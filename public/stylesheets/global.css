@@ -121,13 +121,13 @@ div.navigation {
 	margin-bottom: 1em;
 }
 
-ul#topic-list {
+ul#topic-list, ul#department-list {
 	margin-left: 0px;
 	padding-left: 0px;
 	list-style-type: none;
 }
 
-ul#topic-list li a {
+ul#topic-list li a, ul#department-list li a {
 	display: block;
 	padding: .5em;
 	padding-left:45px;
@@ -268,4 +268,9 @@ span.radio-span {
 .title-image {
 	vertical-align: top;
 	margin-right: 10px;
+}
+
+.special-accommodations {
+	font-style: italic;
+	font-size: 80%;
 }

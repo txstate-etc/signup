@@ -4,12 +4,13 @@ class ReservationsController < ApplicationController
   def new
     @session = Session.find( params[ :session_id ] )
     @reservation = Reservation.new
+    @reservation.session = @session
     @page_title = "Make a Reservation"
   end
   
   def create
-    @reservation = Reservation.new
-    @session = Session.find( params[ :session_id ])
+    @reservation = Reservation.new( params[ :reservation ] )
+    @session = Session.find( params[ :session_id ] )
     @reservation.session = @session
     admin_is_enrolling_someone_else = params[ :user_login ] && current_user.admin?
     if admin_is_enrolling_someone_else

@@ -62,6 +62,7 @@ class Session < ActiveRecord::Base
     event.description = topic.description + "\n\nInstructor: " + instructor.name
     event.dtstart = time
     event.dtend = time + topic.minutes * 60
+    event.url = topic.url
     event.location = location
     return event
   end
