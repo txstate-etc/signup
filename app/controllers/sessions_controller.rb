@@ -64,8 +64,12 @@ class SessionsController < ApplicationController
 
   def attendance
     @session = Session.find( params[ :id ] )
+    @items = @session.reservations.sort do |a,b|
+     a.user.name <=> b.user.name
+    end
+    @items_per_page = 12
+    @page_count = (@items.length + @items_per_page - 1) / @items_per_page
     @page_title = @session.time.to_s + ": " + @session.topic.name
-    @title_image = 'date.png'
     render :layout => 'print' 
   end
   

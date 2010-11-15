@@ -20,7 +20,6 @@
 			<div id="error"><%=h flash[ :error ] %></div>
 		<% end %>
 		<div id="container">
-		<h1><%= image_tag(@title_image, :class=>"title-image") if @title_image %><%= @page_title %></h1>
 		<%= yield %>
 		</div>
 	</body>

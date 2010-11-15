@@ -1,9 +1,18 @@
-<h2>Attendance</h2>
-
-<ul>
-<% @session.reservations.each do |reservation| %>
-  <li>
-    <%= reservation.user.name %>
-  </li>
+<% page = 1 %>
+<% while @items.length > 0 %>
+  <h1><%= @session.topic.name %></h1>
+  <h1><%= @session.location %> : <%= @session.time.to_s %></h1>
+  <h2>Attendance List
+    <% if @page_count > 1 -%> 
+      - Page <%= page %> / <%= @page_count %>
+    <% end -%>
+  </h2>
+  <ul>
+  <% [@items_per_page, @items.length].min.times do %>
+    <li>
+      <%= @items.shift.user.name %>
+    </li>
+  <% end %>
+  </ul>
+  <% page += 1 %>
 <% end %>
-</ul>

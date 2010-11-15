@@ -87,6 +87,10 @@ class SessionsControllerTest < ActionController::TestCase
     get :attendance, {'id' => sessions( :gato )}
     assert_response :success
     assert_not_nil assigns(:session)
+    assert_not_nil assigns(:items)
+    assert_select "ul" do |elements|
+      assert_equal elements.length, assigns(:page_count)
+    end
   end
   
 end
