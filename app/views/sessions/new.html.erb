@@ -6,7 +6,7 @@
 	<%=h @session.topic.name %>
 	
 	<%= f.label :time, "Session Time:", :class => 'field-label' %>
-	<%= f.datetime_select :time %>
+	<%= f.datetime_select :time, :minute_step => 5 %>
 	
 	<%= f.label :instructor_id, "Instructor:", :class => 'field-label' %>
 	<%= f.collection_select :instructor_id, User.find_all_by_instructor( true ), :id, :name, { :include_blank => true } %>
