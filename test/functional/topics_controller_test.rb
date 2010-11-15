@@ -3,7 +3,7 @@ require 'test_helper'
 class TopicsControllerTest < ActionController::TestCase
   fixtures :topics, :users
   
-  test "Login Required only for New and Create actions" do
+  test "Login Required only for New, Create and Update actions" do
     get :index
     assert_response :success
     
@@ -14,6 +14,9 @@ class TopicsControllerTest < ActionController::TestCase
     assert_response :redirect
     
     get :create
+    assert_response :redirect
+    
+    put :update, :id => topics( :gato )
     assert_response :redirect
   end
 
@@ -30,6 +33,9 @@ class TopicsControllerTest < ActionController::TestCase
   
     get :create
     assert_response :success  
+    
+    put :update, :id => topics( :gato )
+    assert_response :success
   end
 
   test "Once logged as instructor, should be able to view topics, but not modify them." do
@@ -45,6 +51,9 @@ class TopicsControllerTest < ActionController::TestCase
   
     get :create
     assert_response :redirect  
+    
+    put :update, :id => topics( :gato )
+    assert_response :redirect
   end
 
   test "Once logged as nobody special, should be able to view topics, but not modify them." do
@@ -60,6 +69,9 @@ class TopicsControllerTest < ActionController::TestCase
   
     get :create
     assert_response :redirect  
+    
+    put :update, :id => topics( :gato )
+    assert_response :redirect
   end
   
   test "Should be able to download a topic's calendar" do

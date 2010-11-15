@@ -1,3 +1,5 @@
+<%= javascript_include_tag 'topic_form' %>
+
 <dl>
 	<dt>Description:</dt>
 	<dd><%= simple_format( h( @topic.description ) ) %></dd>
@@ -27,7 +29,22 @@
 <div class="admin-options">
 	<h2><%= image_tag('advancedsettings.png') %> Admin Options</h2>
 	<div class="download-link download-csv"><%= link_to "Download CSV", :format => :csv %></div>
+	
 	<%= render :partial => "survey_responses/survey_summary", :locals => { :model_object => @topic }%>
+	
+	<div class="admin-section">
+		<h3>Update Details:</h3>
+		<% form_for @topic, :url => { :action => "update" } do |f| %>
+			<%= render :partial => "form_fields", :locals => { :f => f }%>
+			<br/><%= submit_tag "Make Changes" %>
+		<% end %>
+	</div>
+	
+	
 	<div class="button-link confirm"><%= link_to "Create New Session", new_topic_session_path( @topic ) %></div>
+
+	
 </div>
+
+
 <% end %>

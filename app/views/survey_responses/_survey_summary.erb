@@ -4,13 +4,12 @@
 		<div>Average Rating: <%= model_object.average_rating %></div>
 		<div>Average Instructor Rating: <%= model_object.average_instructor_rating %></div>
 		<div id="display-comments"><a href="javascript:Effect.BlindDown('comments');Effect.BlindUp('display-comments')">Display Comments</a></div>
-			<ul id="comments" style="display: none">
-				<% model_object.survey_responses.each do |survey_response| %>
-					<% if !survey_response.comments.empty? %>
-						<li class="comment"><%=h survey_response.comments %></li>
-					<% end %>
+		<ul id="comments" style="display: none">
+			<% model_object.survey_responses.each do |survey_response| %>
+				<% if !survey_response.comments.empty? %>
+					<li class="comment"><%=h survey_response.comments %></li>
 				<% end %>
-			</ul>
-		</div>
+			<% end %>
+		</ul>
 	</div>
 <% end %>
