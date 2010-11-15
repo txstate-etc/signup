@@ -1,3 +1,5 @@
+<%= javascript_include_tag 'topic_form' %>
+
 <dl>
 	<dt>Description:</dt>
 	<dd><%= simple_format( h( @topic.description ) ) %></dd>
@@ -27,7 +29,59 @@
 <div class="admin-options">
 	<h2><%= image_tag('advancedsettings.png') %> Admin Options</h2>
 	<div class="download-link download-csv"><%= link_to "Download CSV", :format => :csv %></div>
+	
 	<%= render :partial => "survey_responses/survey_summary", :locals => { :model_object => @topic }%>
+	
+	<div class="admin-section">
+		<h3>Update Details:</h3>
+		<% form_for @topic, :url => { :action => "update" } do |f| %>
+		<%= f.label :name, "Topic Name:", :class => 'field-label' %>
+		<%= f.text_field :name %>
+
+		<%= f.label :description, "Description of Topic:", :class => 'field-label' %>
+		<%= f.text_area :description %>
+
+		<%= f.label :department_id, "Department:", :class => 'field-label' %>
+		<%= f.collection_select :department_id, Department.all, :id, :name, { :include_blank => true } %>
+
+		<%= f.label :minutes, "Class time in Minutes:", :class => 'field-label' %>
+		<%= f.text_field :minutes, :size => 3 %>
+
+		<%= f.label :url, "URL with More Information on Class:", :class => 'field-label' %>
+		<%= f.text_field :url %>
+
+		<div class="survey-options">
+			<label class="field-label">Post-Class Survey:</label>
+			<span class="radio-span">
+				<%= f.radio_button :survey_type, Topic::SURVEY_NONE %>
+				<%= f.label :survey_type_0, 'None' %>
+			</span>
+
+			<span class="radio-span">
+				<%= f.radio_button :survey_type, Topic::SURVEY_INTERNAL %>
+				<%= f.label :survey_type_1, 'Automatic' %>
+			</span>
+
+			<span class="radio-span">
+				<%= f.radio_button :survey_type, Topic::SURVEY_EXTERNAL %>
+				<%= f.label :survey_type_2, 'External' %>
+			</span>
+
+			<div class="survey-external" id="survey-external">
+				<%= f.label :survey_url, "External Survey URL:", :class => 'field-label' %>
+				<%= f.text_field :survey_url %>			
+			</div>
+		</div>
+
+			<br/><%= submit_tag "Make Changes" %>
+		<% end %>
+	</div>
+	
+	
 	<div class="button-link confirm"><%= link_to "Create New Session", new_topic_session_path( @topic ) %></div>
+
+	
 </div>
+
+
 <% end %>

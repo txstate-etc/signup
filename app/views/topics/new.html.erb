@@ -18,7 +18,7 @@
 	<%= f.text_field :url %>
 	
 	<div class="survey-options">
-		<label class="field-label">Post-Class Survey:</div>
+		<label class="field-label">Post-Class Survey:</label>
 		<span class="radio-span">
 			<%= f.radio_button :survey_type, Topic::SURVEY_NONE %>
 			<%= f.label :survey_type_0, 'None' %>
@@ -36,7 +36,7 @@
 		
 		<div class="survey-external" id="survey-external">
 			<%= f.label :survey_url, "External Survey URL:", :class => 'field-label' %>
-			<%= f.text_field :survey_url %>			
+			<%= f.text_field :survey_url %>
 		</div>
 	</div>
 	

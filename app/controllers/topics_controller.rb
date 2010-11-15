@@ -49,6 +49,19 @@ class TopicsController < ApplicationController
     end
   end
   
+  def update
+    @topic = Topic.find( params[ :id ] )
+    if current_user && current_user.admin?
+      @topic.update_attributes( params[ :topic ] )
+      @topic.save
+      flash[ :notice ] = "The Topic's data has been updated."
+      render :show
+    else
+      redirect_to @topic
+    end
+  end
+  
+  
   def download
     topic = Topic.find( params[ :id ] )
     calendar = RiCal.Calendar
