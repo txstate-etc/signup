@@ -38,9 +38,13 @@ class SessionsController < ApplicationController
   
   def update
     @session = Session.find( params[ :id ] )
-    @session.update_attributes( params[ :session ] )
-    flash[ :notice ] = "The Session's data has been updated."
-    render :show
+    if current_user && current_user.admin? || current_user == @session.instructor
+      @session.update_attributes( params[ :session ] )
+      flash[ :notice ] = "The Session's data has been updated."
+      render :show
+    else
+      redirect_to @session.topic
+    end
   end
   
   def destroy

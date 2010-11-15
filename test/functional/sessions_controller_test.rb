@@ -16,6 +16,9 @@ class SessionsControllerTest < ActionController::TestCase
     delete :destroy, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
     assert_response :redirect    
     assert !sessions( :tracs ).cancelled
+    
+    post :update, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
+    assert_response :redirect
   end
   
   test "Admins can do anything" do
@@ -32,9 +35,12 @@ class SessionsControllerTest < ActionController::TestCase
     delete :destroy, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
     assert_response :redirect    
     assert sessions( :tracs ).reload.cancelled
+
+    post :update, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
+    assert_response :success
   end
   
-  test "Instructors can delete own sessions" do
+  test "Instructors can delete and update own sessions" do
     login_as( users( :instructor2 ) )
     get :show, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
     assert_response :success
@@ -48,6 +54,9 @@ class SessionsControllerTest < ActionController::TestCase
     delete :destroy, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
     assert_response :redirect    
     assert sessions( :tracs ).reload.cancelled
+    
+    post :update, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
+    assert_response :success
   end
   
   test "Regular users should be able to view, but not make changes" do
@@ -64,6 +73,9 @@ class SessionsControllerTest < ActionController::TestCase
     delete :destroy, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
     assert_response :redirect    
     assert !sessions( :tracs ).cancelled
+    
+    post :update, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
+    assert_response :redirect
   end
   
   test "Session page should show whether a user is registered" do
