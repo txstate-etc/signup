@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width,user-scalable=yes">
+		<meta charset="UTF-8">
+		<%= stylesheet_link_tag "print", :media => :all %>
+		<%= javascript_include_tag :defaults %>
+		<title><%= @page_title %></title>
+	</head>
+	<body>
+		<% unless flash[ :notice ].blank? %>
+			<div id="notification"><%=h flash[ :notice ] %></div>
+		<% end %>
+		<% unless flash[ :error ].blank? %>
+			<div id="error"><%=h flash[ :error ] %></div>
+		<% end %>
+		<div id="container">
+		<h1><%= image_tag(@title_image, :class=>"title-image") if @title_image %><%= @page_title %></h1>
+		<%= yield %>
+		</div>
+	</body>
+</html>

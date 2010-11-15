@@ -82,4 +82,11 @@ class SessionsControllerTest < ActionController::TestCase
     assert_equal @response.content_type, 'text/calendar'
   end
     
+  test "Should display printable attendance sheet" do
+    login_as( users( :instructor2 ) )
+    get :attendance, {'id' => sessions( :gato )}
+    assert_response :success
+    assert_not_nil assigns(:session)
+  end
+  
 end

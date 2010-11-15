@@ -62,4 +62,11 @@ class SessionsController < ApplicationController
     send_data(calendar.export, :type => 'text/calendar')
   end
 
+  def attendance
+    @session = Session.find( params[ :id ] )
+    @page_title = @session.time.to_s + ": " + @session.topic.name
+    @title_image = 'date.png'
+    render :layout => 'print' 
+  end
+  
 end
