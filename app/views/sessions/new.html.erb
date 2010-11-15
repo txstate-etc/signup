@@ -1,21 +1,7 @@
 <%= error_messages_for 'session' %>
 
 <% form_for( [ @session.topic, @session ] ) do |f| %>
-	<%= f.label :name, "Topic Name:", :class => 'field-label' %>
-	<%= f.hidden_field :topic_id %>
-	<%=h @session.topic.name %>
-	
-	<%= f.label :time, "Session Time:", :class => 'field-label' %>
-	<%= f.datetime_select :time, :minute_step => 5 %>
-	
-	<%= f.label :instructor_id, "Instructor:", :class => 'field-label' %>
-	<%= f.collection_select :instructor_id, User.find_all_by_instructor( true ), :id, :name, { :include_blank => true } %>
-	
-	<%= f.label :seats, "Seats Available (blank for no limit):", :class => 'field-label' %>
-	<%= f.text_field :seats, :size => 4 %>
-	
-	<%= f.label :location, "Location:", :class => 'field-label' %>
-	<%= f.text_field :location %>
+	<%= render :partial => "form_fields", :locals => { :f => f }%>
 	
 	<br/><br/>
 	
