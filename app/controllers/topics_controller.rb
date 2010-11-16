@@ -53,8 +53,13 @@ class TopicsController < ApplicationController
     @topic = Topic.find( params[ :id ] )
     if current_user && current_user.admin?
       @topic.update_attributes( params[ :topic ] )
-      @topic.save
-      flash[ :notice ] = "The Topic's data has been updated."
+      if @topic.save
+        flash.now[ :notice ] = "The Topic's data has been updated."
+      else
+        flash.now[ :error ] = "There were problems updating this topic."
+      end
+      @page_title = @topic.name
+      @title_image = 'bell.png'
       render :show
     else
       redirect_to @topic

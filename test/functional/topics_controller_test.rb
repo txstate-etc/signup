@@ -80,5 +80,14 @@ class TopicsControllerTest < ActionController::TestCase
     assert_equal @response.content_type, 'text/calendar'
   end
   
+  test "Verify updates working correctly" do
+    login_as( users( :admin1 ) )
+    put :update, :id => topics( :gato )
+    assert_tag :tag => "h1", :child => /Gato/
+    
+    put :update, :id => topics( :gato ), :topic => { :department => nil }
+    assert_response :success
+  end
+  
 end
 
