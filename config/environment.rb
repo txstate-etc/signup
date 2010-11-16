@@ -23,6 +23,7 @@ Rails::Initializer.run do |config|
   config.gem "ri_cal", :version => '0.8.7'
   config.gem "net-ldap", :version => '0.1.1'
   config.gem "fastercsv", :version => '1.5.3'
+  config.gem "searchlogic", :version => '2.4.27'
 
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named
