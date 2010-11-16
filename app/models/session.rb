@@ -10,6 +10,24 @@ class Session < ActiveRecord::Base
   
   default_scope :order => 'time'
   
+  # virtual attribute to handle instructor selection
+  # instructor_name is of the format "Name (login_id)", e.g. "Sean McMains (sm51)"
+  # or just the login id, e.g. "sm51"
+  def instructor_name
+    instructor.name_and_login if instructor
+  end
+  
+  def instructor_name=( name )
+    if name
+      elements = name.split(/[(|)]/)
+      if elements.size > 1
+        self.instructor = User.find_by_login( elements[1] )
+      else
+        self.instructor = User.find_by_login( elements[0] )
+      end
+    end
+  end
+  
   def to_param
     "#{id}-#{topic.name.parameterize}"
   end

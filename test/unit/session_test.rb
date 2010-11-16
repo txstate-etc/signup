@@ -101,4 +101,14 @@ class SessionTest < ActiveSupport::TestCase
     assert_match topics( :gato ).url, sessions( :gato ).to_cal.to_s
   end
   
+  test "We should be able to use instructor names as well as instructor objects" do
+    test_session = sessions( :gato )
+    
+    assert_equal test_session.instructor_name, sessions( :gato ).instructor.name + " (" + sessions( :gato ).instructor.login + ")"
+    test_session.instructor_name = users( :instructor2 ).name + " (" + users( :instructor2 ).login + ")"
+    assert_equal test_session.instructor, users( :instructor2 )
+    test_session.instructor_name = users( :instructor1 ).login
+    assert_equal test_session.instructor, users( :instructor1 )
+  end
+  
 end

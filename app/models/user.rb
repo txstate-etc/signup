@@ -2,6 +2,10 @@ require 'net/ldap'
 
 class User < ActiveRecord::Base
   validates_presence_of :name, :login, :email
+  
+  def name_and_login
+     name + " (" + login + ")"
+  end
     
   # This method is resonsible for populating the User table with the
   # login, name, and email of anybody who might be using the system.
