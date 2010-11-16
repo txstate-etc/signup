@@ -68,9 +68,8 @@ class SessionsController < ApplicationController
 
   def attendance
     @session = Session.find( params[ :id ] )
-    @items = @session.reservations.sort do |a,b|
-     a.user.name <=> b.user.name
-    end
+    @items = @session.reservations.select{|i| i.confirmed? }.sort { |a,b| a.user.name <=> b.user.name }
+    @items.reject!
     @items_per_page = 12
     @page_count = (@items.length + @items_per_page - 1) / @items_per_page
     @page_title = @session.time.to_s + ": " + @session.topic.name
