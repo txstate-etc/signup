@@ -96,13 +96,15 @@ class SessionsControllerTest < ActionController::TestCase
     
   test "Should display printable attendance sheet" do
     login_as( users( :instructor2 ) )
-    get :attendance, {'id' => sessions( :gato )}
+    get :attendance, {'id' => sessions( :gato_overbooked )}
     assert_response :success
     assert_not_nil assigns(:session)
     assert_not_nil assigns(:items)
-    assert_select "ul" do |elements|
+    assert_select 'ul' do |elements|
       assert_equal elements.length, assigns(:page_count)
+      assert_select 'li', 2
     end
+    
   end
   
 end
