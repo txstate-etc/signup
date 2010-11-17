@@ -6,6 +6,9 @@
 <%= f.datetime_select :time, :minute_step => 5 %>
 
 <%= f.label :instructor_id, "Instructor:", :class => 'field-label' %>
+<%# FIXME: display list of current instructors here
+  # Also need way to delete them
+%>
 <%= text_field_with_auto_complete :session, :instructor_name, {}, { :url => users_path( :js ), :method => :get, :with => "'search=' + element.value" } %>
 
 <%= f.label :seats, "Seats Available (blank for no limit):", :class => 'field-label' %>

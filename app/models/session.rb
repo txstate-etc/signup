@@ -3,8 +3,8 @@ require 'ri_cal'
 class Session < ActiveRecord::Base
   has_many :reservations
   belongs_to :topic
-  belongs_to :instructor, :class_name => "User"
-  validates_presence_of :time, :instructor_id, :topic_id, :location
+  has_and_belongs_to_many :instructors, :class_name => "User", :uniq => true
+  validates_presence_of :time, :instructors, :topic_id, :location
   validates_numericality_of :seats, :only_integer => true, :allow_nil => true
   accepts_nested_attributes_for :reservations
   
@@ -14,16 +14,17 @@ class Session < ActiveRecord::Base
   # instructor_name is of the format "Name (login_id)", e.g. "Sean McMains (sm51)"
   # or just the login id, e.g. "sm51"
   def instructor_name
-    instructor.name_and_login if instructor
+    instructors[0].name_and_login if instructors.present?
   end
   
   def instructor_name=( name )
     if name
       elements = name.split(/[(|)]/)
+      self.instructors.clear
       if elements.size > 1
-        self.instructor = User.find_by_login( elements[1] )
+            self.instructors << User.find_by_login( elements[1] )
       else
-        self.instructor = User.find_by_login( elements[0] )
+        self.instructors << User.find_by_login( elements[0] )
       end
     end
   end
@@ -77,7 +78,7 @@ class Session < ActiveRecord::Base
   def to_event
     event = RiCal.Event 
     event.summary = topic.name
-    event.description = topic.description + "\n\nInstructor: " + instructor.name
+    event.description = topic.description + "\n\nInstructor: " + instructors[0].name
     event.dtstart = time
     event.dtend = time + topic.minutes * 60
     event.url = topic.url

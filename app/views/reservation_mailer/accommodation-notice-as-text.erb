@@ -1,4 +1,4 @@
-Hi there <%=h @reservation.session.instructor.name %>,
+Hi there <%=h @reservation.session.instructors[0].name %>,
 
 <%= @reservation.user.name %>, one of the students in your upcoming 
 "<%= @reservation.session.topic.name %>" class, has requested special

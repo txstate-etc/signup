@@ -40,7 +40,7 @@
 </head>
 
 <body>
-	<p>Hi there <%=h @reservation.session.instructor.name %>,</p>
+	<p>Hi there <%=h @reservation.session.instructors[0].name %>,</p>
 
 <p><%=h @reservation.user.name %>, one of the students in your upcoming 
 	"<%=h @reservation.session.topic.name %>" class, has requested special

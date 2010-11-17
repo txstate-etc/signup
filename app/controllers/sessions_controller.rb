@@ -38,7 +38,7 @@ class SessionsController < ApplicationController
   
   def update
     @session = Session.find( params[ :id ] )
-    if current_user && current_user.admin? || current_user == @session.instructor
+    if current_user && current_user.admin? || current_user == @session.instructors[0]
       @session.update_attributes( params[ :session ] )
       flash[ :notice ] = "The Session's data has been updated."
       render :show
@@ -49,7 +49,7 @@ class SessionsController < ApplicationController
   
   def destroy
     session = Session.find( params[ :id ] )
-    if (current_user && current_user.admin? ) or session.instructor == current_user
+    if (current_user && current_user.admin? ) or session.instructors[0] == current_user
       session.cancel!
     else
     end

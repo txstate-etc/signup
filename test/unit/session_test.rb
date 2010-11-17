@@ -39,7 +39,7 @@ class SessionTest < ActiveSupport::TestCase
     end
     
     assert_difference 'ActionMailer::Base.deliveries.size', +0 do
-      sessions( :gato_overbooked ).instructor = users( :instructor1 )
+      sessions( :gato_overbooked ).instructors << users( :instructor1 )
       sessions( :gato_overbooked ).save
     end
     
@@ -104,11 +104,28 @@ class SessionTest < ActiveSupport::TestCase
   test "We should be able to use instructor names as well as instructor objects" do
     test_session = sessions( :gato )
     
-    assert_equal test_session.instructor_name, sessions( :gato ).instructor.name + " (" + sessions( :gato ).instructor.login + ")"
+    assert_equal test_session.instructor_name, sessions( :gato ).instructors[0].name + " (" + sessions( :gato ).instructors[0].login + ")"
     test_session.instructor_name = users( :instructor2 ).name + " (" + users( :instructor2 ).login + ")"
-    assert_equal test_session.instructor, users( :instructor2 )
+    assert_equal test_session.instructors[0], users( :instructor2 )
     test_session.instructor_name = users( :instructor1 ).login
-    assert_equal test_session.instructor, users( :instructor1 )
+    assert_equal test_session.instructors[0], users( :instructor1 )
   end
   
+  test "Session with no instructor is not valid" do
+    test_session = Session.new
+    test_session.topic = topics( :gato )
+    test_session.time = DateTime.parse( '15 June 2035 00:00' )
+    test_session.location = "Tijuana"
+    assert !test_session.save
+  end
+  
+    test "Session with an instructor is valid" do
+    test_session = Session.new
+    test_session.topic = topics( :gato )
+    test_session.time = DateTime.parse( '15 June 2035 00:00' )
+    test_session.location = "Tijuana"
+    test_session.instructor_name = users( :instructor1 ).login
+    assert test_session.save
+  end
+
 end

@@ -51,6 +51,6 @@ class ReservationTest < ActiveSupport::TestCase
       reservation.save
     end
     assert_equal ActionMailer::Base.deliveries.last.to.size, 1
-    assert_equal ActionMailer::Base.deliveries.last.to[0], sessions( :gato ).instructor.email
+    assert_equal ActionMailer::Base.deliveries.last.to[0], sessions( :gato ).instructors[0].email
   end
 end
