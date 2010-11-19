@@ -95,4 +95,12 @@ gato_overbooked:
     location: JCK 1100
     cancelled: false
     seats: 2
+
+tracs_multiple_instructors:
+    time: 2037-07-01 17:00:00
+    instructors: instructor1, instructor2
+    topic: tracs
+    location: JCK 1100
+    cancelled: false
+    seats: 2
     

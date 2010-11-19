@@ -11,7 +11,6 @@ namespace :db do
       person.login = person.name[0..2] + (10..100).to_a.rand.to_s
       person.email = person.name.gsub(" ", ".") + '@dev.nul'
       person.admin = false
-      person.instructor = false;
     end
   end
 
@@ -21,7 +20,7 @@ namespace :db do
     
     Session.populate 1 do |session|
       session.time = 5.days.from_now
-      session.instructor_id = User.find_all_by_instructor( true )
+      session.instructors << User.find_all_by_instructor( true )
       session.topic_id = Topic.all
       session.location = "Alkek 155"
       session.cancelled = false

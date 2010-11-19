@@ -4,11 +4,16 @@ class Session < ActiveRecord::Base
   has_many :reservations
   belongs_to :topic
   has_and_belongs_to_many :instructors, :class_name => "User", :uniq => true
-  validates_presence_of :time, :instructors, :topic_id, :location
+  validates_presence_of :time, :topic_id, :location
+  validate :at_least_one_instructor, :valid_instructor
   validates_numericality_of :seats, :only_integer => true, :allow_nil => true
+  after_validation :reload_if_invalid
   accepts_nested_attributes_for :reservations
-  
   default_scope :order => 'time'
+  
+  def instructor?( user )
+    instructors.include? user
+  end
   
   # virtual attribute to handle instructor selection
   # instructor_name is of the format "Name (login_id)", e.g. "Sean McMains (sm51)"
@@ -18,15 +23,36 @@ class Session < ActiveRecord::Base
   end
   
   def instructor_name=( name )
-    if name
+    if name.present?
       elements = name.split(/[(|)]/)
-      self.instructors.clear
       if elements.size > 1
-            self.instructors << User.find_by_login( elements[1] )
+        user = User.find_by_login( elements[1] )
       else
-        self.instructors << User.find_by_login( elements[0] )
+        user = User.find_by_login( elements[0] )
       end
+      if user.present?
+        self.instructors << user
+      else
+        @invalid_instructor = true
+      end
+    end      
+  end
+  
+  def valid_instructor
+    if @invalid_instructor
+      self.errors.add(:instructor, 'must be a valid user')
+    end  
+  end
+  
+  def at_least_one_instructor
+    if self.instructors.blank? && !@invalid_instructor
+      self.errors.add(:instructors, 'must not be blank')
     end
+  end
+  
+  def reload_if_invalid
+    #bring back any instructors that were deleted
+    self.reload unless self.errors.empty?
   end
   
   def to_param
@@ -78,7 +104,7 @@ class Session < ActiveRecord::Base
   def to_event
     event = RiCal.Event 
     event.summary = topic.name
-    event.description = topic.description + "\n\nInstructor: " + instructors[0].name
+    event.description = topic.description + "\n\nInstructor(s): " + instructors.collect{|i| i.name}.join(", ")
     event.dtstart = time
     event.dtend = time + topic.minutes * 60
     event.url = topic.url

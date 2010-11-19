@@ -105,10 +105,20 @@ class SessionTest < ActiveSupport::TestCase
     test_session = sessions( :gato )
     
     assert_equal test_session.instructor_name, sessions( :gato ).instructors[0].name + " (" + sessions( :gato ).instructors[0].login + ")"
+    test_session.instructors.clear
     test_session.instructor_name = users( :instructor2 ).name + " (" + users( :instructor2 ).login + ")"
     assert_equal test_session.instructors[0], users( :instructor2 )
+    test_session.instructors.clear
     test_session.instructor_name = users( :instructor1 ).login
     assert_equal test_session.instructors[0], users( :instructor1 )
+  end
+  
+  test "We should be able to have multiple instructors" do
+    test_session = sessions( :gato )
+    test_session.instructor_name = users( :instructor2 ).login
+    assert_equal 2, test_session.instructors.size
+    test_session.instructor_ids = [ users( :instructor2 ).id ]
+    assert_equal 1, test_session.instructors.size
   end
   
   test "Session with no instructor is not valid" do
@@ -119,7 +129,7 @@ class SessionTest < ActiveSupport::TestCase
     assert !test_session.save
   end
   
-    test "Session with an instructor is valid" do
+  test "Session with an instructor is valid" do
     test_session = Session.new
     test_session.topic = topics( :gato )
     test_session.time = DateTime.parse( '15 June 2035 00:00' )
@@ -128,4 +138,9 @@ class SessionTest < ActiveSupport::TestCase
     assert test_session.save
   end
 
+  test "We should be able to determine who is an instructor" do
+    test_session = sessions( :gato )
+    assert test_session.instructor?( users( :instructor1 ) )
+    assert !test_session.instructor?( users( :instructor2 ) )
+  end
 end

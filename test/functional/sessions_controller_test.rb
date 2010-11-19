@@ -95,7 +95,7 @@ class SessionsControllerTest < ActionController::TestCase
   end
     
   test "Should display printable attendance sheet" do
-    login_as( users( :instructor2 ) )
+    login_as( users( :instructor1 ) )
     get :attendance, {'id' => sessions( :gato_overbooked )}
     assert_response :success
     assert_not_nil assigns(:session)

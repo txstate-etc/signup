@@ -37,10 +37,17 @@ class SessionsController < ApplicationController
   end
   
   def update
+    # if no instructors are checked, then the browser won't send us an empty array like we expect
+    params[:session][:instructor_ids] ||= [] unless params[:session].blank?
     @session = Session.find( params[ :id ] )
-    if current_user && current_user.admin? || current_user == @session.instructors[0]
-      @session.update_attributes( params[ :session ] )
-      flash[ :notice ] = "The Session's data has been updated."
+    if current_user && current_user.admin? || @session.instructor?( current_user )
+      if @session.update_attributes( params[ :session ] )
+        flash.now[ :notice ] = "The Session's data has been updated."
+      else        
+        flash.now[ :error ] = "There were problems updating this session."
+      end
+      @page_title = @session.time.to_s + ": " + @session.topic.name
+      @title_image = 'date.png'
       render :show
     else
       redirect_to @session.topic
@@ -49,7 +56,7 @@ class SessionsController < ApplicationController
   
   def destroy
     session = Session.find( params[ :id ] )
-    if (current_user && current_user.admin? ) or session.instructors[0] == current_user
+    if (current_user && current_user.admin? ) or @session.instructor?( current_user )
       session.cancel!
     else
     end
@@ -68,11 +75,15 @@ class SessionsController < ApplicationController
 
   def attendance
     @session = Session.find( params[ :id ] )
-    @items = @session.confirmed_reservations.sort { |a,b| a.user.name <=> b.user.name }
-    @items_per_page = 12
-    @page_count = (@items.length + @items_per_page - 1) / @items_per_page
-    @page_title = @session.time.to_s + ": " + @session.topic.name
-    render :layout => 'print' 
+    if current_user && current_user.admin? || @session.instructor?( current_user )
+      @items = @session.confirmed_reservations.sort { |a,b| a.user.name <=> b.user.name }
+      @items_per_page = 12
+      @page_count = (@items.length + @items_per_page - 1) / @items_per_page
+      @page_title = @session.time.to_s + ": " + @session.topic.name
+      render :layout => 'print' 
+    else
+      redirect_to @session
+    end
   end
   
 end

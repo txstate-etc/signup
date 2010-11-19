@@ -1,3 +1,16 @@
+Hi there Teaching with TRACS instructors,
+
+Plain User1, one of the students in your upcoming 
+"Teaching with TRACS" class, has requested special
+accommodations for his/her needs:
+	
+A brandy snifter filled with brown M&Ms.
+
+If you have any questions about this request, you can reach 
+Plain User1 at:
+
+pu12345@dev.nul
+
 <html>
 
 <head>
@@ -40,17 +53,17 @@
 </head>
 
 <body>
-	<p>Hi there <%=h @reservation.session.topic.name %> instructors,</p>
+	<p>Hi there Teaching with TRACS instructors,</p>
 
-<p><%=h @reservation.user.name %>, one of the students in your upcoming 
-	"<%=h @reservation.session.topic.name %>" class, has requested special
+<p>Plain User1, one of the students in your upcoming 
+	"Teaching with TRACS" class, has requested special
 	accommodations for his/her needs:</p>
 	
-<p><%=h @reservation.special_accommodations %></p>
+<p>A brandy snifter filled with brown M&amp;Ms.</p>
 
 <p>If you have any questions about this request, you can reach 
-	<%=h @reservation.user.name %> at 
-	<a href="mailto:<%=h @reservation.user.email %>"><%=h @reservation.user.email %></a>.
+	Plain User1 at 
+	<a href="mailto:pu12345@dev.nul">pu12345@dev.nul</a>.
 	</p>
 
 </body>

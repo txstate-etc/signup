@@ -5,7 +5,7 @@ class TopicTest < ActiveSupport::TestCase
   
   def test_upcoming_sessions
     upcoming_tracs = Topic.find( topics( :tracs ) ).upcoming_sessions
-    assert_equal( upcoming_tracs.length, 3, "TRACS should have 3 upcoming session")
+    assert_equal( upcoming_tracs.length, 4, "TRACS should have 4 upcoming session")
     
     upcoming_gato = Topic.find( topics( :gato ) ).upcoming_sessions
     assert_equal( upcoming_gato.length, 4, "Gato should have 4 upcoming sessions")
@@ -13,7 +13,7 @@ class TopicTest < ActiveSupport::TestCase
   
   test "Verify CSV" do
     csv = topics( :tracs ).to_csv
-    assert_equal 4, csv.split(/\n/).size, "CSV for TRACS should have 3 lines"
+    assert_equal 5, csv.split(/\n/).size, "CSV for TRACS should have 5 lines"
     
     csv = topics( :gato ).to_csv
     assert_equal 10, csv.split(/\n/).size, "CSV for Gato should have 10 lines"

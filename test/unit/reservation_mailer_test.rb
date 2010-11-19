@@ -112,4 +112,26 @@ class ReservationMailerTest < ActionMailer::TestCase
     # I'm apparently not smart enough to figure out how to test this properly with multipart emails with attachments. :-P
     # assert_equal @expected.encoded, ReservationMailer.create_confirm( reservations( :bill ), "http://test.url.com" ).encoded
   end
+  
+  test "accommodations" do
+    @expected.subject = 'Special Accommodations Needed for: Teaching with TRACS'
+    @expected.body    = read_fixture('accommodations')
+    @expected.date    = Time.now
+    @expected.from    = 'nobody@txstate.edu'
+    @expected.to      = ['i12345@dev.nul', 'i23456@dev.nul']
+
+    actual = ReservationMailer.create_accommodation_notice( reservations( :tracs_multiple_instructors_plainuser1 ) )
+ 
+    # For Cheater Driven Development: uncomment the following line to save the 'actual' email
+    # to the fixture file to make it the new 'expected' body
+    #File.open("fixtures/reservation_mailer/accommodations", 'w') {|f| f.write(actual.body) }
+
+    assert_equal @expected.body, actual.body
+    assert_equal @expected.subject, actual.subject
+    assert_equal @expected.from, actual.from
+    assert_equal @expected.to, actual.to
+   
+    # I'm apparently not smart enough to figure out how to test this properly with multipart emails with attachments. :-P
+    # assert_equal @expected.encoded, ReservationMailer.create_confirm( reservations( :bill ), "http://test.url.com" ).encoded
+  end
 end
