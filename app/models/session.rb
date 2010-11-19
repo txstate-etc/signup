@@ -52,7 +52,7 @@ class Session < ActiveRecord::Base
   
   def reload_if_invalid
     #bring back any instructors that were deleted
-    self.reload unless self.errors.empty?
+    self.reload unless (self.new_record? || self.errors.empty?)
   end
   
   def to_param
