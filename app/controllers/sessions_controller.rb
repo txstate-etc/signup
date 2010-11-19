@@ -26,13 +26,13 @@ class SessionsController < ApplicationController
       @session = Session.new( params[ :session ] )
       if @session.save
         flash[ :notice ] = "Session added."
-        redirect_to @session.topic
+        redirect_to @session
       else
         @page_title = "Create New Session"
         render :action => 'new'
       end
     else
-      redirect_to @session.topic
+      redirect_to @session
     end
   end
   
@@ -50,7 +50,7 @@ class SessionsController < ApplicationController
       @title_image = 'date.png'
       render :show
     else
-      redirect_to @session.topic
+      redirect_to @session
     end
   end
   
