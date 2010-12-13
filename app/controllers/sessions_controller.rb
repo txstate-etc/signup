@@ -38,13 +38,13 @@ class SessionsController < ApplicationController
   
   def update
     # if no instructors are checked, then the browser won't send us an empty array like we expect
-    params[:session][:instructor_ids] ||= [] unless params[:session].blank?
+    params[:session][:instructor_ids] ||= [] unless params[:session].blank? || params[:reservations_update]
     @session = Session.find( params[ :id ] )
     if current_user && current_user.admin? || @session.instructor?( current_user )
       if @session.update_attributes( params[ :session ] )
         flash.now[ :notice ] = "The Session's data has been updated."
       else        
-        flash.now[ :error ] = "There were problems updating this session."
+        flash.now[ :error ] = "There were problems updating this session: " + @session.errors.full_messages().to_s
       end
       @page_title = @session.time.to_s + ": " + @session.topic.name
       @title_image = 'date.png'

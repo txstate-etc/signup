@@ -70,6 +70,7 @@
 		<div class="admin-section">
 			<h3>Reservations:</h3>
 			<% form_for @session, :url => { :action => "update" } do |session_form| %>
+				<%= hidden_field :reservations_update, :true %>
 				<ul style="line-height: 1.5em">
 				<% @session.confirmed_reservations.each do |reservation| %>
 					<% session_form.fields_for :reservations, reservation do |reservation_fields|%>
