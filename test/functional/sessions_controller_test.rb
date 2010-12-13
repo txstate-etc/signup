@@ -107,4 +107,12 @@ class SessionsControllerTest < ActionController::TestCase
     
   end
   
+  test "Should be able to update attendance" do
+    login_as( users( :admin1 ) )
+    post :update, :id => sessions( :gato ).id, :session => { :reservations_attributes => { 0 => {:id => reservations( :plainuser1 ).id, :attended => 1 } } }
+    assert_equal assigns( :session ).errors.count, 0, "Sessions should have saved successfully. Error: " + assigns( :session ).errors.full_messages().to_s
+    assert false, "Short circuit"
+  end
+  
+  
 end
