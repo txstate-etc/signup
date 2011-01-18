@@ -22,7 +22,15 @@
 					<dt>Who:</dt>
 					<dd><%=h current_user.name %> (<%=h current_user.email %>)</dd>
 					<dt>Special Accommodations Needed (optional):</dt>
-					<dd><%= f.text_area :special_accommodations, :cols => 40, :rows => 4 %>
+					<dd>
+						Do you need accommodations? [ 
+							<%= radio_button_tag( :accommodations_needed, "Yes", nil, :onclick => "revealAccommodationsArea();" ) %><%= label_tag( :accommodations_needed_yes, "Yes")%> 
+							<%= radio_button_tag( :accommodations_needed, "No", true, :onclick => "hideAccommodationsArea();")%><%= label_tag( :accommodations_needed_no, "No")%> ]
+						<div id="special-accommodations-field" style="display:none">
+							<%= f.text_area :special_accommodations, :cols => 40, :rows => 4 %><br/>
+							Include details on what sort of accommodations you require here.
+						</div>
+					</dd>
 				</dl>
 			</div>
 
