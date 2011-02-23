@@ -10,6 +10,11 @@ class Topic < ActiveRecord::Base
   validates_presence_of :name, :description, :minutes, :department
   validates_associated :department
   validates_presence_of :survey_url, :if => Proc.new{ |topic| topic.survey_type == SURVEY_EXTERNAL }, :message => "must be specified to use an external survey."
+  default_scope :order => 'name'
+  
+  def self.upcoming
+    Topic.find( :all, :conditions => [ "topics.id IN ( select topic_id from sessions where sessions.time > ? AND cancelled = false )", Time.now ] )
+  end
   
   def to_param
     "#{id}-#{name.parameterize}"

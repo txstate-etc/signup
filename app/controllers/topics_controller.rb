@@ -4,7 +4,11 @@ class TopicsController < ApplicationController
   before_filter :authenticate, :except => [ :download, :show, :index ]
   
   def index
-    @topics = Topic.find( :all, { :order => "name asc"} )
+    if current_user && current_user.admin?
+      @topics = Topic.all
+    else
+      @topics = Topic.upcoming
+    end
     @page_title = "Available Topics"
   end
   
