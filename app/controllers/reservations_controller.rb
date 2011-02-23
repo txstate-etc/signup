@@ -53,7 +53,11 @@ class ReservationsController < ApplicationController
     else
       flash[ :error ] = "Reservations can only be cancelled by their owner." + current_user.to_s + " & " + @reservation.user.to_s
     end
-    redirect_to reservations_path
+    if @reservation.user == current_user
+      redirect_to reservations_path
+    else
+      redirect_to @reservation.session
+    end
   end
   
   def download
