@@ -101,7 +101,7 @@ class ReservationMailer < ActionMailer::Base
   def accommodation_notice( reservation )
     subject    'Special Accommodations Needed for: ' + reservation.session.topic.name
     recipients reservation.session.instructors.collect {|i| i.email }
-    from       'nobody@txstate.edu'
+    from       reservation.user.email
     content_type 'multipart/alternative'
     
     part :content_type => "text/plain",

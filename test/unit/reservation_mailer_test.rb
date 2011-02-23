@@ -117,7 +117,7 @@ class ReservationMailerTest < ActionMailer::TestCase
     @expected.subject = 'Special Accommodations Needed for: Teaching with TRACS'
     @expected.body    = read_fixture('accommodations')
     @expected.date    = Time.now
-    @expected.from    = 'nobody@txstate.edu'
+    @expected.from    = 'pu12345@dev.nul'
     @expected.to      = ['i12345@dev.nul', 'i23456@dev.nul']
 
     actual = ReservationMailer.create_accommodation_notice( reservations( :tracs_multiple_instructors_plainuser1 ) )
