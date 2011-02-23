@@ -69,6 +69,22 @@ class ReservationsControllerTest < ActionController::TestCase
     assert_response :redirect
   end
   
+  test "Admins should be able to delete a user's reservation" do
+    login_as( users( :admin1 ) )
+    assert_difference 'Reservation.count', -1 do
+      delete :destroy, :id => reservations( :plainuser1 )
+    end
+    assert_response :redirect
+  end
+  
+  test "The instructor for a session should be able to delete a user's reservation" do
+    login_as( users( :instructor1 ) )
+    assert_difference 'Reservation.count', -1 do
+      delete :destroy, :id => reservations( :plainuser1 )
+    end
+    assert_response :redirect
+  end
+  
   test "Deleting a reservation with no waiting list shouldn't trigger any emails" do
     login_as( users( :plainuser1 ) )
     assert_difference 'ActionMailer::Base.deliveries.size', +0 do

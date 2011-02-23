@@ -47,7 +47,7 @@ class ReservationsController < ApplicationController
   
   def destroy
     @reservation = Reservation.find( params[ :id ] )
-    if @reservation.user == current_user
+    if @reservation.user == current_user || current_user.admin? || @reservation.session.instructor?( current_user )
       @reservation.destroy
       flash[ :notice ] = "Your reservation has been cancelled."
     else
