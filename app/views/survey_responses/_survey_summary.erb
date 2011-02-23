@@ -3,7 +3,7 @@
 		<h3>Survey Results</h3>
 		<div>Average Rating: <%= model_object.average_rating %></div>
 		<div>Average Instructor Rating: <%= model_object.average_instructor_rating %></div>
-		<div id="display-comments"><a href="javascript:Effect.BlindDown('comments');Effect.BlindUp('display-comments')">Display Comments</a></div>
+		<div id="display-comments"><%= link_to_function "Display Comments", "javascript:Effect.BlindDown('comments');Effect.BlindUp('display-comments')" %>
 		<ul id="comments" style="display: none">
 			<% model_object.survey_responses.each do |survey_response| %>
 				<% if !survey_response.comments.empty? %>
