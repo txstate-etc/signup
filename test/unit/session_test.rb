@@ -66,8 +66,8 @@ class SessionTest < ActiveSupport::TestCase
     assert_equal reminder_email.to[0], users( :plainuser3 ).email
   end
   
-  test "Sessions with automatic or external surveys should get emails" do
-    assert_difference 'ActionMailer::Base.deliveries.size', +4 do
+  test "Sessions with automatic or external surveys should get emails, but only for folks not marked as absent" do
+    assert_difference 'ActionMailer::Base.deliveries.size', +3 do
       assert_difference 'Session.all(:conditions => ["survey_sent = ?", false]).size', -2 do
         Session.send_surveys
       end
