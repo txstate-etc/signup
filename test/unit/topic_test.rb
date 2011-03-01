@@ -11,6 +11,14 @@ class TopicTest < ActiveSupport::TestCase
     assert_equal( upcoming_gato.length, 4, "Gato should have 4 upcoming sessions")
   end
   
+  test "Verify that past sessions are computed correctly" do
+    past_tracs = topics( :tracs ).past_sessions
+    assert_equal( past_tracs.length, 1 )
+    
+    past_gato = topics( :gato ).past_sessions
+    assert_equal( past_gato.length, 2 )
+  end
+  
   test "Verify CSV" do
     csv = topics( :tracs ).to_csv
     assert_equal 5, csv.split(/\n/).size, "CSV for TRACS should have 5 lines"

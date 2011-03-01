@@ -24,6 +24,10 @@ class Topic < ActiveRecord::Base
     sessions.find( :all, :conditions => [ "time > ? AND cancelled = false", Time.now ] )
   end
   
+  def past_sessions
+    sessions.find( :all, :conditions => [ "time < ? AND cancelled = false", Time.now ] )
+  end
+  
   def to_csv
     FasterCSV.generate do |csv|
       csv << [ "Topic", "Session ID", "Session Time", "Session Cancelled", "Attendee Name", "Attendee Login", "Attendee Email", "Reservation Confirmed?" ]

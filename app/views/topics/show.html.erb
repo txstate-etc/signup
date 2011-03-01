@@ -24,6 +24,15 @@
 	There are no sessions scheduled at this time.
 <% end %>
 
+<% if @topic.past_sessions.size > 0 && current_user && current_user.admin? %>
+<h3>Past Sessions:</h3>
+	<ul id="past-session-list">
+		<% @topic.past_sessions.each do |session| %>
+			<li><%= link_to session.time, session %></li>
+		<% end %>
+	</ul>
+<% end %>
+
 <div class="download-link download-calendar"><%= link_to "Subscribe to Calendar", :protocol => "webcal", :host => request.host, :port => request.port, :action => 'download' %></div>
 
 <% if current_user && current_user.admin? %>
