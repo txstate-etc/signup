@@ -11,8 +11,7 @@
   <% [@items_per_page, @items.length].min.times do %>
     <li>
       <% item = @items.shift %>
-	  <%= item.user.name %> 
-	  <% if !item.user.department.blank? %>(<%= item.user.department %>)<% end %>
+	    <%= attendance_sheet_entry(item.user) -%>
     </li>
   <% end %>
   </ul>
