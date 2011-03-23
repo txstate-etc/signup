@@ -52,3 +52,13 @@ ul li {
   border-bottom: dotted 2px;
   padding: 1em 0.25em;
 }
+
+p {
+  margin: 0;
+  font-size: larger;
+}
+
+p.line2 {
+  font-style: italic;
+  font-size: medium; 
+}
