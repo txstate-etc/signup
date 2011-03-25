@@ -76,7 +76,7 @@ class SessionsController < ApplicationController
   def attendance
     @session = Session.find( params[ :id ] )
     if current_user && current_user.admin? || @session.instructor?( current_user )
-      send_data @session.attendance_pdf, :disposition => 'inline', :type => 'application/pdf'
+      send_data AttendanceReport.new.to_pdf(@session), :disposition => 'inline', :type => 'application/pdf'
     else
       redirect_to @session
     end
