@@ -96,7 +96,7 @@
 				</ul>
 				<%= submit_tag "Record Attendance" %>
 			<% end %>
-			<%= link_to 'Print Attendance Sheet', {:action => :attendance, :id => @session } %>
+			<%= link_to 'Print Attendance Sheet', {:action => :attendance, :id => @session, :format => "pdf" } %>
 		</div>
 	<% end %>
 

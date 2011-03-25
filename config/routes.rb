@@ -41,7 +41,7 @@ ActionController::Routing::Routes.draw do |map|
   # map.connect ':controller/:action/:id'
   # map.connect ':controller/:action/:id.:format'
 
-  map.connect 'sessions/attendance/:id', :controller => :sessions, :action => :attendance
+  map.connect 'sessions/attendance/:id.:format', :controller => :sessions, :action => :attendance
   map.connect 'sessions/download', :controller => :sessions, :action => :download
   map.connect 'topics/download/:id', :controller => :topics, :action => :download
   

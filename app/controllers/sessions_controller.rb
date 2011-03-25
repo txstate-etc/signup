@@ -76,11 +76,7 @@ class SessionsController < ApplicationController
   def attendance
     @session = Session.find( params[ :id ] )
     if current_user && current_user.admin? || @session.instructor?( current_user )
-      @items = @session.confirmed_reservations
-      @items_per_page = 12
-      @page_count = (@items.length + @items_per_page - 1) / @items_per_page
-      @page_title = @session.time.to_s + ": " + @session.topic.name
-      render :layout => 'print' 
+      send_data @session.attendance_pdf, :disposition => 'inline', :type => 'application/pdf'
     else
       redirect_to @session
     end

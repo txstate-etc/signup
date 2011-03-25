@@ -1,4 +1,6 @@
 require 'ri_cal'
+require 'prawn/core'
+require 'prawn/layout'
 
 class Session < ActiveRecord::Base
   has_many :reservations
@@ -144,4 +146,48 @@ class Session < ActiveRecord::Base
   def average_rating
     survey_responses.inject(0.0) { |sum, rating| sum + rating.class_rating } / survey_responses.size
   end
+  
+  def attendance_pdf
+    pdf = Prawn::Document.new
+    
+    pdf.create_stamp("page_header") do
+      pdf.text_box topic.name, :at => [20, 730], :size => 16, :align => :center, :style => :bold, :single_line => true, :overflow => :ellipses
+      pdf.text_box location, :at => [20, 710], :size => 14, :align => :center, :style => :bold, :single_line => true, :overflow => :ellipses
+      pdf.text_box time.to_s, :at => [20, 690], :size => 14, :align => :center, :style => :bold
+      pdf.text_box "Attendance List", :at => [20, 650], :size => 14, :align => :center, :style => :bold      
+    end
+    
+    items = confirmed_reservations
+    while items.size > 0
+      pdf.stamp("page_header")
+      pdf.bounding_box([20,630], :width => 500, :height =>550) do
+        [12, items.size].min.times do
+          item = items.shift
+          pdf.bounding_box([0,pdf.cursor], :width => 500, :height =>48) do
+            pdf.stroke_bounds
+            pdf.pad(14) do 
+              pdf.indent(5) do           
+                pdf.text item.user.name, :size => 14
+                pdf.text attendance_entry_line2(item.user), :size => 12, :style => :italic
+              end          
+            end
+          end 
+        end
+      end
+      pdf.start_new_page if items.size > 0
+    end
+        
+    pdf.number_pages "Page <page> of <total>", [pdf.bounds.right - 50, 0] 
+    pdf.render
+  end
+  
+  protected
+  def attendance_entry_line2(user)
+    line2 = ""
+    line2 << user.email if user.email
+    line2 << ", " if user.email && user.department
+    line2 << user.department if user.department
+    line2
+  end
+
 end
