@@ -69,6 +69,14 @@ class ReservationsControllerTest < ActionController::TestCase
     assert_response :redirect
   end
   
+  test "Users should only be able to delete reservations before the class has begun" do
+    login_as( users( :plainuser1 ) )
+    assert_difference 'Reservation.count', 0, "User was able to delete a reservation from the past." do
+      delete :destroy, :id => reservations( :gato_past_plainuser1 )
+    end
+    assert_response :redirect
+  end
+  
   test "Admins should be able to delete a user's reservation" do
     login_as( users( :admin1 ) )
     assert_difference 'Reservation.count', -1 do

@@ -47,12 +47,17 @@ class ReservationsController < ApplicationController
   
   def destroy
     @reservation = Reservation.find( params[ :id ] )
-    if @reservation.user == current_user || current_user.admin? || @reservation.session.instructor?( current_user )
+    superuser =  current_user.admin? || @reservation.session.instructor?( current_user )
+    
+    if @reservation.user != current_user && !superuser
+      flash[ :error ] = "Reservations can only be cancelled by their owner." + current_user.to_s + " & " + @reservation.user.to_s
+    elsif @reservation.session.time <= Time.now && !superuser
+      flash[ :error ] = "Reservations cannot be cancelled once the session has begun."      
+    else
       @reservation.destroy
       flash[ :notice ] = "Your reservation has been cancelled."
-    else
-      flash[ :error ] = "Reservations can only be cancelled by their owner." + current_user.to_s + " & " + @reservation.user.to_s
     end
+    
     if @reservation.user == current_user
       redirect_to reservations_path
     else
