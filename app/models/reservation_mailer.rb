@@ -3,8 +3,8 @@ class ReservationMailer < ActionMailer::Base
 
   def confirm( reservation )
     subject    'Reservation Confirmation For: ' + reservation.user.name
-    recipients reservation.user.email
-    from       'nobody@txstate.edu'
+    recipients reservation.user.email_header
+    from       reservation.session.instructors[0].email_header
     content_type 'multipart/alternative'
         
     part :content_type => "text/plain",
@@ -19,8 +19,8 @@ class ReservationMailer < ActionMailer::Base
 
   def remind( reservation )
     subject    'Reminder: ' + reservation.session.topic.name
-    recipients reservation.user.email
-    from       'nobody@txstate.edu'
+    recipients reservation.user.email_header
+    from       reservation.session.instructors[0].email_header
     content_type 'multipart/alternative'
     
     part :content_type => "text/plain",
@@ -35,8 +35,8 @@ class ReservationMailer < ActionMailer::Base
 
   def promotion_notice( reservation )
     subject    'Now Enrolled: ' + reservation.session.topic.name
-    recipients reservation.user.email
-    from       'nobody@txstate.edu'
+    recipients reservation.user.email_header
+    from       reservation.session.instructors[0].email_header
     content_type 'multipart/alternative'
     
     part :content_type => "text/plain",
@@ -51,8 +51,8 @@ class ReservationMailer < ActionMailer::Base
 
   def cancellation_notice( reservation )
     subject    'Class Cancelled: ' + reservation.session.topic.name
-    recipients reservation.user.email
-    from       'nobody@txstate.edu'
+    recipients reservation.user.email_header
+    from       reservation.session.instructors[0].email_header
     content_type 'multipart/alternative'
     
     url = url_for( :controller => "reservations" )
@@ -68,8 +68,8 @@ class ReservationMailer < ActionMailer::Base
   
   def update_notice( reservation )
     subject    'Class Details Updated: ' + reservation.session.topic.name
-    recipients reservation.user.email
-    from       'nobody@txstate.edu'
+    recipients reservation.user.email_header
+    from       reservation.session.instructors[0].email_header
     content_type 'multipart/alternative'
     
     url = url_for( :controller => "reservations" )
@@ -85,8 +85,8 @@ class ReservationMailer < ActionMailer::Base
   
   def survey_mail( reservation )
     subject    'Feedback Requested: ' + reservation.session.topic.name
-    recipients reservation.user.email
-    from       'nobody@txstate.edu'
+    recipients reservation.user.email_header
+    from       reservation.session.instructors[0].email_header
     content_type 'multipart/alternative'
     
     part :content_type => "text/plain",
@@ -100,8 +100,8 @@ class ReservationMailer < ActionMailer::Base
   
   def accommodation_notice( reservation )
     subject    'Special Accommodations Needed for: ' + reservation.session.topic.name
-    recipients reservation.session.instructors.collect {|i| i.email }
-    from       reservation.user.email
+    recipients reservation.session.instructors.collect {|i| i.email_header }
+    from       reservation.user.email_header
     content_type 'multipart/alternative'
     
     part :content_type => "text/plain",

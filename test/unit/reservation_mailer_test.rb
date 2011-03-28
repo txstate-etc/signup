@@ -7,7 +7,7 @@ class ReservationMailerTest < ActionMailer::TestCase
     @expected.subject = 'Reservation Confirmation For: Plain User1'
     @expected.body    = read_fixture('confirm')
     @expected.date    = Time.now
-    @expected.from    = 'nobody@txstate.edu'
+    @expected.from    = 'i12345@dev.nul'
     @expected.to      = 'pu12345@dev.nul'
 
     actual = ReservationMailer.create_confirm( reservations( :plainuser1 ) )
@@ -29,7 +29,7 @@ class ReservationMailerTest < ActionMailer::TestCase
     @expected.subject = 'Reminder: Introduction to Gato'
     @expected.body    = read_fixture('remind')
     @expected.date    = Time.now
-    @expected.from    = 'nobody@txstate.edu'
+    @expected.from    = 'i12345@dev.nul'
     @expected.to      = 'pu12345@dev.nul'
 
     actual = ReservationMailer.create_remind( reservations( :plainuser1 ) )
@@ -51,7 +51,7 @@ class ReservationMailerTest < ActionMailer::TestCase
     @expected.subject = 'Now Enrolled: Introduction to Gato'
     @expected.body    = read_fixture('promote')
     @expected.date    = Time.now
-    @expected.from    = 'nobody@txstate.edu'
+    @expected.from    = 'i12345@dev.nul'
     @expected.to      = 'pu12345@dev.nul'
 
     actual = ReservationMailer.create_promotion_notice( reservations( :plainuser1 ) )
@@ -73,7 +73,7 @@ class ReservationMailerTest < ActionMailer::TestCase
     @expected.subject = 'Class Details Updated: Introduction to Gato'
     @expected.body    = read_fixture('update')
     @expected.date    = Time.now
-    @expected.from    = 'nobody@txstate.edu'
+    @expected.from    = 'i12345@dev.nul'
     @expected.to      = 'pu12345@dev.nul'
 
     actual = ReservationMailer.create_update_notice( reservations( :plainuser1 ) )
@@ -95,7 +95,7 @@ class ReservationMailerTest < ActionMailer::TestCase
     @expected.subject = 'Class Cancelled: Introduction to Gato'
     @expected.body    = read_fixture('cancel')
     @expected.date    = Time.now
-    @expected.from    = 'nobody@txstate.edu'
+    @expected.from    = 'i12345@dev.nul'
     @expected.to      = 'pu12345@dev.nul'
 
     actual = ReservationMailer.create_cancellation_notice( reservations( :plainuser1 ) )

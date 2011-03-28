@@ -7,6 +7,10 @@ class User < ActiveRecord::Base
      name + " (" + login + ")"
   end
     
+  def email_header
+    "\"#{name}\" <#{email}>"
+  end
+    
   # This method is resonsible for populating the User table with the
   # login, name, and email of anybody who might be using the system.
   # The included sample code is to pull in data from Texas State's
