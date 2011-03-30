@@ -86,7 +86,7 @@ class Session < ActiveRecord::Base
   
   def confirmed_reservations
     results = self.seats ? reservations[ 0, self.seats ] : reservations
-    return results.sort { |a,b| a.user.name <=> b.user.name }
+    return results.sort { |a,b| a.user.last_name <=> b.user.last_name }
   end
   
   def seats_remaining

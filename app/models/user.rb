@@ -1,7 +1,11 @@
 require 'net/ldap'
 
 class User < ActiveRecord::Base
-  validates_presence_of :name, :login, :email
+  validates_presence_of :last_name, :login, :email
+  
+  def name
+    [first_name, last_name].join(" ").strip
+  end
   
   def name_and_login
      name + " (" + login + ")"
@@ -43,14 +47,16 @@ class User < ActiveRecord::Base
       # Build the list
       records = records_updated = new_records = 0
       ldap.search(:base => base_dn, :filter => filter, :return_result => false ) do |entry|
-        name = entry.givenName.to_s.strip + " " + entry.sn.to_s.strip
+        first_name = entry.givenName.to_s.strip
+        last_name = entry.sn.to_s.strip
         login = entry.name.to_s.strip
         email = login + "@txstate.edu"
         department = nil
         department = entry.department.to_s if entry.respond_to?( :department )
-        user = User.find_or_initialize_by_login :name => name, :login => login, :email => email, :department => department
-        if user.name != name || user.department != department
-          user.name = name
+        user = User.find_or_initialize_by_login :first_name => first_name, :last_name => last_name, :login => login, :email => email, :department => department
+        if user.first_name != first_name || user.last_name != last_name || user.department != department
+          user.first_name = first_name
+          user.last_name = last_name
           user.department = department
           user.save
           logger.info( "Updated: " + email )

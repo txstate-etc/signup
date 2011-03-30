@@ -144,8 +144,8 @@ class SessionTest < ActiveSupport::TestCase
     assert !test_session.instructor?( users( :instructor2 ) )
   end
   
-  test "Confirmed Reservations should be alphabetized by name" do
+  test "Confirmed Reservations should be alphabetized by last name" do
     test_session = sessions( :gato_overbooked )
-    assert_equal test_session.confirmed_reservations, test_session.confirmed_reservations.sort { |a,b| a.user.name <=> b.user.name }
+    assert_equal test_session.confirmed_reservations, test_session.confirmed_reservations.sort { |a,b| a.user.last_name <=> b.user.last_name }
   end
 end

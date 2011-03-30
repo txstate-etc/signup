@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101116233846) do
+ActiveRecord::Schema.define(:version => 20110330200707) do
 
   create_table "departments", :force => true do |t|
     t.string   "name"
@@ -76,16 +76,18 @@ ActiveRecord::Schema.define(:version => 20101116233846) do
   create_table "users", :force => true do |t|
     t.string   "login",                         :null => false
     t.string   "email",                         :null => false
-    t.string   "name",                          :null => false
     t.boolean  "admin",      :default => false, :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "active",     :default => true
     t.string   "department"
+    t.string   "first_name"
+    t.string   "last_name"
   end
 
   add_index "users", ["active"], :name => "index_users_on_active"
+  add_index "users", ["first_name"], :name => "index_users_on_first_name"
+  add_index "users", ["last_name"], :name => "index_users_on_last_name"
   add_index "users", ["login"], :name => "index_users_on_login"
-  add_index "users", ["name"], :name => "index_users_on_name"
 
 end

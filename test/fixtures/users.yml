@@ -3,42 +3,45 @@
 plainuser1:
     login: pu12345
     email: pu12345@dev.nul
-    name: Plain User1
+    first_name: Plain
+    last_name: User1
     admin: false
 
 plainuser2:
     login: pu23456
     email: pu23456@dev.nul
-    name: Plain User2
+    first_name: Plain
+    last_name: User2
     admin: false
 
 plainuser3:
     login: pu34567
     email: pu34567@dev.nul
-    name: Plain User3
+    first_name: Plain
+    last_name: User3
     admin: false
 
 admin1:
     login: a12345
     email: a12345@dev.nul
-    name: Admin1
+    last_name: Admin1
     admin: true
 
 admin2:
     login: a23456
     email: a23456@dev.nul
-    name: Admin2
+    last_name: Admin2
     admin: true
 
 instructor1:
     login: i12345
     email: i12345@dev.nul
-    name: Instructor1
+    last_name: Instructor1
     admin: false
 
 instructor2:
     login: i23456
     email: i23456@dev.nul
-    name: Instructor2
+    last_name: Instructor2
     admin: false
 
