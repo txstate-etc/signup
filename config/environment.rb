@@ -28,6 +28,7 @@ Rails::Initializer.run do |config|
   config.gem "pdf-reader", :lib => "pdf/reader"
   config.gem "Ascii85", :lib => "ascii85"
   config.gem "prawn", :version => '0.8.4'
+  config.gem "calendar_date_select", :version => '1.16.2'
 
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named

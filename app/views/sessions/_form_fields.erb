@@ -3,7 +3,13 @@
 <%=h @session.topic.name %>
 
 <%= f.label :time, "Session Time:", :class => 'field-label' %>
-<%= f.datetime_select :time, :minute_step => 5 %>
+<%= f.calendar_date_select :time %>
+
+<%= f.label :reg_start, "Registration Period Begins", :class => 'field-label' %>
+<%= f.calendar_date_select :reg_start %>
+
+<%= f.label :time, "Registration Period Ends:", :class => 'field-label' %>
+<%= f.calendar_date_select :reg_end %>
 
 <%= f.label :instructor_id, "Instructor(s):", :class => 'field-label' %>
 <ul class="instructor-list">

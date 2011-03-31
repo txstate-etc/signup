@@ -4,6 +4,8 @@
 	<dd><%= link_to @session.topic.name, @session.topic%></dd>
 	<dt>Time:</dt>
 	<dd><%=h @session.time %></dd>
+  <dt>Registration Period:</dt>
+  <dd><%=h registration_period(@session) %></dd>
 	<dt>Location:</dt>
 	<dd><%=h @session.location %></dd>
 	<dt>Instructor(s):</dt>
@@ -50,7 +52,7 @@
 		<%= link_to "cancel reservation", @reservation, :method => :delete, :confirm => "Are you sure you want to cancel your reservation for \"" + @reservation.session.topic.name + "\"?"%>
 	</div>
 	
-<% else %>		
+<% elsif @session.in_registration_period? %>		
 	<% if @session.space_is_available? %>
 		<div class="button-link confirm">
 			<%= link_to "Register", new_session_reservation_path( @session ) %>

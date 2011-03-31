@@ -78,6 +78,12 @@ class Session < ActiveRecord::Base
     end
   end
   
+  def in_registration_period?
+    return false if reg_start.present? && reg_start > Time.now
+    return false if reg_end.present? && reg_end < Time.now
+    return true
+  end
+  
   def space_is_available?
     return true if self.seats == nil
     return true if self.seats > Reservation.count( :conditions => ["session_id = ?", self.id ] )
