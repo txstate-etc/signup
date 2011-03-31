@@ -78,6 +78,10 @@ class Session < ActiveRecord::Base
     end
   end
   
+  def registration_period_defined?
+    reg_start.present? || reg_end.present?
+  end
+  
   def in_registration_period?
     return false if reg_start.present? && reg_start > Time.now
     return false if reg_end.present? && reg_end < Time.now

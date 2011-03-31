@@ -5,11 +5,19 @@
 <%= f.label :time, "Session Time:", :class => 'field-label' %>
 <%= f.calendar_date_select :time %>
 
-<%= f.label :reg_start, "Registration Period Begins", :class => 'field-label' %>
-<%= f.calendar_date_select :reg_start %>
-
-<%= f.label :time, "Registration Period Ends:", :class => 'field-label' %>
-<%= f.calendar_date_select :reg_end %>
+<div>
+  <label class='field-label'>Do you want to limit the Registration Period? [ 
+    <%= radio_button_tag( :reg_period_needed, "Yes", @session.registration_period_defined?, :onclick => "revealRegPeriodArea();" ) %><%= label_tag( :reg_period_needed_yes, "Yes")%> 
+    <%= radio_button_tag( :reg_period_needed, "No", !@session.registration_period_defined?, :onclick => "hideRegPeriodArea();")%><%= label_tag( :reg_period_needed_no, "No")%> ]
+  </label>  
+  <div id="registration-period-field" style="<%= @session.registration_period_defined? ? '' : 'display:none' %>">
+    <%= f.label :reg_start, "Registration Period Begins:", :class => 'field-label' %>
+    <%= f.calendar_date_select :reg_start %>
+    
+    <%= f.label :time, "Registration Period Ends:", :class => 'field-label' %>
+    <%= f.calendar_date_select :reg_end %>
+  </div>
+</div>
 
 <%= f.label :instructor_id, "Instructor(s):", :class => 'field-label' %>
 <ul class="instructor-list">
