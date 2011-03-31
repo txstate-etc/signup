@@ -51,3 +51,21 @@
 	<% end %>
 
 <% end %>
+
+<% if @past_reservations.size > 0 %>
+<div class="reservation-group">
+  <h2>Past Sessions</h2>
+  <ul class="reservation-list">
+    <% @past_reservations.each do |reservation| %>
+      <li>
+        <div>
+          <div class="reservation-name">
+            <%= link_to reservation.session.time, reservation.session %>: <%= link_to reservation.session.topic.name, reservation.session.topic %>
+          </div>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+</div>
+<% end %>
+
