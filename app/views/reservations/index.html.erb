@@ -69,3 +69,16 @@
 </div>
 <% end %>
 
+<% if ( current_user && current_user.admin? ) or @session.instructor?( current_user ) %>
+<div class="admin-options">
+  <h2><%= image_tag('advancedsettings.png') %> Instructor/Admin Options</h2>
+    <div class="admin-section">
+      <h3>View Another Person's Reservations:</h3>
+      <% form_tag ({:controller => :reservations, :action => :index}, :method => "get") do %>
+        <%= label_tag "user_login", "Login ID:", :class => 'field-label' %>
+        <%= text_field_tag "user_login", nil, :size => 7 %><br/>
+        <%= submit_tag "Show Reservations" %>
+      <% end %>
+    </div>
+</div>
+<% end %>

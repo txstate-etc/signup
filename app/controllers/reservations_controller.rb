@@ -39,8 +39,16 @@ class ReservationsController < ApplicationController
   end
   
   def index
-    @page_title = "Your Reservations"
-    reservations = Reservation.find( :all, :conditions => ["user_id = ? AND sessions.cancelled = false", current_user.id ], :include => [ :session ] )
+    admin_is_viewing_someone_else = params[ :user_login ] && current_user.admin?
+    if admin_is_viewing_someone_else
+      user = User.find_by_login( params[ :user_login ] )
+      @page_title = "Reservations for #{user.name}"
+    else
+      user = current_user
+      @page_title = "Your Reservations"
+    end
+    
+    reservations = Reservation.find( :all, :conditions => ["user_id = ? AND sessions.cancelled = false", user.id ], :include => [ :session ] )
     current_reservations = reservations.find_all{ |reservation| reservation.session.time > Time.now }
     @past_reservations = reservations.find_all{ |reservation| reservation.session.time <= Time.now && reservation.attended? }
     @confirmed_reservations = current_reservations.find_all{ |reservation| reservation.confirmed? }
