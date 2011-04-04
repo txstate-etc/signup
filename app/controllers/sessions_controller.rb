@@ -42,13 +42,13 @@ class SessionsController < ApplicationController
     @session = Session.find( params[ :id ] )
     if current_user && current_user.admin? || @session.instructor?( current_user )
       if @session.update_attributes( params[ :session ] )
-        flash.now[ :notice ] = "The Session's data has been updated."
+        flash[ :notice ] = "The Session's data has been updated."
       else        
-        flash.now[ :error ] = "There were problems updating this session: " + @session.errors.full_messages().to_s
+        flash[ :error ] = "There were problems updating this session: " + @session.errors.full_messages().to_s
       end
       @page_title = @session.time.to_s + ": " + @session.topic.name
       @title_image = 'date.png'
-      render :show
+      redirect_to @session
     else
       redirect_to @session
     end
