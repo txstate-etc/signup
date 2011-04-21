@@ -1,3 +1,16 @@
+<% content_for :admin_tools do %>
+    <p><%= link_to "Create New Topic", new_topic_path %></p>
+<% end %>
+ 
+<% content_for :sidebar do %>
+  <div class="download-link download-calendar">
+    <%= link_to "[add all topic sessions to calendar]", :protocol => "webcal", :controller => 'sessions', :host => request.host, :port => request.port, :action => 'download' %>
+  </div>
+<% end %>
+   
+
+<div id="group-by-dept" class="notice"><%= link_to '(group by department)', departments_path %></div>
+
 <ul id="topic-list">
 	<% @topics.each do |topic| %>
 		<li>
@@ -6,13 +19,3 @@
 	<% end %>
 </ul>
 
-<div class="notice">You can also browse topics <%= link_to 'by department', departments_path %>.</div>
-
-<div class="download-link download-calendar"><%= link_to "Subscribe to Calendar", :protocol => "webcal", :controller => 'sessions', :host => request.host, :port => request.port, :action => 'download' %></div>
-
-<% if current_user && current_user.admin? %>
-<div class="admin-options">
-	<h2><%= image_tag('advancedsettings.png') %> Admin Options</h2>
-	<div class="button-link confirm"><%= link_to "Create New Topic", new_topic_path %></div>
-</div>
-<% end %>
