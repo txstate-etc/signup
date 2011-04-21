@@ -6,7 +6,6 @@ class SessionsController < ApplicationController
   def show
     @session = Session.find( params[:id] )
     @page_title = @session.time.to_s + ": " + @session.topic.name
-    @title_image = 'date.png'
     @reservation = Reservation.find_by_user_id_and_session_id( current_user.id, @session.id ) if current_user
   end
   
@@ -15,7 +14,7 @@ class SessionsController < ApplicationController
     if current_user && current_user.admin?
       @session = Session.new
       @session.topic = topic
-      @page_name = "Create New Session"
+      @page_title = "Create New Session"
     else
       redirect_to topic
     end
@@ -47,7 +46,6 @@ class SessionsController < ApplicationController
         flash[ :error ] = "There were problems updating this session: " + @session.errors.full_messages().to_s
       end
       @page_title = @session.time.to_s + ": " + @session.topic.name
-      @title_image = 'date.png'
       redirect_to @session
     else
       redirect_to @session

@@ -18,7 +18,6 @@ class TopicsController < ApplicationController
     respond_to do |wants|
       wants.html do
         @page_title = @topic.name
-        @title_image = 'bell.png'
       end
       
       wants.csv do
@@ -63,7 +62,6 @@ class TopicsController < ApplicationController
         flash.now[ :error ] = "There were problems updating this topic."
       end
       @page_title = @topic.name
-      @title_image = 'bell.png'
       render :show
     else
       redirect_to @topic

@@ -68,16 +68,13 @@
 </div>
 <% end %>
 
-<% if current_user && current_user.admin? %>
-<div class="admin-options">
-  <h2><%= image_tag('advancedsettings.png') %> Instructor/Admin Options</h2>
-    <div class="admin-section">
-      <h3>View Another Person's Reservations:</h3>
-      <% form_tag ({:controller => :reservations, :action => :index}, :method => "get") do %>
-        <%= label_tag "user_login", "Login ID:", :class => 'field-label' %>
-        <%= text_field_tag "user_login", nil, :size => 7 %><br/>
-        <%= submit_tag "Show Reservations" %>
-      <% end %>
-    </div>
-</div>
+<% content_for :admin_tools do %>
+  <div>
+    <h3>View Another Person:</h3>
+    <% form_tag ({:controller => :reservations, :action => :index}, :method => "get") do %>
+      <%= label_tag "user_login", "Net ID", :class => "admin-netid-label" %>
+      <%= text_field_tag "user_login", nil, :size => 7 %>
+      <%= submit_tag "Go" %>
+    <% end %>
+  </div>
 <% end %>

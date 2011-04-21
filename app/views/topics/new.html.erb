@@ -3,7 +3,7 @@
 
 <% form_for( @topic ) do |f| %>
 	<%= render :partial => "form_fields", :locals => { :f => f }%>	
-	<br/><br/>
+	<br/>
 	
-	<%= submit_tag "Create New Topic", :class => "confirm submit-button" %>
+	<%= submit_tag "Create Topic" %>
 <% end %>

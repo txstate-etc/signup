@@ -174,10 +174,15 @@ dt {
 .topbanner-deptlink {
   display: block;
   position: absolute;
-  left: 850px;
+  left: 700px;
   top: 28px;
-  width: 300px;
   font-weight: bold;
+  font-size: 0.875em;
+}
+
+label.admin-netid-label {
+  font-size: .875em;
+  font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', serif;
 }
 
 label.field-label {
@@ -245,20 +250,17 @@ div.notice {
 div#group-by-dept {
   position: relative;
   top: -25px;
-  left: 13em;  
+  margin-left: 13em;  
 }
 
 input.submit-button {
-  width: 100%;
   height: 3em;
   color: white;
   font-weight: bold;
   margin-bottom: 1em;
   font-size: 1em;
   font-weight: bold;
-  border: 3px outset black;
   cursor: pointer;
-  text-transform: lowercase;
 }
 
 .confirm {
@@ -380,6 +382,15 @@ div.admin-tools {
 div.admin-tools h1 {
   color: #501214;
   border-bottom: #501214 dotted 1px;
+}
+
+div.admin-tools div {
+  border-bottom: #501214 dotted 1px;
+}
+
+div.admin-tools h3 {
+  line-height: 1em;
+  margin-top: 0.5em;
 }
 
 div.admin-tools p {
@@ -526,18 +537,20 @@ div.reservation-group {
 }
 
 div#container {
-  max-width: 800px;
+  max-width: 970px;
   background-color: #FFF;
   margin-top: 60px;
   margin-left: 20px;
+  margin-right: 40px;
   margin-bottom: 20px;
-  padding: 20px 220px;
-  min-height: 800px;
+  padding: 20px 0px;
+  min-height: 600px;
 }
 
 div#contents {
   margin-top: 20px;  
-  margin-left: 60px;
+  margin-left: 240px;
+  margin-right: 40px;
 }
 
 div#contents h1 {

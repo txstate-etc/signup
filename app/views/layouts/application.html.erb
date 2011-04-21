@@ -29,12 +29,13 @@
       <div class="sidebar">
         <%= yield :sidebar %>
       </div>
-  		<div class="admin-tools">
-        <% if current_user && current_user.admin? %>
+      <% if current_user && current_user.admin? %>
+        <div class="admin-tools">
           <h1>ADMIN TOOLS</h1>
     		  <%= yield :admin_tools %>
-        <% end %>
-  		</div>
+          <p><%= link_to "Create New Topic", new_topic_path %></p>
+        </div>
+      <% end %>
   		<% unless flash[ :notice ].blank? %>
   			<div id="notification"><%=h flash[ :notice ] %></div>
   		<% end %>

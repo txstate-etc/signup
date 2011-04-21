@@ -1,3 +1,13 @@
+<% content_for :admin_tools do %>
+  <p><%= link_to "Create New Session", new_topic_session_path( @topic ) %></p>
+<% end %>
+
+<% content_for :sidebar do %>
+  <div class="download-link download-calendar">
+    <%= link_to "[add all sessions to calendar]", :protocol => "webcal", :host => request.host, :port => request.port, :action => 'download' %>
+  </div>
+<% end %>
+
 <%= javascript_include_tag 'topic_form' %>
 <%= error_messages_for 'topic' %>
 
@@ -33,8 +43,6 @@
 	</ul>
 <% end %>
 
-<div class="download-link download-calendar"><%= link_to "Subscribe to Calendar", :protocol => "webcal", :host => request.host, :port => request.port, :action => 'download' %></div>
-
 <% if current_user && current_user.admin? %>
 <div class="admin-options">
 	<h2><%= image_tag('advancedsettings.png') %> Admin Options</h2>
@@ -48,12 +56,7 @@
 			<%= render :partial => "form_fields", :locals => { :f => f }%>
 			<br/><%= submit_tag "Make Changes" %>
 		<% end %>
-	</div>
-	
-	
-	<div class="button-link confirm"><%= link_to "Create New Session", new_topic_session_path( @topic ) %></div>
-
-	
+	</div>	
 </div>
 
 

@@ -1,10 +1,6 @@
-<% content_for :admin_tools do %>
-    <p><%= link_to "Create New Topic", new_topic_path %></p>
-<% end %>
- 
 <% content_for :sidebar do %>
   <div class="download-link download-calendar">
-    <%= link_to "[add all topic sessions to calendar]", :protocol => "webcal", :controller => 'sessions', :host => request.host, :port => request.port, :action => 'download' %>
+    <%= link_to "[add all topics to calendar]", :protocol => "webcal", :controller => 'sessions', :host => request.host, :port => request.port, :action => 'download' %>
   </div>
 <% end %>
    
