@@ -11,13 +11,13 @@
 					<li>
 						<div>
 							<div class="reservation-name">
-								<%= link_to reservation.session.time, reservation.session %>: <%= link_to reservation.session.topic.name, reservation.session.topic %>
+								<%= link_to formatted_time_range(reservation.session.time, reservation.session.topic.minutes), reservation.session %><br/><%= link_to reservation.session.topic.name, reservation.session.topic %>
 							</div>
-							<div class="button-link confirm">
-								<%= link_to "download to calendar", { :controller => :reservations, :action => :download, :id => reservation.id } %>
-							</div>
-							<div class="button-link delete">
-								<%= link_to "cancel reservation", reservation, :method => :delete, :confirm => "Are you sure you want to cancel your reservation for \"" + reservation.session.topic.name + "\"?"%>
+              <div class="download-link download-calendar">
+                <%= link_to "[add reservation to calendar]", :controller => :reservations, :action => :download, :id => reservation.id %>
+              </div>
+							<div class="delete-link">
+								<%= link_to "Cancel Reservation", reservation, :method => :delete, :confirm => "Are you sure you want to cancel your reservation for \"" + reservation.session.topic.name + "\"?"%>
 							</div>
 						</div>
 					</li>
@@ -34,13 +34,13 @@
 				<li>
 					<div>
 						<div class="reservation-name">
-							<%= link_to reservation.session.time, reservation.session %>: <%= link_to reservation.session.topic.name, reservation.session.topic %>
+							<%= link_to formatted_time_range(reservation.session.time, reservation.session.topic.minutes), reservation.session %><br/><%= link_to reservation.session.topic.name, reservation.session.topic %>
 						</div>
-						<div class="button-link confirm">
-							<%= link_to "download to calendar", { :controller => :reservations, :action => :download, :id => reservation.id } %>
-						</div>
-						<div class="button-link delete">
-							<%= link_to "remove name from waiting list", reservation, :method => :delete, :confirm => "Are you sure you want to remove your name from the waiting list for \"" + reservation.session.topic.name + "\"?"%>
+              <div class="download-link download-calendar">
+                <%= link_to "[add reservation to calendar]", :controller => :reservations, :action => :download, :id => reservation.id %>
+              </div>
+						<div class="delete-link">
+							<%= link_to "Remove Name From Waiting List", reservation, :method => :delete, :confirm => "Are you sure you want to remove your name from the waiting list for \"" + reservation.session.topic.name + "\"?"%>
 						</div>
 					</div>
 				</li>
@@ -59,7 +59,7 @@
       <li>
         <div>
           <div class="reservation-name">
-            <%= link_to reservation.session.time, reservation.session %>: <%= link_to reservation.session.topic.name, reservation.session.topic %>
+            <%= link_to formatted_time_range(reservation.session.time, reservation.session.topic.minutes), reservation.session %><br/><%= link_to reservation.session.topic.name, reservation.session.topic %>
           </div>
         </div>
       </li>

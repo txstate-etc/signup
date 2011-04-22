@@ -1,5 +1,5 @@
 class ReservationMailer < ActionMailer::Base
-  
+  helper :application
 
   def confirm( reservation )
     subject    'Reservation Confirmation For: ' + reservation.user.name

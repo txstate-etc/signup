@@ -1,11 +1,6 @@
 <%= error_messages_for 'reservation' %>
 
 		
-		<% if !@session.space_is_available? %>
-		<div class="notice">NOTICE: This class is full! However, you can still put yourself on the waiting
-			list. If space becomes available in the class, you will be automatically
-			registered and notified by email.</div>
-		<% end %>
 		<% form_for( [ @session, @reservation ] ) do |f| %>
 			<dl>
 				<dt>Topic:</dt>
@@ -29,9 +24,13 @@
 			<% if @session.space_is_available? %>
 				<%= submit_tag "Confirm Reservation" %>
 			<% else %>
+        <div class="notice">NOTICE: This class is full! However, you can still put yourself on the waiting
+          list. If space becomes available in the class, you will be automatically
+          registered and notified by email.
+        </div>
 				<%= submit_tag "Confirm Waiting List Signup" %>
 			<% end %>
 		<% end %>
 		<br/>
-		<div ><%= link_to "Cancel Reservation", @session.topic %></div>
+		<div ><%= link_to "Cancel", @session.topic %></div>
 	

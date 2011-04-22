@@ -12,7 +12,7 @@
 	<dd>
 	  <ul class="instructor-list">
 	    <% @session.instructors.each do |instructor| %>
-	      <li><%=h instructor.name %></li>
+	      <li><%= link_to instructor.name , 'mailto:' + instructor.email %></li>
 	    <% end %>
 	  </ul>
 	</dd>
@@ -48,8 +48,8 @@
   	<% else %>
   		<p>You are on the waiting list for this session.</p>
   	<% end %>
-  	<div class="button-link confirm">
-  		<%= link_to "download to calendar", { :controller => :reservations, :action => :download, :id => @reservation.id } %>
+  	<div class="download-link download-calendar">
+  		<%= link_to "[add reservation to calendar]", { :controller => :reservations, :action => :download, :id => @reservation.id } %>
   	</div>
   	<div class="button-link delete">
   		<%= link_to "cancel reservation", @reservation, :method => :delete, :confirm => "Are you sure you want to cancel your reservation for \"" + @reservation.session.topic.name + "\"?"%>
@@ -76,7 +76,7 @@
 			<h3>Reservations:</h3>
 			<% form_for @session, :url => { :action => "update" } do |session_form| %>
 				<%= hidden_field :reservations_update, :true %>
-				<ul style="line-height: 1.5em">
+				<ul class="attendance-list" style="line-height: 1.5em">
 				<% @session.confirmed_reservations.each do |reservation| %>
 					<% session_form.fields_for :reservations, reservation do |reservation_fields|%>
 						<li><span class="radio-span">

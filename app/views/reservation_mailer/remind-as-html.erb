@@ -59,7 +59,7 @@ please do so <%= link_to "here", :controller => "reservations", :only_path => fa
 			<dt>What:</dt>
 			<dd><%=h @reservation.session.topic.name %></dd>
 			<dt>When:</dt>
-			<dd><%=h @reservation.session.time %></dd>
+			<dd><%=h formatted_time_range(@reservation.session.time, @reservation.session.topic.minutes) %></dd>
 			<dt>Where:</dt>
 			<dd><%=h @reservation.session.location %></dd>
 			<dt>Who:</dt>

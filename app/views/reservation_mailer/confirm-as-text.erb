@@ -10,7 +10,7 @@ to cancel your reservation for any reason, you can do so here:
 Your Reservation
 
 What: <%= @reservation.session.topic.name %>
-When: <%= @reservation.session.time %>
+When: <%= formatted_time_range(@reservation.session.time, @reservation.session.topic.minutes) %>
 Where: <%= @reservation.session.location %>
 Who:  <%= @reservation.user.name %>
 Description: <%= auto_link( @reservation.session.topic.description ) %>

@@ -9,7 +9,7 @@ updated class information below.
 Your Updated Reservation
 
 What: <%= @reservation.session.topic.name %>
-When: <%= @reservation.session.time %>
+When: <%= formatted_time_range(@reservation.session.time, @reservation.session.topic.minutes) %>
 Who:  <%= @reservation.user.name %>
 Description: <%=  auto_link( @reservation.session.topic.description ) %>
 
