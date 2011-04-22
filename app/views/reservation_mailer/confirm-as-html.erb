@@ -62,7 +62,7 @@ to cancel your reservation for any reason, you can do so <%= link_to "here", :co
 			<dt>Who:</dt>
 			<dd><%=h @reservation.user.name %></dd>
 			<dt>Description:</dt>
-      <dd><%=h @reservation.session.topic.description %></dd>
+      <dd><%= auto_link( simple_format( h( @reservation.session.topic.description ) ) ) %></dd>
 		</dl>
 	</div>
 </div>

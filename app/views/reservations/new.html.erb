@@ -1,6 +1,5 @@
 <%= error_messages_for 'reservation' %>
 
-	<div class="reservationContainer">
 		
 		<% if !@session.space_is_available? %>
 		<div class="notice">NOTICE: This class is full! However, you can still put yourself on the waiting
@@ -8,37 +7,31 @@
 			registered and notified by email.</div>
 		<% end %>
 		<% form_for( [ @session, @reservation ] ) do |f| %>
-			<div class="reservationCard">
-				<% if @session.space_is_available? %>
-					<h2>Your Reservation</h2>
-				<% else %>
-					<h2>Waiting List Signup</h2>
-				<% end %>
-				<dl>
-					<dt>What:</dt>
-					<dd><%=h @session.topic.name %></dd>
-					<dt>When:</dt>
-					<dd><%=h @session.time %></dd>
-					<dt>Who:</dt>
-					<dd><%=h current_user.name %> (<%=h current_user.email %>)</dd>
-					<dt>Special Accommodations Needed (optional):</dt>
-					<dd>
-						Do you need accommodations? [ 
-							<%= radio_button_tag( :accommodations_needed, "Yes", nil, :onclick => "revealAccommodationsArea();" ) %><%= label_tag( :accommodations_needed_yes, "Yes")%> 
-							<%= radio_button_tag( :accommodations_needed, "No", true, :onclick => "hideAccommodationsArea();")%><%= label_tag( :accommodations_needed_no, "No")%> ]
-						<div id="special-accommodations-field" style="display:none">
-							<%= f.text_area :special_accommodations, :cols => 40, :rows => 4 %><br/>
-							Include details on what sort of accommodations you require here.
-						</div>
-					</dd>
-				</dl>
-			</div>
-
+			<dl>
+				<dt>Topic:</dt>
+				<dd><%=h @session.topic.name %></dd>
+				<dt>Time:</dt>
+				<dd><%=h formatted_time_range(@session.time, @session.topic.minutes) %></dd>
+				<dt>Your Contact Information:</dt>
+				<dd><%=h current_user.name %> (<%=h current_user.email %>)</dd>
+				<dt>Special Accommodations Needed (optional):</dt>
+				<dd>
+					Do you need accommodations? [ 
+						<%= radio_button_tag( :accommodations_needed, "Yes", nil, :onclick => "revealAccommodationsArea();" ) %><%= label_tag( :accommodations_needed_yes, "Yes")%> 
+						<%= radio_button_tag( :accommodations_needed, "No", true, :onclick => "hideAccommodationsArea();")%><%= label_tag( :accommodations_needed_no, "No")%> ]
+					<div id="special-accommodations-field" style="display:none">
+						<%= f.text_area :special_accommodations, :cols => 40, :rows => 4 %><br/>
+						Include details on what sort of accommodations you require here.
+					</div>
+				</dd>
+			</dl>
+      <br/>
 			<% if @session.space_is_available? %>
-				<%= submit_tag "Confirm Reservation", :class => "confirm submit-button" %>
+				<%= submit_tag "Confirm Reservation" %>
 			<% else %>
-				<%= submit_tag "Confirm Waiting List Signup", :class => "tentative submit-button" %>
+				<%= submit_tag "Confirm Waiting List Signup" %>
 			<% end %>
 		<% end %>
-		<div class="button-link delete"><%= link_to "Cancel Reservation", @session.topic %></div>
-	</div>
+		<br/>
+		<div ><%= link_to "Cancel Reservation", @session.topic %></div>
+	

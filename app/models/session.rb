@@ -156,4 +156,5 @@ class Session < ActiveRecord::Base
   def average_rating
     survey_responses.inject(0.0) { |sum, rating| sum + rating.class_rating } / survey_responses.size
   end
+  
 end

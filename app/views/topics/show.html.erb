@@ -13,7 +13,7 @@
 
 <dl>
 	<dt>Description:</dt>
-	<dd><%= simple_format( h( @topic.description ) ) %></dd>
+	<dd><%= auto_link( simple_format( h( @topic.description ) ) ) %></dd>
 	<dt>Duration:</dt>
 	<dd><%=h @topic.minutes %> minutes</dd>
 	<dt>Department:</dt>
@@ -27,7 +27,7 @@
 <% if @topic.upcoming_sessions.size > 0 %>
 	<ul id="session-list">
 		<% @topic.upcoming_sessions.each do |session| %>
-			<li><%= link_to session.time, session %></li>
+			<li><%= link_to formatted_time_range(session.time, @topic.minutes), session %></li>
 		<% end %>
 	</ul>
 <% else %>
@@ -38,14 +38,14 @@
 <h3>Past Sessions:</h3>
 	<ul id="past-session-list">
 		<% @topic.past_sessions.each do |session| %>
-			<li><%= link_to session.time, session %></li>
+			<li><%= link_to formatted_time_range(session.time, @topic.minutes), session %></li>
 		<% end %>
 	</ul>
 <% end %>
 
 <% if current_user && current_user.admin? %>
 <div class="admin-options">
-	<h2><%= image_tag('advancedsettings.png') %> Admin Options</h2>
+	<h2>Admin Options</h2>
 	<div class="download-link download-csv"><%= link_to "Download CSV", :format => :csv %></div>
 	
 	<%= render :partial => "survey_responses/survey_summary", :locals => { :model_object => @topic }%>

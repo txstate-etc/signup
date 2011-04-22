@@ -3,7 +3,7 @@
 	<dt>Topic:</dt>
 	<dd><%= link_to @session.topic.name, @session.topic%></dd>
 	<dt>Time:</dt>
-	<dd><%=h @session.time %></dd>
+	<dd><%=h formatted_time_range(@session.time, @session.topic.minutes) %></dd>
   <dt>Registration Period:</dt>
   <dd><%=h registration_period(@session) %></dd>
 	<dt>Location:</dt>
@@ -17,7 +17,7 @@
 	  </ul>
 	</dd>
 	<dt>Description:</dt>
-	<dd><%= simple_format( h( @session.topic.description ) ) %></dd>
+	<dd><%= auto_link( simple_format( h( @session.topic.description ) ) ) %></dd>
 	<dt>Duration:</dt>
 	<dd><%=h @session.topic.minutes %> minutes</dd>
 	<dt>Department:</dt>
@@ -70,7 +70,7 @@
 
 <% if ( current_user && current_user.admin? ) or @session.instructor?( current_user ) %>
 <div class="admin-options">
-	<h2><%= image_tag('advancedsettings.png') %> Instructor/Admin Options</h2>
+	<h2>Instructor/Admin Options</h2>
 	<% if @session.confirmed_reservations.size > 0 %>
 		<div class="admin-section">
 			<h3>Reservations:</h3>

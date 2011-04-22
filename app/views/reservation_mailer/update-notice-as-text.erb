@@ -11,7 +11,7 @@ Your Updated Reservation
 What: <%= @reservation.session.topic.name %>
 When: <%= @reservation.session.time %>
 Who:  <%= @reservation.user.name %>
-Description: <%= @reservation.session.topic.description %>
+Description: <%=  auto_link( @reservation.session.topic.description ) %>
 
 ----
 
