@@ -18,7 +18,8 @@ class SessionsControllerTest < ActionController::TestCase
     assert !sessions( :tracs ).cancelled
     
     post :update, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
-    assert_response :redirect
+    assert_response :redirect    
+    assert_not_equal "The Session's data has been updated.", flash[:notice]
   end
   
   test "Admins can do anything" do
@@ -37,7 +38,8 @@ class SessionsControllerTest < ActionController::TestCase
     assert sessions( :tracs ).reload.cancelled
 
     post :update, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
-    assert_response :success
+    assert_redirected_to session_path(sessions( :tracs ))
+    assert_equal "The Session's data has been updated.", flash[:notice]
   end
   
   test "Instructors can delete and update own sessions" do
@@ -56,7 +58,8 @@ class SessionsControllerTest < ActionController::TestCase
     assert sessions( :tracs ).reload.cancelled
     
     post :update, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
-    assert_response :success
+    assert_redirected_to session_path(sessions( :tracs ))
+    assert_equal "The Session's data has been updated.", flash[:notice]
   end
   
   test "Regular users should be able to view, but not make changes" do
