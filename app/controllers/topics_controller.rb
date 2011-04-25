@@ -42,7 +42,7 @@ class TopicsController < ApplicationController
       @topic = Topic.new( params[ :topic ] )
       if @topic.save
         flash[ :notice ] = "Topic \"" + @topic.name + "\" added."
-        redirect_to topics_path
+        redirect_to @topic
       else
         @page_title = "Create New Topic"
         render :action => 'new'
@@ -57,7 +57,7 @@ class TopicsController < ApplicationController
     if current_user && current_user.admin?
       @topic.update_attributes( params[ :topic ] )
       if @topic.save
-        flash.now[ :notice ] = "The Topic's data has been updated."
+        flash.now[ :notice ] = "The topic's data has been updated."
       else
         flash.now[ :error ] = "There were problems updating this topic."
       end

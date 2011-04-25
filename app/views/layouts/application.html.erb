@@ -17,12 +17,6 @@
       </div>
     </div>
     <div id="container">
-      <% unless flash[ :notice ].blank? %>
-        <div id="notification"><%=h flash[ :notice ] %></div>
-      <% end %>
-      <% unless flash[ :error ].blank? %>
-        <div id="error"><%=h flash[ :error ] %></div>
-      <% end %>
       <div class="left-column">
     		<div class="navigation">
     		  <p><% if current_user %><%=h current_user.name %><% end -%></p>
@@ -41,6 +35,12 @@
         <% end %>
       </div>
   		<div id="right-column">
+        <% unless flash[ :notice ].blank? %>
+          <div id="notification"><%=h flash[ :notice ] %></div>
+        <% end %>
+        <% unless flash[ :error ].blank? %>
+          <div id="error"><%=h flash[ :error ] %></div>
+        <% end %>
   		  <div id="contents">
   		    <h1><%= image_tag(@title_image, :class=>"title-image") if @title_image %><%= @page_title %></h1>
   		    <%= yield %>
