@@ -75,19 +75,15 @@ font-weight: bold;
   font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', serif;
   font-size: .875em;
 }
+a:visited {
+  text-decoration: underline;
+  color: #836c31;
+}
 a:link {
   color: #836c31;
   text-decoration: none;
   }
   
-a:hover {
-
-  text-decoration: underline;
-  }
-a:visited {
-  color: #4b4b4b;
-  text-decoration: none;
-}
 a:hover {
   color: #836c31;
   text-decoration:underline;
@@ -164,7 +160,7 @@ dt {
 .topbanner-sitename {
   display: block;
   position: absolute;
-  left: 240px;
+  left: 210px;
   top: 25px;
   font-weight: bold;
   font-size: 1.7em;
