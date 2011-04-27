@@ -164,6 +164,7 @@ dt {
   top: 25px;
   font-weight: bold;
   font-size: 1.7em;
+  padding-bottom: 0.25em;
 }
 
 .topbanner-deptlink {
@@ -192,7 +193,7 @@ label.field-label {
 #notification {
   color: #000;
   border: 2px solid #94a74d;
-  margin-left: 240px;
+  margin-left: 20px;
   margin-right: 40px;
   margin-bottom: 1.0em;
   font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', serif;
@@ -209,7 +210,7 @@ label.field-label {
 #error {
   color: #D00;
   border: 2px solid #D00;
-  margin-left: 240px;
+  margin-left: 20px;
   margin-right: 40px;
   margin-bottom: 1.0em;
   font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', serif;
@@ -361,7 +362,7 @@ div.left-column {
 div#right-column {
   background-color: #FFF;
   margin-top: 20px;
-  margin-left: 20px;
+  margin-left: 240px;
   margin-right: 40px;
   margin-bottom: 20px;
   min-height: 600px;
@@ -464,7 +465,7 @@ div.admin-tools a:active {
 
 div#contents {
   margin-top: 0px;  
-  margin-left: 240px;
+  margin-left: 20px;
   margin-right: 40px;
 }
 
