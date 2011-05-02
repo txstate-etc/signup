@@ -74,7 +74,7 @@ class TopicsController < ApplicationController
     calendar = RiCal.Calendar
     calendar.add_x_property 'X-WR-CALNAME', topic.name
     topic.sessions.each do |session|
-      calendar.add_subcomponent( session.to_event ) if !session.cancelled
+      session.to_event.each { |event| calendar.add_subcomponent( event ) } if !session.cancelled
     end
     send_data(calendar.export, :type => 'text/calendar')
   end

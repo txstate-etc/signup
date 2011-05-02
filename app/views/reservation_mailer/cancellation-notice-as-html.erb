@@ -54,8 +54,13 @@
 		<dl>
 			<dt>What:</dt>
 			<dd><%=h @reservation.session.topic.name %></dd>
-			<dt>When:</dt>
-			<dd><%=h formatted_time_range(@reservation.session.time, @reservation.session.topic.minutes) %></dd>
+      <dt>When:</dt>
+      <% if @reservation.session.multiple_occurrences? %>
+        <dd>This session meets <%= @reservation.session.occurrences.count %> times:</dd>
+      <% end %>
+      <% @reservation.session.occurrences.each do |o| %>
+        <dd><%=h formatted_time_range(o.time, @reservation.session.topic.minutes) %></dd>
+      <% end %>
 			<dt>Who:</dt>
 			<dd><%=h @reservation.user.name %></dd>
 		</dl>

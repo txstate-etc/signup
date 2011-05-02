@@ -1,9 +1,18 @@
+<% content_for :admin_tools do %>
+  <p><%= link_to "Create New Session", new_topic_session_path( @session.topic ) %></p>
+<% end %>
+
 <%= error_messages_for 'session' %>
 <dl>
 	<dt>Topic:</dt>
 	<dd><%= link_to @session.topic.name, @session.topic%></dd>
-	<dt>Time:</dt>
-	<dd><%=h formatted_time_range(@session.time, @session.topic.minutes) %></dd>
+  <dt>Time:</dt>
+	<% if @session.multiple_occurrences? %>
+    <dd>This session meets <%= @session.occurrences.count %> times:</dd>
+  <% end %>
+  <% @session.occurrences.each do |o| %>
+    <dd><%=h formatted_time_range(o.time, @session.topic.minutes) %></dd>
+  <% end %>
   <dt>Registration Period:</dt>
   <dd><%=h registration_period(@session) %></dd>
 	<dt>Location:</dt>

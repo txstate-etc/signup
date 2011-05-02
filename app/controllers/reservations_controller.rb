@@ -49,10 +49,10 @@ class ReservationsController < ApplicationController
     end
     
     reservations = Reservation.find( :all, :conditions => ["user_id = ? AND sessions.cancelled = false", user.id ], :include => [ :session ] )
-    current_reservations = reservations.find_all{ |reservation| reservation.session.time > Time.now }
-    @past_reservations = reservations.find_all{ |reservation| reservation.session.time <= Time.now && reservation.attended? }
+    current_reservations = reservations.find_all{ |reservation| reservation.session.last_time > Time.now }.sort {|a,b| a.session.next_time <=> b.session.next_time}
+    @past_reservations = reservations.find_all{ |reservation| reservation.session.last_time <= Time.now && reservation.attended? }
     @confirmed_reservations = current_reservations.find_all{ |reservation| reservation.confirmed? }
-    @waiting_list_signups = current_reservations.find_all{ |reservation| !reservation.confirmed? }
+    @waiting_list_signups = current_reservations.find_all{ |reservation| reservation.session.time > Time.now && !reservation.confirmed? }
   end
   
   def destroy

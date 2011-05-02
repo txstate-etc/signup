@@ -11,7 +11,7 @@
 					<li>
 						<div>
 							<div class="reservation-name">
-								<%= link_to formatted_time_range(reservation.session.time, reservation.session.topic.minutes), reservation.session %><br/><%= link_to reservation.session.topic.name, reservation.session.topic %>
+								<%= link_to formatted_time_range(reservation.session.next_time, reservation.session.topic.minutes), reservation.session %><br/><%= link_to reservation.session.topic.name, reservation.session.topic %>
 							</div>
               <div class="download-link download-calendar">
                 <%= link_to "[add reservation to calendar]", :controller => :reservations, :action => :download, :id => reservation.id %>

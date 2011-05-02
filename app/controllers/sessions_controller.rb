@@ -14,6 +14,7 @@ class SessionsController < ApplicationController
     if current_user && current_user.admin?
       @session = Session.new
       @session.topic = topic
+      @session.occurrences.build
       @page_title = "Create New Session"
     else
       redirect_to topic
@@ -27,6 +28,7 @@ class SessionsController < ApplicationController
         flash[ :notice ] = "Session added."
         redirect_to @session
       else
+        @session.occurrences.build
         @page_title = "Create New Session"
         render :action => 'new'
       end
@@ -66,7 +68,7 @@ class SessionsController < ApplicationController
     calendar = RiCal.Calendar
     calendar.add_x_property 'X-WR-CALNAME', 'All Training Sessions'
     Session.find_all_by_cancelled( false ).each do |session|
-      calendar.add_subcomponent( session.to_event )
+      session.to_event.each { |event| calendar.add_subcomponent( event ) }
     end
     send_data(calendar.export, :type => 'text/calendar')
   end

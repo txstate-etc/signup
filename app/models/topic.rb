@@ -13,7 +13,7 @@ class Topic < ActiveRecord::Base
   default_scope :order => 'name'
   
   def self.upcoming
-    Topic.find( :all, :conditions => [ "topics.id IN ( select topic_id from sessions where sessions.time > ? AND cancelled = false )", Time.now ] )
+    Topic.find( :all, :conditions => [ "topics.id IN ( select topic_id from sessions, occurrences where sessions.id = occurrences.session_id AND occurrences.time > ? AND cancelled = false )", Time.now ] )
   end
   
   def to_param
@@ -21,11 +21,11 @@ class Topic < ActiveRecord::Base
   end
   
   def upcoming_sessions
-    sessions.find( :all, :conditions => [ "time > ? AND cancelled = false", Time.now ] )
+    sessions.find( :all, :conditions => [ "cancelled = false AND sessions.id NOT IN (SELECT session_id FROM occurrences WHERE occurrences.time <= ?)", Time.now ], :order => "occurrences.time", :include => :occurrences )
   end
   
   def past_sessions
-    sessions.find( :all, :conditions => [ "time < ? AND cancelled = false", Time.now ] )
+    sessions.find( :all, :conditions => [ "occurrences.time < ? AND cancelled = false", Time.now ], :order => "occurrences.time", :include => :occurrences )
   end
   
   def to_csv

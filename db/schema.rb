@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110331181635) do
+ActiveRecord::Schema.define(:version => 20110426204119) do
 
   create_table "departments", :force => true do |t|
     t.string   "name"
@@ -27,6 +27,15 @@ ActiveRecord::Schema.define(:version => 20110331181635) do
     t.datetime "updated_at"
   end
 
+  create_table "occurrences", :force => true do |t|
+    t.integer  "session_id"
+    t.datetime "time"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "occurrences", ["session_id"], :name => "index_occurrences_on_session_id"
+
   create_table "reservations", :force => true do |t|
     t.integer  "user_id",                               :null => false
     t.integer  "session_id",                            :null => false
@@ -37,7 +46,6 @@ ActiveRecord::Schema.define(:version => 20110331181635) do
   end
 
   create_table "sessions", :force => true do |t|
-    t.datetime "time",                           :null => false
     t.integer  "topic_id",                       :null => false
     t.string   "location",                       :null => false
     t.boolean  "cancelled",   :default => false, :null => false

@@ -4,6 +4,10 @@ class SurveyResponse < ActiveRecord::Base
   validates_uniqueness_of :reservation_id, :message => "A survey has already been submitted for this reservation."
   
   def validate
-    errors.add_to_base "You can't provide feedback on a session that hasn't yet occured" if self.reservation.session.time > Time.now
+    if self.reservation.session.time > Time.now
+      errors.add_to_base "You can't provide feedback on a session that hasn't yet occurred" 
+    elsif self.reservation.session.last_time > Time.now
+      errors.add_to_base "You can't provide feedback on a session until the last meeting has occurred"
+    end
   end
 end

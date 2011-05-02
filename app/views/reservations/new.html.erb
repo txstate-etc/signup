@@ -5,8 +5,13 @@
 			<dl>
 				<dt>Topic:</dt>
 				<dd><%=h @session.topic.name %></dd>
-				<dt>Time:</dt>
-				<dd><%=h formatted_time_range(@session.time, @session.topic.minutes) %></dd>
+        <dt>Time:</dt>
+        <% if @session.multiple_occurrences? %>
+          <dd>This session meets <%= @session.occurrences.count %> times:</dd>
+        <% end %>
+        <% @session.occurrences.each do |o| %>
+          <dd><%=h formatted_time_range(o.time, @session.topic.minutes) %></dd>
+        <% end %>
 				<dt>Your Contact Information:</dt>
 				<dd><%=h current_user.name %> (<%=h current_user.email %>)</dd>
 				<dt>Special Accommodations Needed (optional):</dt>

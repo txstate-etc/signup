@@ -27,7 +27,7 @@ Rails::Initializer.run do |config|
   config.gem "searchlogic", :version => '2.4.27'
   config.gem "pdf-reader", :lib => "pdf/reader"
   config.gem "Ascii85", :lib => "ascii85"
-  config.gem "prawn", :version => '0.8.4'
+  config.gem "prawn", :version => '0.11.1'
   config.gem "calendar_date_select", :version => '1.16.2'
 
   # Only load the plugins named here, in the order given (default is alphabetical).
@@ -55,7 +55,16 @@ CASClient::Frameworks::Rails::Filter.configure(
 )
 
 ActiveSupport::CoreExtensions::Date::Conversions::DATE_FORMATS.merge!(:default => "%A %m/%d/%Y")
-ActiveSupport::CoreExtensions::Time::Conversions::DATE_FORMATS.merge!(:default => "%l:%M%p %A, %B %d, %Y")
+ActiveSupport::CoreExtensions::Time::Conversions::DATE_FORMATS.merge!(:default => "%l:%M%p %A, %B %e, %Y")
+
+CalendarDateSelect::FORMATS[:my_custom] = {
+# Here's the code to pass to Date#strftime
+  :date => "%B %e, %Y",
+  :time => " %l:%M %p",  # notice the space before time.  If you want date and time to be seperated with a space, put the leading space here.
+
+  :javascript_include => "format_my_custom"
+}
+CalendarDateSelect.format = :my_custom
 
 # Change error display to use a SPAN instead of a DIV
 ActionView::Base.field_error_proc = Proc.new { |html_tag, instance| "<span class=\"fieldWithErrors\">#{html_tag}</span>" }

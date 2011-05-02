@@ -13,7 +13,14 @@ Training Reservation System.
 Your Reservation
 
 What: <%= @reservation.session.topic.name %>
+<% if @reservation.session.multiple_occurrences? -%>
+When: This session meets <%= @reservation.session.occurrences.count %> times:
+<% @reservation.session.occurrences.each do |o| -%>
+  <%= formatted_time_range(o.time, @reservation.session.topic.minutes) %>
+<% end -%>
+<% else -%>
 When: <%= formatted_time_range(@reservation.session.time, @reservation.session.topic.minutes) %>
+<% end -%>
 Where: <%= @reservation.session.location %>
 Who:  <%= @reservation.user.name %>
 Description: <%= auto_link( @reservation.session.topic.description ) %>

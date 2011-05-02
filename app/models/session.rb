@@ -4,15 +4,52 @@ require 'prawn/layout'
 
 class Session < ActiveRecord::Base
   has_many :reservations
+  has_many :occurrences, :dependent => :destroy
+  accepts_nested_attributes_for :occurrences, :reject_if => lambda { |a| a[:time].blank? }, :allow_destroy => true
   belongs_to :topic
   has_and_belongs_to_many :instructors, :class_name => "User", :uniq => true
-  validates_presence_of :time, :topic_id, :location
-  validate :at_least_one_instructor, :valid_instructor
+  validate :at_least_one_occurrence, :at_least_one_instructor, :valid_instructor
+  validates_presence_of :topic_id, :location
   validates_numericality_of :seats, :only_integer => true, :allow_nil => true
   after_validation :reload_if_invalid
-  accepts_nested_attributes_for :reservations
-  default_scope :order => 'time'
+  accepts_nested_attributes_for :reservations  
   
+  def time
+    if occurrences.present?
+      occurrences[0].time
+    else
+      nil
+    end
+  end
+
+  def next_time
+    if occurrences.present?
+      o = occurrences.detect {|o| o.time > Time.now}
+      return (o.nil?? time : o.time)
+    else
+      nil
+    end
+  end
+
+  def last_time
+    if occurrences.present?
+      occurrences.last.time
+    else
+      nil
+    end
+  end
+
+  def multiple_occurrences?
+    occurrences.present? && occurrences.count > 1
+  end
+
+  def at_least_one_occurrence
+    if self.occurrences.blank? || self.occurrences.all?{|o|o.marked_for_destruction?}
+      self.errors.add(:occurrences, 'can\'t be blank')
+    end
+  end
+  
+
   def instructor?( user )
     instructors.include? user
   end
@@ -42,13 +79,13 @@ class Session < ActiveRecord::Base
   
   def valid_instructor
     if @invalid_instructor
-      self.errors.add(:instructor, 'must be a valid user')
+      self.errors.add(:instructor_id, 'must be a valid user')
     end  
   end
   
   def at_least_one_instructor
     if self.instructors.blank? && !@invalid_instructor
-      self.errors.add(:instructors, 'must not be blank')
+      self.errors.add(:instructor_id, 'can\'t be blank')
     end
   end
   
@@ -62,7 +99,7 @@ class Session < ActiveRecord::Base
   end
   
   def after_update
-    send_update = time_changed? || location_changed?
+    send_update = occurrences.changed? || location_changed?
     if send_update
       confirmed_reservations.each do |reservation|
         ReservationMailer.deliver_update_notice( reservation )
@@ -109,24 +146,27 @@ class Session < ActiveRecord::Base
   
   def to_cal
     calendar = RiCal.Calendar
-    event = self.to_event
-    calendar.add_subcomponent( event )
+    events = self.to_event
+    events.each { |event| calendar.add_subcomponent( event ) }
     return calendar.export
   end
   
   def to_event
-    event = RiCal.Event 
-    event.summary = topic.name
-    event.description = topic.description + "\n\nInstructor(s): " + instructors.collect{|i| i.name}.join(", ")
-    event.dtstart = time
-    event.dtend = time + topic.minutes * 60
-    event.url = topic.url
-    event.location = location
-    return event
+    events = occurrences.map do |o|
+      event = RiCal.Event 
+      event.summary = topic.name
+      event.description = topic.description + "\n\nInstructor(s): " + instructors.collect{|i| i.name}.join(", ")
+      event.dtstart = o.time
+      event.dtend = o.time + topic.minutes * 60
+      event.url = topic.url
+      event.location = location 
+      event
+    end
+    return events
   end
   
   def self.send_reminders( start_time, end_time )
-    session_list = Session.find( :all, :conditions => ['time >= ? AND time <= ? AND cancelled = 0', start_time, end_time ] )
+    session_list = Session.find( :all, :conditions => ['occurrences.time >= ? AND occurrences.time <= ? AND cancelled = 0', start_time, end_time ], :order => "occurrences.time", :include => :occurrences )
     session_list.each do |session|
       session.confirmed_reservations.each do |reservation|
         ReservationMailer.deliver_remind( reservation )
@@ -135,8 +175,9 @@ class Session < ActiveRecord::Base
   end
   
   def self.send_surveys
-    session_list = Session.all( :joins => :topic, :conditions => ['time < ? AND survey_sent = ? AND survey_type != ? AND cancelled = ?', DateTime.now, false, Topic::SURVEY_NONE, false ], :readonly => false)
+    session_list = Session.all( :joins => :topic, :conditions => ['occurrences.time < ? AND survey_sent = ? AND survey_type != ? AND cancelled = ?', DateTime.now, false, Topic::SURVEY_NONE, false ], :readonly => false)
     session_list.each do |session|
+      next if session.last_time > Time.now #wait until the last occurrance
       session.confirmed_reservations.each do |reservation|
         ReservationMailer.deliver_survey_mail( reservation ) if reservation.attended != Reservation::ATTENDANCE_MISSED
       end
