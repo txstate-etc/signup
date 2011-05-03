@@ -1,23 +1,20 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 gato_past:
-  time: 2010-06-02 12:00:00
   instructors: instructor1
   topic: gato
   location: Alkek 155
   cancelled: false
   seats: 20
-
+  
 tracs_past:
-    time: 2010-06-05 12:00:00
-    instructors: instructor1
-    topic: tracs
-    location: Alkek 155
-    cancelled: false
-    seats: 20
+  instructors: instructor1
+  topic: tracs
+  location: Alkek 155
+  cancelled: false
+  seats: 20
 
 no_survey_topic_past:
-  time: 2010-06-06 12:00:00
   instructors: instructor1
   topic: no_survey_topic
   location: Alkek 155
@@ -25,7 +22,6 @@ no_survey_topic_past:
   seats: 20
 
 gato_past_surveys_sent:
-  time: 2010-06-01 12:00:00
   instructors: instructor1
   topic: gato
   location: Alkek 155
@@ -34,7 +30,6 @@ gato_past_surveys_sent:
   survey_sent: true
 
 gato:
-  time: 2035-06-02 12:00:00
   instructors: instructor1
   topic: gato
   location: Alkek 155
@@ -42,7 +37,6 @@ gato:
   seats: 20
 
 gato_cancelled:
-  time: 2035-08-02 15:00:00
   instructors: instructor1
   topic: gato
   location: Alkek 155
@@ -50,7 +44,6 @@ gato_cancelled:
   seats: 20
 
 gato_2:
-  time: 2035-09-02 15:00:00
   instructors: instructor1
   topic: gato
   location: Alkek 155
@@ -58,7 +51,6 @@ gato_2:
   seats: 20
 
 tracs:
-  time: 2035-06-02 9:00:00
   instructors: instructor2
   topic: tracs
   location: JCK 1100
@@ -66,7 +58,6 @@ tracs:
   seats: 15
 
 tracs_tiny:
-  time: 2035-06-02 9:00:00
   instructors: instructor2
   topic: tracs
   location: JCK 1100
@@ -74,7 +65,6 @@ tracs_tiny:
   seats: 1
   
 tracs_tiny_full:
-  time: 2035-06-15 9:00:00
   instructors: instructor2
   topic: tracs
   location: JCK 1100
@@ -82,25 +72,22 @@ tracs_tiny_full:
   seats: 1
   
 gato_huge:
-  time: 2035-06-02 12:00:00
   instructors: instructor1
   topic: gato
   location: Alkek 155
   cancelled: false
 
 gato_overbooked:
-    time: 2035-07-01 17:00:00
-    instructors: instructor1
-    topic: gato
-    location: JCK 1100
-    cancelled: false
-    seats: 2
+  instructors: instructor1
+  topic: gato
+  location: JCK 1100
+  cancelled: false
+  seats: 2
 
 tracs_multiple_instructors:
-    time: 2037-07-01 17:00:00
-    instructors: instructor1, instructor2
-    topic: tracs
-    location: JCK 1100
-    cancelled: false
-    seats: 2
+  instructors: instructor1, instructor2
+  topic: tracs
+  location: JCK 1100
+  cancelled: false
+  seats: 2
     

@@ -98,8 +98,15 @@ class Session < ActiveRecord::Base
     "#{id}-#{topic.name.parameterize}"
   end
   
+  def before_update
+    # Have to check if occurrences changed here because the dirty flag is reset by the time after_update is called.
+    @occurrences_dirty = occurrences.present? && ( occurrences.changed? || occurrences.any?{ |o| o.changed? } )
+    logger.info("in before_update, dirty = #{@occurrences_dirty}")
+    return true
+  end
+  
   def after_update
-    send_update = occurrences.changed? || location_changed?
+    send_update = @occurrences_dirty || location_changed?
     if send_update
       confirmed_reservations.each do |reservation|
         ReservationMailer.deliver_update_notice( reservation )
@@ -175,7 +182,7 @@ class Session < ActiveRecord::Base
   end
   
   def self.send_surveys
-    session_list = Session.all( :joins => :topic, :conditions => ['occurrences.time < ? AND survey_sent = ? AND survey_type != ? AND cancelled = ?', DateTime.now, false, Topic::SURVEY_NONE, false ], :readonly => false)
+    session_list = Session.all( :joins => :topic, :conditions => ['occurrences.time < ? AND survey_sent = ? AND survey_type != ? AND cancelled = ?', DateTime.now, false, Topic::SURVEY_NONE, false ], :readonly => false, :order => "occurrences.time", :include => :occurrences )
     session_list.each do |session|
       next if session.last_time > Time.now #wait until the last occurrance
       session.confirmed_reservations.each do |reservation|

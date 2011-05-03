@@ -34,7 +34,7 @@ class SessionTest < ActiveSupport::TestCase
     end
 
     assert_difference 'ActionMailer::Base.deliveries.size', +2 do
-      sessions( :gato_overbooked ).time = Time.now()
+      sessions( :gato_overbooked ).occurrences[0].time = Time.now()
       sessions( :gato_overbooked ).save
     end
     
@@ -124,7 +124,7 @@ class SessionTest < ActiveSupport::TestCase
   test "Session with no instructor is not valid" do
     test_session = Session.new
     test_session.topic = topics( :gato )
-    test_session.time = DateTime.parse( '15 June 2035 00:00' )
+    test_session.occurrences.build(:time => DateTime.parse( '15 June 2035 00:00' ))
     test_session.location = "Tijuana"
     assert !test_session.save
   end
@@ -132,7 +132,7 @@ class SessionTest < ActiveSupport::TestCase
   test "Session with an instructor is valid" do
     test_session = Session.new
     test_session.topic = topics( :gato )
-    test_session.time = DateTime.parse( '15 June 2035 00:00' )
+    test_session.occurrences.build(:time => DateTime.parse( '15 June 2035 00:00' ))
     test_session.location = "Tijuana"
     test_session.instructor_name = users( :instructor1 ).login
     assert test_session.save

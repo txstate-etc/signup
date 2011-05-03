@@ -9,7 +9,7 @@ updated class information below.
 Your Updated Reservation
 
 What: Introduction to Gato
-When: Saturday, June 02 2035  7:00AM -  8:00AM
+When: Saturday, June  2, 2035,  7:00AM -  8:00AM
 Who:  Plain User1
 Description: All about our Content Management System.
 
@@ -86,7 +86,10 @@ http://localhost:3000/topics/419328395
 			<dt>What:</dt>
 			<dd>Introduction to Gato</dd>
 			<dt>When:</dt>
-			<dd>Saturday, June 02 2035  7:00AM -  8:00AM</dd>
+      
+      
+        <dd>Saturday, June  2, 2035,  7:00AM -  8:00AM</dd>
+      
 			<dt>Where:</dt>
 			<dd>Alkek 155</dd>
 			<dt>Who:</dt>

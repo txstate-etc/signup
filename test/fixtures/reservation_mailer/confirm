@@ -10,7 +10,7 @@ http://localhost:3000/reservations
 Your Reservation
 
 What: Introduction to Gato
-When: Saturday, June 02 2035  7:00AM -  8:00AM
+When: Saturday, June  2, 2035,  7:00AM -  8:00AM
 Where: Alkek 155
 Who:  Plain User1
 Description: All about our Content Management System.
@@ -77,7 +77,10 @@ to cancel your reservation for any reason, you can do so <a href="http://localho
 			<dt>What:</dt>
 			<dd>Introduction to Gato</dd>
 			<dt>When:</dt>
-			<dd>Saturday, June 02 2035  7:00AM -  8:00AM</dd>
+      
+      
+        <dd>Saturday, June  2, 2035,  7:00AM -  8:00AM</dd>
+      
 			<dt>Where:</dt>
 			<dd>Alkek 155</dd>
 			<dt>Who:</dt>

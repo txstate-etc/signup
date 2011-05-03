@@ -13,7 +13,7 @@ http://localhost:3000/topics/419328395
 The Cancelled Reservation
 
 What: Introduction to Gato
-When: Saturday, June 02 2035  7:00AM -  8:00AM
+When: Saturday, June  2, 2035,  7:00AM -  8:00AM
 Who:  Plain User1
 
 ----
@@ -76,8 +76,11 @@ Our sincere apologies for the inconvenience.
 		<dl>
 			<dt>What:</dt>
 			<dd>Introduction to Gato</dd>
-			<dt>When:</dt>
-			<dd>Saturday, June 02 2035  7:00AM -  8:00AM</dd>
+      <dt>When:</dt>
+      
+      
+        <dd>Saturday, June  2, 2035,  7:00AM -  8:00AM</dd>
+      
 			<dt>Who:</dt>
 			<dd>Plain User1</dd>
 		</dl>
