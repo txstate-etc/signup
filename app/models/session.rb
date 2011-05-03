@@ -184,6 +184,7 @@ class Session < ActiveRecord::Base
   def self.send_surveys
     session_list = Session.all( :joins => :topic, :conditions => ['occurrences.time < ? AND survey_sent = ? AND survey_type != ? AND cancelled = ?', DateTime.now, false, Topic::SURVEY_NONE, false ], :readonly => false, :order => "occurrences.time", :include => :occurrences )
     session_list.each do |session|
+      session.reload #Force it to load in all occurrences
       next if session.last_time > Time.now #wait until the last occurrance
       session.confirmed_reservations.each do |reservation|
         ReservationMailer.deliver_survey_mail( reservation ) if reservation.attended != Reservation::ATTENDANCE_MISSED

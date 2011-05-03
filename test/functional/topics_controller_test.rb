@@ -83,13 +83,13 @@ class TopicsControllerTest < ActionController::TestCase
   test "Normal users should only see topics with scheduled sessions" do
     login_as( users( :plainuser1 ) )
     get :index
-    assert_equal assigns( :topics ).count, 2
+    assert_equal assigns( :topics ).count, 3
   end
   
   test "Admins should see all topics, regardless of whether courses are scheduled or not" do
     login_as( users( :admin1 ) )
     get :index
-    assert_equal assigns( :topics ).count, 3
+    assert_equal assigns( :topics ).count, 4
   end
   
   test "Verify updates working correctly" do

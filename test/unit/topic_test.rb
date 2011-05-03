@@ -9,6 +9,9 @@ class TopicTest < ActiveSupport::TestCase
     
     upcoming_gato = Topic.find( topics( :gato ) ).upcoming_sessions
     assert_equal( upcoming_gato.length, 4, "Gato should have 4 upcoming sessions")
+
+    upcoming_multi = Topic.find( topics( :multi_time_topic ) ).upcoming_sessions
+    assert_equal( upcoming_multi.length, 1, "Multi Time Topic should have 1 upcoming session")
   end
   
   test "Verify that past sessions are computed correctly" do
@@ -17,6 +20,9 @@ class TopicTest < ActiveSupport::TestCase
     
     past_gato = topics( :gato ).past_sessions
     assert_equal( past_gato.length, 2 )
+
+    past_multi = topics( :multi_time_topic ).past_sessions
+    assert_equal( past_multi.length, 2 )
   end
   
   test "Verify CSV" do

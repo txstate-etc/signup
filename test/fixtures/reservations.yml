@@ -71,3 +71,14 @@ tracs_multiple_instructors_plainuser1:
     session: tracs_multiple_instructors
     special_accommodations: "A brandy snifter filled with brown M&Ms."
     
+multi_time_topic_plainuser1:
+    user: plainuser1
+    session: multi_time_topic
+
+multi_time_topic_started_plainuser1:
+    user: plainuser1
+    session: multi_time_topic_started
+
+multi_time_topic_completed_plainuser2:
+    user: plainuser2
+    session: multi_time_topic_completed

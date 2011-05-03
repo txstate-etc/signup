@@ -7,6 +7,11 @@ class ReservationTest < ActiveSupport::TestCase
     reservation = Reservation.new( :session => sessions( :gato_past ), :user => users( :plainuser1 ) )
     assert !reservation.save
   end
+
+  test "Shouldn't be able to make reservations for sessions that have started" do
+    reservation = Reservation.new( :session => sessions( :multi_time_topic_started ), :user => users( :plainuser2 ) )
+    assert !reservation.save
+  end
   
   test "Shouldn't be able to make reservations for sessions that have been cancelled" do
     reservation = Reservation.new( :session => sessions( :gato_cancelled ),  :user => users( :plainuser1 ) )

@@ -4,6 +4,6 @@ class DepartmentTest < ActiveSupport::TestCase
   fixtures :departments, :topics
   # Replace this with your real tests.
   test "Initial relationships work" do
-    assert_equal departments( :its ).topics.size, 2
+    assert_equal departments( :its ).topics.size, 3
   end
 end

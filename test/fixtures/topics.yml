@@ -23,3 +23,10 @@ no_survey_topic:
   minutes: 30
   survey_type: 0
   department: tr
+  
+multi_time_topic:
+  name: Topic with Multiple Times per Session
+  description: You've got to show up twice.
+  minutes: 60
+  survey_type: 1
+  department: its

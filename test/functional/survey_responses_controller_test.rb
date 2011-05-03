@@ -30,6 +30,15 @@ class SurveyResponsesControllerTest < ActionController::TestCase
     assert_response :success
   end
   
+  test "Users shouldn't be able to submit feedback on sessions that haven't yet completed" do
+    login_as( users( :plainuser1 ) )
+
+    assert_difference 'SurveyResponse.all.size', +0 do
+      get :create, :reservation_id => reservations( :multi_time_topic_started_plainuser1 ).id, :survey_response => { :reservation_id => reservations( :multi_time_topic_started_plainuser1 ).id, :class_rating => 2, :instructor_rating =>2 }
+    end
+    assert_response :success
+  end
+  
   test "Users shouldn't be able to submit feedback on sessions that have been cancelled" do
     login_as( users( :plainuser3 ) )
 

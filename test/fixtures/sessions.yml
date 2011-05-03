@@ -91,3 +91,23 @@ tracs_multiple_instructors:
   cancelled: false
   seats: 2
     
+multi_time_topic:
+  instructors: instructor1
+  topic: multi_time_topic
+  location: Alkek 155
+  cancelled: false
+  seats: 20
+
+multi_time_topic_started:
+  instructors: instructor1
+  topic: multi_time_topic
+  location: Alkek 155
+  cancelled: false
+  seats: 20
+  
+multi_time_topic_completed:
+  instructors: instructor1
+  topic: multi_time_topic
+  location: Alkek 155
+  cancelled: false
+  seats: 20

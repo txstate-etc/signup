@@ -67,8 +67,8 @@ class SessionTest < ActiveSupport::TestCase
   end
   
   test "Sessions with automatic or external surveys should get emails, but only for folks not marked as absent" do
-    assert_difference 'ActionMailer::Base.deliveries.size', +3 do
-      assert_difference 'Session.all(:conditions => ["survey_sent = ?", false]).size', -2 do
+    assert_difference 'ActionMailer::Base.deliveries.size', +4 do
+      assert_difference 'Session.all(:conditions => ["survey_sent = ?", false]).size', -3 do
         Session.send_surveys
       end
     end
@@ -147,5 +147,34 @@ class SessionTest < ActiveSupport::TestCase
   test "Confirmed Reservations should be alphabetized by last name" do
     test_session = sessions( :gato_overbooked )
     assert_equal test_session.confirmed_reservations, test_session.confirmed_reservations.sort { |a,b| a.user.last_name <=> b.user.last_name }
+  end
+  
+  test "Try reminder emails for a multi time session" do
+    assert_equal 2, sessions( :multi_time_topic ).occurrences.count
+    
+    # it should send one reminder for the first occurrence
+    start_date = DateTime.parse( '7 May 2045' ).at_beginning_of_day
+    end_date = DateTime.parse( '7 May 2045' ).end_of_day    
+    assert_difference 'ActionMailer::Base.deliveries.size', +1 do
+      Session.send_reminders( start_date, end_date )
+    end
+
+    # it should send no reminders if there are no occurrences for the day
+    start_date = DateTime.parse( '8 May 2045' ).at_beginning_of_day
+    end_date = DateTime.parse( '8 May 2045' ).end_of_day    
+    assert_difference 'ActionMailer::Base.deliveries.size', 0 do
+      Session.send_reminders( start_date, end_date )
+    end
+
+    # it should still send reminders for the second occurrence
+    start_date = DateTime.parse( '9 May 2045' ).at_beginning_of_day
+    end_date = DateTime.parse( '9 May 2045' ).end_of_day    
+    assert_difference 'ActionMailer::Base.deliveries.size', +2 do
+      Session.send_reminders( start_date, end_date )
+    end
+  end
+  
+  test "ics for multi time sessions has multiple events" do
+    assert_equal 2, RiCal.parse_string(sessions( :multi_time_topic ).to_cal).first.events.size
   end
 end

@@ -118,7 +118,23 @@ class ReservationsControllerTest < ActionController::TestCase
   test "Show what training sessions user is registered for" do
     login_as( users( :plainuser1 ) )
     get :index
-    assert_equal 4,  assigns( :confirmed_reservations ).size, "Number of upcoming sessions for Plainuser1 was incorrect."
+    assert_equal 6,  assigns( :confirmed_reservations ).size, "Number of upcoming sessions for Plainuser1 was incorrect."
+    assert_equal 3,  assigns( :past_reservations ).size, "Number of past sessions for Plainuser1 was incorrect."
+    assert_equal 0,  assigns( :waiting_list_signups ).size, "Number of wait listed sessions for Plainuser1 was incorrect."
+    assert_response :success
+
+    login_as( users( :plainuser2 ) )
+    get :index
+    assert_equal 2,  assigns( :confirmed_reservations ).size, "Number of upcoming sessions for Plainuser2 was incorrect."
+    assert_equal 3,  assigns( :past_reservations ).size, "Number of past sessions for Plainuser2 was incorrect."
+    assert_equal 0,  assigns( :waiting_list_signups ).size, "Number of wait listed sessions for Plainuser2 was incorrect."
+    assert_response :success
+    
+    login_as( users( :plainuser3 ) )
+    get :index
+    assert_equal 1,  assigns( :confirmed_reservations ).size, "Number of upcoming sessions for Plainuser3 was incorrect."
+    assert_equal 0,  assigns( :past_reservations ).size, "Number of past sessions for Plainuser3 was incorrect."
+    assert_equal 1,  assigns( :waiting_list_signups ).size, "Number of wait listed sessions for Plainuser3 was incorrect."
     assert_response :success
   end
   
