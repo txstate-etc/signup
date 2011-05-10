@@ -65,7 +65,7 @@ class Session < ActiveRecord::Base
     if name.present?
       elements = name.split(/[(|)]/)
       if elements.size > 1
-        user = User.find_by_login( elements[1] )
+        user = User.find_by_login( elements.last )
       else
         user = User.find_by_login( elements[0] )
       end

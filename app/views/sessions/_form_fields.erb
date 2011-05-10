@@ -23,15 +23,20 @@
 </div>
 
 <%= f.label :instructor_id, "Instructor(s):", :class => 'field-label' %>
+<!--
 <ul class="instructor-list">
-  <% @session.instructors.each do |instructor| %>
+  <%# @session.instructors.each do |instructor| %>
     <li>
-      <%= check_box_tag "session[instructor_ids][]", instructor.id, true %>
-      <%= h instructor.name_and_login %>
+      <%#= check_box_tag "session[instructor_ids][]", instructor.id, true %>
+      <%#= h instructor.name_and_login %>
     </li>
-  <% end %>
+  <%# end %>
 </ul>
-<%= text_field_with_auto_complete :session, :instructor_name, { :value => "" }, { :url => users_path( :js ), :method => :get, :with => "'search=' + element.value" } %>
+-->
+<% f.fields_for :instructors do |builder| %>
+  <%= render "instructor_fields", :f => builder %>
+<% end %>
+<p><%= link_to_add_fields "add another instructor", f, :instructors %></p>
 
 <%= f.label :seats, "Seats Available (blank for no limit):", :class => 'field-label' %>
 <%= f.text_field :seats, :size => 4 %>

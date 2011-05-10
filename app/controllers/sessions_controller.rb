@@ -39,7 +39,7 @@ class SessionsController < ApplicationController
   
   def update
     # if no instructors are checked, then the browser won't send us an empty array like we expect
-    params[:session][:instructor_ids] ||= [] unless params[:session].blank? || params[:reservations_update]
+    #params[:session][:instructor_ids] ||= [] unless params[:session].blank? || params[:reservations_update]
     @session = Session.find( params[ :id ] )
     if current_user && current_user.admin? || @session.instructor?( current_user )
       if @session.update_attributes( params[ :session ] )

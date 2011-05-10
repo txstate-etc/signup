@@ -29,7 +29,8 @@ Rails::Initializer.run do |config|
   config.gem "Ascii85", :lib => "ascii85"
   config.gem "prawn", :version => '0.11.1'
   config.gem "calendar_date_select", :version => '1.16.2'
-
+  config.gem "repeated_auto_complete"
+  
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named
   # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
