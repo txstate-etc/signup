@@ -23,16 +23,6 @@
 </div>
 
 <%= f.label :instructor_id, "Instructor(s):", :class => 'field-label' %>
-<!--
-<ul class="instructor-list">
-  <%# @session.instructors.each do |instructor| %>
-    <li>
-      <%#= check_box_tag "session[instructor_ids][]", instructor.id, true %>
-      <%#= h instructor.name_and_login %>
-    </li>
-  <%# end %>
-</ul>
--->
 <% f.fields_for :instructors do |builder| %>
   <%= render "instructor_fields", :f => builder %>
 <% end %>

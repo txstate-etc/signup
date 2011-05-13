@@ -8,6 +8,7 @@ class User < ActiveRecord::Base
   end
   
   def name_and_login
+     return nil unless name && login
      name + " (" + login + ")"
   end
     

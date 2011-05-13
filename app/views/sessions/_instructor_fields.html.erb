@@ -1,0 +1,4 @@
+<div class="fields">
+  <%= f.text_field_with_auto_complete :name_and_login, { }, { :url => users_path( :js ), :method => :get, :with => "'search=' + element.value" } %>
+  <%= link_to_remove_fields "remove", f %>
+</div>

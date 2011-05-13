@@ -15,6 +15,7 @@ class SessionsController < ApplicationController
       @session = Session.new
       @session.topic = topic
       @session.occurrences.build
+      @session.instructors.build
       @page_title = "Create New Session"
     else
       redirect_to topic
@@ -29,6 +30,7 @@ class SessionsController < ApplicationController
         redirect_to @session
       else
         @session.occurrences.build
+        @session.instructors.build
         @page_title = "Create New Session"
         render :action => 'new'
       end
@@ -38,8 +40,6 @@ class SessionsController < ApplicationController
   end
   
   def update
-    # if no instructors are checked, then the browser won't send us an empty array like we expect
-    #params[:session][:instructor_ids] ||= [] unless params[:session].blank? || params[:reservations_update]
     @session = Session.find( params[ :id ] )
     if current_user && current_user.admin? || @session.instructor?( current_user )
       if @session.update_attributes( params[ :session ] )

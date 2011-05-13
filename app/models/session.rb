@@ -8,6 +8,7 @@ class Session < ActiveRecord::Base
   accepts_nested_attributes_for :occurrences, :reject_if => lambda { |a| a[:time].blank? }, :allow_destroy => true
   belongs_to :topic
   has_and_belongs_to_many :instructors, :class_name => "User", :uniq => true
+  accepts_nested_attributes_for :instructors, :reject_if => lambda { |a| true }, :allow_destroy => false
   validate :at_least_one_occurrence, :at_least_one_instructor, :valid_instructor
   validates_presence_of :topic_id, :location
   validates_numericality_of :seats, :only_integer => true, :allow_nil => true
@@ -54,29 +55,6 @@ class Session < ActiveRecord::Base
     instructors.include? user
   end
   
-  # virtual attribute to handle instructor selection
-  # instructor_name is of the format "Name (login_id)", e.g. "Sean McMains (sm51)"
-  # or just the login id, e.g. "sm51"
-  def instructor_name
-    instructors[0].name_and_login if instructors.present?
-  end
-  
-  def instructor_name=( name )
-    if name.present?
-      elements = name.split(/[(|)]/)
-      if elements.size > 1
-        user = User.find_by_login( elements.last )
-      else
-        user = User.find_by_login( elements[0] )
-      end
-      if user.present?
-        self.instructors << user
-      else
-        @invalid_instructor = true
-      end
-    end      
-  end
-  
   def valid_instructor
     if @invalid_instructor
       self.errors.add(:instructor_id, 'must be a valid user')
@@ -96,6 +74,18 @@ class Session < ActiveRecord::Base
   
   def to_param
     "#{id}-#{topic.name.parameterize}"
+  end
+  
+  def initialize(attributes = nil)    
+    # use our local method to add/remove instructors
+    attributes.merge!(build_instructors_attributes(attributes.delete(:instructors_attributes))) unless attributes.nil?
+    super(attributes)
+  end
+  
+  def update_attributes(attributes)
+    # use our local method to add/remove instructors
+    attributes.merge!(build_instructors_attributes(attributes.delete(:instructors_attributes))) unless attributes.nil?
+    super(attributes)
   end
   
   def before_update
@@ -204,6 +194,47 @@ class Session < ActiveRecord::Base
   
   def average_rating
     survey_responses.inject(0.0) { |sum, rating| sum + rating.class_rating } / survey_responses.size
+  end
+  
+  private
+  
+  def build_instructors_attributes(attributes)
+    return {} if attributes.blank?
+    
+    # Example input:
+    # {
+    #   "1305227580344" => {"name_and_login"=>"Charles B Jones (cj32)", "_destroy"=>""},
+    #               "0" => {"name_and_login"=>"Emin Saglamer (es26)",   "id"=>"30798", "_destroy"=>""},
+    #               "1 "=> {"name_and_login"=>"Patrick A Smith (ps35)", "id"=>"31919", "_destroy"=>""},
+    #               "2" => {"name_and_login"=>"Rori Sheffield (rp41)",  "id"=>"32014", "_destroy"=>"1"}
+    # }
+ 
+    ids = []
+    attributes.values.each do |attr|      
+      next if attr["_destroy"] == "1"      
+      if(attr.include?("id") && instructors.find(attr["id"]).name_and_login == attr["name_and_login"])
+        ids << attr["id"]        
+      elsif attr["name_and_login"].present?
+        user = find_instructor(attr["name_and_login"])
+        if user.nil? 
+          @invalid_instructor = true
+        else
+          ids << user.id
+        end        
+      end
+    end
+    
+    return { "instructor_ids" => ids }
+  end
+  
+  def find_instructor( name )
+    return nil if name.blank?
+    elements = name.split(/[(|)]/)
+    if elements.size > 1
+      User.find_by_login( elements.last )
+    else
+      User.find_by_login( elements[0] )
+    end
   end
   
 end

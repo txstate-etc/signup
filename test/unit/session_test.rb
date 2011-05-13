@@ -103,19 +103,41 @@ class SessionTest < ActiveSupport::TestCase
   
   test "We should be able to use instructor names as well as instructor objects" do
     test_session = sessions( :gato )
+
+    assert test_session.update_attributes( { :instructors_attributes => {
+      "1305227580344" => {"name_and_login"=>"Instructor2 (i23456)", "_destroy"=>""},
+                  "0" => {"name_and_login"=>"Instructor1 (i12345)", "id"=> users( :instructor1 ).id, "_destroy"=>"1"}
+    }})
+      
+    assert_equal 1, test_session.instructors.size
+    assert_equal users( :instructor2 ), test_session.instructors[0]
     
-    assert_equal test_session.instructor_name, sessions( :gato ).instructors[0].name + " (" + sessions( :gato ).instructors[0].login + ")"
-    test_session.instructors.clear
-    test_session.instructor_name = users( :instructor2 ).name + " (" + users( :instructor2 ).login + ")"
-    assert_equal test_session.instructors[0], users( :instructor2 )
-    test_session.instructors.clear
-    test_session.instructor_name = users( :instructor1 ).login
-    assert_equal test_session.instructors[0], users( :instructor1 )
+    assert test_session.update_attributes( { :instructors_attributes => {
+      "0" => {"name_and_login"=>"Instructor1 (i12345)", "id"=> users( :instructor2 ).id,"_destroy"=>""}
+    }})
+    assert_equal 1, test_session.instructors.size
+    assert_equal users( :instructor1 ), test_session.instructors[0]
+
+    test_session2 = Session.new( { 
+      :occurrences_attributes =>{"0"=>{"time"=>"May 25, 2015 12:00 PM", "_destroy"=>""}}, 
+      :location => "Alkek 155", 
+      :topic_id => topics( :gato ).id,
+      :instructors_attributes => {
+        "1305227580344" => {"name_and_login"=>"Instructor2 (i23456)", "_destroy"=>""},
+                    "0" => {"name_and_login"=>"Instructor1 (i12345)", "_destroy"=>""}
+      }
+    })       
+     
+    assert test_session2.save  
+    assert_equal 2, test_session2.instructors.size
+    assert_equal users( :instructor2 ), test_session2.instructors[0]
+    assert_equal users( :instructor1 ), test_session2.instructors[1]
+
   end
   
   test "We should be able to have multiple instructors" do
     test_session = sessions( :gato )
-    test_session.instructor_name = users( :instructor2 ).login
+    test_session.instructors << users( :instructor2 )
     assert_equal 2, test_session.instructors.size
     test_session.instructor_ids = [ users( :instructor2 ).id ]
     assert_equal 1, test_session.instructors.size
@@ -134,7 +156,7 @@ class SessionTest < ActiveSupport::TestCase
     test_session.topic = topics( :gato )
     test_session.occurrences.build(:time => DateTime.parse( '15 June 2035 00:00' ))
     test_session.location = "Tijuana"
-    test_session.instructor_name = users( :instructor1 ).login
+    test_session.instructor_ids = [ users( :instructor2 ).id ]
     assert test_session.save
   end
 
