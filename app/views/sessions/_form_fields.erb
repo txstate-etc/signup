@@ -1,12 +1,13 @@
 <%= f.label :name, "Topic Name:", :class => 'field-label' %>
 <%= f.hidden_field :topic_id %>
 <%=h @session.topic.name %>
-
-<%= f.label :occurrences, "Session Time(s):", :class => 'field-label' %>
-<% f.fields_for :occurrences do |builder| %>
-    <%= render "occurrence_fields", :f => builder %>
-<% end %>
-<p><%= link_to_add_fields "add another time", f, :occurrences %></p>
+<div id="occurrences">
+  <%= f.label :occurrences, "Session Time(s):", :class => 'field-label' %>
+  <% f.fields_for :occurrences do |builder| %>
+      <%= render "occurrence_fields", :f => builder %>
+  <% end %>
+  <p><%= link_to_add_fields "add another time", f, :occurrences %></p>
+</div>
 
 <div>
   <label class='field-label'>Do you want to limit the Registration Period? [ 
