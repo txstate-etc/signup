@@ -181,7 +181,7 @@ label.admin-netid-label {
   font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', serif;
 }
 
-label.field-label {
+.field-label {
   margin-top: .75em;
   display:block;
   width: 100%;

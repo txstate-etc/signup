@@ -10,10 +10,10 @@
 </div>
 
 <div>
-  <label class='field-label'>Do you want to limit the Registration Period? [ 
+  <div class='field-label'>Do you want to limit the Registration Period? [ 
     <%= radio_button_tag( :reg_period_needed, "Yes", @session.registration_period_defined?, :onclick => "revealRegPeriodArea();" ) %><%= label_tag( :reg_period_needed_yes, "Yes")%> 
     <%= radio_button_tag( :reg_period_needed, "No", !@session.registration_period_defined?, :onclick => "hideRegPeriodArea();")%><%= label_tag( :reg_period_needed_no, "No")%> ]
-  </label>  
+  </div>  
   <div id="registration-period-field" style="<%= @session.registration_period_defined? ? '' : 'display:none' %>">
     <%= f.label :reg_start, "Registration Period Begins:", :class => 'field-label' %>
     <%= f.calendar_date_select :reg_start %>
