@@ -43,15 +43,18 @@ function set_initial_occurrence_value(link) {
   var fields = $(link).up(1).select('.fields').filter(function(el) { return el.visible(); }).reverse();
 
   for(i=0;i<fields.length;i++) {
-    var timestamp=Date.parse(fields[i].select('input[type=text]')[0].value);
-    if (isNaN(timestamp)==false) {
-      value = new Date(timestamp);
-      break;
+    var text = fields[i].select('input[type=text]')[0].value;
+    if(text) {
+      var timestamp=Date.parse(text);
+      if (isNaN(timestamp)==false && timestamp > 0) {
+        value = timestamp;
+        break;
+      }
     }
   }
   
   if(value) {
-    value = new Date(value.getTime() + 86400000).toFormattedString(true);
+    value = new Date(value + 86400000).toFormattedString(true);
   } else {
     value = '';
   }
