@@ -78,13 +78,13 @@ class Session < ActiveRecord::Base
   
   def initialize(attributes = nil)    
     # use our local method to add/remove instructors
-    attributes.merge!(build_instructors_attributes(attributes.delete(:instructors_attributes))) unless attributes.nil?
+    attributes.merge!(build_instructors_attributes(false, attributes.delete(:instructors_attributes))) unless attributes.nil?
     super(attributes)
   end
   
   def update_attributes(attributes)
     # use our local method to add/remove instructors
-    attributes.merge!(build_instructors_attributes(attributes.delete(:instructors_attributes))) unless attributes.nil?
+    attributes.merge!(build_instructors_attributes(true, attributes.delete(:instructors_attributes))) unless attributes.nil?
     super(attributes)
   end
   
@@ -198,7 +198,7 @@ class Session < ActiveRecord::Base
   
   private
   
-  def build_instructors_attributes(attributes)
+  def build_instructors_attributes(update, attributes)
     return {} if attributes.blank?
     
     # Example input:
@@ -209,10 +209,12 @@ class Session < ActiveRecord::Base
     #               "2" => {"name_and_login"=>"Rori Sheffield (rp41)",  "id"=>"32014", "_destroy"=>"1"}
     # }
  
+    #logger.info("in build_instructors_attributes, instructors = #{instructors.nil? ? "nil" : instructors}")
+    
     ids = []
     attributes.values.each do |attr|      
       next if attr["_destroy"] == "1"      
-      if(attr.include?("id") && instructors.find(attr["id"]).name_and_login == attr["name_and_login"])
+      if(update && attr.include?("id") && instructors.find(attr["id"]).name_and_login == attr["name_and_login"])
         ids << attr["id"]        
       elsif attr["name_and_login"].present?
         user = find_instructor(attr["name_and_login"])
