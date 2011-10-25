@@ -45,9 +45,9 @@
 </head>
 
 <body>
-	<p>Hi there <%= @reservation.user.name %>,</p>
+	<p>Hi there <%= @user.name %>,</p>
 
-<p>Just a friendly reminder: the "<%= @reservation.session.topic.name %>" class you signed up
+<p>Just a friendly reminder: the "<%= @session.topic.name %>" class you signed up
 for is coming up! If your plans have changed and you can no longer make it to the class,
 or you need to cancel your reservation for any other reason, 
 please do so <%= link_to "here", :controller => "reservations", :only_path => false %>.</p>
@@ -57,20 +57,20 @@ please do so <%= link_to "here", :controller => "reservations", :only_path => fa
 		<h2>Your Reservation</h2>
 		<dl>
 			<dt>What:</dt>
-			<dd><%=h @reservation.session.topic.name %></dd>
+			<dd><%=h @session.topic.name %></dd>
       <dt>When:</dt>
-      <% if @reservation.session.multiple_occurrences? %>
-        <dd>This session meets <%= @reservation.session.occurrences.count %> times:</dd>
+      <% if @session.multiple_occurrences? %>
+        <dd>This session meets <%= @session.occurrences.count %> times:</dd>
       <% end %>
-      <% @reservation.session.occurrences.each do |o| %>
-        <dd><%=h formatted_time_range(o.time, @reservation.session.topic.minutes) %></dd>
+      <% @session.occurrences.each do |o| %>
+        <dd><%=h formatted_time_range(o.time, @session.topic.minutes) %></dd>
       <% end %>
 			<dt>Where:</dt>
-			<dd><%=h @reservation.session.location %></dd>
+			<dd><%=h @session.location %></dd>
 			<dt>Who:</dt>
-			<dd><%=h @reservation.user.name %></dd>
+			<dd><%=h @user.name %></dd>
       <dt>Description:</dt>
-      <dd><%= auto_link( simple_format( h( @reservation.session.topic.description ) ) ) %></dd>
+      <dd><%= auto_link( simple_format( h( @session.topic.description ) ) ) %></dd>
 		</dl>
 	</div>
 </div>

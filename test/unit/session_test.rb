@@ -49,7 +49,7 @@ class SessionTest < ActiveSupport::TestCase
     start_date = DateTime.parse( '1 January 2035' )
     end_date = DateTime.parse( '31 December 2035' )
     
-    assert_difference 'ActionMailer::Base.deliveries.size', +6 do
+    assert_difference 'ActionMailer::Base.deliveries.size', +13 do
       Session.send_reminders( start_date, end_date )
     end
   end
@@ -57,11 +57,15 @@ class SessionTest < ActiveSupport::TestCase
   test "Verify that correct person gets emailed" do
     start_date = DateTime.parse( '15 June 2035 00:00' )
     end_date = DateTime.parse( '15 June 2035 23:59' )
-    assert_difference 'ActionMailer::Base.deliveries.size', +1 do
+    assert_difference 'ActionMailer::Base.deliveries.size', +2 do
       Session.send_reminders( start_date, end_date )
     end
     
     reminder_email = ActionMailer::Base.deliveries.last
+    assert_equal reminder_email.subject, "Reminder: " + topics( :tracs ).name
+    assert_equal reminder_email.to[0], users( :instructor2 ).email
+
+    reminder_email = ActionMailer::Base.deliveries[-2]
     assert_equal reminder_email.subject, "Reminder: " + topics( :tracs ).name
     assert_equal reminder_email.to[0], users( :plainuser3 ).email
   end
@@ -174,10 +178,10 @@ class SessionTest < ActiveSupport::TestCase
   test "Try reminder emails for a multi time session" do
     assert_equal 2, sessions( :multi_time_topic ).occurrences.count
     
-    # it should send one reminder for the first occurrence
+    # it should send one reminder (for recipient and instructor) for the first occurrence
     start_date = DateTime.parse( '7 May 2045' ).at_beginning_of_day
     end_date = DateTime.parse( '7 May 2045' ).end_of_day    
-    assert_difference 'ActionMailer::Base.deliveries.size', +1 do
+    assert_difference 'ActionMailer::Base.deliveries.size', +2 do
       Session.send_reminders( start_date, end_date )
     end
 
@@ -191,7 +195,7 @@ class SessionTest < ActiveSupport::TestCase
     # it should still send reminders for the second occurrence
     start_date = DateTime.parse( '9 May 2045' ).at_beginning_of_day
     end_date = DateTime.parse( '9 May 2045' ).end_of_day    
-    assert_difference 'ActionMailer::Base.deliveries.size', +2 do
+    assert_difference 'ActionMailer::Base.deliveries.size', +4 do
       Session.send_reminders( start_date, end_date )
     end
   end

@@ -17,20 +17,20 @@ class ReservationMailer < ActionMailer::Base
     attachment :content_type => "text/calendar", :body => reservation.session.to_cal
   end
 
-  def remind( reservation )
-    subject    'Reminder: ' + reservation.session.topic.name
-    recipients reservation.user.email_header
-    from       reservation.session.instructors[0].email_header
+  def remind( session, user )
+    subject    'Reminder: ' + session.topic.name
+    recipients user.email_header
+    from       session.instructors[0].email_header
     content_type 'multipart/alternative'
     
     part :content_type => "text/plain",
-      :body => render_message( "remind-as-text", :reservation => reservation ),
+      :body => render_message( "remind-as-text", :session => session, :user => user ),
       :transfer_encoding => "base64"
     
     part :content_type => "text/html",
-      :body => render_message( "remind-as-html", :reservation => reservation )
+      :body => render_message( "remind-as-html", :session => session, :user => user )
     
-    attachment :content_type => "text/calendar", :body => reservation.session.to_cal
+    attachment :content_type => "text/calendar", :body => session.to_cal
   end
 
   def promotion_notice( reservation )

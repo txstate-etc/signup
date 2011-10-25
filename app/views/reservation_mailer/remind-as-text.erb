@@ -1,6 +1,6 @@
-Hi there <%= @reservation.user.name %>,
+Hi there <%= @user.name %>,
 
-Just a friendly reminder: the "<%= @reservation.session.topic.name %>"
+Just a friendly reminder: the "<%= @session.topic.name %>"
 class you signed up for is coming up! If your plans have changed 
 and you can no longer make it to the class, or you need to cancel 
 your reservation for any other reason, please do so from the 
@@ -12,18 +12,18 @@ Training Reservation System.
 
 Your Reservation
 
-What: <%= @reservation.session.topic.name %>
-<% if @reservation.session.multiple_occurrences? -%>
-When: This session meets <%= @reservation.session.occurrences.count %> times:
-<% @reservation.session.occurrences.each do |o| -%>
-  <%= formatted_time_range(o.time, @reservation.session.topic.minutes) %>
+What: <%= @session.topic.name %>
+<% if @session.multiple_occurrences? -%>
+When: This session meets <%= @session.occurrences.count %> times:
+<% @session.occurrences.each do |o| -%>
+  <%= formatted_time_range(o.time, @session.topic.minutes) %>
 <% end -%>
 <% else -%>
-When: <%= formatted_time_range(@reservation.session.time, @reservation.session.topic.minutes) %>
+When: <%= formatted_time_range(@session.time, @session.topic.minutes) %>
 <% end -%>
-Where: <%= @reservation.session.location %>
-Who:  <%= @reservation.user.name %>
-Description: <%= auto_link( @reservation.session.topic.description ) %>
+Where: <%= @session.location %>
+Who:  <%= @user.name %>
+Description: <%= auto_link( @session.topic.description ) %>
 
 ----
 

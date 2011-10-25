@@ -165,8 +165,13 @@ class Session < ActiveRecord::Base
   def self.send_reminders( start_time, end_time )
     session_list = Session.find( :all, :conditions => ['occurrences.time >= ? AND occurrences.time <= ? AND cancelled = 0', start_time, end_time ], :order => "occurrences.time", :include => :occurrences )
     session_list.each do |session|
+      # send a reminder to each student
       session.confirmed_reservations.each do |reservation|
-        ReservationMailer.deliver_remind( reservation )
+        ReservationMailer.deliver_remind( session, reservation.user )
+      end
+      # now send one to each instructor
+      session.instructors.each do |instructor|
+        ReservationMailer.deliver_remind( session, instructor )
       end
     end
   end
