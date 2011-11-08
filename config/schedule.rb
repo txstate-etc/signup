@@ -19,26 +19,29 @@
 
 # Learn more: http://github.com/javan/whenever
 
-# send out email reminders for classes that are 3 days
-# out every night at 10:00pm.
-every '0 22 * * *' do
-  rake "cron:send_reminders[3]"
-end
+set :output, "log/cron_log.log"
 
-# send out email reminders for classes that are today
-# every morning at 12:01am.
-every '1 0 * * *' do
-  rake "cron:send_reminders[0]"
-end
+if @environment == 'production'
+  # send out email reminders for classes that are 3 days
+  # out every night at 10:00pm.
+  every '0 22 * * *' do
+    rake "cron:send_reminders[3]"
+  end
 
-# send out survey emails
-# every morning at 12:10am.
-every '10 0 * * *' do
-  rake "cron:send_surveys"
-end
+  # send out email reminders for classes that are today
+  # every morning at 12:01am.
+  every '1 0 * * *' do
+    rake "cron:send_reminders[0]"
+  end
 
+  # send out survey emails
+  # every morning at 12:10am.
+  every '10 0 * * *' do
+    rake "cron:send_surveys"
+  end
 
-# update Users table nightly at 11:00pm
-every '0 21 * * *' do
-  rake "cron:import_users"
+  # update Users table nightly at 11:00pm
+  every '0 21 * * *' do
+    rake "cron:import_users"
+  end
 end
