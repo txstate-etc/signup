@@ -21,7 +21,7 @@ class ReservationsController < ApplicationController
     
     if @reservation.save
       if @reservation.confirmed?
-        ReservationMailer.deliver_confirm( @reservation )
+        ReservationMailer.delay.deliver_confirm( @reservation )
         flash[ :notice ] = "Your reservation has been confirmed."
       else
         flash[ :notice ] = "You have been added to the waiting list."

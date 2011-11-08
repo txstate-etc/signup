@@ -54,6 +54,7 @@ class ReservationTest < ActiveSupport::TestCase
     assert_difference 'ActionMailer::Base.deliveries.size', +1 do
       reservation = Reservation.new( :session => sessions( :tracs_multiple_instructors ),  :user => users( :plainuser2 ), :special_accommodations => "I'd like an eggplant" )
       reservation.save
+      Delayed::Worker.new(:quiet => true).work_off
     end
     assert_equal ActionMailer::Base.deliveries.last.to.size, 2
     assert_equal ActionMailer::Base.deliveries.last.to[0], sessions( :tracs_multiple_instructors ).instructors[0].email

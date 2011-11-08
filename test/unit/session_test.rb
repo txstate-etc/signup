@@ -31,16 +31,19 @@ class SessionTest < ActiveSupport::TestCase
     assert_difference 'ActionMailer::Base.deliveries.size', +2 do
       sessions( :gato_overbooked ).location = "The Third Circle of Hell"
       sessions( :gato_overbooked ).save
+      Delayed::Worker.new(:quiet => true).work_off
     end
 
     assert_difference 'ActionMailer::Base.deliveries.size', +2 do
       sessions( :gato_overbooked ).occurrences[0].time = Time.now()
       sessions( :gato_overbooked ).save
+      Delayed::Worker.new(:quiet => true).work_off
     end
     
     assert_difference 'ActionMailer::Base.deliveries.size', +0 do
       sessions( :gato_overbooked ).instructors << users( :instructor1 )
       sessions( :gato_overbooked ).save
+      Delayed::Worker.new(:quiet => true).work_off
     end
     
   end
@@ -51,6 +54,7 @@ class SessionTest < ActiveSupport::TestCase
     
     assert_difference 'ActionMailer::Base.deliveries.size', +13 do
       Session.send_reminders( start_date, end_date )
+      Delayed::Worker.new(:quiet => true).work_off
     end
   end
 
@@ -59,6 +63,7 @@ class SessionTest < ActiveSupport::TestCase
     end_date = DateTime.parse( '15 June 2035 23:59' )
     assert_difference 'ActionMailer::Base.deliveries.size', +2 do
       Session.send_reminders( start_date, end_date )
+      Delayed::Worker.new(:quiet => true).work_off
     end
     
     reminder_email = ActionMailer::Base.deliveries.last
@@ -74,6 +79,7 @@ class SessionTest < ActiveSupport::TestCase
     assert_difference 'ActionMailer::Base.deliveries.size', +4 do
       assert_difference 'Session.all(:conditions => ["survey_sent = ?", false]).size', -3 do
         Session.send_surveys
+        Delayed::Worker.new(:quiet => true).work_off
       end
     end
     
@@ -183,6 +189,7 @@ class SessionTest < ActiveSupport::TestCase
     end_date = DateTime.parse( '7 May 2045' ).end_of_day    
     assert_difference 'ActionMailer::Base.deliveries.size', +2 do
       Session.send_reminders( start_date, end_date )
+      Delayed::Worker.new(:quiet => true).work_off
     end
 
     # it should send no reminders if there are no occurrences for the day
@@ -190,6 +197,7 @@ class SessionTest < ActiveSupport::TestCase
     end_date = DateTime.parse( '8 May 2045' ).end_of_day    
     assert_difference 'ActionMailer::Base.deliveries.size', 0 do
       Session.send_reminders( start_date, end_date )
+      Delayed::Worker.new(:quiet => true).work_off
     end
 
     # it should still send reminders for the second occurrence
@@ -197,6 +205,7 @@ class SessionTest < ActiveSupport::TestCase
     end_date = DateTime.parse( '9 May 2045' ).end_of_day    
     assert_difference 'ActionMailer::Base.deliveries.size', +4 do
       Session.send_reminders( start_date, end_date )
+      Delayed::Worker.new(:quiet => true).work_off
     end
   end
   

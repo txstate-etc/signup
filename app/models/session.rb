@@ -99,7 +99,7 @@ class Session < ActiveRecord::Base
     send_update = @occurrences_dirty || location_changed?
     if send_update
       confirmed_reservations.each do |reservation|
-        ReservationMailer.deliver_update_notice( reservation )
+        ReservationMailer.delay.deliver_update_notice( reservation )
       end
     end
   end
@@ -108,7 +108,7 @@ class Session < ActiveRecord::Base
     self.cancelled = true
     self.save
     confirmed_reservations.each do |reservation|
-      ReservationMailer.deliver_cancellation_notice( reservation )
+      ReservationMailer.delay.deliver_cancellation_notice( reservation )
     end
   end
   
@@ -163,26 +163,28 @@ class Session < ActiveRecord::Base
   end
   
   def self.send_reminders( start_time, end_time )
+    logger.info "#{DateTime.now.strftime("%F %T")}: Sending session reminders for #{start_time.strftime("%F %T")}..."
     session_list = Session.find( :all, :conditions => ['occurrences.time >= ? AND occurrences.time <= ? AND cancelled = 0', start_time, end_time ], :order => "occurrences.time", :include => :occurrences )
     session_list.each do |session|
       # send a reminder to each student
       session.confirmed_reservations.each do |reservation|
-        ReservationMailer.deliver_remind( session, reservation.user )
+        ReservationMailer.delay.deliver_remind( session, reservation.user )
       end
       # now send one to each instructor
       session.instructors.each do |instructor|
-        ReservationMailer.deliver_remind( session, instructor )
+        ReservationMailer.delay.deliver_remind( session, instructor )
       end
     end
   end
   
   def self.send_surveys
+    logger.info "#{DateTime.now.strftime("%F %T")}: Sending survey reminders..."
     session_list = Session.all( :joins => :topic, :conditions => ['occurrences.time < ? AND survey_sent = ? AND survey_type != ? AND cancelled = ?', DateTime.now, false, Topic::SURVEY_NONE, false ], :readonly => false, :order => "occurrences.time", :include => :occurrences )
     session_list.each do |session|
       session.reload #Force it to load in all occurrences
       next if session.last_time > Time.now #wait until the last occurrance
       session.confirmed_reservations.each do |reservation|
-        ReservationMailer.deliver_survey_mail( reservation ) if reservation.attended != Reservation::ATTENDANCE_MISSED
+        ReservationMailer.delay.deliver_survey_mail( reservation ) if reservation.attended != Reservation::ATTENDANCE_MISSED
       end
       session.survey_sent = true
       session.save

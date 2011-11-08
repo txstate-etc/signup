@@ -1,6 +1,21 @@
 class ReservationMailer < ActionMailer::Base
   helper :application
 
+  def deliver!(mail = @mail)
+    # do pre-deliver stuff
+    logger.info("Sending #{@template} mail at #{@sent_on.to_s}...")  
+    
+    begin
+      super
+    rescue Exception => e  # Net::SMTP errors or sendmail pipe errors
+      logger.error("Error sending #{@template} mail: #{e.message}")
+      raise e
+    end
+          
+    # do post-deliver stuff (catch exceptions, do exception stuff, and re-throw)
+    logger.info("#{@template} mail sent successfully")  
+  end
+
   def confirm( reservation )
     subject    'Reservation Confirmation For: ' + reservation.user.name
     recipients reservation.user.email_header

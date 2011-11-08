@@ -49,6 +49,7 @@ class ReservationsControllerTest < ActionController::TestCase
     login_as( users( :plainuser3 ) )
     assert_difference 'ActionMailer::Base.deliveries.size', +1 do
       get :create, :session_id => sessions( :gato ), :session => { :session_id => sessions( :gato ) }
+      Delayed::Worker.new(:quiet => true).work_off
     end
     
     confirmation_email = ActionMailer::Base.deliveries.last
@@ -105,6 +106,7 @@ class ReservationsControllerTest < ActionController::TestCase
     
     assert_difference 'ActionMailer::Base.deliveries.size', +1 do
       delete :destroy, :id => reservations( :overbooked_plainuser1 )
+      Delayed::Worker.new(:quiet => true).work_off
     end
     
     promotion_email = ActionMailer::Base.deliveries.last
