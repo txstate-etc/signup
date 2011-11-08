@@ -9,7 +9,22 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110516224206) do
+ActiveRecord::Schema.define(:version => 20111101215832) do
+
+  create_table "delayed_jobs", :force => true do |t|
+    t.integer  "priority",   :default => 0
+    t.integer  "attempts",   :default => 0
+    t.text     "handler"
+    t.text     "last_error"
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string   "locked_by"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "delayed_jobs", ["priority", "run_at"], :name => "delayed_jobs_priority"
 
   create_table "departments", :force => true do |t|
     t.string   "name"
@@ -17,12 +32,11 @@ ActiveRecord::Schema.define(:version => 20110516224206) do
     t.datetime "updated_at"
   end
 
-  create_table "messages", :force => true do |t|
-    t.text     "body"
-    t.string   "attachment_file_name"
-    t.string   "attachment_content_type"
-    t.integer  "attachment_file_size"
+  create_table "email_logs", :force => true do |t|
+    t.integer  "user_id"
     t.integer  "session_id"
+    t.string   "message_type"
+    t.string   "content"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -35,7 +49,7 @@ ActiveRecord::Schema.define(:version => 20110516224206) do
   end
 
   add_index "occurrences", ["session_id", "time"], :name => "unique_occurrence_times_in_session", :unique => true
-  add_index "occurrences", ["session_id"], :name => "index_occurances_on_session_id"
+  add_index "occurrences", ["session_id"], :name => "index_occurrences_on_session_id"
 
   create_table "reservations", :force => true do |t|
     t.integer  "user_id",                               :null => false

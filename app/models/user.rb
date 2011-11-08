@@ -26,7 +26,7 @@ class User < ActiveRecord::Base
     filter = '(&(objectCategory=CN=Person,CN=Schema,CN=Configuration,DC=matrix,DC=txstate,DC=edu)(|(memberOf=CN=students,OU=Txstate Conscribed Lists,DC=matrix,DC=txstate,DC=edu)(memberOf=CN=staff,OU=Txstate Conscribed Lists,DC=matrix,DC=txstate,DC=edu)(memberOf=CN=faculty,OU=Txstate Conscribed Lists,DC=matrix,DC=txstate,DC=edu)))'
 
     bind_dn = 'cn=itsldap,ou=TxState Service Accounts,dc=matrix,dc=txstate,dc=edu'
-    bind_pass = 'SECRET'
+    bind_pass = LDAP_PASSWORD
     logger.info("Starting import from LDAP: " + Time.now.to_s )
     
     server_index = 0

@@ -2,3 +2,4 @@ log/
 \.sqlite3$
 \.project
 tmproj
+password
