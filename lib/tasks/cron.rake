@@ -9,16 +9,19 @@ namespace :cron do
     start_date = ( DateTime.now + days_ahead ).at_beginning_of_day
     end_date = ( DateTime.now + days_ahead ).end_of_day
     Session.send_reminders( start_date, end_date )    
+    Rails.logger.flush
   end
 
   desc "Send out survey emails"
   task :send_surveys => :environment do 
     Session.send_surveys   
+    Rails.logger.flush
   end
 
   desc "Update Users table"
   task :import_users => :environment do 
     User.import_all
+    Rails.logger.flush
   end
 
 end
