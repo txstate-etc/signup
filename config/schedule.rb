@@ -19,6 +19,10 @@
 
 # Learn more: http://github.com/javan/whenever
 
+env :PATH, '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+
+job_type :envcommand, 'cd :path && RAILS_ENV=:environment :task'
+
 set :output, "log/cron_log.log"
 
 if @environment == 'production'
@@ -43,5 +47,10 @@ if @environment == 'production'
   # update Users table nightly at 11:00pm
   every '0 21 * * *' do
     rake "cron:import_users"
+  end
+
+  # restart the delayed_job daemon when the system reboots
+  every :reboot do
+    envcommand 'script/delayed_job restart --monitor'
   end
 end
