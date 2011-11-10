@@ -9,11 +9,13 @@ class ReservationMailer < ActionMailer::Base
       super
     rescue Exception => e  # Net::SMTP errors or sendmail pipe errors
       logger.error("Error sending #{@template} mail: #{e.message}")
+      logger.flush
       raise e
     end
           
     # do post-deliver stuff (catch exceptions, do exception stuff, and re-throw)
     logger.info("#{@template} mail sent successfully")  
+    logger.flush
   end
 
   def confirm( reservation )
