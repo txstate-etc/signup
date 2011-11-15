@@ -51,6 +51,6 @@ if @environment == 'production'
 
   # restart the delayed_job daemon when the system reboots
   every :reboot do
-    envcommand 'script/delayed_job restart --monitor'
+    envcommand 'script/delayed_job stop && script/delayed_job start --monitor'
   end
 end
