@@ -162,10 +162,14 @@ class Session < ActiveRecord::Base
     return events
   end
   
-  def self.send_reminders( start_time, end_time )
+  def self.send_reminders( start_time, end_time, only_first_occurrence = false )
     logger.info "#{DateTime.now.strftime("%F %T")}: Sending session reminders for #{start_time.strftime("%F %T")}..."
     session_list = Session.find( :all, :conditions => ['occurrences.time >= ? AND occurrences.time <= ? AND cancelled = 0', start_time, end_time ], :order => "occurrences.time", :include => :occurrences )
     session_list.each do |session|
+      session.reload #Force it to load in all occurrences
+      # Skip sessions that have already had their first occurrence if specified
+      next if only_first_occurrence && (session.time < start_time || session.time > end_time)
+
       # send a reminder to each student
       session.confirmed_reservations.each do |reservation|
         ReservationMailer.delay.deliver_remind( session, reservation.user )

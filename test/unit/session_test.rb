@@ -207,6 +207,14 @@ class SessionTest < ActiveSupport::TestCase
       Session.send_reminders( start_date, end_date )
       Delayed::Worker.new(:quiet => true).work_off
     end
+    
+    # it should NOT send reminders for the second occurrence if only_first_occurrence is true (3rd param to send_reminders)
+    start_date = DateTime.parse( '9 May 2045' ).at_beginning_of_day
+    end_date = DateTime.parse( '9 May 2045' ).end_of_day    
+    assert_difference 'ActionMailer::Base.deliveries.size', 0 do
+      Session.send_reminders( start_date, end_date, true )
+      Delayed::Worker.new(:quiet => true).work_off
+    end
   end
   
   test "ics for multi time sessions has multiple events" do
