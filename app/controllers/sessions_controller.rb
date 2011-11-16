@@ -57,7 +57,7 @@ class SessionsController < ApplicationController
   def destroy
     session = Session.find( params[ :id ] )
     if (current_user && current_user.admin? ) or @session.instructor?( current_user )
-      session.cancel!
+      session.cancel!( params[:custom_message] )
     else
     end
     flash[ :notice ] = "The session has been cancelled and the attendees notified."

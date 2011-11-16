@@ -104,11 +104,11 @@ class Session < ActiveRecord::Base
     end
   end
   
-  def cancel!
+  def cancel!(custom_message = '')
     self.cancelled = true
     self.save
     confirmed_reservations.each do |reservation|
-      ReservationMailer.delay.deliver_cancellation_notice( reservation )
+      ReservationMailer.delay.deliver_cancellation_notice( reservation, custom_message )
     end
   end
   

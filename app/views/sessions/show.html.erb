@@ -144,11 +144,19 @@
 			</form>
 		</div>
 	<% end %>
+
+	<% if @session.time > Time.now && !@session.cancelled %>
+		<div class="admin-section">
+			<h3>Cancel Session:</h3>
+			<%= form_tag({}, { :method => :delete }) %>
+				<%= label_tag "custom_message", "Reason for Cancellation (optional):", :class => 'field-label' %>
+				<%= text_area_tag "custom_message", nil, :rows => 4, :cols => 60 %><br/>
+				<%= submit_tag "Cancel Session", :confirm => "Are you sure you want to cancel this class? All registered attendees will be notified that the session has been cancelled." %>
+			</form>
+		</div>
+	<% end %>
 	
 	<%= render :partial => "survey_responses/survey_summary", :locals => { :model_object => @session }%>
 
-	<div class="button-link delete">
-		<%= link_to "cancel session", @session, :confirm => "Are you sure you want to cancel this class? All registered attendees will be notified that the session has been cancelled.", :method => :delete %>
-	</div>
 </div>
 <% end %>

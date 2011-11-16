@@ -3,6 +3,10 @@ Hi there <%= @reservation.user.name %>,
 Sad news: the session on "<%= @reservation.session.topic.name %>" for which you
 had signed up has been cancelled.
 
+<% if @custom_message.present? -%>
+<%= @custom_message %>	
+
+<% end -%>
 If you'd like to sign up to take the class at a different time, you can
 see a list of times it is offered here:
 
