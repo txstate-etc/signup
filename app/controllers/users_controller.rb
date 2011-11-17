@@ -8,4 +8,8 @@ class UsersController < ApplicationController
     @users = User.all(:conditions => conditions.join(" AND "))
   end
 
+  def logout
+    CASClient::Frameworks::Rails::Filter.logout(self, root_url)
+  end
+  
 end

@@ -405,6 +405,10 @@ div.navigation a:active {
   color: #4b4b4b;
   text-decoration:none;}
 
+.logout-link {
+  font-size: 70%;
+}
+
 div.sidebar {
   line-height: 2em;
   padding: 0em 0em 0em 0.5em;
