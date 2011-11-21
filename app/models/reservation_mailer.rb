@@ -66,7 +66,7 @@ class ReservationMailer < ActionMailer::Base
     attachment :content_type => "text/calendar", :body => reservation.session.to_cal
   end
 
-  def cancellation_notice( reservation, custom_message )
+  def cancellation_notice( reservation, custom_message = '' )
     subject    'Class Cancelled: ' + reservation.session.topic.name
     recipients reservation.user.email_header
     from       reservation.session.instructors[0].email_header
