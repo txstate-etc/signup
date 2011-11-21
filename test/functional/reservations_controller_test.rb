@@ -17,6 +17,13 @@ class ReservationsControllerTest < ActionController::TestCase
     assert_response :redirect
   end
   
+  test "Failed login causes redirect and error message" do
+    @request.session[ :cas_user ] = 'fake_user'
+    get :new, :session_id => reservations( :plainuser1 ).session_id
+    assert_redirected_to root_url
+    assert_equal "Oops! We could not log you in. If you just received your login ID, you may need to wait 24 hours before it's available.", flash[:error]
+  end
+    
   test "Try making reservations" do
     login_as( users( :plainuser3 ) )
     get :new, :session_id => sessions( :gato )

@@ -15,20 +15,54 @@ class User < ActiveRecord::Base
   def email_header
     "\"#{name}\" <#{email}>"
   end
+  
+  def self.find_or_lookup_by_login(login)
+    return nil unless login.present?
     
+    user = User.find(:first, :conditions => ['login = ?', login ] )
+    if user.blank?
+      # try to find in ldap
+      import_users(login)
+      user = User.find(:first, :conditions => ['login = ?', login ] )
+    end
+    
+    user
+  end
+  
+  def self.import_all
+    import_users(nil)
+  end
+
   # This method is resonsible for populating the User table with the
   # login, name, and email of anybody who might be using the system.
   # The included sample code is to pull in data from Texas State's
   # LDAP system. You'll need to customize this for your institution.
-  def self.import_all
+  def self.import_users(logins)
     ldap_servers = ['ads1.matrix.txstate.edu','ads2.matrix.txstate.edu']
     base_dn = 'ou=TxState Users,dc=matrix,dc=txstate,dc=edu'
-    filter = '(&(objectCategory=CN=Person,CN=Schema,CN=Configuration,DC=matrix,DC=txstate,DC=edu)(|(memberOf=CN=students,OU=Txstate Conscribed Lists,DC=matrix,DC=txstate,DC=edu)(memberOf=CN=staff,OU=Txstate Conscribed Lists,DC=matrix,DC=txstate,DC=edu)(memberOf=CN=faculty,OU=Txstate Conscribed Lists,DC=matrix,DC=txstate,DC=edu)))'
-
+    
+    filter = '(&'
+    filter <<   '(objectCategory=CN=Person,CN=Schema,CN=Configuration,DC=matrix,DC=txstate,DC=edu)'
+    if logins.present?
+      if logins.is_a? Array
+        filter << '(|' << logins.map{|login| "(sAMAccountName=#{login})" }.join('') << ')'
+      else
+        filter << "(sAMAccountName=#{logins})"
+      end
+    else
+      filter <<   '(|(memberOf=CN=students,OU=Txstate Conscribed Lists,DC=matrix,DC=txstate,DC=edu)'
+      filter <<     '(memberOf=CN=staff,OU=Txstate Conscribed Lists,DC=matrix,DC=txstate,DC=edu)'
+      filter <<     '(memberOf=CN=faculty,OU=Txstate Conscribed Lists,DC=matrix,DC=txstate,DC=edu)'
+      filter <<   ')'
+    end
+    filter << ')'
+    logger.debug("LDAP filter = #{filter}")
+    
     bind_dn = 'cn=itsldap,ou=TxState Service Accounts,dc=matrix,dc=txstate,dc=edu'
     bind_pass = LDAP_PASSWORD
-    logger.info("Starting import from LDAP: " + Time.now.to_s )
     
+    logger.info("Starting import from LDAP: " + Time.now.to_s )
+
     server_index = 0
     begin
       ldap = Net::LDAP.new

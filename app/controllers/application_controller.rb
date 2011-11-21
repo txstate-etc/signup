@@ -17,12 +17,19 @@ class ApplicationController < ActionController::Base
     return true if session[ :user ]
     
     if session[ :cas_user ]
-      session[ :user ] = User.find(:first, :conditions => ['login = ?', session[ :cas_user ] ] )
-      return true
+      session[ :user ] = User.find_or_lookup_by_login(session[ :cas_user ])
     else
-      CASClient::Frameworks::Rails::Filter.filter( self )
-      session[ :user ] = User.find(:first, :conditions => ['login = ?', session[ :cas_user ] ] )
+      return false unless CASClient::Frameworks::Rails::Filter.filter( self )
+      session[ :user ] = User.find_or_lookup_by_login(session[ :cas_user ]) if session[ :cas_user ] 
     end
+    
+    if session[:user].blank?
+      flash[ :error ] = "Oops! We could not log you in. If you just received your login ID, you may need to wait 24 hours before it's available."
+      redirect_to root_url
+      return false 
+    end
+    
+    return true
   end
   
   helper_method :current_user
