@@ -524,7 +524,9 @@ ul#topic-list li a:active, ul#department-list li a:active {
   color: #836c31; 
 }
 
-
+ul#topic-list li span.session-info {
+  font-size: 80%;
+}
 
 
 ul#session-list {
