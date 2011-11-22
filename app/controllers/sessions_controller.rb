@@ -5,7 +5,8 @@ class SessionsController < ApplicationController
   
   def show
     @session = Session.find( params[:id] )
-    @page_title = @session.time.to_s + ": " + @session.topic.name
+    #@page_title = @session.time.to_s + ": " + @session.topic.name
+    @page_title = @session.topic.name
     @reservation = Reservation.find_by_user_id_and_session_id( current_user.id, @session.id ) if current_user
   end
   

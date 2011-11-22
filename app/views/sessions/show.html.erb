@@ -3,79 +3,98 @@
 <% end %>
 
 <%= error_messages_for 'session' %>
-<dl>
-	<dt>Topic:</dt>
-	<dd><%= link_to @session.topic.name, @session.topic%></dd>
-  <dt>Time:</dt>
-	<% if @session.multiple_occurrences? %>
-    <dd>This session meets <%= @session.occurrences.count %> times:</dd>
-  <% end %>
-  <% @session.occurrences.each do |o| %>
-    <dd><%=h formatted_time_range(o.time, @session.topic.minutes) %></dd>
-  <% end %>
-  <dt>Registration Period:</dt>
-  <dd><%=h registration_period(@session) %></dd>
-	<dt>Location:</dt>
-	<dd><%=h @session.location %></dd>
-	<dt>Instructor(s):</dt>
-	<dd>
-	  <ul class="instructor-list">
-	    <% @session.instructors.each do |instructor| %>
-	      <li><%= link_to instructor.name , 'mailto:' + instructor.email %></li>
-	    <% end %>
-	  </ul>
-	</dd>
-	<dt>Description:</dt>
-	<dd><%= auto_link( simple_format( h( @session.topic.description ) ) ) %></dd>
-	<dt>Duration:</dt>
-	<dd><%=h @session.topic.minutes %> minutes</dd>
-	<dt>Department:</dt>
-	<dd><%=link_to @session.topic.department.name, @session.topic.department %></dd>
-	<% if !@session.topic.url.blank? %>
-		<dt>Additional Info:</dt>
-		<dd><%= link_to @session.topic.url, @session.topic.url %></dd>
-	<% end %>
-	<dt>Registration:</dt>
-	<dd>
-		<%=h @session.confirmed_reservations.size %>
-		<% if @session.seats %>
-			/ <%=h @session.seats %>
-		<% end %> 
-		registered
-		<% if @session.waiting_list.size > 0 %>
-			(<%=h @session.waiting_list.size %> waiting)
-		<% end %>
-	</dd>
-</dl>
 
-<% if @reservation %>
-  <% if @reservation.attended? %>
-    <p>You attended this session.</p>
-  <% else %>
-  	<% if @reservation.confirmed? %>
-  		<p>You are registered for this session. </p>
-  	<% else %>
-  		<p>You are on the waiting list for this session.</p>
+<div id="session-details">
+  <h2>Session Details</h2>
+  <dl>
+    <dt>Time:</dt>
+  	<% if @session.multiple_occurrences? %>
+      <dd>This session meets <%= @session.occurrences.count %> times:</dd>
+    <% end %>
+    <% @session.occurrences.each do |o| %>
+      <dd><%=h formatted_time_range(o.time, @session.topic.minutes) %></dd>
+    <% end %>
+  	<% if @session.registration_period_defined? %>
+    	<dt>Registration Period:</dt>
+    	<dd><%=h registration_period(@session) %></dd>
   	<% end %>
-  	<div class="download-link download-calendar">
-  		<%= link_to "[add reservation to calendar]", { :controller => :reservations, :action => :download, :id => @reservation.id } %>
-  	</div>
-  	<div class="button-link delete">
-  		<%= link_to "cancel reservation", @reservation, :method => :delete, :confirm => "Are you sure you want to cancel your reservation for \"" + @reservation.session.topic.name + "\"?"%>
-  	</div>
-  <% end %>	
-<% elsif @session.in_registration_period? %>		
-	<% if @session.space_is_available? %>
-		<div class="button-link confirm">
-			<%= link_to "Register", new_session_reservation_path( @session ) %>
-		</div>
-		
-	<% else %>
-		<div class="button-link tentative">
-			<%= link_to "add to waiting list", new_session_reservation_path( @session ) %>
-		</div>
-	<% end %>
-<% end %>
+  	<dt>Location:</dt>
+  	<dd><%=h @session.location %></dd>
+  	<% if @session.instructors.size > 1 %>
+  	  <dt>Instructors:</dt>
+	  <% else %>
+	    <dt>Instructor:</dt>
+	  <% end %>
+  	<dd>
+  	  <ul class="instructor-list">
+  	    <% @session.instructors.each do |instructor| %>
+  	      <li><%= link_to instructor.name , 'mailto:' + instructor.email %></li>
+  	    <% end %>
+  	  </ul>
+  	</dd>
+  	<dt>Registration:</dt>
+  	<dd>
+  		<%=h @session.confirmed_reservations.size %>
+  		<% if @session.seats %>
+  			/ <%=h @session.seats %>
+  		<% end %> 
+  		registered
+  		<% if @session.waiting_list.size > 0 %>
+  			(<%=h @session.waiting_list.size %> waiting)
+  		<% end %>
+  		<% if @reservation %>
+  		  <% if @reservation.attended? %>
+  		    <p>You attended this session.</p>
+  		  <% else %>
+  		  	<% if @reservation.confirmed? %>
+  		  		<p>You are registered for this session. </p>
+  		  	<% else %>
+  		  		<p>You are on the waiting list for this session.</p>
+  		  	<% end %>
+  		  	<div class="download-link download-calendar">
+  		  		<%= link_to "[add reservation to calendar]", { :controller => :reservations, :action => :download, :id => @reservation.id } %>
+  		  	</div>
+  		  	<div class="register-button">
+  		  		<%= link_to "Cancel Reservation", @reservation, :method => :delete, :confirm => "Are you sure you want to cancel your reservation for \"" + @reservation.session.topic.name + "\"?", :class => 'register-button' %>
+  		  	</div>
+  		  <% end %>	
+  		<% elsif @session.in_registration_period? %>		
+  			<% if @session.space_is_available? %>
+          <div class="register-button">
+  					<%= link_to "Register Now", new_session_reservation_path( @session ), :class => 'register-button' %>
+          </div>
+
+  			<% else %>
+  				<div class="register-button">
+  					<%= link_to "Add to Waiting List", new_session_reservation_path( @session ), :class => 'register-button' %>
+  				</div>
+  			<% end %>
+			<% else %>
+			  <p>Registration is closed for this session.</p>
+  		<% end %>
+    	<% if @session.topic.upcoming_sessions.size > 1 %>
+    	  <dd><%= link_to 'Need to look for another session?', @session.topic %></dd>
+      <% end %>
+  	</dd>
+  </dl>
+</div>
+
+<div id="topic-details">
+  <h2>Topic Details</h2>
+  <dl>
+    <dt>Description:</dt>
+  	<dd><%= auto_link( simple_format( h( @session.topic.description ) ) ) %></dd>
+  	<dt>Duration:</dt>
+  	<dd><%=h @session.topic.minutes %> minutes</dd>
+  	<dt>Department:</dt>
+  	<dd><%=link_to @session.topic.department.name, @session.topic.department %></dd>
+  	<% if !@session.topic.url.blank? %>
+  		<dt>Additional Info:</dt>
+  		<dd><%= link_to @session.topic.url, @session.topic.url %></dd>
+  	<% end %>
+  </dl>
+</div>
+
 
 <% if ( current_user && current_user.admin? ) or @session.instructor?( current_user ) %>
 <div class="admin-options">

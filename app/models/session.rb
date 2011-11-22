@@ -117,9 +117,9 @@ class Session < ActiveRecord::Base
   end
   
   def in_registration_period?
-    return false if reg_start.present? && reg_start > Time.now
-    return false if reg_end.present? && reg_end < Time.now
-    return true
+    reg_start_time = self.reg_start.blank? ? self.created_at : self.reg_start
+    reg_end_time = self.reg_end.blank? ? self.time : self.reg_end
+    return reg_start_time <= Time.now && reg_end_time >= Time.now
   end
   
   def space_is_available?
