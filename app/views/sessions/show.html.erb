@@ -82,6 +82,8 @@
 <div id="topic-details">
   <h2>Topic Details</h2>
   <dl>
+  	<dt>Topic:</dt>
+  	<dd><%= link_to @session.topic.name, @session.topic%></dd>
     <dt>Description:</dt>
   	<dd><%= auto_link( simple_format( h( @session.topic.description ) ) ) %></dd>
   	<dt>Duration:</dt>
