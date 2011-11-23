@@ -4,12 +4,21 @@ class TopicsController < ApplicationController
   before_filter :authenticate, :except => [ :download, :show, :index ]
   
   def index
-    if current_user && current_user.admin?
+    if current_user && current_user.admin? && session[:filter] != 'upcoming'
       @topics = Topic.all
     else
       @topics = Topic.upcoming
     end
+    
     @page_title = "Available Topics"
+  end
+
+  def filter
+    session[:filter] = case params[:filter] 
+      when 'upcoming' then 'upcoming'
+      else 'all'
+    end
+    redirect_to topics_path
   end
   
   def show

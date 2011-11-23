@@ -44,6 +44,7 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'sessions/attendance/:id.:format', :controller => :sessions, :action => :attendance
   map.connect 'sessions/download', :controller => :sessions, :action => :download
   map.connect 'topics/download/:id', :controller => :topics, :action => :download
+  map.connect 'topics/filter/:filter', :controller => :topics, :action => :filter
   map.connect 'logout', :controller => :users, :action => :logout
   
   map.resources :departments
