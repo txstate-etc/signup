@@ -518,7 +518,7 @@ div#contents h1 {
   border-bottom-color: #501214;
 }
 
-div#topic-details h2, div#session-details h2 {
+div#topic-details h2, div#session-details h2, div#past-session-details h2 {
   padding-bottom: 2px;
   font-size: 1em;
   font-weight: bold;
@@ -528,15 +528,20 @@ div#topic-details h2, div#session-details h2 {
 }
   
 div#topic-details {
-  margin: 2em 0;
+  margin: 1em 0 2em 0;
 }
 
 div#session-details {
-  margin-top: 1em;
+  margin: 1em 0 2em 0;
+}
+
+div#past-session-details {
+  margin: 1em 0 2em 0;
 }
 
 ul#topic-list, ul#department-list {
   margin-left: 0px;
+  margin-top: -1em;
   padding-left: 0px;
   list-style-type: none;
   font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', serif;
@@ -549,7 +554,7 @@ ul#topic-list li, ul#department-list li  {
   border-bottom-width: 1px;
   border-bottom-style: dotted;
   border-bottom-color: #836c31;
-  padding: 0.25em 0;
+  padding: 0.5em 0;
 }
 
 ul#topic-list li a:link, ul#department-list li a:link  {
@@ -576,12 +581,13 @@ ul#topic-list li a:active, ul#department-list li a:active {
   color: #836c31; 
 }
 
-ul#topic-list li span.session-info {
+ul#topic-list li div.session-info {
   font-size: 80%;
+  margin-top: -0.5em;
 }
 
 
-ul#session-list {
+ul.session-list {
   margin-left: 0px;
   padding-left: 0px;
   list-style-type: none;
@@ -589,20 +595,17 @@ ul#session-list {
   font-size: .875em;
 }
 
-ul#session-list li {
+ul.session-list li {
   text-decoration: none;
-  border-bottom-width: 1px;
-  border-bottom-style: dotted;
-  border-bottom-color: #836c31;
-    padding-left: 1.5em;
+  padding-left: 1.5em;
 
 }
 
-ul#session-list li a:link {
+ul.session-list li a:link {
   color: #836c31;
 }
 
-ul#session-list li a:hover, ul.reservation-list a:hover {
+ul.session-list li a:hover, ul.reservation-list a:hover {
   
   text-decoration: underline;
 }
@@ -610,17 +613,17 @@ ul#session-list li a:hover, ul.reservation-list a:hover {
 ul.attendance-list li {
 }
 
-ul#session-list li a:visited, ul.reservation-list li {
+ul.session-list li a:visited, ul.reservation-list li {
 
   color: #4b4b4b;
 }
 
-ul#session-list li a:active {
+ul.session-list li a:active {
   color: #836c31;
   text-decoration: none;
 }
 
-ul#past-session-list {
+/*ul.past-session-list, ul.past-session-list-more {
   margin-left: 0px;
   padding-left: 0px;
   list-style-type: none;
@@ -628,12 +631,16 @@ ul#past-session-list {
   font-size: .875em;
   }
 
-ul#past-session-list li {
+ul.past-session-list li, ul.past-session-list-more li {
   text-decoration: none;
-  border-bottom-width: 1px;
-  border-bottom-style: dotted;
-  border-bottom-color: #836c31;
   padding-left: 1.5em;
+}*/
+
+div.session-list-expand, div.session-list-collapse {
+  margin-left: 1.5em;
+  font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', serif;
+  font-size: .8em;  
+  padding-right: 16px;
 }
 
 ul.reservation-list {

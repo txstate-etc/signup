@@ -1,6 +1,18 @@
 // Place your application-specific JavaScript functions and classes here
 // This file is automatically included by javascript_include_tag :defaults
 
+function expand_session_list(link) {
+  Effect.BlindDown($(link).up().previous());
+  $(link).up().next().style.display = 'inline';
+  $(link).up().style.display = 'none';
+}
+
+function collapse_session_list(link) {
+  Effect.BlindUp($(link).up().previous(1));
+  $(link).up().style.display = 'none';
+  $(link).up().previous().style.display = 'inline';
+}
+
 function revealAccommodationsArea() {
 	Effect.BlindDown('special-accommodations-field', { duration: 0.5 } );
 }

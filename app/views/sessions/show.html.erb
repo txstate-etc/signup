@@ -14,6 +14,9 @@
     <% @session.occurrences.each do |o| %>
       <dd><%=h formatted_time_range(o.time, @session.topic.minutes) %></dd>
     <% end %>
+  	<% if @session.topic.upcoming_sessions.size > 1 %>
+  	  <dd><%= link_to 'Need to look for another session?', @session.topic %></dd>
+    <% end %>
   	<% if @session.registration_period_defined? %>
     	<dt>Registration Period:</dt>
     	<dd><%=h registration_period(@session) %></dd>
@@ -72,9 +75,6 @@
 			<% else %>
 			  <p>Registration is closed for this session.</p>
   		<% end %>
-    	<% if @session.topic.upcoming_sessions.size > 1 %>
-    	  <dd><%= link_to 'Need to look for another session?', @session.topic %></dd>
-      <% end %>
   	</dd>
   </dl>
 </div>

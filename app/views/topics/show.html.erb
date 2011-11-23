@@ -11,37 +11,37 @@
 <%= javascript_include_tag 'topic_form' %>
 <%= error_messages_for 'topic' %>
 
-<dl>
-	<dt>Description:</dt>
-	<dd><%= auto_link( simple_format( h( @topic.description ) ) ) %></dd>
-	<dt>Duration:</dt>
-	<dd><%=h @topic.minutes %> minutes</dd>
-	<dt>Department:</dt>
-	<dd><%=link_to @topic.department.name, @topic.department if !@topic.department.blank? %></dd>
-	<% if !@topic.url.blank? %>
-		<dt>Additional Info:</dt>
-		<dd><%= link_to @topic.url, @topic.url %></dd>
-	<% end %>
-</dl>
-<h3>Upcoming Sessions:</h3>
-<% if @topic.upcoming_sessions.size > 0 %>
-	<ul id="session-list">
-		<% @topic.upcoming_sessions.each do |session| %>
-			<li><%= link_to formatted_time_range(session.time, @topic.minutes), session %></li>
-		<% end %>
-	</ul>
-<% else %>
-	There are no sessions scheduled at this time.
-<% end %>
+<div id="session-details">
+  <h2>Upcoming Sessions</h2>
+  <% if @topic.upcoming_sessions.size > 0 %>
+    <%= session_list(@topic.upcoming_sessions) %>
+  <% else %>
+    There are no sessions scheduled at this time.
+  <% end %>
+</div>
 
+<div id="topic-details">
+  <h2>Topic Details</h2>
+  <dl>
+    <dt>Description:</dt>
+    <dd><%= auto_link( simple_format( h( @topic.description ) ) ) %></dd>
+    <dt>Duration:</dt>
+    <dd><%=h @topic.minutes %> minutes</dd>
+    <dt>Department:</dt>
+    <dd><%=link_to @topic.department.name, @topic.department if !@topic.department.blank? %></dd>
+    <% if !@topic.url.blank? %>
+      <dt>Additional Info:</dt>
+      <dd><%= link_to @topic.url, @topic.url %></dd>
+    <% end %>
+  </dl>
+</div>
+
+<div id="past-session-details">
 <% if @topic.past_sessions.size > 0 && current_user && current_user.admin? %>
-<h3>Past Sessions:</h3>
-	<ul id="past-session-list">
-		<% @topic.past_sessions.each do |session| %>
-			<li><%= link_to formatted_time_range(session.time, @topic.minutes), session %></li>
-		<% end %>
-	</ul>
+  <h2>Past Sessions</h2>
+  <%= session_list(@topic.past_sessions.reverse) %>
 <% end %>
+</div>
 
 <% if current_user && current_user.admin? %>
 <div class="admin-options">
