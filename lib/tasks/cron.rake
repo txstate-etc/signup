@@ -25,5 +25,78 @@ namespace :cron do
     Rails.logger.flush
   end
 
+  namespace :delayed_job do
+    
+    def get_pid
+      begin
+        IO.read("#{RAILS_ROOT}/tmp/pids/delayed_job.pid").to_i
+      rescue
+        nil
+      end
+    end
+    
+    def pid_exists?(pid) 
+      return false if pid.nil?
+      begin
+        Process.getpgid( pid )
+        true
+      rescue Errno::ESRCH
+        false
+      end
+    end
+    
+    desc "Stop delayed_job daemon"
+    task :stop => :environment do
+      pid = get_pid
+      
+      # stop
+      puts "Stopping..."
+      STDOUT.flush
+      `cd #{RAILS_ROOT} && RAILS_ENV=#{Rails.env} script/delayed_job stop`
+      sleep 5
+      puts "Stop finished"
+      STDOUT.flush
+      
+      # check pid, kill -SIGKILL if necessary
+      puts "pid to kill is #{pid}"
+      STDOUT.flush
+      if pid_exists?(pid)
+        puts "pid to kill, #{pid}, exists. Killing..."
+        STDOUT.flush
+        Process.kill("KILL", pid)
+        puts "Killed #{pid}, sleeping 5 seconds"
+        STDOUT.flush
+        sleep 5
+        puts "Done sleeping"
+        STDOUT.flush
+      end
+    end
+
+    desc "Start delayed_job daemon if not already running"
+    task :start => :environment do
+      # check pid, start if not running
+      pid = get_pid
+      puts "checking #{pid} before starting"
+      STDOUT.flush
+      if pid_exists?(pid)
+        puts "Pid #{pid} exists, not starting"
+        STDOUT.flush
+      else
+        puts "Pid #{pid} does not exist. Starting..."
+        STDOUT.flush
+        `cd #{RAILS_ROOT} && RAILS_ENV=#{Rails.env} script/delayed_job start` unless pid_exists?(get_pid)
+      end
+    end
+
+    desc "Restart delayed_job daemon"
+    task :restart => [:environment, :stop, :start] 
+  end
+  
+  task :checkenv => :environment do
+    puts "root is #{RAILS_ROOT}"
+    puts "environment is #{RAILS_ENV}"
+    puts "also #{Rails.env}"
+    puts `echo $RAILS_ENV`
+  end
 end
 

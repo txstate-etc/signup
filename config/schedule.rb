@@ -27,14 +27,14 @@ set :output, "log/cron_log.log"
 
 if @environment == 'production'
   # send out email reminders for classes that are 3 days
-  # out every night at 10:00pm.
-  every '0 22 * * *' do
+  # out every night at 10:02pm.
+  every '2 22 * * *' do
     rake "cron:send_reminders[3]"
   end
 
   # send out email reminders for classes that are today
-  # every morning at 12:01am.
-  every '1 0 * * *' do
+  # every morning at 12:02am.
+  every '2 0 * * *' do
     rake "cron:send_reminders[0]"
   end
 
@@ -44,13 +44,18 @@ if @environment == 'production'
     rake "cron:send_surveys"
   end
 
-  # update Users table nightly at 11:00pm
-  every '0 21 * * *' do
+  # update Users table nightly at 11:02pm
+  every '2 21 * * *' do
     rake "cron:import_users"
   end
 
   # restart the delayed_job daemon when the system reboots
   every :reboot do
-    envcommand 'script/delayed_job stop && script/delayed_job start --monitor'
+    rake "cron:delayed_job:restart"
   end
+  
+  every 1.hour do
+    rake "cron:delayed_job:restart"
+  end
+  
 end
