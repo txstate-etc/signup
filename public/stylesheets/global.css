@@ -268,8 +268,8 @@ div.notice {
 }
 
 div#group-by-dept {
-  position: relative;
-  top: -22px;
+  position: absolute;
+  top: 2px;
   margin-left: 14em;  
 }
 
@@ -503,6 +503,7 @@ div.admin-tools a:active {
   text-decoration:none;}
 
 div#contents {
+  position: relative;
   margin-top: 0px;  
   margin-left: 20px;
   margin-right: 40px;
@@ -541,7 +542,6 @@ div#past-session-details {
 
 ul#topic-list, ul#department-list {
   margin-left: 0px;
-  margin-top: -1em;
   padding-left: 0px;
   list-style-type: none;
   font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', serif;
