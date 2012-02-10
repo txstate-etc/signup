@@ -14,14 +14,19 @@
 
 <div id="group-by-dept" class="notice"><%= link_to '(group by department)', departments_path %></div>
 
-<ul id="topic-list">
-	<% @topics.each do |topic| %>
-		<li>
-			<%= link_to topic.name, topic %>
-			<% if topic.upcoming_sessions.present? %>				
-				<div class="session-info"><%= link_to_session topic.upcoming_sessions[0] %></div>
-			<% end %>
-		</li>
-	<% end %>
-</ul>
-
+<% if @topics.count == 0 %>
+  <div class="empty-list">
+    <p>Sorry, there are no upcoming sessions at this time. Please check again later!</p>
+  </div>
+<% else %>
+  <ul id="topic-list">
+  	<% @topics.each do |topic| %>
+  		<li>
+  			<%= link_to topic.name, topic %>
+  			<% if topic.upcoming_sessions.present? %>				
+  				<div class="session-info"><%= link_to_session topic.upcoming_sessions[0] %></div>
+  			<% end %>
+  		</li>
+  	<% end %>
+  </ul>
+<% end %>

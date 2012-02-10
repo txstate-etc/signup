@@ -519,6 +519,10 @@ div#contents h1 {
   border-bottom-color: #501214;
 }
 
+div.empty-list {
+  padding: 2em;
+}
+
 div#topic-details h2, div#session-details h2, div#past-session-details h2 {
   padding-bottom: 2px;
   font-size: 1em;
@@ -810,4 +814,8 @@ ul.instructor-list {
 
 ul.instructor-list li {
 /*  padding-bottom: 0.5em;*/
+}
+
+#contents div.dialog {
+  margin-left: 4em;
 }

@@ -1,7 +1,8 @@
 <% if @confirmed_reservations.size == 0  && @waiting_list_signups.size == 0 %>
-	You don't have any upcoming reservations. Why don't you <%= link_to "take a look at the available topics", topics_path %>
-	and see what looks interesting?
-	<div style="clear:both">&nbsp;</div>
+	<div class="empty-list">
+    <p>You don't have any upcoming reservations. Why don't you <%= link_to "take a look at the available topics", topics_path %>
+	    and see what looks interesting?</p>
+	</div>
 <% else %>
 	<% if @confirmed_reservations.size > 0 %>
 		<div class="reservation-group">
