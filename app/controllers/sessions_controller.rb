@@ -4,8 +4,13 @@ class SessionsController < ApplicationController
   before_filter :authenticate, :except => [ :download, :show ]
   
   def show
-    @session = Session.find( params[:id] )
-    #@page_title = @session.time.to_s + ": " + @session.topic.name
+    begin
+      @session = Session.find( params[:id] )
+    rescue ActiveRecord::RecordNotFound
+      render (:file => 'shared/404.erb', :status => 404, :layout => true) unless @session
+      return
+    end
+    
     @page_title = @session.topic.name
     @reservation = Reservation.find_by_user_id_and_session_id( current_user.id, @session.id ) if current_user
   end

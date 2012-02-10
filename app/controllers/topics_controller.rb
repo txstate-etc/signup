@@ -21,8 +21,13 @@ class TopicsController < ApplicationController
     redirect_to topics_path
   end
   
-  def show
-    @topic = Topic.find( params[:id] )
+  def show    
+    begin
+      @topic = Topic.find( params[:id] )
+    rescue ActiveRecord::RecordNotFound
+      render (:file => 'shared/404.erb', :status => 404, :layout => true) unless @session
+      return
+    end
 
     respond_to do |wants|
       wants.html do
