@@ -56,7 +56,7 @@ ActionController::Routing::Routes.draw do |map|
     end
   end
   
-  map.resources :reservations, :only => [ :index ]
+  map.reservations 'reservations', :controller => :reservations, :action => :index, :conditions => { :method => [:post, :get] }
   map.connect 'reservations/download/:id', :controller => :reservations, :action => :download
   map.resources :survey_responses, :only => [ :new, :create ]
 end
