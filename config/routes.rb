@@ -52,7 +52,7 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :topics, :shallow => true do |topic|
     topic.resources :sessions do |session|
-      session.resources :reservations
+      session.resources :reservations, :new => { :new => [:post, :get] }
     end
   end
   
