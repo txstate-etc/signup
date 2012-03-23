@@ -9,16 +9,20 @@ class SessionsControllerTest < ActionController::TestCase
     
     get :new, :topic_id => sessions( :tracs ).topic_id
     assert_response :redirect
+    assert_redirected_to CASClient::Frameworks::Rails::Filter.login_url(@controller)
     
     get :create, :topic_id => sessions( :tracs ).topic_id
     assert_response :redirect
+    assert_redirected_to CASClient::Frameworks::Rails::Filter.login_url(@controller)
 
     delete :destroy, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
     assert_response :redirect    
+    assert_redirected_to CASClient::Frameworks::Rails::Filter.login_url(@controller)
     assert !sessions( :tracs ).cancelled
     
     post :update, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
     assert_response :redirect    
+    assert_redirected_to CASClient::Frameworks::Rails::Filter.login_url(@controller)
     assert_not_equal "The Session's data has been updated.", flash[:notice]
   end
   
@@ -35,6 +39,7 @@ class SessionsControllerTest < ActionController::TestCase
 
     delete :destroy, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
     assert_response :redirect    
+    assert_redirected_to topic_path(sessions( :tracs ).topic)
     assert sessions( :tracs ).reload.cancelled
 
     post :update, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
@@ -48,13 +53,16 @@ class SessionsControllerTest < ActionController::TestCase
     assert_response :success
     
     get :new, :topic_id => sessions( :tracs ).topic_id
+    assert_redirected_to topic_path(sessions( :tracs ).topic)
     assert_response :redirect
     
     get :create, :topic_id => sessions( :tracs ).topic_id, :session => { :topic_id => sessions( :tracs ).topic_id }
+    assert_redirected_to session_path(sessions( :tracs ))
     assert_response :redirect
 
     delete :destroy, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
     assert_response :redirect    
+    assert_redirected_to topic_path(sessions( :tracs ).topic)
     assert sessions( :tracs ).reload.cancelled
     
     post :update, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
@@ -68,16 +76,20 @@ class SessionsControllerTest < ActionController::TestCase
     assert_response :success
     
     get :new, :topic_id => sessions( :tracs ).topic_id
+    assert_redirected_to topic_path(sessions( :tracs ).topic)
     assert_response :redirect
     
     get :create, :topic_id => sessions( :tracs ).topic_id, :session => { :topic_id => sessions( :tracs ).topic_id }
+    assert_redirected_to session_path(sessions( :tracs ))
     assert_response :redirect
 
     delete :destroy, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
     assert_response :redirect    
+    assert_redirected_to topic_path(sessions( :tracs ).topic)
     assert !sessions( :tracs ).cancelled
     
     post :update, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
+    assert_redirected_to session_path(sessions( :tracs ))
     assert_response :redirect
   end
   

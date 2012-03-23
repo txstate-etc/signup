@@ -17,8 +17,8 @@ module ApplicationHelper
     start_time.strftime('%A, %B %e, %Y, ') + friendly_time(start_time) + " - " + friendly_time(end_time)
   end
 
-  def link_to_remove_fields(name, f)
-    f.hidden_field(:_destroy) + link_to_function(name, "remove_fields(this)")
+  def link_to_remove_fields(name, f, options={})
+    f.hidden_field(:_destroy) + link_to_function(name, "remove_fields(this)", options)
   end
   
   def link_to_add_fields(name, f, association)
@@ -28,4 +28,5 @@ module ApplicationHelper
     end
     link_to_function(name, h("add_fields(this, \"#{association}\", \"#{escape_javascript(fields)}\", \"set_initial_#{association.to_s.singularize}_value\")"))
   end
+  
 end

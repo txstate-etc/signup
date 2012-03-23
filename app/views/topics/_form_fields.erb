@@ -35,3 +35,14 @@
 		<%= f.text_field :survey_url %>
 	</div>
 </div>
+
+<div class="workshop-materials">
+  <label class="field-label">Workshop Materials:</label>
+	<% f.fields_for :documents do |builder| %>
+	  <div class="fields">
+      <%= link_to builder.object.friendly_name, builder.object.item.url, :class => 'document' %>
+      <%= link_to_remove_fields "remove", builder, :class => 'remove' %>
+    </div>
+	<% end %>
+	<p class="add-fields"><%= link_to_add_fields "upload new material", f, :documents %></p>
+</div>

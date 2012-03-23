@@ -1,7 +1,7 @@
 <%= javascript_include_tag 'topic_form' %>
 <%= error_messages_for 'topic' %>
 
-<% form_for( @topic ) do |f| %>
+<% form_for( @topic, :html => { :multipart => true } ) do |f| %>
 	<%= render :partial => "form_fields", :locals => { :f => f }%>	
 	<br/>
 	

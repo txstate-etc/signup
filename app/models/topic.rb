@@ -7,10 +7,20 @@ class Topic < ActiveRecord::Base
 
   belongs_to :department
   has_many :sessions
+  has_many :documents, :dependent => :destroy
+  accepts_nested_attributes_for :documents, :allow_destroy => true
   validates_presence_of :name, :description, :minutes, :department
   validates_associated :department
   validates_presence_of :survey_url, :if => Proc.new{ |topic| topic.survey_type == SURVEY_EXTERNAL }, :message => "must be specified to use an external survey."
   default_scope :order => 'name'
+  
+  def after_validation
+    if !self.errors.empty?
+      # delete any documents that were just uploaded, since they will have to be uploaded again
+      documents.delete_if { |d| d.destroy if d.new_record? }
+    end
+    true
+  end
   
   def self.upcoming
     Topic.find( :all, :conditions => [ "topics.id IN ( select topic_id from sessions, occurrences where sessions.id = occurrences.session_id AND occurrences.time > ? AND cancelled = false )", Time.now ] )

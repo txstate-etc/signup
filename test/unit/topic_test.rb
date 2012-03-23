@@ -46,4 +46,23 @@ class TopicTest < ActiveSupport::TestCase
   test "Verify relationship to Departments" do
     assert_equal departments( :its ), topics( :gato ).department
   end
+
+  test "Verify relationship to Documents" do
+    topic = topics( :topic_with_attached_documents )
+    assert_equal 2, topic.documents.size
+    assert_equal documents( :attached_document_1 ), topic.documents[0]
+    assert_equal documents( :attached_document_2 ), topic.documents[1]
+  end
+
+  test "Should delete new documents on update failure" do
+    topic = topics( :topic_with_attached_documents )
+    topic.minutes = nil
+    assert_equal 2, topic.documents.size
+    document = topic.documents.build
+    document.item = File.new("#{Rails.root}/test/fixtures/reservation_mailer/confirm")
+    assert document.new_record?
+    assert_equal 3, topic.documents.size
+    assert_equal false, topic.valid?
+    assert_equal 2, topic.documents.size
+  end
 end

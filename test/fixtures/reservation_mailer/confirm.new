@@ -1,0 +1,99 @@
+Hi there Plain User1,
+
+Your reservation for Introduction to Gato has been confirmed. If you need
+to cancel your reservation for any reason, you can do so here:
+
+http://localhost:3000/reservations
+
+----
+
+Your Reservation
+
+What: Introduction to Gato
+When: Saturday, June  2, 2035,  7:00AM -  8:00AM
+Where: Alkek 155
+Who:  Plain User1
+Description: All about our Content Management System.
+
+----
+
+You can use the attached ICS file to add the session to your calendar software.
+
+<html>
+
+<head>
+	<title>Reservation Confirmation</title>
+	<style type="text/css">
+	div.reservationCard {
+		background-color: #eeeeaa;
+		color: #000000;
+		padding: 1em;
+		margin-bottom: 1em;
+	}
+	
+	div.reservationCard h2 {
+		font-family: Palatino, serif;
+		font-style: italic;
+		text-align: center;
+		margin-top: 0px;
+		font-size: 200%;
+		font-weight: bold;
+	}
+
+  div.reservationCard dd {
+    padding-bottom: 0.5em;
+  }
+  
+	div.reservationContainer {
+		width: 50%;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	div.reservationContainer input {
+		width: 100%;
+		height: 3em;
+		color: white;
+		font-weight: bold;
+		margin-bottom: 1em;
+		font-size: 1em;
+		font-weight: bold;
+		border: 3px outset black;
+		cursor: pointer;
+	}
+	</style>
+</head>
+
+<body>
+	<p>Hi there Plain User1,</p>
+
+<p>Your reservation for Introduction to Gato has been confirmed. If you need
+to cancel your reservation for any reason, you can do so <a href="http://localhost:3000/reservations">here</a>.</p>
+
+<div class="reservationContainer">
+	<div class="reservationCard">
+		<h2>Your Reservation</h2>
+		<dl>
+			<dt>What:</dt>
+			<dd>Introduction to Gato</dd>
+			<dt>When:</dt>
+      
+      
+        <dd>Saturday, June  2, 2035,  7:00AM -  8:00AM</dd>
+      
+			<dt>Where:</dt>
+			<dd>Alkek 155</dd>
+			<dt>Who:</dt>
+			<dd>Plain User1</dd>
+			<dt>Description:</dt>
+      <dd><p>All about our Content Management System.</p></dd>
+		</dl>
+	</div>
+</div>
+
+<p>You can use the attached ICS file to add the session to your calendar software.</p>
+</body>
+
+</html>
+
+Attachment: (unnamed)

@@ -25,7 +25,7 @@ class TopicsController < ApplicationController
     begin
       @topic = Topic.find( params[:id] )
     rescue ActiveRecord::RecordNotFound
-      render (:file => 'shared/404.erb', :status => 404, :layout => true) unless @session
+      render(:file => 'shared/404.erb', :status => 404, :layout => true) unless @session
       return
     end
 
@@ -70,13 +70,14 @@ class TopicsController < ApplicationController
     @topic = Topic.find( params[ :id ] )
     if current_user && current_user.admin?
       @topic.update_attributes( params[ :topic ] )
+      @page_title = @topic.name
       if @topic.save
-        flash.now[ :notice ] = "The topic's data has been updated."
+        flash[ :notice ] = "The topic's data has been updated."
+        redirect_to @topic
       else
         flash.now[ :error ] = "There were problems updating this topic."
+        render :action => 'show'
       end
-      @page_title = @topic.name
-      render :show
     else
       redirect_to @topic
     end

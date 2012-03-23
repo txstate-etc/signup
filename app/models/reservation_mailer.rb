@@ -1,6 +1,17 @@
 class ReservationMailer < ActionMailer::Base
   helper :application
 
+  def self.absolute_url(path)
+    protocol = ActionMailer::Base.default_url_options[:protocol] || 'http://'
+    host = ActionMailer::Base.default_url_options[:host] || 'localhost'
+    port = ActionMailer::Base.default_url_options[:port] || ''
+    
+    port = ':' + port unless port.empty?
+    path = '/' + path unless path.start_with? '/'
+        
+    protocol + host + port + path
+  end
+
   def deliver!(mail = @mail)
     # do pre-deliver stuff
     logger.info("Sending #{@template} mail at #{@sent_on.to_s}...")  

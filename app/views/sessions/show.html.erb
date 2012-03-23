@@ -94,6 +94,12 @@
   		<dt>Additional Info:</dt>
   		<dd><%= link_to @session.topic.url, @session.topic.url %></dd>
   	<% end %>
+    <% if !@session.topic.documents.blank? %>
+      <dt>Workshop Materials:</dt>
+      <% @session.topic.documents.each do |document| %>
+        <dd><%= link_to document.friendly_name, document.item.url %></dd>
+      <% end %>
+    <% end %>
   </dl>
 </div>
 
@@ -123,6 +129,9 @@
 							<%=h ', ' + reservation.user.department if !reservation.user.department.blank? %>
 							<% if !reservation.special_accommodations.blank? %>
 								: <span class="special-accommodations">(<%=h reservation.special_accommodations %>)</span>
+							<% end %>
+							<% if @session.last_time >= Time.now %>
+							  <%= link_to '[remind]', send_reminder_path(reservation), {:confirm => "Are you sure you want to send an email reminder to #{reservation.user.name}"}%>
 							<% end %>
 							<%= link_to '[cancel]', reservation, :method => :delete, :confirm => "Are you sure you want to cancel this reservation?" %>
 						</li>

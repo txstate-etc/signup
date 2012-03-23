@@ -33,6 +33,12 @@
       <dt>Additional Info:</dt>
       <dd><%= link_to @topic.url, @topic.url %></dd>
     <% end %>
+    <% if !@topic.documents.blank? %>
+      <dt>Workshop Materials:</dt>
+      <% @topic.documents.each do |document| %>
+        <dd><%= link_to document.friendly_name, document.item.url %></dd>
+      <% end %>
+    <% end %>
   </dl>
 </div>
 
@@ -52,7 +58,7 @@
 	
 	<div class="admin-section">
 		<h3>Update Details:</h3>
-		<% form_for @topic, :url => { :action => "update" } do |f| %>
+		<% form_for @topic, :url => { :action => "update" }, :html => { :multipart => true } do |f| %>
 			<%= render :partial => "form_fields", :locals => { :f => f }%>
 			<br/><%= submit_tag "Make Changes" %>
 		<% end %>

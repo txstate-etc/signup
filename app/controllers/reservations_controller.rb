@@ -60,12 +60,52 @@ class ReservationsController < ApplicationController
     superuser =  current_user.admin? || @reservation.session.instructor?( current_user )
     
     if @reservation.user != current_user && !superuser
-      flash[ :error ] = "Reservations can only be cancelled by their owner." + current_user.to_s + " & " + @reservation.user.to_s
+      flash[ :error ] = "Reservations can only be cancelled by their owner, an admin, or an instructor." + current_user.to_s + " & " + @reservation.user.to_s
     elsif @reservation.session.time <= Time.now && !superuser
       flash[ :error ] = "Reservations cannot be cancelled once the session has begun."      
     else
       @reservation.destroy
       flash[ :notice ] = "Your reservation has been cancelled."
+    end
+    
+    if @reservation.user == current_user
+      redirect_to reservations_path
+    else
+      redirect_to @reservation.session
+    end
+  end
+  
+  # send an email reminder to the student
+  def send_reminder
+    @reservation = Reservation.find( params[ :id ] )
+    superuser =  current_user.admin? || @reservation.session.instructor?( current_user )
+    
+    if @reservation.user != current_user && !superuser
+      flash[ :error ] = "Reminders can only be sent by their owner, an admin, or an instructor." + current_user.to_s + " & " + @reservation.user.to_s
+    elsif @reservation.session.last_time < Time.now && !superuser
+      flash[ :error ] = "Reminders cannot be sent once the session has ended."      
+    else
+      @reservation.send_reminder
+      flash[ :notice ] = "A reminder has been sent to #{@reservation.user.name}."
+    end
+    
+    if @reservation.user == current_user
+      redirect_to reservations_path
+    else
+      redirect_to @reservation.session
+    end
+  end
+  
+  # send an email reminder to the student
+  def send_survey
+    @reservation = Reservation.find( params[ :id ] )
+    superuser =  current_user.admin? || @reservation.session.instructor?( current_user )
+    
+    if @reservation.user != current_user && !superuser
+      flash[ :error ] = "Survey reminders can only be sent by their owner, an admin, or an instructor." + current_user.to_s + " & " + @reservation.user.to_s
+    else
+      @reservation.send_survey
+      flash[ :notice ] = "A survey reminder has been sent to #{@reservation.user.name}."
     end
     
     if @reservation.user == current_user

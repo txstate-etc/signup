@@ -14,7 +14,7 @@ class ReservationMailerTest < ActionMailer::TestCase
     
     # For Cheater Driven Development: uncomment the following line to save the 'actual' email
     # to the fixture file to make it the new 'expected' body
-    #File.open("fixtures/reservation_mailer/confirm", 'w') {|f| f.write(actual.body) }
+    #File.open("#{Rails.root}/test/fixtures/reservation_mailer/confirm", 'w') {|f| f.write(actual.body) }
     
     assert_equal @expected.body, actual.body
     assert_equal @expected.subject, actual.subject
@@ -134,5 +134,14 @@ class ReservationMailerTest < ActionMailer::TestCase
    
     # I'm apparently not smart enough to figure out how to test this properly with multipart emails with attachments. :-P
     # assert_equal @expected.encoded, ReservationMailer.create_confirm( reservations( :bill ), "http://test.url.com" ).encoded
+  end
+  
+  test "Should generate sane urls" do
+    path = 'path/to/some/file.txt'
+    assert_equal 'http://localhost:3000/' + path, ReservationMailer.absolute_url(path)
+    assert_equal 'http://localhost:3000/' + path, ReservationMailer.absolute_url('/' + path)
+    ActionMailer::Base.default_url_options[:host] = "www.example.com"
+    ActionMailer::Base.default_url_options[:port] = nil
+    assert_equal 'http://www.example.com/' + path, ReservationMailer.absolute_url(path)
   end
 end

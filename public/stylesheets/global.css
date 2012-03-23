@@ -779,6 +779,16 @@ span.radio-span {
   -webkit-border-radius: 1em;
 }
 
+div.workshop-materials .fields {
+  height: 25px;
+  line-height: 25px;
+  font-size: .95em;
+}
+
+div.workshop-materials .document {
+  color: #000000;
+  margin-right: 15px;
+}
 
 .comment {
   font-style: italic;

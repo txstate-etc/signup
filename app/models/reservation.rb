@@ -41,4 +41,12 @@ class Reservation < ActiveRecord::Base
     !confirmed?
   end
   
+  def send_reminder
+    ReservationMailer.delay.deliver_remind( session, user )
+  end
+  
+  def send_survey
+    ReservationMailer.delay.deliver_survey_mail( self )
+  end
+  
 end
