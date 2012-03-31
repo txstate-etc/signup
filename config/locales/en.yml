@@ -7,3 +7,5 @@ en:
     attributes:
       session:
         occurrences: "Session Time"
+      document:
+        item_file_size: "Document size"

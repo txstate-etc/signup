@@ -69,9 +69,9 @@ class TopicsController < ApplicationController
   def update
     @topic = Topic.find( params[ :id ] )
     if current_user && current_user.admin?
-      @topic.update_attributes( params[ :topic ] )
+      success = @topic.update_attributes( params[ :topic ] )
       @page_title = @topic.name
-      if @topic.save
+      if success
         flash[ :notice ] = "The topic's data has been updated."
         redirect_to @topic
       else

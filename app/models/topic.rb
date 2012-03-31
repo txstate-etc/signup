@@ -8,7 +8,7 @@ class Topic < ActiveRecord::Base
   belongs_to :department
   has_many :sessions
   has_many :documents, :dependent => :destroy
-  accepts_nested_attributes_for :documents, :allow_destroy => true
+  accepts_nested_attributes_for :documents, :allow_destroy => true, :reject_if => lambda { |t| t['item'].nil? }
   validates_presence_of :name, :description, :minutes, :department
   validates_associated :department
   validates_presence_of :survey_url, :if => Proc.new{ |topic| topic.survey_type == SURVEY_EXTERNAL }, :message => "must be specified to use an external survey."
