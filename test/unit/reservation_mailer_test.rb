@@ -37,7 +37,7 @@ class ReservationMailerTest < ActionMailer::TestCase
     
     # For Cheater Driven Development: uncomment the following line to save the 'actual' email
     # to the fixture file to make it the new 'expected' body
-    #File.open("fixtures/reservation_mailer/remind", 'w') {|f| f.write(actual.body) }
+    #File.open("#{Rails.root}/test/fixtures/reservation_mailer/remind", 'w') {|f| f.write(actual.body) }
     
     assert_equal @expected.body, actual.body
     assert_equal @expected.subject, actual.subject
@@ -59,7 +59,7 @@ class ReservationMailerTest < ActionMailer::TestCase
     
     # For Cheater Driven Development: uncomment the following line to save the 'actual' email
     # to the fixture file to make it the new 'expected' body
-    #File.open("fixtures/reservation_mailer/promote", 'w') {|f| f.write(actual.body) }
+    #File.open("#{Rails.root}/test/fixtures/reservation_mailer/promote", 'w') {|f| f.write(actual.body) }
     
     assert_equal @expected.body, actual.body
     assert_equal @expected.subject, actual.subject
@@ -81,7 +81,7 @@ class ReservationMailerTest < ActionMailer::TestCase
     
     # For Cheater Driven Development: uncomment the following line to save the 'actual' email
     # to the fixture file to make it the new 'expected' body
-    #File.open("fixtures/reservation_mailer/update", 'w') {|f| f.write(actual.body) }
+    #File.open("#{Rails.root}/test/fixtures/reservation_mailer/update", 'w') {|f| f.write(actual.body) }
     
     assert_equal @expected.body, actual.body
     assert_equal @expected.subject, actual.subject
@@ -103,7 +103,7 @@ class ReservationMailerTest < ActionMailer::TestCase
     
     # For Cheater Driven Development: uncomment the following line to save the 'actual' email
     # to the fixture file to make it the new 'expected' body
-    #File.open("fixtures/reservation_mailer/cancel", 'w') {|f| f.write(actual.body) }
+    #File.open("#{Rails.root}/test/fixtures/reservation_mailer/cancel.actual", 'w') {|f| f.write(actual.body) }
     
     assert_equal @expected.body, actual.body
     assert_equal @expected.subject, actual.subject
@@ -125,7 +125,7 @@ class ReservationMailerTest < ActionMailer::TestCase
  
     # For Cheater Driven Development: uncomment the following line to save the 'actual' email
     # to the fixture file to make it the new 'expected' body
-    #File.open("fixtures/reservation_mailer/accommodations", 'w') {|f| f.write(actual.body) }
+    #File.open("#{Rails.root}/test/fixtures/reservation_mailer/accommodations", 'w') {|f| f.write(actual.body) }
 
     assert_equal @expected.body, actual.body
     assert_equal @expected.subject, actual.subject
@@ -137,11 +137,18 @@ class ReservationMailerTest < ActionMailer::TestCase
   end
   
   test "Should generate sane urls" do
+    host = ActionMailer::Base.default_url_options[:host]
+    port = ActionMailer::Base.default_url_options[:port]
     path = 'path/to/some/file.txt'
+    
     assert_equal 'http://localhost:3000/' + path, ReservationMailer.absolute_url(path)
     assert_equal 'http://localhost:3000/' + path, ReservationMailer.absolute_url('/' + path)
     ActionMailer::Base.default_url_options[:host] = "www.example.com"
     ActionMailer::Base.default_url_options[:port] = nil
     assert_equal 'http://www.example.com/' + path, ReservationMailer.absolute_url(path)
+    
+    # reset host and port back to configured values
+    ActionMailer::Base.default_url_options[:host] = host
+    ActionMailer::Base.default_url_options[:port] = port
   end
 end

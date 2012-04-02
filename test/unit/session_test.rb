@@ -76,15 +76,16 @@ class SessionTest < ActiveSupport::TestCase
   end
   
   test "Sessions with automatic or external surveys should get emails, but only for folks not marked as absent" do
-    assert_difference 'ActionMailer::Base.deliveries.size', +4 do
+    assert_difference 'ActionMailer::Base.deliveries.size', +2 do
       assert_difference 'Session.all(:conditions => ["survey_sent = ?", false]).size', -3 do
         Session.send_surveys
         Delayed::Worker.new(:quiet => true).work_off
       end
     end
-    
-    ActionMailer::Base.deliveries.last(3).each do |survey_email|
+
+    ActionMailer::Base.deliveries.last(2).each do |survey_email|
       assert_match 'localhost', survey_email.body, "URLs not being constructed properly"
+      assert_match /\/survey_responses\/new\?reservation_id=#{reservations(:multi_time_topic_completed_plainuser2).id}|http:\/\/localhost\/tracssurvey/, survey_email.body, "URLs not being constructed properly"
     end
   end
   

@@ -14,7 +14,7 @@ tracs:
   url: http://tracs.txstate.edu
   minutes: 120
   survey_type: 2
-  survey_url: http://localhost/null
+  survey_url: http://localhost/tracssurvey
   department: its
   
 no_survey_topic:

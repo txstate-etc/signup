@@ -188,7 +188,7 @@ class Session < ActiveRecord::Base
       session.reload #Force it to load in all occurrences
       next if session.last_time > Time.now #wait until the last occurrance
       session.confirmed_reservations.each do |reservation|
-        ReservationMailer.delay.deliver_survey_mail( reservation ) if reservation.attended != Reservation::ATTENDANCE_MISSED
+        ReservationMailer.delay.deliver_survey_mail( reservation ) if reservation.survey_response.nil? && reservation.attended != Reservation::ATTENDANCE_MISSED
       end
       session.survey_sent = true
       session.save
