@@ -29,4 +29,15 @@ module ApplicationHelper
     link_to_function(name, h("add_fields(this, \"#{association}\", \"#{escape_javascript(fields)}\", \"set_initial_#{association.to_s.singularize}_value\")"))
   end
   
+  def survey_link(reservation)
+    return '' if reservation.session.last_time > Time.now || reservation.attended == Reservation::ATTENDANCE_MISSED || reservation.survey_response.present? || reservation.session.topic.survey_type == 0
+    
+    if reservation.session.topic.survey_type == 1
+      url = new_survey_response_url + "?reservation_id=#{reservation.id}"
+    elsif reservation.session.topic.survey_type == 2
+      url = reservation.session.topic.survey_url
+    end
+    link_to 'Take the survey!', url, :class => 'survey-link'
+  end
+  
 end

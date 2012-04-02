@@ -46,20 +46,24 @@
   			(<%=h @session.waiting_list.size %> waiting)
   		<% end %>
   		<% if @reservation %>
-  		  <% if @reservation.attended? %>
-  		    <p>You attended this session.</p>
-  		  <% else %>
+  		  <% if @reservation.attended == Reservation::ATTENDANCE_ATTENDED %>
+  		    <p>You attended this session. <%= survey_link(@reservation) %></p>
+  		  <% elsif @reservation.attended == Reservation::ATTENDANCE_MISSED %>
+		    <p>You registered for this session, but were marked absent. </p>
+				<% else %>
   		  	<% if @reservation.confirmed? %>
-  		  		<p>You are registered for this session. </p>
+  		  		<p>You are registered for this session. <%= survey_link(@reservation) %></p>
   		  	<% else %>
   		  		<p>You are on the waiting list for this session.</p>
   		  	<% end %>
   		  	<div class="download-link download-calendar">
   		  		<%= link_to "[add reservation to calendar]", { :controller => :reservations, :action => :download, :id => @reservation.id } %>
   		  	</div>
-  		  	<div class="register-button">
-  		  		<%= link_to "Cancel Reservation", @reservation, :method => :delete, :confirm => "Are you sure you want to cancel your reservation for \"" + @reservation.session.topic.name + "\"?", :class => 'register-button' %>
-  		  	</div>
+  		  	<%- if @reservation.session.time > Time.now -%>
+	  		  	<div class="register-button">
+	  		  		<%= link_to "Cancel Reservation", @reservation, :method => :delete, :confirm => "Are you sure you want to cancel your reservation for \"" + @reservation.session.topic.name + "\"?", :class => 'register-button' %>
+	  		  	</div>
+  		  	<%- end -%>
   		  <% end %>	
   		<% elsif @session.in_registration_period? %>		
   			<% if @session.space_is_available? %>
