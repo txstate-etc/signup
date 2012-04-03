@@ -520,7 +520,8 @@ div#contents h1 {
 }
 
 div.empty-list {
-  padding: 2em;
+  padding: 1em;
+  padding-left: .5em;
 }
 
 div#topic-details h2, div#session-details h2, div#past-session-details h2 {
