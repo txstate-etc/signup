@@ -627,19 +627,6 @@ ul.session-list li a:active {
   text-decoration: none;
 }
 
-/*ul.past-session-list, ul.past-session-list-more {
-  margin-left: 0px;
-  padding-left: 0px;
-  list-style-type: none;
-  font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', serif;
-  font-size: .875em;
-  }
-
-ul.past-session-list li, ul.past-session-list-more li {
-  text-decoration: none;
-  padding-left: 1.5em;
-}*/
-
 div.session-list-expand, div.session-list-collapse {
   margin-left: 1.5em;
   font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', serif;
@@ -660,22 +647,46 @@ ul.reservation-list li {
   border-bottom-width: 1px;
   border-bottom-style: dotted;
   border-bottom-color: #836c31;
-    padding-left: 1.5em;
+  padding-left: .5em;
+  padding-bottom: .5em;
+  margin-top: .75em;
+  margin-bottom: 1em;
 }
 
-div.reservation-name {
-  font-size: 1.3em;
-  margin-bottom:.5em;
-}
+ul.reservation-list li:last-child {
+  border: none;
+} 
 
 div.reservation-group {
+  margin-top: 1em;
+  margin-bottom: 2em;
+}
+
+div.reservation-group h2 {
+  border-bottom: 2px solid #501214;
+}
+
+div.reservation-group a.topic {
+  display: block;
+}
+
+div.reservation-group a.date {
+  display: block;
+  color: #000;
+  font-size: .9em;
+  margin-bottom: 1em;
+}
+
+div.reservation-group a.survey-link {
+  display: block;
+  color: #501214;
+  font-size: .9em;
   margin-top: 1em;
 }
 
 div.download-link {
   background-repeat: no-repeat;
   background-position: 0px 50%;
-  margin-bottom: .5em;
   margin-left: 3px;
 }
 
@@ -684,8 +695,6 @@ div.download-link a {
   display: block;
   font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', serif;
   padding-left: 25px;
-  padding-top: 0.5em;
-  padding-bottom: 0.5em;
   font-size: .75em;
 }
 

@@ -12,7 +12,8 @@
 					<li>
 						<div>
 							<div class="reservation-name">
-								<%= link_to formatted_time_range(reservation.session.next_time, reservation.session.topic.minutes), reservation.session %><br/><%= link_to reservation.session.topic.name, reservation.session.topic %>
+								<%= link_to reservation.session.topic.name, reservation.session.topic, :class => 'topic' %>
+								<%= link_to formatted_time_range(reservation.session.next_time, reservation.session.topic.minutes), reservation.session, :class => 'date' %>
 							</div>
               <div class="download-link download-calendar">
                 <%= link_to "[add reservation to calendar]", :controller => :reservations, :action => :download, :id => reservation.id %>
@@ -35,7 +36,8 @@
 				<li>
 					<div>
 						<div class="reservation-name">
-							<%= link_to formatted_time_range(reservation.session.time, reservation.session.topic.minutes), reservation.session %><br/><%= link_to reservation.session.topic.name, reservation.session.topic %>
+							<%= link_to reservation.session.topic.name, reservation.session.topic, :class => 'topic' %>
+							<%= link_to formatted_time_range(reservation.session.time, reservation.session.topic.minutes), reservation.session, :class => 'date' %>
 						</div>
               <div class="download-link download-calendar">
                 <%= link_to "[add reservation to calendar]", :controller => :reservations, :action => :download, :id => reservation.id %>
@@ -54,14 +56,18 @@
 
 <% if @past_reservations.size > 0 %>
 <div class="reservation-group">
-  <h2>Past Sessions</h2>
+  <h2>Sessions Attended</h2>
   <ul class="reservation-list">
     <% @past_reservations.each do |reservation| %>
       <li>
         <div>
           <div class="reservation-name">
-            <%= link_to formatted_time_range(reservation.session.time, reservation.session.topic.minutes), reservation.session %><br/><%= link_to reservation.session.topic.name, reservation.session.topic %>
+						<%= link_to reservation.session.topic.name, reservation.session.topic, :class => 'topic' %>
+            <%= link_to formatted_time_range(reservation.session.time, reservation.session.topic.minutes), reservation.session, :class => 'date' %>
           </div>
+					<div class="survey-link">
+						<%= survey_link(reservation) %>
+					</div>
         </div>
       </li>
     <% end %>
