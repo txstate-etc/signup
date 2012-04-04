@@ -30,7 +30,12 @@ module ApplicationHelper
   end
   
   def survey_link(reservation)
-    return '' if reservation.session.last_time > Time.now || reservation.attended == Reservation::ATTENDANCE_MISSED || reservation.survey_response.present? || reservation.session.topic.survey_type == 0
+    return '' if reservation.session.last_time > Time.now || 
+      reservation.attended == Reservation::ATTENDANCE_MISSED || 
+      reservation.survey_response.present? || 
+      reservation.session.topic.survey_type == 0 ||
+      current_user.nil? ||
+      current_user != reservation.user
     
     if reservation.session.topic.survey_type == 1
       url = new_survey_response_url + "?reservation_id=#{reservation.id}"
