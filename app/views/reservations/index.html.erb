@@ -12,7 +12,7 @@
 					<li>
 						<div>
 							<div class="reservation-name">
-								<%= link_to reservation.session.topic.name, reservation.session.topic, :class => 'topic' %>
+								<%= link_to reservation.session.topic.name, reservation.session, :class => 'topic' %>
 								<%= link_to formatted_time_range(reservation.session.next_time, reservation.session.topic.minutes), reservation.session, :class => 'date' %>
 							</div>
               <div class="download-link download-calendar">
@@ -36,7 +36,7 @@
 				<li>
 					<div>
 						<div class="reservation-name">
-							<%= link_to reservation.session.topic.name, reservation.session.topic, :class => 'topic' %>
+							<%= link_to reservation.session.topic.name, reservation.session, :class => 'topic' %>
 							<%= link_to formatted_time_range(reservation.session.time, reservation.session.topic.minutes), reservation.session, :class => 'date' %>
 						</div>
               <div class="download-link download-calendar">
@@ -62,7 +62,7 @@
       <li>
         <div>
           <div class="reservation-name">
-						<%= link_to reservation.session.topic.name, reservation.session.topic, :class => 'topic' %>
+						<%= link_to reservation.session.topic.name, reservation.session, :class => 'topic' %>
             <%= link_to formatted_time_range(reservation.session.time, reservation.session.topic.minutes), reservation.session, :class => 'date' %>
           </div>
 					<div class="survey-link">
