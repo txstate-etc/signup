@@ -1,65 +1,89 @@
 <%= error_messages_for 'survey_response' %>
 
 <% form_for( @survey_response ) do |f| %>
+	<h2>Course Evaluation Survey</h2>
 	<%= f.hidden_field :reservation_id %>
-	<div class="survey-options">
-		<label class="field-label">Class Rating (1 is worst, 5 is best):</label>
-		<span class="radio-span">
-			<%= f.radio_button :class_rating, 1 %>
-			<%= f.label :class_rating_1, '1' %>
-		</span>
-
-		<span class="radio-span">
-			<%= f.radio_button :class_rating, 2 %>
-			<%= f.label :class_rating_2, '2' %>
-		</span>
-	
-		<span class="radio-span">
-			<%= f.radio_button :class_rating, 3 %>
-			<%= f.label :class_rating_3, '3' %>
-		</span>
-		
-		<span class="radio-span">
-			<%= f.radio_button :class_rating, 4 %>
-			<%= f.label :class_rating_4, '4' %>
-		</span>
-		
-		<span class="radio-span">
-			<%= f.radio_button :class_rating, 5 %>
-			<%= f.label :class_rating_5, '5' %>
-		</span>
-	</div>
-	
-	<div class="survey-options">
-		<label class="field-label">Instructor Rating (1 is worst, 5 is best):</label>
-		<span class="radio-span">
-			<%= f.radio_button :instructor_rating, 1 %>
-			<%= f.label :instructor_rating_1, '1' %>
-		</span>
-
-		<span class="radio-span">
-			<%= f.radio_button :instructor_rating, 2 %>
-			<%= f.label :instructor_rating_2, '2' %>
-		</span>
-	
-		<span class="radio-span">
-			<%= f.radio_button :instructor_rating, 3 %>
-			<%= f.label :instructor_rating_3, '3' %>
-		</span>
-		
+	<div class="survey-question">
+		<label class="field-label">Please rate your instructor. If multiple instructors, provide an overall rating.</label>
 		<span class="radio-span">
 			<%= f.radio_button :instructor_rating, 4 %>
-			<%= f.label :instructor_rating_4, '4' %>
+			<%= f.label :instructor_rating_4, '4 - Excellent' %>
 		</span>
 		
 		<span class="radio-span">
-			<%= f.radio_button :instructor_rating, 5 %>
-			<%= f.label :instructor_rating_5, '5' %>
+			<%= f.radio_button :instructor_rating, 3 %>
+			<%= f.label :instructor_rating_3, '3 - Good' %>
 		</span>
+		
+		<span class="radio-span">
+			<%= f.radio_button :instructor_rating, 2 %>
+			<%= f.label :instructor_rating_2, '2 - Fair' %>
+		</span>
+	
+		<span class="radio-span">
+			<%= f.radio_button :instructor_rating, 1 %>
+			<%= f.label :instructor_rating_1, '1 - Poor' %>
+		</span>
+
 	</div>
 	
-	<%= f.label :comments, "Additional Comments:", :class => 'field-label' %>
-	<%= f.text_field :comments %>
+	<div class="survey-question">
+		<label class="field-label">Rate the applicability of workshop content to your needs.</label>
+		<span class="radio-span">
+			<%= f.radio_button :applicability, 4 %>
+			<%= f.label :applicability_4, '4 - Excellent' %>
+		</span>
+		
+		<span class="radio-span">
+			<%= f.radio_button :applicability, 3 %>
+			<%= f.label :applicability_3, '3 - Good' %>
+		</span>
+		
+		<span class="radio-span">
+			<%= f.radio_button :applicability, 2 %>
+			<%= f.label :applicability_2, '2 - Fair' %>
+		</span>
+	
+		<span class="radio-span">
+			<%= f.radio_button :applicability, 1 %>
+			<%= f.label :applicability_1, '1 - Poor' %>
+		</span>
+
+	</div>
+	
+	<div class="survey-question">
+		<label class="field-label">What is your overall impression of this workshop?</label>
+		<span class="radio-span">
+			<%= f.radio_button :class_rating, 4 %>
+			<%= f.label :class_rating_4, '4 - Excellent' %>
+		</span>
+		
+		<span class="radio-span">
+			<%= f.radio_button :class_rating, 3 %>
+			<%= f.label :class_rating_3, '3 - Good' %>
+		</span>
+		
+		<span class="radio-span">
+			<%= f.radio_button :class_rating, 2 %>
+			<%= f.label :class_rating_2, '2 - Fair' %>
+		</span>
+	
+		<span class="radio-span">
+			<%= f.radio_button :class_rating, 1 %>
+			<%= f.label :class_rating_1, '1 - Poor' %>
+		</span>
+
+	</div>
+	
+	<div class="survey-question">
+		<%= f.label :most_useful, "What did you find most useful about this workshop?", :class => 'field-label' %>
+		<%= f.text_area :most_useful, :cols => 60, :rows => 4 %>
+	</div>
+
+	<div class="survey-question">
+		<%= f.label :comments, "Add your comments regarding the instructor(s), the pace of the workshop, the time allowed, and any other feedback.", :class => 'field-label' %>
+		<%= f.text_area :comments, :cols => 60, :rows => 10 %>
+	</div>
 	
 	<br/><br/>
 	

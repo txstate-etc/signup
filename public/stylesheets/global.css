@@ -524,7 +524,7 @@ div.empty-list {
   padding-left: .5em;
 }
 
-div#topic-details h2, div#session-details h2, div#past-session-details h2 {
+div#topic-details h2, div#session-details h2, div#past-session-details h2, form#new_survey_response h2 {
   padding-bottom: 2px;
   font-size: 1em;
   font-weight: bold;
@@ -738,6 +738,18 @@ div.admin-options h3 {
 span.radio-span {
   margin: 0.18em;
   padding: 0.18em;
+}
+
+form#new_survey_response h2 {
+  margin: 2em 0;
+}
+
+.survey-question {
+  margin-top: 2em;
+}
+
+.survey-question span.radio-span {
+  margin-right: 5em;
 }
 
 .admin-section {
