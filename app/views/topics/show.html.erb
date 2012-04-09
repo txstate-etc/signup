@@ -1,4 +1,5 @@
 <% content_for :admin_tools do %>
+	<p class="download-link download-csv"><%= link_to "Download Attendance History", :format => :csv %></p>
   <p><%= link_to "Create New Session", new_topic_session_path( @topic ) %></p>
 <% end %>
 
@@ -52,7 +53,6 @@
 <% if current_user && current_user.admin? %>
 <div class="admin-options">
 	<h2>Admin Options</h2>
-	<div class="download-link download-csv"><%= link_to "Download CSV", :format => :csv %></div>
 	
 	<%= render :partial => "survey_responses/survey_summary", :locals => { :model_object => @topic }%>
 	

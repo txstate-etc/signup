@@ -37,7 +37,7 @@ class TopicsController < ApplicationController
       wants.csv do
         send_data @topic.to_csv,
           :type => 'text/csv; charset=iso-8859-1; header=present',
-          :disposition => "attachment; filename=users.csv"
+          :disposition => "attachment; filename=#{@topic.to_param}.csv"
       end
     end
   end

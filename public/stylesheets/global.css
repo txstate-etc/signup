@@ -456,7 +456,6 @@ div.sidebar {
 div.admin-tools {
   background-color: #F6F6F6;
   border: 2px solid #4b4b4b;
-  line-height: 2em;
   padding: 0.5em 0.5em 1.0em 0.5em;
   width: 180px;
   margin-top: 20px;
@@ -484,7 +483,8 @@ div.admin-tools h3 {
 
 div.admin-tools p {
   border-bottom: #501214 dotted 1px;
-  }
+  padding: .25em 0;
+}
 
 div.admin-tools a:link {
   color: #6C5828;
@@ -685,26 +685,26 @@ div.reservation-group a.survey-link {
   margin-top: 1em;
 }
 
-div.download-link {
+.download-link {
   background-repeat: no-repeat;
   background-position: 0px 50%;
   margin-left: 3px;
 }
 
 
-div.download-link a {
+.download-link a {
   display: block;
   font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', serif;
   padding-left: 25px;
   font-size: .75em;
 }
 
-div.download-calendar {
+.download-calendar {
   background-image:  url(/images/cal.gif);
   background-repeat: no-repeat;
 }
 
-div.download-csv {
+.download-csv {
   background-image:  url(/images/csv.gif);
   background-repeat: no-repeat;
 

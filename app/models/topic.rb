@@ -40,13 +40,19 @@ class Topic < ActiveRecord::Base
   
   def to_csv
     FasterCSV.generate do |csv|
-      csv << [ "Topic", "Session ID", "Session Time", "Session Cancelled", "Attendee Name", "Attendee Login", "Attendee Email", "Reservation Confirmed?" ]
+      csv << [ "Topic", "Session ID", "Session Time", "Session Cancelled", "Attendee Name", "Attendee Login", "Attendee Email", "Reservation Confirmed?", "Attended?" ]
       logger.info "FOO: STarting iterations"
       sessions.each do |session|
         logger.info "FOO: session - " + session.topic.name
         session.reservations.each do |reservation|
           logger.info "FOO: reservation - " + reservation.user.name
-          csv << [ session.topic.name, session.id, session.time, session.cancelled, reservation.user.name, reservation.user.login, reservation.user.email, reservation.confirmed? ]
+          attended = ""
+          if reservation.attended == Reservation::ATTENDANCE_MISSED
+            attended = "MISSED"
+          elsif reservation.attended == Reservation::ATTENDANCE_ATTENDED
+            attended = "ATTENDED"
+          end
+          csv << [ session.topic.name, session.id, session.time, session.cancelled, reservation.user.name, reservation.user.login, reservation.user.email, reservation.confirmed?, attended ]
         end
       end
     end
