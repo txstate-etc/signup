@@ -45,4 +45,32 @@ module ApplicationHelper
     link_to 'Take the survey!', url, :class => 'survey-link'
   end
   
+  def expandible_list(comments)
+    ret = '<ul>'
+    comments[0..4].each do |comment| 
+      ret << "<li>#{comment}</li>"
+    end 
+    ret << '</ul>'
+    
+    if comments.size > 5
+      ret << '<ul style="display:none;">'
+      comments.drop(5).each do |comment|
+        ret << "<li>#{comment}</li>"
+      end
+      ret << '</ul>'
+      
+      ret << list_expand_collapse_links
+    end 
+
+    ret
+  end
+  
+  def list_expand_collapse_links()
+    ret = '<div class="list-expand" style="display:block;">'
+    ret << link_to_function("show more ▼", 'expand_list(this)')
+    ret << '</div>'
+    ret << '<div class="list-collapse" style="display:none;">'
+    ret << link_to_function("show fewer ▲", 'collapse_list(this)')
+    ret << '</div>'
+  end
 end

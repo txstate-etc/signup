@@ -61,4 +61,6 @@ ActionController::Routing::Routes.draw do |map|
   map.send_reminder 'reservations/send_reminder/:id', :controller => :reservations, :action => :send_reminder
   map.resources :survey_responses, :only => [ :create ]
   map.new_survey_response 'survey_responses/new', :controller => :survey_responses, :action => :new, :conditions => { :method => [:post, :get] }
+  map.topic_survey_results 'topics/:id/survey_results', :controller => :topics, :action => :survey_results
+  map.session_survey_results 'sessions/:id/survey_results', :controller => :sessions, :action => :survey_results
 end

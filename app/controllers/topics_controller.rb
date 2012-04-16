@@ -50,6 +50,20 @@ class TopicsController < ApplicationController
       redirect_to topics_path
     end
   end
+
+  def edit
+    if current_user && current_user.admin?
+      begin
+        @topic = Topic.find( params[:id] )
+      rescue ActiveRecord::RecordNotFound
+        render(:file => 'shared/404.erb', :status => 404, :layout => true) unless @session
+        return
+      end
+      @page_title = "Update Topic Details"
+    else
+      redirect_to topics_path
+    end
+  end
   
   def create
     if current_user && current_user.admin?
@@ -94,4 +108,13 @@ class TopicsController < ApplicationController
     send_data(calendar.export, :type => 'text/calendar')
   end
 
+  def survey_results
+    if current_user && current_user.admin?
+      @topic = Topic.find( params[ :id ] )
+      @page_title = @topic.name
+    else
+      redirect_to topics_path
+    end
+  end
+  
 end

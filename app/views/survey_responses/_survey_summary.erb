@@ -1,15 +1,14 @@
 <% if model_object.survey_responses.size > 0 %>
-	<div class="admin-section">
-		<h3>Survey Results</h3>
-		<div>Average Rating: <%= "%.2f" % model_object.average_rating %></div>
-		<div>Average Instructor Rating: <%= "%.2f" % model_object.average_instructor_rating %></div>
-		<div id="display-comments"><%= link_to_function "Display Comments", "javascript:Effect.BlindDown('comments');Effect.BlindUp('display-comments')" %></div>
-		<ul id="comments" style="display: none">
-			<% model_object.survey_responses.each do |survey_response| %>
-				<% if !survey_response.comments.empty? %>
-					<li class="comment"><%=h survey_response.comments %></li>
-				<% end %>
-			<% end %>
-		</ul>
+	<div id="survey-responses">
+		<h2>Survey Results</h2>
+		<div class="survey-result">Average Instructor Rating: <%= "%.2f" % model_object.average_instructor_rating %></div>
+		<% if model_object.average_applicability_rating > 0 %>
+			<div class="survey-result">Average Content Rating: <%= "%.2f" % model_object.average_applicability_rating %></div>
+		<% end %>
+		<div class="survey-result">Average Overall Rating: <%= "%.2f" % model_object.average_rating %></div>
+		<%= usefulness_comments(model_object) %>
+		<%= overall_comments(model_object) %>
 	</div>
+<% else %>
+	<p>No survey results have been submitted.</p>
 <% end %>

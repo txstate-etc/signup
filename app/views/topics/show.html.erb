@@ -1,5 +1,7 @@
 <% content_for :admin_tools do %>
 	<p class="download-link download-csv"><%= link_to "Download Attendance History", :format => :csv %></p>
+	<p><%= link_to "View Survey Results", topic_survey_results_path( @topic ) %>
+	<p><%= link_to "Update Topic Details", edit_topic_path %>
   <p><%= link_to "Create New Session", new_topic_session_path( @topic ) %></p>
 <% end %>
 
@@ -12,7 +14,7 @@
 <%= javascript_include_tag 'topic_form' %>
 <%= error_messages_for 'topic' %>
 
-<div id="session-details">
+<div id="session-details" class="session-list">
   <h2>Upcoming Sessions</h2>
   <% if @topic.upcoming_sessions.size > 0 %>
     <%= session_list(@topic.upcoming_sessions) %>
@@ -43,27 +45,9 @@
   </dl>
 </div>
 
-<div id="past-session-details">
+<div id="past-session-details" class="session-list">
 <% if @topic.past_sessions.size > 0 && current_user && current_user.admin? %>
   <h2>Past Sessions</h2>
   <%= session_list(@topic.past_sessions.reverse) %>
 <% end %>
 </div>
-
-<% if current_user && current_user.admin? %>
-<div class="admin-options">
-	<h2>Admin Options</h2>
-	
-	<%= render :partial => "survey_responses/survey_summary", :locals => { :model_object => @topic }%>
-	
-	<div class="admin-section">
-		<h3>Update Details:</h3>
-		<% form_for @topic, :url => { :action => "update" }, :html => { :multipart => true } do |f| %>
-			<%= render :partial => "form_fields", :locals => { :f => f }%>
-			<br/><%= submit_tag "Make Changes" %>
-		<% end %>
-	</div>	
-</div>
-
-
-<% end %>

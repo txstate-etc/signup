@@ -18,28 +18,7 @@ module TopicsHelper
   end
 
   def session_list(sessions)
-    ret = '<ul class="session-list">'
-    sessions[0..4].each do |session| 
-      ret << "<li>#{link_to_session(session)}</li>"
-    end 
-    ret << '</ul>'
-    
-    if sessions.size > 5
-      ret << '<ul class="session-list" style="display:none;">'
-      sessions.drop(5).each do |session|
-        ret << "<li>#{link_to_session(session)}</li>"
-      end
-      ret << '</ul>'
-      
-      ret << '<div class="session-list-expand" style="display:inline;">'
-      ret << link_to_function("show more ▼", 'expand_session_list(this)')
-      ret << '</div>'
-      ret << '<div class="session-list-collapse" style="display:none;">'
-      ret << link_to_function("show fewer ▲", 'collapse_session_list(this)')
-      ret << '</div>'
-    end 
-
-    ret
+    expandible_list sessions.map{|session| link_to_session(session)}
   end
   
 end

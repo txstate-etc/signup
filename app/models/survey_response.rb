@@ -2,6 +2,7 @@ class SurveyResponse < ActiveRecord::Base
   belongs_to :reservation
   validates_presence_of :class_rating, :instructor_rating, :applicability
   validates_uniqueness_of :reservation_id, :message => "A survey has already been submitted for this reservation."
+  default_scope :order => 'created_at DESC'
   
   def validate
     if self.reservation.session.time > Time.now

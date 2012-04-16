@@ -1,0 +1,25 @@
+<% content_for :admin_tools do %>
+	<p class="download-link download-csv"><%= link_to "Download Attendance History", :format => :csv %></p>
+	<p><%= link_to "View Survey Results", topic_survey_results_path( @topic ) %>
+	<p><%= link_to "View Topic Details", @topic %>
+  <p><%= link_to "Create New Session", new_topic_session_path( @topic ) %></p>
+<% end %>
+
+<% content_for :sidebar do %>
+  <div class="download-link download-calendar">
+    <%= link_to "[add all sessions to calendar]", :protocol => "webcal", :host => request.host, :port => request.port, :action => 'download' %>
+  </div>
+<% end %>
+
+<%= javascript_include_tag 'topic_form' %>
+<%= error_messages_for 'topic' %>
+
+<div class="topic-details">
+	<h2>Update Details</h2>
+	<% form_for @topic, :url => { :action => "update" }, :html => { :multipart => true } do |f| %>
+		<%= render :partial => "form_fields", :locals => { :f => f }%>
+		<br/><%= submit_tag "Make Changes" %>
+		<%= link_to "Cancel", @topic %>
+	<% end %>
+</div>	
+

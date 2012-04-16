@@ -524,7 +524,9 @@ div.empty-list {
   padding-left: .5em;
 }
 
-div#topic-details h2, div#session-details h2, div#past-session-details h2, form#new_survey_response h2 {
+div#topic-details h2, div#session-details h2, 
+div#past-session-details h2, form#new_survey_response h2,
+div#survey-responses h2 {
   padding-bottom: 2px;
   font-size: 1em;
   font-weight: bold;
@@ -533,16 +535,37 @@ div#topic-details h2, div#session-details h2, div#past-session-details h2, form#
   border-bottom-color: #501214;
 }
   
-div#topic-details {
+div#topic-details, div#session-details, 
+div#past-session-details, div#survey-responses {
   margin: 1em 0 2em 0;
 }
 
-div#session-details {
-  margin: 1em 0 2em 0;
+div.survey-result {
+  margin: 0.5em 0 1em 0;
 }
 
-div#past-session-details {
-  margin: 1em 0 2em 0;
+div.survey-comments {
+  margin: 2.5em 0 1em 0;
+}
+
+div.survey-comments li {
+  max-width: 685px;
+  margin: 1em .25em 0 .25em;
+  padding: .25em .5em .5em;
+  background-color: #F6F6F6;
+  border: 1px solid #4B4B4B;
+  border-bottom: 1px solid #3B3B3B;
+  -moz-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2),inset 1px 1px #fff;
+  -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2),inset 1px 1px #fff;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2),inset 1px 1px #fff;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+}
+
+div.survey-comments div.list-expand, div.survey-comments div.list-collapse {
+  margin-left: .25em;
+  margin-top: 1em;
 }
 
 ul#topic-list, ul#department-list {
@@ -592,7 +615,7 @@ ul#topic-list li div.session-info {
 }
 
 
-ul.session-list {
+.session-list ul {
   margin-left: 0px;
   padding-left: 0px;
   list-style-type: none;
@@ -600,17 +623,17 @@ ul.session-list {
   font-size: .875em;
 }
 
-ul.session-list li {
+.session-list li {
   text-decoration: none;
   padding-left: 1.5em;
 
 }
 
-ul.session-list li a:link {
+.session-list li a:link {
   color: #836c31;
 }
 
-ul.session-list li a:hover, ul.reservation-list a:hover {
+.session-list li a:hover, ul.reservation-list a:hover {
   
   text-decoration: underline;
 }
@@ -618,18 +641,18 @@ ul.session-list li a:hover, ul.reservation-list a:hover {
 ul.attendance-list li {
 }
 
-ul.session-list li a:visited, ul.reservation-list li {
+.session-list li a:visited, ul.reservation-list li {
 
   color: #4b4b4b;
 }
 
-ul.session-list li a:active {
+.session-list li a:active {
   color: #836c31;
   text-decoration: none;
 }
 
-div.session-list-expand, div.session-list-collapse {
-  margin-left: 1.5em;
+div.list-expand, div.list-collapse {
+  margin-left: 1.75em;
   font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', serif;
   font-size: .8em;  
   padding-right: 16px;
@@ -810,10 +833,6 @@ div.workshop-materials .fields {
 div.workshop-materials .document {
   color: #000000;
   margin-right: 15px;
-}
-
-.comment {
-  font-style: italic;
 }
 
 #display-comments {
