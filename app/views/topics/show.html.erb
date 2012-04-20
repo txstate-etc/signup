@@ -35,3 +35,9 @@
   <%= session_list(@topic.past_sessions.reverse) %>
 <% end %>
 </div>
+
+<% if ( current_user && current_user.admin? ) %>
+<div class="admin-options">
+	<p>NOTE: Admin options are now accessed through the <strong>ADMIN TOOLS</strong> sidebar on the left.</p>
+</div>
+<% end %>
