@@ -15,22 +15,37 @@ class ReservationsController < ApplicationController
     admin_is_enrolling_someone_else = params[ :user_login ] && current_user.admin?
     if admin_is_enrolling_someone_else
       @reservation.user = User.find_by_login( params[ :user_login ] )
+      if @reservation.user.nil?
+        flash[ :error ] = "Could not find user with Login ID #{params[ :user_login ]}"
+        redirect_to attendance_path(@reservation.session)
+        return
+      end
     else
       @reservation.user = current_user
     end
     
-    if @reservation.save
-      if @reservation.confirmed?
-        ReservationMailer.delay.deliver_confirm( @reservation )
-        flash[ :notice ] = "Your reservation has been confirmed."
+    success = @reservation.save
+    ReservationMailer.delay.deliver_confirm( @reservation ) if success &&  @reservation.confirmed?
+ 
+    if admin_is_enrolling_someone_else
+      if success
+        if @reservation.confirmed?
+          flash[ :notice ] = "The reservation for #{@reservation.user.name} has been confirmed."
+        else
+          flash[ :notice ] = "#{@reservation.user.name} has been added to the waiting list."
+        end
       else
-        flash[ :notice ] = "You have been added to the waiting list."
-      end
-      redirect_to @reservation.session
-    else
-      if admin_is_enrolling_someone_else
         flash[ :error ] = "Unable to make reservation for " + params[ :user_login ]
-        redirect_to @reservation.session
+      end
+      redirect_to attendance_path(@reservation.session) 
+    else
+      if success
+        if @reservation.confirmed?
+          flash[ :notice ] = "Your reservation has been confirmed."
+        else
+          flash[ :notice ] = "You have been added to the waiting list."
+        end
+        redirect_to @reservation.session 
       else
         @page_title = "Make a Reservation"
         render :action => 'new'
@@ -59,19 +74,24 @@ class ReservationsController < ApplicationController
     @reservation = Reservation.find( params[ :id ] )
     superuser =  current_user.admin? || @reservation.session.instructor?( current_user )
     
+    
     if @reservation.user != current_user && !superuser
       flash[ :error ] = "Reservations can only be cancelled by their owner, an admin, or an instructor." + current_user.to_s + " & " + @reservation.user.to_s
     elsif @reservation.session.time <= Time.now && !superuser
       flash[ :error ] = "Reservations cannot be cancelled once the session has begun."      
     else
       @reservation.destroy
-      flash[ :notice ] = "Your reservation has been cancelled."
+      if @reservation.user == current_user
+        flash[ :notice ] = "Your reservation has been cancelled."
+      else
+        flash[ :notice ] = "The reservation for #{@reservation.user.name} has been cancelled."
+      end
     end
     
-    if @reservation.user == current_user
+    if !superuser
       redirect_to reservations_path
     else
-      redirect_to @reservation.session
+      redirect_to request.referrer
     end
   end
   

@@ -1,20 +1,4 @@
-<% content_for :admin_tools do %>
-	<p class="download-link download-csv"><%= link_to "Download Attendance History", :format => :csv %></p>
-	<p><%= link_to "View Survey Results", topic_survey_results_path( @topic ) %>
-	<p><%= link_to "Update Topic Details", edit_topic_path %>
-  <p><%= link_to "Create New Session", new_topic_session_path( @topic ) %></p>
-<% end %>
-
-<% content_for :sidebar do %>
-  <div class="download-link download-calendar">
-    <%= link_to "[add all sessions to calendar]", :protocol => "webcal", :host => request.host, :port => request.port, :action => 'download' %>
-  </div>
-<% end %>
-
-<%= javascript_include_tag 'topic_form' %>
-<%= error_messages_for 'topic' %>
-
-<div id="session-details" class="session-list">
+<div id="session-details" class="session-list content-section">
   <h2>Upcoming Sessions</h2>
   <% if @topic.upcoming_sessions.size > 0 %>
     <%= session_list(@topic.upcoming_sessions) %>
@@ -23,7 +7,7 @@
   <% end %>
 </div>
 
-<div id="topic-details">
+<div id="topic-details" class="content-section">
   <h2>Topic Details</h2>
   <dl>
     <dt>Description:</dt>
@@ -45,7 +29,7 @@
   </dl>
 </div>
 
-<div id="past-session-details" class="session-list">
+<div id="past-session-details" class="session-list content-section">
 <% if @topic.past_sessions.size > 0 && current_user && current_user.admin? %>
   <h2>Past Sessions</h2>
   <%= session_list(@topic.past_sessions.reverse) %>

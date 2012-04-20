@@ -23,7 +23,7 @@ time, mark, audio, video {
   padding: 0;
   border: 0;
   font-size: 100%;
-  font: inherit
+  font: inherit;
   vertical-align: baseline;
 }
 /* HTML5 display-role reset for older browsers */
@@ -422,23 +422,26 @@ div.navigation {
 
 div.navigation p {
   border-bottom: #4b4b4b dotted 1px;
-  font-size: 1em;}
+  font-size: 1em;
+}
+
+div.navigation a {
+  color: #6C5828;
+}
+
+div.navigation a.selected {
+  font-weight: bold;
+  color: #4b4b4b;
+}
 
 div.navigation a:link {
-  color: #6C5828;
-  text-decoration:none;}
+  text-decoration:none;
+}
   
 div.navigation a:hover {
-  color: #6C5828;
-  text-decoration:underline;}
+  text-decoration:underline;
+}
 
-div.navigation a:visited {
-  color: #4b4b4b;
-  text-decoration:none;}
-  
-div.navigation a:active {
-  color: #4b4b4b;
-  text-decoration:none;}
 
 .logout-link {
   font-size: 70%;
@@ -457,7 +460,7 @@ div.admin-tools {
   background-color: #F6F6F6;
   border: 2px solid #4b4b4b;
   padding: 0.5em 0.5em 1.0em 0.5em;
-  width: 180px;
+  width: 190px;
   margin-top: 20px;
   margin-left: 10px;
   opacity: 0.8;
@@ -470,6 +473,8 @@ div.admin-tools {
 div.admin-tools h1 {
   color: #501214;
   border-bottom: #501214 dotted 1px;
+  padding-bottom: .25em;
+  font-size: 1.2em;
 }
 
 div.admin-tools div {
@@ -486,21 +491,24 @@ div.admin-tools p {
   padding: .25em 0;
 }
 
-div.admin-tools a:link {
+div.admin-tools a {
+  font-size: 16px;
+  font-weight: normal;
   color: #6C5828;
-  text-decoration:none;}
-  
-div.admin-tools a:hover {
-  color: #6C5828;
-  text-decoration:underline;}
+}
 
-div.admin-tools a:visited {
+div.admin-tools a.selected {
+  font-weight: bold;
   color: #4b4b4b;
-  text-decoration:none;}
-  
-div.admin-tools a:active {
-  color: #4b4b4b;
-  text-decoration:none;}
+}
+    
+div.admin-tools a:link {
+  text-decoration:none;
+}
+
+div.admin-tools a:hover {
+  text-decoration:underline;
+}
 
 div#contents {
   position: relative;
@@ -524,9 +532,16 @@ div.empty-list {
   padding-left: .5em;
 }
 
-div#topic-details h2, div#session-details h2, 
-div#past-session-details h2, form#new_survey_response h2,
-div#survey-responses h2 {
+.content-section {
+  margin: 1em 0 2em 0;
+}
+
+.content-section dl {
+  margin-top: -.5em;
+}
+
+.content-section h2 {
+  margin-bottom: 1em;
   padding-bottom: 2px;
   font-size: 1em;
   font-weight: bold;
@@ -535,11 +550,6 @@ div#survey-responses h2 {
   border-bottom-color: #501214;
 }
   
-div#topic-details, div#session-details, 
-div#past-session-details, div#survey-responses {
-  margin: 1em 0 2em 0;
-}
-
 div.survey-result {
   margin: 0.5em 0 1em 0;
 }
@@ -658,6 +668,78 @@ div.list-expand, div.list-collapse {
   padding-right: 16px;
 }
 
+table.attendance-list {
+  margin-top: -1em;
+  width: 100%;
+}
+
+table.attendance-list tr {
+  height: 3.5em;
+}
+
+table.attendance-list tr.even {
+  background-color: #f6f6f6;
+}
+
+table.attendance-list td {
+  padding: .25em .5em .25em .5em;
+  border-bottom: 1px #C6C6C6 solid;
+}
+
+table.attendance-list .attendance-radios {
+  width: 216px;
+  border-left: 1px #C6C6C6 solid;
+}
+
+table.attendance-list .attendance-actions {
+  width: 40px;
+  text-align: center;
+  border-left: 1px #C6C6C6 solid;
+}
+
+.special-accommodations {
+  font-style: italic;
+  font-size: 80%;
+  width: 326px;
+  cursor: pointer;
+}
+
+.special-accommodations.collapsed {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 2em;
+}
+
+table.attendance-list a.remind-link,
+table.attendance-list a.cancel-link {
+    display: inline-block;
+    color: transparent;
+    width: 16px;
+    height: 26px;
+}
+
+table.attendance-list a.remind-link {
+    background: url(/images/time_go.png) center no-repeat;
+}
+
+table.attendance-list a.cancel-link {
+    background: url(/images/delete.png) center no-repeat;
+}
+
+.attendance-submit {
+  float: right;
+}
+
+.hidden {
+  position:absolute;
+  left:-10000px;
+  top:auto;
+  width:1px;
+  height:1px;
+  overflow:hidden;
+}
+
 ul.reservation-list {
   margin-left: 0px;
   padding-left: 0px;
@@ -758,6 +840,27 @@ div.admin-options h3 {
   font-size: 1em;
 }
 
+div.admin-options strong {
+  font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', serif;
+  font-weight: bold;
+  color: #501214;
+}
+
+#cancel-session-dialog {
+  width: 500px;
+  padding: 2em;
+}
+
+#cancel-session-dialog p {
+  margin-top: 1em;
+  margin-bottom: 1.5em;
+}
+
+#cancel-session-dialog input[type=submit] {
+  margin-top: 1em;
+  margin-bottom: 1.5em;
+}
+
 span.radio-span {
   margin: 0.18em;
   padding: 0.18em;
@@ -849,12 +952,6 @@ div.workshop-materials .document {
   vertical-align: top;
   margin-right: 10px;
 }
-
-.special-accommodations {
-  font-style: italic;
-  font-size: 80%;
-}
-
 
 ul.instructor-list {
   padding-left: 0;

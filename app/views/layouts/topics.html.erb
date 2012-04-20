@@ -1,0 +1,25 @@
+<% content_for :admin_tools do %>
+	<% if @topic && !@topic.new_record? %>
+		<p class="download-link download-csv"><%= link_to "Download Attendance History", :format => :csv %></p>
+		<p><%= link_to "View Topic Details", @topic %>
+		<p><%= link_to "View Survey Results", topic_survey_results_path( @topic ) %>
+		<p><%= link_to "Update Topic Details", edit_topic_path %>
+	  <p><%= link_to "Create New Session", new_topic_session_path( @topic ) %></p>
+	<% end %>
+<% end %>
+
+<% content_for :sidebar do %>
+	<% if @topic && !@topic.new_record? %>
+	  <div class="download-link download-calendar">
+	    <%= link_to "[add all sessions to calendar]", :protocol => "webcal", :host => request.host, :port => request.port, :action => 'download' %>
+	  </div>
+	<% end %>
+<% end %>
+
+<% content_for :content do %>
+	<%= javascript_include_tag 'topic_form' %>
+	<%= error_messages_for 'topic' %>
+	<%= yield %>
+<% end %>
+
+<%= render :file => 'layouts/application' %>

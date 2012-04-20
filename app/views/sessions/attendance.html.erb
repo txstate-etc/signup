@@ -1,0 +1,139 @@
+<%= javascript_include_tag 'attendance' %>
+
+<div id="session-details" class="content-section">
+  <h2>Session Details</h2>
+  <dl>
+    <dt>Time:</dt>
+  	<% if @session.multiple_occurrences? %>
+      <dd>This session meets <%= @session.occurrences.count %> times:</dd>
+    <% end %>
+    <% @session.occurrences.each do |o| %>
+      <dd><%=h formatted_time_range(o.time, @session.topic.minutes) %></dd>
+    <% end %>
+  	<% if @session.topic.upcoming_sessions.size > 1 %>
+  	  <dd><%= link_to 'Need to look for another session?', @session.topic %></dd>
+    <% end %>
+  	<% if @session.registration_period_defined? %>
+    	<dt>Registration Period:</dt>
+    	<dd><%=h registration_period(@session) %></dd>
+  	<% end %>
+  	<dt>Location:</dt>
+  	<dd><%=h @session.location %></dd>
+  	<% if @session.instructors.size > 1 %>
+  	  <dt>Instructors:</dt>
+	  <% else %>
+	    <dt>Instructor:</dt>
+	  <% end %>
+  	<dd>
+  	  <ul class="instructor-list">
+  	    <% @session.instructors.each do |instructor| %>
+  	      <li><%= link_to instructor.name , 'mailto:' + instructor.email %></li>
+  	    <% end %>
+  	  </ul>
+  	</dd>
+  	<dt>Registration:</dt>
+  	<dd>
+  		<%=h @session.confirmed_reservations.size %>
+  		<% if @session.seats %>
+  			/ <%=h @session.seats %>
+  		<% end %> 
+  		registered
+  		<% if @session.waiting_list.size > 0 %>
+  			(<%=h @session.waiting_list.size %> waiting)
+  		<% end %>
+			<br/><%= link_to 'Print Attendance Sheet', {:action => :attendance, :id => @session, :format => "pdf" } %>
+		</dd>
+  </dl>
+</div>
+
+
+
+<% if @session.confirmed_reservations.size > 0 %>
+	<div class="content-section">
+		<h2>Confirmed Reservations</h2>
+		<% form_for @session, :url => { :action => "update" } do |session_form| %>
+			<%= hidden_field :reservations_update, :true %>
+			<table id="confirmed-reservations" class="attendance-list" >
+				<thead class="hidden">
+					<tr>
+						<th scope="col" class="attendance-user">Reservation Details</th>
+						<th scope="col" class="attendance-actions">Actions</th>	
+						<th scope="col" class="attendance-radios">Attendance</th>
+				</thead>
+				<tbody>
+					<% @session.confirmed_reservations.each do |reservation| %>
+					<tr class="<%= cycle("even", "odd") %>">
+						<% session_form.fields_for :reservations, reservation do |reservation_fields|%>
+							<td class="attendance-user">	
+								<%= link_to reservation.user.name, 'mailto:' + reservation.user.email %>
+								<%=h ', ' + reservation.user.department if !reservation.user.department.blank? %>
+								<% if !reservation.special_accommodations.blank? %>
+									<p class="special-accommodations collapsed" title="<%=h reservation.special_accommodations %>"><%=h reservation.special_accommodations %></p>
+								<% end %>
+							</td>
+							<td class="attendance-actions">
+								<%= link_to 'cancel', reservation, :title => 'Cancel reservation', :class => "cancel-link", :method => :delete, :confirm => "Are you sure you want to cancel this reservation?" %>
+								<% if @session.last_time >= Time.now %>
+								  <%= link_to 'remind', send_reminder_path(reservation), {:title => 'Send reminder', :class => "remind-link", :confirm => "Are you sure you want to send an email reminder to #{reservation.user.name}?"}%>
+								<% end %>
+							</td>
+							<td class="attendance-radios"><span class="radio-span">
+								<%= reservation_fields.radio_button :attended, Reservation::ATTENDANCE_UNKNOWN %>
+								<%= reservation_fields.label :attended_0, '?' %>
+								</span><span class="radio-span">
+								<%= reservation_fields.radio_button :attended, Reservation::ATTENDANCE_ATTENDED %>
+								<%= reservation_fields.label :attended_2, 'Attended' %>
+								</span><span class="radio-span">
+								<%= reservation_fields.radio_button :attended, Reservation::ATTENDANCE_MISSED %>
+								<%= reservation_fields.label :attended_1, 'Missed' %>
+								</span>
+							</td>
+						</tr>
+						<% end %>
+					<% end%>
+				</tbody>
+			</table>
+			<%= submit_tag "Record Attendance", :class => "attendance-submit" %>
+		<% end %>
+	</div>
+<% end %>
+
+<% if @session.waiting_list.size > 0 %>
+	<div class="content-section">
+		<h2>Waiting List</h2>
+		<table id="waiting-list" class="attendance-list" >
+			<thead class="hidden">
+				<tr>
+					<th scope="col" class="attendance-user">Reservation Details</th>
+					<th scope="col" class="attendance-actions">Actions</th>	
+			</thead>
+			<tbody>
+				<% @session.waiting_list.each do |reservation| %>
+				<tr class="<%= cycle("even", "odd") %>">
+						<td class="attendance-user">	
+							<%= link_to reservation.user.name, 'mailto:' + reservation.user.email %>
+							<%=h ', ' + reservation.user.department if !reservation.user.department.blank? %>
+							<% if !reservation.special_accommodations.blank? %>
+								<p class="special-accommodations collapsed" title="<%=h reservation.special_accommodations %>"><%=h reservation.special_accommodations %></p>
+							<% end %>
+						</td>
+						<td class="attendance-actions">
+							<%= link_to 'cancel', reservation, :title => 'Cancel reservation', :class => "cancel-link", :method => :delete, :confirm => "Are you sure you want to cancel this reservation?" %>
+						</td>
+					</tr>
+				<% end%>
+			</tbody>
+		</table>
+	</div>
+<% end %>
+
+<% if @session.time > Time.now %>
+	<div class="content-section">
+		<h2>Enroll Another Person</h2>
+		<%= form_tag :controller => :reservations, :action => :create, :session_id => @session.id %>
+			<%= label_tag "user_login", "Login ID:" %>
+			<%= text_field_tag "user_login", nil, :size => 7 %>
+			<%= submit_tag "Enroll" %>
+		</form>
+	</div>
+<% end %>

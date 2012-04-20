@@ -10,7 +10,7 @@ class SessionsController < ApplicationController
       render(:file => 'shared/404.erb', :status => 404, :layout => true) unless @session
       return
     end
-    
+        
     @page_title = @session.topic.name
     @reservation = Reservation.find_by_user_id_and_session_id( current_user.id, @session.id ) if current_user
   end
@@ -22,12 +22,26 @@ class SessionsController < ApplicationController
       @session.topic = topic
       @session.occurrences.build
       @session.instructors.build
-      @page_title = "Create New Session"
+      @page_title = @session.topic.name
     else
       redirect_to topic
     end
   end
   
+  def edit
+    if current_user && current_user.admin?
+      begin
+        @session = Session.find( params[ :id ] )
+      rescue ActiveRecord::RecordNotFound
+        render(:file => 'shared/404.erb', :status => 404, :layout => true) unless @session
+        return
+      end
+      @page_title = @session.topic.name
+    else
+      redirect_to topics_path
+    end
+  end
+
   def create
     if current_user && current_user.admin?
       @session = Session.new( params[ :session ] )
@@ -37,7 +51,7 @@ class SessionsController < ApplicationController
       else
         @session.occurrences.build
         @session.instructors.build
-        @page_title = "Create New Session"
+        @page_title = @session.topic.name
         render :action => 'new'
       end
     else
@@ -82,9 +96,22 @@ class SessionsController < ApplicationController
   def attendance
     @session = Session.find( params[ :id ] )
     if current_user && current_user.admin? || @session.instructor?( current_user )
-      send_data AttendanceReport.new.to_pdf(@session), :disposition => 'inline', :type => 'application/pdf'
+      @page_title = @session.topic.name
+      respond_to do |format|
+        format.html
+        format.pdf { send_data AttendanceReport.new.to_pdf(@session), :disposition => 'inline', :type => 'application/pdf' }
+      end
     else
       redirect_to @session
+    end
+  end
+
+  def survey_results
+    if current_user && current_user.admin?
+      @session = Session.find( params[ :id ] )
+      @page_title = @session.topic.name
+    else
+      redirect_to topics_path
     end
   end
   

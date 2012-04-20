@@ -1,9 +1,11 @@
-<%= error_messages_for 'session' %>
-
-<% form_for( [ @session.topic, @session ] ) do |f| %>
-	<%= render :partial => "form_fields", :locals => { :f => f }%>
+<div id="session-details" class="content-section">
+	<h2>Create New Session</h2>
+	<% form_for( [ @session.topic, @session ] ) do |f| %>
+		<%= render :partial => "form_fields", :locals => { :f => f }%>
 	
-	<br/><br/>
+		<br/><br/>
 	
-	<%= submit_tag "Create Session"%>
-<% end %>
+		<%= submit_tag "Create Session"%>
+		<%= link_to "Cancel", @session.topic %>
+	<% end %>
+</div>

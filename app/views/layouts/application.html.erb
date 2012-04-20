@@ -44,7 +44,7 @@
         <% end %>
   		  <div id="contents">
   		    <h1><%= image_tag(@title_image, :class=>"title-image") if @title_image %><%= @page_title %></h1>
-  		    <%= yield %>
+  		    <%= yield(:content) or yield %>
   		  </div>
   		</div>
     </div>

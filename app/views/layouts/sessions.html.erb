@@ -1,0 +1,25 @@
+<% content_for :admin_tools do %>
+	<% if @session && !@session.new_record? %>
+		<p><%= link_to "View Session Details", @session %>
+		<p><%= link_to "View Reservations", attendance_path( @session ) %>
+		<%- if @session.last_time < Time.now -%>
+			<p><%= link_to "View Survey Results", session_survey_results_path( @session ) %>
+		<%- end -%>
+		<p><%= link_to "Update Session Details", edit_session_path %>
+		<% if @session.time > Time.now && !@session.cancelled %>
+			<p><%= link_to "Cancel Session", '#', :id => 'cancel-session-link' %>
+		<% end %>
+	<% end %>
+  <p><%= link_to "Create New Session", new_topic_session_path( @session.topic ) %></p>
+<% end %>
+
+<% content_for :content do %>
+	<%= error_messages_for 'session' %>
+
+	<%= yield %>
+
+	<%= render :partial => "cancel", :locals => { :session => @session }%>
+
+<% end %>
+
+<%= render :file => 'layouts/application' %>

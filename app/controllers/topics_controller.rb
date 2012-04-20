@@ -11,6 +11,7 @@ class TopicsController < ApplicationController
     end
     
     @page_title = "Available Topics"
+    render :layout => 'application'
   end
 
   def filter
@@ -25,7 +26,7 @@ class TopicsController < ApplicationController
     begin
       @topic = Topic.find( params[:id] )
     rescue ActiveRecord::RecordNotFound
-      render(:file => 'shared/404.erb', :status => 404, :layout => true) unless @session
+      render(:file => 'shared/404.erb', :status => 404, :layout => true) unless @topic
       return
     end
 
@@ -56,7 +57,7 @@ class TopicsController < ApplicationController
       begin
         @topic = Topic.find( params[:id] )
       rescue ActiveRecord::RecordNotFound
-        render(:file => 'shared/404.erb', :status => 404, :layout => true) unless @session
+        render(:file => 'shared/404.erb', :status => 404, :layout => true) unless @topic
         return
       end
       @page_title = "Update Topic Details"

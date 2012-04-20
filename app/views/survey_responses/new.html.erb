@@ -1,5 +1,6 @@
 <%= error_messages_for 'survey_response' %>
 
+<div class="content-section">
 <% form_for( @survey_response ) do |f| %>
 	<h2>Course Evaluation Survey</h2>
 	<%= f.hidden_field :reservation_id %>
@@ -89,3 +90,4 @@
 	
 	<%= submit_tag "Submit Survey Response" %>
 <% end %>
+</div>

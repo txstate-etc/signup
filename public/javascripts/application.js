@@ -73,3 +73,12 @@ function set_initial_occurrence_value(link) {
   
   $(link).up().previous('.fields').select('input[type=text]')[0].value = value;
 }
+
+// Highlight the sidebar link that matches the page we are on, if any.
+Event.observe(document, 'dom:loaded', function () {
+	$$('div.navigation a', 'div.admin-tools a').each(function(link) {
+		if (link.href == window.location.href.split("#")[0]) {
+			link.addClassName('selected');
+		}
+	});
+});

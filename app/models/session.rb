@@ -196,7 +196,8 @@ class Session < ActiveRecord::Base
   end
   
   def survey_responses
-    Reservation.all( :joins => :survey_response, :include => :survey_response, :conditions => [ 'session_id = ?', self ] ).collect{|reservation| reservation.survey_response}
+    Reservation.all( :joins => :survey_response, :include => :survey_response,
+     :conditions => [ 'session_id = ?', self ] ).collect{|reservation| reservation.survey_response}.sort{|a,b| b.created_at <=> a.created_at}
   end
   
   def average_instructor_rating
@@ -205,6 +206,11 @@ class Session < ActiveRecord::Base
   
   def average_rating
     survey_responses.inject(0.0) { |sum, rating| sum + rating.class_rating } / survey_responses.size
+  end
+
+  def average_applicability_rating
+    ratings = survey_responses.reject { |rating| rating.applicability.nil? }
+    ratings.inject(0.0) { |sum, rating| sum + rating.applicability } / ratings.size
   end
   
   private
