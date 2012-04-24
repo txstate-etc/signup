@@ -149,6 +149,7 @@ dt {
 .topbanner-content a {
   color: #501214;
   text-decoration: none;
+  text-shadow: 1px 1px 1px #ddd;
 }
 
 .topbanner-homelink {
