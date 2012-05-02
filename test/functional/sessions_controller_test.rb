@@ -111,16 +111,10 @@ class SessionsControllerTest < ActionController::TestCase
     
   test "Should display printable attendance sheet" do
     login_as( users( :instructor1 ) )
-    get :attendance, {'id' => sessions( :gato_overbooked )}
+    get :attendance, {'id' => sessions( :gato_overbooked ), 'format' => 'pdf'}
     assert_response :success
-    assert_equal @response.content_type, 'application/pdf'
-    assert_not_nil assigns(:session)
-    # assert_not_nil assigns(:items)
-    # assert_select 'ul' do |elements|
-    #   assert_equal elements.length, assigns(:page_count)
-    #   assert_select 'li', 2
-    # end
-    
+    assert_equal 'application/pdf', @response.content_type
+    assert_not_nil assigns(:session)    
   end
   
   test "Should be able to update attendance" do

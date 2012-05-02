@@ -10,12 +10,12 @@ class SurveyResponsesControllerTest < ActionController::TestCase
     assert_response :success
 
     assert_difference 'SurveyResponse.all.size', +1 do
-      get :create, :reservation_id => reservations( :gato_past_plainuser3 ).id, :survey_response => { :reservation_id => reservations( :gato_past_plainuser3 ).id, :class_rating => 2, :instructor_rating =>2 }
+      get :create, :reservation_id => reservations( :gato_past_plainuser3 ).id, :survey_response => { :reservation_id => reservations( :gato_past_plainuser3 ).id, :class_rating => 2, :instructor_rating =>2, :applicability => 2 }
     end
     assert_response :redirect
 
     assert_difference 'SurveyResponse.all.size', +0 do
-      get :create, :reservation_id => reservations( :gato_past_plainuser3 ).id, :survey_response => { :reservation_id => reservations( :gato_past_plainuser3 ).id, :class_rating => 2, :instructor_rating =>2 }
+      get :create, :reservation_id => reservations( :gato_past_plainuser3 ).id, :survey_response => { :reservation_id => reservations( :gato_past_plainuser3 ).id, :class_rating => 2, :instructor_rating =>2, :applicability => 2 }
     end
     assert_response :success
 
@@ -25,7 +25,7 @@ class SurveyResponsesControllerTest < ActionController::TestCase
     login_as( users( :plainuser3 ) )
 
     assert_difference 'SurveyResponse.all.size', +0 do
-      get :create, :reservation_id => reservations( :plainuser3 ).id, :survey_response => { :reservation_id => reservations( :plainuser3 ).id, :class_rating => 2, :instructor_rating =>2 }
+      get :create, :reservation_id => reservations( :plainuser3 ).id, :survey_response => { :reservation_id => reservations( :plainuser3 ).id, :class_rating => 2, :instructor_rating =>2, :applicability => 2 }
     end
     assert_response :success
   end
@@ -34,7 +34,7 @@ class SurveyResponsesControllerTest < ActionController::TestCase
     login_as( users( :plainuser1 ) )
 
     assert_difference 'SurveyResponse.all.size', +0 do
-      get :create, :reservation_id => reservations( :multi_time_topic_started_plainuser1 ).id, :survey_response => { :reservation_id => reservations( :multi_time_topic_started_plainuser1 ).id, :class_rating => 2, :instructor_rating =>2 }
+      get :create, :reservation_id => reservations( :multi_time_topic_started_plainuser1 ).id, :survey_response => { :reservation_id => reservations( :multi_time_topic_started_plainuser1 ).id, :class_rating => 2, :instructor_rating =>2, :applicability => 2 }
     end
     assert_response :success
   end
@@ -43,7 +43,7 @@ class SurveyResponsesControllerTest < ActionController::TestCase
     login_as( users( :plainuser3 ) )
 
     assert_difference 'SurveyResponse.all.size', +0 do
-      get :create, :reservation_id => reservations(  :gato_cancelled_plainuser3 ).id, :survey_response => { :reservation_id => reservations(  :gato_cancelled_plainuser3 ).id, :class_rating => 2, :instructor_rating =>2 }
+      get :create, :reservation_id => reservations(  :gato_cancelled_plainuser3 ).id, :survey_response => { :reservation_id => reservations(  :gato_cancelled_plainuser3 ).id, :class_rating => 2, :instructor_rating =>2, :applicability => 2 }
     end
     assert_response :success    
   end
@@ -52,7 +52,7 @@ class SurveyResponsesControllerTest < ActionController::TestCase
     login_as( users( :plainuser1 ) )
 
     assert_difference 'SurveyResponse.all.size', +0 do
-      get :create, :reservation_id => reservations( :gato_past_plainuser3 ).id, :survey_response => { :reservation_id => reservations( :gato_past_plainuser3 ).id, :class_rating => 2, :instructor_rating =>2 }
+      get :create, :reservation_id => reservations( :gato_past_plainuser3 ).id, :survey_response => { :reservation_id => reservations( :gato_past_plainuser3 ).id, :class_rating => 2, :instructor_rating =>2, :applicability => 2 }
     end
     assert_response :redirect
     

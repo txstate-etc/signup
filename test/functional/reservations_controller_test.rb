@@ -48,7 +48,7 @@ class ReservationsControllerTest < ActionController::TestCase
     assert_difference 'Reservation.count', +1, "Admin couldn't create reservation" do
       get :create, :session_id => sessions( :gato ), :session => { :session_id => sessions( :gato) }, :user_login => users( :plainuser3 ).login
     end
-    assert_redirected_to sessions( :gato )
+    assert_redirected_to attendance_path( sessions( :gato ) )
     assert_equal assigns( :reservation ).user, users( :plainuser3 ), "Admin made reservation for plainuser3, but it wasn't recorded as plainuser3"
   end
   
