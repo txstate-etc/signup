@@ -59,7 +59,7 @@ class User < ActiveRecord::Base
     logger.debug("LDAP filter = #{filter}")
     
     bind_dn = 'cn=itsldap,ou=TxState Service Accounts,dc=matrix,dc=txstate,dc=edu'
-    bind_pass = LDAP_PASSWORD
+    bind_pass = begin LDAP_PASSWORD rescue "" end
     
     logger.info("Starting import from LDAP: " + Time.now.to_s )
 
