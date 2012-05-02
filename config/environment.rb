@@ -20,18 +20,8 @@ Rails::Initializer.run do |config|
   # config.gem "hpricot", :version => '0.6', :source => "http://code.whytheluckystiff.net"
   # config.gem "sqlite3-ruby", :lib => "sqlite3"
   # config.gem "aws-s3", :lib => "aws/s3"
-  config.gem "ri_cal", :version => '0.8.7'
-  config.gem "net-ldap", :version => '0.1.1'
-  config.gem "fastercsv", :version => '1.5.3'
-  config.gem "searchlogic", :version => '2.4.27'
-  config.gem "pdf-reader", :lib => "pdf/reader"
-  config.gem "Ascii85", :lib => "ascii85"
-  config.gem "prawn", :version => '0.11.1'
-  config.gem "calendar_date_select", :version => '1.16.2'
-  config.gem "repeated_auto_complete"
-  config.gem "delayed_job", :version => '~>2.0.4'
-  config.gem "whenever"
-  config.gem "paperclip", :version => '~>2.7.0'
+  
+  # NOTE: gems are now defined in Gemfile for bundler support
   
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named
