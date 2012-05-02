@@ -17,3 +17,7 @@ gem "delayed_job", '~>2.0.4'
 gem "whenever"
 gem "paperclip", '~>2.7.0'
 
+group :development, :test do
+  gem 'rake', '~> 0.9.2.2'
+  gem "rdoc", '~> 3.12'
+end
