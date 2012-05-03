@@ -6,7 +6,7 @@
 			<p>
 				Are you sure you want to cancel this class? All registered attendees will be notified that the session has been cancelled.
 			</p>
-			<%= form_tag({}, { :method => :delete }) %>
+			<%= form_tag({:action => 'show'}, { :method => :delete }) %>
 				<%= label_tag "custom_message", "Reason for Cancellation (optional):", :class => 'field-label' %>
 				<%= text_area_tag "custom_message", nil, :rows => 10, :cols => 60 %><br/>
 				<%= submit_tag "Cancel Session" %>
