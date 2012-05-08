@@ -7,7 +7,7 @@ class SessionsController < ApplicationController
     begin
       @session = Session.find( params[:id] )
     rescue ActiveRecord::RecordNotFound
-      render(:file => 'shared/404.erb', :status => 404, :layout => true) unless @session
+      render(:file => 'shared/404.erb', :status => 404, :layout => 'application') unless @session
       return
     end
         
@@ -33,7 +33,7 @@ class SessionsController < ApplicationController
       begin
         @session = Session.find( params[ :id ] )
       rescue ActiveRecord::RecordNotFound
-        render(:file => 'shared/404.erb', :status => 404, :layout => true) unless @session
+        render(:file => 'shared/404.erb', :status => 404, :layout => 'application') unless @session
         return
       end
       @page_title = @session.topic.name
