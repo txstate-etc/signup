@@ -17,6 +17,7 @@ iframe.ie6_blocker {
   border-top:1px solid #777;
   border-bottom:1px solid #777;
   color: white !important;
+  text-align:center;
 }
 
 .calendar_date_select .cds_buttons {
