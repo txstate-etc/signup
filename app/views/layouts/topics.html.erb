@@ -1,6 +1,6 @@
 <% content_for :admin_tools do %>
 	<% if @topic && !@topic.new_record? %>
-		<p class="download-link download-csv"><%= link_to "Download Attendance History", :format => :csv %></p>
+		<p class="download-link download-csv"><%= link_to "Download Attendance History", topic_path( @topic, :format => :csv ) %></p>
 		<p><%= link_to "View Topic Details", @topic %>
 		<p><%= link_to "View Survey Results", topic_survey_results_path( @topic ) %>
 		<p><%= link_to "Update Topic Details", edit_topic_path %>
