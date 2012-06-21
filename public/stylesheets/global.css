@@ -56,6 +56,13 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
+label {
+  cursor: pointer;
+}
+input[type="radio"] {
+  margin: 3px 0 3px 2px;
+  padding: 0;
+}
 
 .serif {
   font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', serif;
@@ -683,7 +690,7 @@ table.attendance-list tr.even {
 }
 
 table.attendance-list td {
-  padding: .25em .5em .25em .5em;
+  padding: 4px 8px;
   border-bottom: 1px #C6C6C6 solid;
 }
 
@@ -863,8 +870,9 @@ div.admin-options strong {
 }
 
 span.radio-span {
-  margin: 0.18em;
-  padding: 0.18em;
+  margin: 4px;
+  padding: 0;
+  white-space: nowrap;
 }
 
 form#new_survey_response h2 {
