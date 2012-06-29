@@ -1,5 +1,5 @@
 <% if ( current_user && current_user.admin? ) or session.instructor?( current_user ) %>
-	<% if session.time && session.time > Time.now && !session.cancelled %>
+	<% if !session.new_record? && session.time && session.time > Time.now && !session.cancelled %>
 		<%= javascript_include_tag 'modal' %>
 		<div id="cancel-session-dialog" class="content-section">
 			<h2>Cancel Session</h2>
