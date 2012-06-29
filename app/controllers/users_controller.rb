@@ -2,10 +2,12 @@ class UsersController < ApplicationController
   def index
     return if params[ :search ].blank?
     conditions = []
+    values = []
     params[ :search ].split(/\s+/).each do |word|
-      conditions << "(first_name LIKE '%#{word}%' OR last_name LIKE '%#{word}%' OR login LIKE '%#{word}%')"
+      conditions << "(first_name LIKE ? OR last_name LIKE ? OR login LIKE ?)"
+      3.times { values << "%#{word}%" }
     end
-    @users = User.all(:conditions => conditions.join(" AND "))
+    @users = User.all(:conditions => [conditions.join(" AND ")] + values)
   end
 
   def logout
