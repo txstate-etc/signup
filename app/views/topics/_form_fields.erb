@@ -1,5 +1,5 @@
 <%= f.label :name, "Topic Name:", :class => 'field-label' %>
-<%= f.text_field :name %>
+<%= f.text_field :name, :size => 80 %>
 
 <%= f.label :description, "Description of Topic:", :class => 'field-label' %>
 <%= f.text_area :description, :cols => 80, :rows => 20 %>
@@ -11,7 +11,7 @@
 <%= f.text_field :minutes, :size => 3 %>
 
 <%= f.label :url, "URL with More Information on Class:", :class => 'field-label' %>
-<%= f.text_field :url %>
+<%= f.text_field :url, :size => 80 %>
 
 <div class="survey-options">
 	<label class="field-label">Post-Class Survey:</label>

@@ -1,6 +1,9 @@
 require 'net/ldap'
 
 class User < ActiveRecord::Base
+  has_many :permissions
+  has_many :departments, :through => :permissions
+  
   validates_presence_of :last_name, :login, :email
   
   def name
@@ -14,6 +17,16 @@ class User < ActiveRecord::Base
     
   def email_header
     "\"#{name}\" <#{email}>"
+  end
+  
+  def self.find_by_name_and_login( name )
+    return nil if name.blank?
+    elements = name.split(/[(|)]/)
+    if elements.size > 1
+      User.find_by_login( elements.last )
+    else
+      User.find_by_login( elements[0] )
+    end
   end
   
   def self.find_or_lookup_by_login(login)

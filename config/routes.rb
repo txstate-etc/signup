@@ -47,7 +47,7 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'topics/filter/:filter', :controller => :topics, :action => :filter
   map.connect 'logout', :controller => :users, :action => :logout
   
-  map.resources :departments
+  map.resources :departments, :collection => { :manage => :get }
   map.resources :users, :only => [ :index ]
   
   map.resources :topics, :shallow => true do |topic|

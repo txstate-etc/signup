@@ -611,20 +611,7 @@ ul#topic-list li a:link, ul#department-list li a:link  {
 }
 
 ul#topic-list li a:hover, ul#department-list li a:hover {
-  display: block;
   text-decoration: underline;
-}
-
-ul#topic-list li a:visited, ul#department-list li a:visited{
-  display: block;
-  text-decoration: none;
-  color: #4b4b4b; 
-}
-
-ul#topic-list li a:active, ul#department-list li a:active {
-  display: block;
-  text-decoration: none;
-  color: #836c31; 
 }
 
 ul#topic-list li div.session-info {
@@ -975,4 +962,26 @@ ul.instructor-list li {
 
 #contents div.dialog {
   margin-left: 4em;
+}
+
+div#manage-departments {
+  margin: 20px 0;
+  width: 600px;
+}
+
+div#manage-departments #actions {
+  margin-bottom: 0;
+}
+
+div#manage-departments ul {
+  margin-top: -1em;
+}
+
+div#manage-departments li {
+  padding: 10px 6px;
+  border-bottom: 1px solid #C6C6C6;
+}
+
+div#manage-departments li.even {
+  background-color: #F6F6F6;
 }

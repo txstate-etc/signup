@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120413203558) do
+ActiveRecord::Schema.define(:version => 20120804172551) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -60,6 +60,13 @@ ActiveRecord::Schema.define(:version => 20120413203558) do
 
   add_index "occurrences", ["session_id", "time"], :name => "unique_occurrence_times_in_session", :unique => true
   add_index "occurrences", ["session_id"], :name => "index_occurrences_on_session_id"
+
+  create_table "permissions", :force => true do |t|
+    t.integer  "department_id"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "reservations", :force => true do |t|
     t.integer  "user_id",                               :null => false

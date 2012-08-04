@@ -247,13 +247,7 @@ class Session < ActiveRecord::Base
   end
   
   def find_instructor( name )
-    return nil if name.blank?
-    elements = name.split(/[(|)]/)
-    if elements.size > 1
-      User.find_by_login( elements.last )
-    else
-      User.find_by_login( elements[0] )
-    end
+    User.find_by_name_and_login( name )
   end
   
 end
