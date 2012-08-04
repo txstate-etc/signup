@@ -41,7 +41,10 @@
   		<% if @session.waiting_list.size > 0 %>
   			(<%=h @session.waiting_list.size %> waiting)
   		<% end %>
-			<br/><%= link_to 'Print Attendance Sheet', {:action => :attendance, :id => @session, :format => "pdf" } %>
+  		<% if @session.confirmed_reservations.size > 0 %>
+			  <br/><%= link_to 'Print Attendance Sheet', {:action => :attendance, :id => @session, :format => "pdf" } %>
+			  <br/><%= link_to 'Email All Participants', mailto_all(@session) %>
+			<% end %>
 		</dd>
   </dl>
 </div>

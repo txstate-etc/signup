@@ -4,4 +4,11 @@ module SessionsHelper
     end_time = session.reg_end.blank? ? "the start of class." : session.reg_end
     return "From #{start_time} until #{end_time}"
   end
+
+  def mailto_all(session)
+    mailto = "mailto:#{session.instructors[0].email}"
+    mailto << "?subject=Update: #{session.topic.name}"
+    mailto << '&bcc=' << session.confirmed_reservations.map { |r| r.user.email }.join(',') unless session.confirmed_reservations.blank?
+    mailto
+  end
 end
