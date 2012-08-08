@@ -48,7 +48,7 @@ class User < ActiveRecord::Base
     return true if self.admin?
     
     # Non-admins can only edit things in their own departments
-    return false if self.departments.blank? && !instructor?
+    return false if !self.editor? && !instructor?
     
     # Return true if we are just being asked about general editing permissions
     return true if item.nil?
@@ -56,17 +56,21 @@ class User < ActiveRecord::Base
     # Only admins can edit departments
     return false if item.is_a? Department
     
-    # Non-admins can edit topics in their department
+    # Non-admins can create and edit topics in their department
+    # Instructors cannot edit topics
     if item.is_a? Topic 
+      return self.editor? if item.new_record?
       return self.departments.include?(item.department)
     end
     
     # Non-admins can edit sessions for topics in their department
+    # Instructors can edit sessions they are the instructor of.
     if item.is_a? Session 
       return self.departments.include?(item.topic.department) || item.instructor?( self )
     end
     
     # Non-admins can edit reservations for topics in their department
+    # Instructors can edit reservations for sessions they are the instructor of.
     if item.is_a? Reservation 
       return self.departments.include?(item.session.topic.department) || item.session.instructor?( self )
     end

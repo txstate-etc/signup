@@ -81,8 +81,8 @@ class TopicsController < ApplicationController
   end
   
   def new
-    if authorized?
-      @topic = Topic.new
+    @topic = Topic.new
+    if authorized? @topic
       @page_title = "Create New Topic"
     else
       redirect_to topics_path

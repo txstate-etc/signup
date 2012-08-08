@@ -50,9 +50,9 @@ gato_past_plainuser3:
     session: gato_past
     attended: <%= Reservation::ATTENDANCE_MISSED %>
     
-gato_past_survey_sent_plainuser1:
+gato_past_surveys_sent_plainuser1:
     user: plainuser1
-    session: gato_past_survey_sent
+    session: gato_past_surveys_sent
     
 tracs_past_plainuser1:
     user: plainuser1

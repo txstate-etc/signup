@@ -17,10 +17,12 @@ class ApplicationController < ActionController::Base
     return true if session[ :user ]
     
     if session[ :cas_user ]
-      session[ :user ] = User.find_or_lookup_by_login(session[ :cas_user ]).id
+      user = User.find_or_lookup_by_login(session[ :cas_user ])
+      session[ :user ] = user.id if user
     else
       return false unless CASClient::Frameworks::Rails::Filter.filter( self )
-      session[ :user ] = User.find_or_lookup_by_login(session[ :cas_user ]).id if session[ :cas_user ] 
+      user = User.find_or_lookup_by_login(session[ :cas_user ]) if session[ :cas_user ] 
+      session[ :user ] = user.id if user
     end
     
     if session[:user].blank?

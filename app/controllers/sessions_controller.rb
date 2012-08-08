@@ -56,7 +56,7 @@ class SessionsController < ApplicationController
         render :action => 'new'
       end
     else
-      redirect_to @session
+      redirect_to root_url
     end
   end
   

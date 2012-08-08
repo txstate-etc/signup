@@ -97,10 +97,10 @@ class TopicsControllerTest < ActionController::TestCase
     assert_equal assigns( :topics ).count, 3
   end
   
-  test "Admins should see all topics, regardless of whether courses are scheduled or not" do
+  test "Admins should only see topics with scheduled sessions" do
     login_as( users( :admin1 ) )
     get :index
-    assert_equal assigns( :topics ).count, 5
+    assert_equal assigns( :topics ).count, 3
   end
   
   test "Verify updates working correctly" do
@@ -114,6 +114,43 @@ class TopicsControllerTest < ActionController::TestCase
     put :update, :id => topics( :gato ), :topic => { :department => nil }
     assert_match(/problems updating/, flash[:error])
     assert_response :success
+  end
+  
+  test "Admins can manage any topic" do
+    login_as( users( :admin1 ) )
+    get :manage
+    assert_response :success
+    assert_equal 3, assigns( :departments ).count
+    assert_equal 5, assigns( :topics ).count
+  end
+  
+  test "Editors can manage topics in their department" do
+    login_as( users( :editor1 ) )
+    get :manage
+    assert_response :success
+    assert_equal 1, assigns( :departments ).count
+    assert_equal 3, assigns( :topics ).count
+  end
+  
+  test "Instructors can manage topics they are instructors for" do
+    login_as( users( :instructor1 ) )
+    get :manage
+    assert_response :success
+    assert_equal 2, assigns( :departments ).count
+    assert_equal 4, assigns( :topics ).count
+
+    login_as( users( :instructor2 ) )
+    get :manage
+    assert_response :success
+    assert_equal 1, assigns( :departments ).count
+    assert_equal 1, assigns( :topics ).count
+  end
+  
+  test "Normal users cannot manage topics" do
+    login_as( users( :plainuser1 ) )
+    get :manage
+    assert_response :redirect
+    assert_redirected_to topics_url
   end
   
 end
