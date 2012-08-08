@@ -7,7 +7,7 @@ class UsersController < ApplicationController
       conditions << "(first_name LIKE ? OR last_name LIKE ? OR login LIKE ?)"
       3.times { values << "%#{word}%" }
     end
-    @users = User.all(:conditions => [conditions.join(" AND ")] + values)
+    @users = User.all(:select => "first_name, last_name, login", :conditions => [conditions.join(" AND ")] + values)
   end
 
   def logout

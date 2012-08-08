@@ -27,12 +27,14 @@
         <div class="sidebar">
           <%= yield :sidebar %>
         </div>
-        <% if current_user && current_user.admin? %>
+        <% if authorized? %>
           <div class="admin-tools">
             <h1>ADMIN TOOLS</h1>
       		  <%= yield :admin_tools %>
-            <p><%= link_to "Create New Topic", new_topic_path %></p>
-            <p><%= link_to "Manage Departments", manage_departments_path %></p>
+            <p><%= link_to "Manage Topics", manage_topics_path %></p>
+            <% if current_user.admin? %>
+              <p><%= link_to "Manage Departments", manage_departments_path %></p>
+            <% end %>
           </div>
         <% end %>
       </div>

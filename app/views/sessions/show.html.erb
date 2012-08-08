@@ -100,10 +100,3 @@
     <% end %>
   </dl>
 </div>
-
-<% if ( current_user && current_user.admin? ) or @session.instructor?( current_user ) %>
-<div class="admin-options">
-	<p>NOTE: Admin options are now accessed through the <strong>ADMIN TOOLS</strong> sidebar on the left.</p>
-</div>
-<% end %>
-

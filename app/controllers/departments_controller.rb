@@ -17,8 +17,8 @@ class DepartmentsController < ApplicationController
   end
 
   def new
-    if current_user && current_user.admin?
-      @department = Department.new
+    @department = Department.new
+    if authorized? @department
       @department.permissions.build
       @page_title = "Create New Department"
     else
@@ -27,23 +27,24 @@ class DepartmentsController < ApplicationController
   end
 
   def edit
-    if current_user && current_user.admin?
-      begin
-        @department = Department.find( params[:id] )
-      rescue ActiveRecord::RecordNotFound
-        render(:file => 'shared/404.erb', :status => 404, :layout => true) unless @department
-        return
-      end
+    begin
+      @department = Department.find( params[:id] )
+    rescue ActiveRecord::RecordNotFound
+      render(:file => 'shared/404.erb', :status => 404, :layout => true) unless @department
+      return
+    end
+
+    if authorized? @department
       @department.permissions.build if @department.permissions.blank?
       @page_title = "Update Department Details"
     else
-      redirect_to departments_path
+      redirect_to @department
     end
   end
   
   def create
-    if current_user && current_user.admin?
-      @department = Department.new( params[ :department ] )
+    @department = Department.new( params[ :department ] )
+    if authorized? @department
       if @department.save
         flash[ :notice ] = "Department \"" + @department.name + "\" added."
         redirect_to manage_departments_path
@@ -59,7 +60,7 @@ class DepartmentsController < ApplicationController
   
   def update
     @department = Department.find( params[ :id ] )
-    if current_user && current_user.admin?
+    if authorized? @department
       success = @department.update_attributes( params[ :department ] )
       @page_title = @department.name
       if success
@@ -77,7 +78,7 @@ class DepartmentsController < ApplicationController
   
   def destroy
     @department = Department.find( params[ :id ] )
-    if current_user && current_user.admin?    
+    if authorized? @department   
       if @department.topics.present?
         flash[ :error ] = "Cannot delete department! There are topics assigned to it."
         redirect_to @department

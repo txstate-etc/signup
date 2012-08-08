@@ -5,7 +5,8 @@
 <%= f.text_area :description, :cols => 80, :rows => 20 %>
 
 <%= f.label :department_id, "Department:", :class => 'field-label' %>
-<%= f.collection_select :department_id, Department.all, :id, :name, { :include_blank => true } %>
+
+<%= department_select(f) %>
 
 <%= f.label :minutes, "Class time in Minutes:", :class => 'field-label' %>
 <%= f.text_field :minutes, :size => 3 %>

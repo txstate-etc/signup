@@ -1,5 +1,5 @@
 <% content_for :admin_tools do %>
-  <% if @department && !@department.new_record? && @department.topics.blank? %>
+  <% if @department && authorized?(@department) && !@department.new_record? && @department.topics.blank? %>
     <p>
       <%= link_to "Delete This Department", @department, :method => :delete, :confirm => "Are you sure you want to delete this department?" %>
     </p>

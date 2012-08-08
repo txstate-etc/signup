@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120804172551) do
+ActiveRecord::Schema.define(:version => 20120808164437) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -67,6 +67,9 @@ ActiveRecord::Schema.define(:version => 20120804172551) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "permissions", ["department_id"], :name => "index_permissions_on_department_id"
+  add_index "permissions", ["user_id"], :name => "index_permissions_on_user_id"
 
   create_table "reservations", :force => true do |t|
     t.integer  "user_id",                               :null => false

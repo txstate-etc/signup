@@ -76,12 +76,14 @@
 <% end %>
 
 <% content_for :admin_tools do %>
-  <div>
-    <h3>View Another Person:</h3>
-    <% form_tag({:controller => :reservations, :action => :index}, :method => "get") do %>
-      <%= label_tag "user_login", "Net ID", :class => "admin-netid-label" %>
-      <%= text_field_tag "user_login", nil, :size => 7 %>
-      <%= submit_tag "Go" %>
-    <% end %>
-  </div>
+  <% if current_user.admin? %>
+    <div>
+      <h3>View Another Person:</h3>
+      <% form_tag({:controller => :reservations, :action => :index}, :method => "get") do %>
+        <%= label_tag "user_login", "Net ID", :class => "admin-netid-label" %>
+        <%= text_field_tag "user_login", nil, :size => 7 %>
+        <%= submit_tag "Go" %>
+      <% end %>
+    </div>
+  <% end %>
 <% end %>

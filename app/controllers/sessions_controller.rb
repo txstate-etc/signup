@@ -17,7 +17,7 @@ class SessionsController < ApplicationController
   
   def new
     topic = Topic.find( params[ :topic_id ] )
-    if current_user && current_user.admin?
+    if authorized? topic
       @session = Session.new
       @session.topic = topic
       @session.occurrences.build
@@ -29,22 +29,23 @@ class SessionsController < ApplicationController
   end
   
   def edit
-    if current_user && current_user.admin?
-      begin
-        @session = Session.find( params[ :id ] )
-      rescue ActiveRecord::RecordNotFound
-        render(:file => 'shared/404.erb', :status => 404, :layout => 'application') unless @session
-        return
-      end
+    begin
+      @session = Session.find( params[ :id ] )
+    rescue ActiveRecord::RecordNotFound
+      render(:file => 'shared/404.erb', :status => 404, :layout => 'application') unless @session
+      return
+    end
+
+    if authorized? @session
       @page_title = @session.topic.name
     else
-      redirect_to topics_path
+      redirect_to @session
     end
   end
 
   def create
-    if current_user && current_user.admin?
-      @session = Session.new( params[ :session ] )
+    @session = Session.new( params[ :session ] )
+    if authorized? @session
       if @session.save
         flash[ :notice ] = "Session added."
         redirect_to @session
@@ -61,7 +62,7 @@ class SessionsController < ApplicationController
   
   def update
     @session = Session.find( params[ :id ] )
-    if current_user && current_user.admin? || @session.instructor?( current_user )
+    if authorized? @session
       if @session.update_attributes( params[ :session ] )
         flash[ :notice ] = "The Session's data has been updated."
       else        
@@ -76,7 +77,7 @@ class SessionsController < ApplicationController
   
   def destroy
     session = Session.find( params[ :id ] )
-    if (current_user && current_user.admin? ) or @session.instructor?( current_user )
+    if authorized? session
       session.cancel!( params[:custom_message] )
     else
     end
@@ -95,7 +96,7 @@ class SessionsController < ApplicationController
 
   def attendance
     @session = Session.find( params[ :id ] )
-    if current_user && current_user.admin? || @session.instructor?( current_user )
+    if authorized? @session
       @page_title = @session.topic.name
       respond_to do |format|
         format.html
@@ -107,11 +108,11 @@ class SessionsController < ApplicationController
   end
 
   def survey_results
-    if current_user && current_user.admin?
-      @session = Session.find( params[ :id ] )
+    @session = Session.find( params[ :id ] )
+    if authorized? @session
       @page_title = @session.topic.name
     else
-      redirect_to topics_path
+      redirect_to @session
     end
   end
   

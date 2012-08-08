@@ -4,14 +4,6 @@
   </div>
 <% end %>
    
-<% content_for :admin_tools do %>
-  <% if session[:filter] == 'upcoming' %>
-    <p><%= link_to "Show All Topics", '/topics/filter/all' %></p>
-  <% else %>
-    <p><%= link_to "Hide Inactive Topics", '/topics/filter/upcoming' %></p>
-  <% end %>
-<% end %>
-
 <div id="group-by-dept" class="notice"><%= link_to '(group by department)', departments_path %></div>
 
 <% if @topics.count == 0 %>

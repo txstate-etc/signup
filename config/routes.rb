@@ -44,13 +44,13 @@ ActionController::Routing::Routes.draw do |map|
   map.attendance 'sessions/attendance/:id.:format', :controller => :sessions, :action => :attendance
   map.connect 'sessions/download', :controller => :sessions, :action => :download
   map.connect 'topics/download/:id', :controller => :topics, :action => :download
-  map.connect 'topics/filter/:filter', :controller => :topics, :action => :filter
+  map.connect 'topics/filter/*filter', :controller => :topics, :action => :filter
   map.connect 'logout', :controller => :users, :action => :logout
   
   map.resources :departments, :collection => { :manage => :get }
   map.resources :users, :only => [ :index ]
   
-  map.resources :topics, :shallow => true do |topic|
+  map.resources :topics, :shallow => true, :collection => { :manage => :get } do |topic|
     topic.resources :sessions do |session|
       session.resources :reservations, :new => { :new => [:post, :get] }
     end

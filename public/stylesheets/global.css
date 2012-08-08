@@ -969,10 +969,6 @@ div#manage-departments {
   width: 600px;
 }
 
-div#manage-departments #actions {
-  margin-bottom: 0;
-}
-
 div#manage-departments ul {
   margin-top: -1em;
 }
@@ -984,4 +980,64 @@ div#manage-departments li {
 
 div#manage-departments li.even {
   background-color: #F6F6F6;
+}
+
+div#manage-topics ul.actions {
+  background-color: #F6F6F6;
+  border: 1px solid #C6C6C6;
+  padding: 6px;
+  font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', serif;
+  font-size: 0.9em;
+  list-style: disc inside;
+}
+
+div#manage-topics table {
+  margin-top: -1em;
+  width: 100%;
+  font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', serif;
+  font-size: 0.9em;
+}
+
+div#manage-topics thead tr {
+  font-size: .9em;
+  font-weight: bold;
+}
+div#manage-topics thead .topic-date {
+  text-align: center;
+}
+
+div#manage-topics tr {
+  padding: 10px 6px;
+  border-bottom: 1px solid #C6C6C6;
+}
+
+div#manage-topics tr.even {
+  background-color: #F6F6F6;
+}
+
+div#manage-topics .topic-name {
+  padding: 1px 5px;
+}
+
+div#manage-topics .topic-date {
+  width: 138px;
+  text-align: right;
+  border-left: 1px #C6C6C6 solid;
+  padding-right: 8px;
+}
+div#manage-topics .topic-date .empty {
+  text-align: center;
+}
+
+div#manage-topics .topic-count {
+  width: 100px;
+  text-align: center;
+  border-left: 1px #C6C6C6 solid;
+}
+
+div#manage-topics div.empty-list {
+  font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', serif;
+  font-size: .9em;
+  margin-top: -1em;
+  padding: 0 .5em;
 }

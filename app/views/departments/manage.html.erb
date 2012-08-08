@@ -1,7 +1,9 @@
 <% content_for :admin_tools do %>
+  <% if current_user.admin? %>
     <p>
       <%= link_to "Create New Department", new_department_path %>
     </p>
+  <% end %>
 <% end %>
 
 <div id="manage-departments">
