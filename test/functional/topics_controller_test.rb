@@ -118,6 +118,8 @@ class TopicsControllerTest < ActionController::TestCase
   
   test "Admins can manage any topic" do
     login_as( users( :admin1 ) )
+    @request.session[ :topics ] = 'all'
+    @request.session[ :departments ] = 'all'
     get :manage
     assert_response :success
     assert_equal 3, assigns( :departments ).count
@@ -134,6 +136,8 @@ class TopicsControllerTest < ActionController::TestCase
   
   test "Instructors can manage topics they are instructors for" do
     login_as( users( :instructor1 ) )
+    @request.session[ :topics ] = 'all'
+    @request.session[ :departments ] = 'all'
     get :manage
     assert_response :success
     assert_equal 2, assigns( :departments ).count
