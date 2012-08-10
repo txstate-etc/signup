@@ -13,8 +13,8 @@ class TopicsController < ApplicationController
   def manage
     redirect_to topics_path and return unless authorized?
 
-    @upcoming = session[:topics] == 'upcoming'
-    @all_depts = current_user.admin? && session[:departments] != 'user'
+    @upcoming = session[:topics] != 'all'
+    @all_depts = current_user.admin? && session[:departments] == 'all'
 
     # Non-admins: show topics for their departments only. 
     # Admins: show topics for their departments by default. Show all depts based on filter
