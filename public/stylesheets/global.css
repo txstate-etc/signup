@@ -328,7 +328,7 @@ input.submit-button {
   
 }
 
-a.register-button {
+a.register-button, input.register-button {
 	-moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
 	-webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
 	box-shadow:inset 0px 1px 0px 0px #ffffff;
@@ -348,19 +348,29 @@ a.register-button {
 	padding:3px 12px;
 	text-decoration:none !important;
 	text-shadow:1px 1px 0px #ffffff;
-}a.register-button:hover {
+}a.register-button:hover, input.register-button:hover {
 	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #e9e9e9), color-stop(1, #f9f9f9) );
 	background:-moz-linear-gradient( center top, #e9e9e9 5%, #f9f9f9 100% );
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#e9e9e9', endColorstr='#f9f9f9');
 	background-color:#e9e9e9;
-}a.register-button:active {
+}a.register-button:active, input.register-button:active {
 	position:relative;
 	top:1px;
 }
 
+input.register-button {
+  font-size: 14px;
+  padding-top: 6px;
+  padding-bottom: 7px;
+}
+
 div.register-button {
-  margin-top: 1em;
-  margin-left: -1.5em;
+  margin-top: .5em;
+  margin-left: -.5em;
+}
+
+#session-details .notice {
+  font-size: .9em;
 }
 
 .button-link a {
@@ -375,11 +385,10 @@ div.register-button {
 }
 
 .delete-link a {
-  display: block;
-  padding: .25em;
+  padding: .25em 0;
   text-decoration: none;
   color: #501214;
-  font-size: .75em;
+  font-size: .85em;
   font-weight: normal;
   font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', serif;
 }
@@ -457,7 +466,7 @@ div.navigation a:hover {
 
 div.sidebar {
   line-height: 2em;
-  padding: 0em 0em 0em 0.5em;
+  padding: 0em 0em 0em 0.65em;
   width: 216px;
   margin-top: 20px;
   margin-left: 0px;  
@@ -496,10 +505,11 @@ div.admin-tools h3 {
 
 div.admin-tools p {
   border-bottom: #501214 dotted 1px;
-  padding: .25em 0;
+  padding: .5em 0;
 }
 
 div.admin-tools a {
+  display: block;
   font-size: 16px;
   font-weight: normal;
   color: #6C5828;
@@ -516,6 +526,10 @@ div.admin-tools a:link {
 
 div.admin-tools a:hover {
   text-decoration:underline;
+}
+
+div.view-person {
+  padding-bottom: .5em;
 }
 
 div#contents {
@@ -748,7 +762,7 @@ ul.reservation-list li {
   border-bottom-width: 1px;
   border-bottom-style: dotted;
   border-bottom-color: #836c31;
-  padding-left: .5em;
+  padding-left: .25em;
   padding-bottom: .5em;
   margin-top: .75em;
   margin-bottom: 1em;
@@ -776,38 +790,46 @@ div.reservation-group a.date {
   color: #000;
   font-size: .9em;
   margin-bottom: 1em;
+  margin-left: .5em;
+}
+
+div.reservation-group div.survey-link {
+  margin-left: -.2em;  
 }
 
 div.reservation-group a.survey-link {
-  display: block;
   color: #501214;
   font-size: .9em;
   margin-top: 1em;
 }
 
-.download-link {
-  background-repeat: no-repeat;
-  background-position: 0px 50%;
-  margin-left: 3px;
+div.reservation-group .reservation-actions {
+  margin-top: -.5em;
+  margin-left: .6em;
+  font-size: .95em;
 }
 
+.download-link, .edit-reservation-link {
+  background-repeat: no-repeat;
+  background-position: 0px 50%;
+}
 
-.download-link a {
-  display: block;
+.download-link a, .edit-reservation-link a {
   font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', serif;
   padding-left: 25px;
-  font-size: .75em;
+  font-size: .85em;
+}
+
+.edit-reservation-link {
+  background-image:  url(/images/email_go.png);
 }
 
 .download-calendar {
   background-image:  url(/images/cal.gif);
-  background-repeat: no-repeat;
 }
 
 .download-csv {
   background-image:  url(/images/csv.gif);
-  background-repeat: no-repeat;
-
 }
 
 div.admin-options {

@@ -158,7 +158,7 @@ module CASClient
             st = controller.session[:cas_last_valid_ticket]
             delete_service_session_lookup(st) if st
             controller.send(:reset_session)
-            controller.send(:redirect_to, client.logout_url(referer))
+            controller.send(:redirect_to, client.logout_url(nil, referer))
           end
           
           def redirect_to_cas_for_authentication(controller)

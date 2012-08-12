@@ -3,8 +3,12 @@ Hi there <%=h @reservation.session.topic.name %> instructors,
 <%= @reservation.user.name %>, one of the students in your upcoming 
 "<%= @reservation.session.topic.name %>" class, has requested special
 accommodations for his/her needs:
-	
-<%= @reservation.special_accommodations %>
+
+<%- if @reservation.special_accommodations.blank? -%>
+  < None. The student has deleted his previous request. >
+<%- else -%>	
+  <%= @reservation.special_accommodations %>
+<%- end -%>
 
 If you have any questions about this request, you can reach 
 <%=h @reservation.user.name %> at:

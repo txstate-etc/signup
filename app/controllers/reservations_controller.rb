@@ -53,6 +53,40 @@ class ReservationsController < ApplicationController
     end
   end
   
+  def edit
+    begin
+      @reservation = Reservation.find( params[:id] )
+    rescue ActiveRecord::RecordNotFound
+      render(:file => 'shared/404.erb', :status => 404, :layout => true) unless @reservation
+      return
+    end
+
+    superuser =  authorized? @reservation
+    
+    if @reservation.user == current_user || superuser
+      @page_title = "Update Reservation Details"
+    else
+      redirect_to root_url
+    end
+  end
+  
+  def update
+    @reservation = Reservation.find( params[:id] )
+    if @reservation.user == current_user || authorized?(@reservation)
+      success = @reservation.update_attributes( params[ :reservation ] )
+      if success
+        flash[ :notice ] = "The reservation's data has been updated."
+        redirect_to @reservation.session
+      else
+        @page_title = "Update Reservation Details"
+        flash.now[ :error ] = "There were problems updating this reservation."
+        render :action => 'edit'
+      end
+    else
+      redirect_to root_url
+    end
+  end
+  
   def index
     admin_is_viewing_someone_else = params[ :user_login ] && current_user.admin?
     if admin_is_viewing_someone_else

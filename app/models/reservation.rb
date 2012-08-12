@@ -25,6 +25,10 @@ class Reservation < ActiveRecord::Base
   def after_create
     ReservationMailer.delay.deliver_accommodation_notice( self ) if !special_accommodations.blank?
   end
+
+  def after_update
+    ReservationMailer.delay.deliver_accommodation_notice( self ) if special_accommodations_changed?
+  end
   
   def after_destroy
     if !session.space_is_available?

@@ -46,7 +46,11 @@
 	"<%=h @reservation.session.topic.name %>" class, has requested special
 	accommodations for his/her needs:</p>
 	
-<p><%=h @reservation.special_accommodations %></p>
+<%- if @reservation.special_accommodations.blank? -%>
+  <p>&lt; None. The student has deleted his previous request. &gt;</p>
+<%- else -%>
+  <p><%=h @reservation.special_accommodations %></p>
+<%- end -%>
 
 <p>If you have any questions about this request, you can reach 
 	<%=h @reservation.user.name %> at 

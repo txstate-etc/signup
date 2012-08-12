@@ -26,13 +26,23 @@ class ReservationsControllerTest < ActionController::TestCase
     
   test "Try making reservations" do
     login_as( users( :plainuser3 ) )
-    get :new, :session_id => sessions( :gato )
-    assert_response :success
     
     assert_difference 'Reservation.count', + 1, "Couldn't create reservation" do
-      get :create, :session_id => sessions( :gato ), :session => { :session_id => sessions( :gato ) }
+      get :create, :session_id => sessions( :gato )
     end
     assert_redirected_to sessions( :gato )
+  end
+
+  test "Try editing reservations" do
+    login_as( users( :plainuser1 ) )
+    get :edit, :id => reservations( :plainuser1 )
+    assert_response :success
+    
+    accommodation = "I need a seeing-eye buffalo"
+    get :update, :id => reservations( :plainuser1 ), :reservation => { :special_accommodations => accommodation }
+    assert_redirected_to sessions( :gato )
+    assert_equal assigns( :reservation ).special_accommodations, accommodation
+    assert_equal "The reservation's data has been updated.", flash[:notice]
   end
   
   test "Ensure special accommodations are recorded" do
