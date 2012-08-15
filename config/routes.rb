@@ -46,7 +46,7 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'topics/download/:id', :controller => :topics, :action => :download
   map.connect 'topics/filter/*filter', :controller => :topics, :action => :filter
   map.logout 'logout', :controller => :users, :action => :logout
-  map.login 'login', :controller => :users, :action => :login
+  map.login 'login', :controller => :users, :action => :login, :conditions => { :method => [:post, :get] }
   
   map.resources :departments, :collection => { :manage => :get }
   map.resources :users, :only => [ :index ]
@@ -57,7 +57,8 @@ ActionController::Routing::Routes.draw do |map|
     end
   end
 
-  map.resources :reservations, :only => [ :index, :edit ], :index => { :index => [:post, :get] }
+  map.resources :reservations, :only => :edit
+  map.reservations 'reservations', :controller => :reservations, :action => :index, :conditions => { :method => [:post, :get] }
   
   map.connect 'reservations/download/:id', :controller => :reservations, :action => :download
   map.send_reminder 'reservations/send_reminder/:id', :controller => :reservations, :action => :send_reminder
