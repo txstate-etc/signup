@@ -43,7 +43,7 @@
 	<p>Hi there <%=h @reservation.session.topic.name %> instructors,</p>
 
 <p><%=h @reservation.user.name %>, one of the students in your upcoming 
-	"<%=h @reservation.session.topic.name %>" class, has requested special
+	"<%=h @reservation.session.topic.name %>" class on <%=h formatted_time_range(@reservation.session.time, @reservation.session.topic.minutes) %>, has requested special
 	accommodations for his/her needs:</p>
 	
 <%- if @reservation.special_accommodations.blank? -%>

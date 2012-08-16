@@ -1,7 +1,7 @@
 Hi there <%=h @reservation.session.topic.name %> instructors,
 
 <%= @reservation.user.name %>, one of the students in your upcoming 
-"<%= @reservation.session.topic.name %>" class, has requested special
+"<%= @reservation.session.topic.name %>" class on <%= formatted_time_range(@reservation.session.time, @reservation.session.topic.minutes) %>, has requested special
 accommodations for his/her needs:
 
 <%- if @reservation.special_accommodations.blank? -%>
