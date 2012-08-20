@@ -17,10 +17,12 @@ class ApplicationController < ActionController::Base
     return true if session[ :user ]
     
     if session[ :cas_user ]
-      session[ :user ] = User.find_or_lookup_by_login(session[ :cas_user ])
+      user = User.find_or_lookup_by_login(session[ :cas_user ])
+      session[ :user ] = user.id if user
     else
       return false unless CASClient::Frameworks::Rails::Filter.filter( self )
-      session[ :user ] = User.find_or_lookup_by_login(session[ :cas_user ]) if session[ :cas_user ] 
+      user = User.find_or_lookup_by_login(session[ :cas_user ]) if session[ :cas_user ] 
+      session[ :user ] = user.id if user
     end
     
     if session[:user].blank?
@@ -33,9 +35,15 @@ class ApplicationController < ActionController::Base
   end
   
   helper_method :current_user
+  helper_method :authorized?
   private
   def current_user
-    session[ :user ]
+    @_current_user ||= session[ :user ] && User.find(session[ :user ])
   end
+  
+  def authorized?(item=nil)
+    current_user && current_user.authorized?(item)
+  end
+  
   
 end

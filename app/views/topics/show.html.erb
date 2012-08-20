@@ -1,6 +1,6 @@
 <div id="session-details" class="session-list content-section">
   <h2>Upcoming Sessions</h2>
-  <% if @topic.upcoming_sessions.size > 0 %>
+  <% if @topic.upcoming_sessions.present? %>
     <%= session_list(@topic.upcoming_sessions) %>
   <% else %>
     There are no sessions scheduled at this time.
@@ -30,14 +30,8 @@
 </div>
 
 <div id="past-session-details" class="session-list content-section">
-<% if @topic.past_sessions.size > 0 && current_user && current_user.admin? %>
+<% if authorized?(@topic) && @topic.past_sessions.present? %>
   <h2>Past Sessions</h2>
   <%= session_list(@topic.past_sessions.reverse) %>
 <% end %>
 </div>
-
-<% if ( current_user && current_user.admin? ) %>
-<div class="admin-options">
-	<p>NOTE: Admin options are now accessed through the <strong>ADMIN TOOLS</strong> sidebar on the left.</p>
-</div>
-<% end %>

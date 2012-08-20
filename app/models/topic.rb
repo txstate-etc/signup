@@ -26,16 +26,24 @@ class Topic < ActiveRecord::Base
     Topic.find( :all, :conditions => [ "topics.id IN ( select topic_id from sessions, occurrences where sessions.id = occurrences.session_id AND occurrences.time > ? AND cancelled = false )", Time.now ] )
   end
   
+  def self.by_instructor(user, upcoming=false)
+    sub_select = "select topic_id from sessions, sessions_users, occurrences where sessions.id = sessions_users.session_id AND sessions_users.user_id = ? AND cancelled = false"
+    sub_select << " AND sessions.id = occurrences.session_id AND occurrences.time > ?" if upcoming
+    conditions = [" topics.id IN ( #{sub_select} )", user.id]
+    conditions << Time.now if upcoming
+    Topic.find( :all, :conditions => conditions )
+  end
+  
   def to_param
     "#{id}-#{name.parameterize}"
   end
   
   def upcoming_sessions
-    sessions.find( :all, :conditions => [ "cancelled = false AND sessions.id NOT IN (SELECT session_id FROM occurrences WHERE occurrences.time <= ?)", Time.now ], :order => "occurrences.time", :include => :occurrences )
+    @_upcoming_sessions ||= sessions.find( :all, :conditions => [ "cancelled = false AND sessions.id NOT IN (SELECT session_id FROM occurrences WHERE occurrences.time <= ?)", Time.now ], :order => "occurrences.time", :include => :occurrences )
   end
   
   def past_sessions
-    sessions.find( :all, :conditions => [ "occurrences.time < ? AND cancelled = false", Time.now ], :order => "occurrences.time", :include => :occurrences )
+    @_past_sessions ||= sessions.find( :all, :conditions => [ "occurrences.time < ? AND cancelled = false", Time.now ], :order => "occurrences.time", :include => :occurrences )
   end
   
   def to_csv

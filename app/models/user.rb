@@ -42,6 +42,53 @@ class User < ActiveRecord::Base
     user
   end
   
+  def authorized?(item=nil)
+    
+    # Admins can do anything
+    return true if self.admin?
+    
+    # Non-admins can only edit things in their own departments
+    return false if !self.editor? && !instructor?
+    
+    # Return true if we are just being asked about general editing permissions
+    return true if item.nil?
+
+    # Only admins can edit departments
+    return false if item.is_a? Department
+    
+    # Non-admins can create and edit topics in their department
+    # Instructors cannot edit topics
+    if item.is_a? Topic 
+      return self.editor? if item.new_record?
+      return self.departments.include?(item.department)
+    end
+    
+    # Non-admins can edit sessions for topics in their department
+    # Instructors can edit sessions they are the instructor of.
+    if item.is_a? Session 
+      return self.departments.include?(item.topic.department) || item.instructor?( self )
+    end
+    
+    # Non-admins can edit reservations for topics in their department
+    # Instructors can edit reservations for sessions they are the instructor of.
+    if item.is_a? Reservation 
+      return self.departments.include?(item.session.topic.department) || item.session.instructor?( self )
+    end
+    
+    # default deny
+    return false
+  end
+  
+  # return true if the user has permissions on one or more departments
+  def editor?
+    @_is_editor ||= self.departments.present?
+  end
+  
+  # return true if the user is an instructor for any session (even in the past)
+  def instructor?
+    @_is_instructor ||= Session.count( :conditions => [ "sessions.id in (select session_id from sessions_users where user_id = ?) AND cancelled = false", self.id ] ) > 0
+  end
+  
   def self.import_all
     import_users(nil)
   end

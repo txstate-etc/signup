@@ -1,5 +1,5 @@
 <% content_for :admin_tools do %>
-	<% if @session && !@session.new_record? %>
+	<% if @session && authorized?(@session) && !@session.new_record? %>
 		<p><%= link_to "View Session Details", @session %>
 		<p><%= link_to "View Reservations", attendance_path( @session ) %>
 		<%- if @session.last_time < Time.now -%>
@@ -10,7 +10,9 @@
 			<p><%= link_to "Cancel Session", '#', :id => 'cancel-session-link' %>
 		<% end %>
 	<% end %>
-  <p><%= link_to "Create New Session", new_topic_session_path( @session.topic ) %></p>
+	<% if @session && authorized?(@session.topic) %>
+    <p><%= link_to "Create New Session", new_topic_session_path( @session.topic ) %></p>
+  <% end %>
 <% end %>
 
 <% content_for :content do %>

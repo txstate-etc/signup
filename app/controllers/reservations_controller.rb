@@ -12,7 +12,7 @@ class ReservationsController < ApplicationController
     @reservation = Reservation.new( params[ :reservation ] )
     @session = Session.find( params[ :session_id ] )
     @reservation.session = @session
-    admin_is_enrolling_someone_else = params[ :user_login ] && current_user.admin?
+    admin_is_enrolling_someone_else = params[ :user_login ] && authorized?(@reservation)
     if admin_is_enrolling_someone_else
       @reservation.user = User.find_by_login( params[ :user_login ] )
       if @reservation.user.nil?
@@ -53,6 +53,40 @@ class ReservationsController < ApplicationController
     end
   end
   
+  def edit
+    begin
+      @reservation = Reservation.find( params[:id] )
+    rescue ActiveRecord::RecordNotFound
+      render(:file => 'shared/404.erb', :status => 404, :layout => true) unless @reservation
+      return
+    end
+
+    superuser =  authorized? @reservation
+    
+    if @reservation.user == current_user || superuser
+      @page_title = "Update Reservation Details"
+    else
+      redirect_to root_url
+    end
+  end
+  
+  def update
+    @reservation = Reservation.find( params[:id] )
+    if @reservation.user == current_user || authorized?(@reservation)
+      success = @reservation.update_attributes( params[ :reservation ] )
+      if success
+        flash[ :notice ] = "The reservation's data has been updated."
+        redirect_to @reservation.session
+      else
+        @page_title = "Update Reservation Details"
+        flash.now[ :error ] = "There were problems updating this reservation."
+        render :action => 'edit'
+      end
+    else
+      redirect_to root_url
+    end
+  end
+  
   def index
     admin_is_viewing_someone_else = params[ :user_login ] && current_user.admin?
     if admin_is_viewing_someone_else
@@ -72,8 +106,7 @@ class ReservationsController < ApplicationController
   
   def destroy
     @reservation = Reservation.find( params[ :id ] )
-    superuser =  current_user.admin? || @reservation.session.instructor?( current_user )
-    
+    superuser =  authorized? @reservation
     
     if @reservation.user != current_user && !superuser
       flash[ :error ] = "Reservations can only be cancelled by their owner, an admin, or an instructor." + current_user.to_s + " & " + @reservation.user.to_s
@@ -98,7 +131,7 @@ class ReservationsController < ApplicationController
   # send an email reminder to the student
   def send_reminder
     @reservation = Reservation.find( params[ :id ] )
-    superuser =  current_user.admin? || @reservation.session.instructor?( current_user )
+    superuser =  authorized? @reservation
     
     if @reservation.user != current_user && !superuser
       flash[ :error ] = "Reminders can only be sent by their owner, an admin, or an instructor." + current_user.to_s + " & " + @reservation.user.to_s
@@ -112,14 +145,14 @@ class ReservationsController < ApplicationController
     if @reservation.user == current_user
       redirect_to reservations_path
     else
-      redirect_to @reservation.session
+      redirect_to attendance_path( @reservation.session )
     end
   end
   
   # send an email reminder to the student
   def send_survey
     @reservation = Reservation.find( params[ :id ] )
-    superuser =  current_user.admin? || @reservation.session.instructor?( current_user )
+    superuser =  authorized? @reservation
     
     if @reservation.user != current_user && !superuser
       flash[ :error ] = "Survey reminders can only be sent by their owner, an admin, or an instructor." + current_user.to_s + " & " + @reservation.user.to_s
@@ -131,7 +164,7 @@ class ReservationsController < ApplicationController
     if @reservation.user == current_user
       redirect_to reservations_path
     else
-      redirect_to @reservation.session
+      redirect_to attendance_path( @reservation.session )
     end
   end
   

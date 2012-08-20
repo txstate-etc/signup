@@ -44,19 +44,22 @@ ActionController::Routing::Routes.draw do |map|
   map.attendance 'sessions/attendance/:id.:format', :controller => :sessions, :action => :attendance
   map.connect 'sessions/download', :controller => :sessions, :action => :download
   map.connect 'topics/download/:id', :controller => :topics, :action => :download
-  map.connect 'topics/filter/:filter', :controller => :topics, :action => :filter
-  map.connect 'logout', :controller => :users, :action => :logout
+  map.connect 'topics/filter/*filter', :controller => :topics, :action => :filter
+  map.logout 'logout', :controller => :users, :action => :logout
+  map.login 'login', :controller => :users, :action => :login, :conditions => { :method => [:post, :get] }
   
   map.resources :departments, :collection => { :manage => :get }
   map.resources :users, :only => [ :index ]
   
-  map.resources :topics, :shallow => true do |topic|
+  map.resources :topics, :shallow => true, :collection => { :manage => :get } do |topic|
     topic.resources :sessions do |session|
       session.resources :reservations, :new => { :new => [:post, :get] }
     end
   end
-  
+
+  map.resources :reservations, :only => :edit
   map.reservations 'reservations', :controller => :reservations, :action => :index, :conditions => { :method => [:post, :get] }
+  
   map.connect 'reservations/download/:id', :controller => :reservations, :action => :download
   map.send_reminder 'reservations/send_reminder/:id', :controller => :reservations, :action => :send_reminder
   map.resources :survey_responses, :only => [ :create ]

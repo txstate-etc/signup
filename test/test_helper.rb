@@ -39,5 +39,6 @@ end
 
 
 def login_as( login )
-  @request.session[ :user ] = login
+  @controller.instance_variable_set("@_current_user", nil)
+  @request.session[ :user ] = login.id
 end

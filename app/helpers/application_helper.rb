@@ -1,6 +1,10 @@
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
   
+  def pluralize_word(count, singular, plural = nil)
+    ((count == 1 || count == '1') ? singular : (plural || singular.pluralize))
+  end
+  
   def friendly_time(time)
     if (time.hour == 12 && time.min == 0) 
       "Noon"

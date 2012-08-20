@@ -51,11 +51,17 @@ class ReservationTest < ActiveSupport::TestCase
   end
   
   test "Instructor should receive email if special accomodations are needed" do
+    reservation = Reservation.new( :session => sessions( :tracs_multiple_instructors ),  :user => users( :plainuser2 ) )
+    reservation.save
+    reservation.reload
+    assert_equal nil, reservation.special_accommodations
     assert_difference 'ActionMailer::Base.deliveries.size', +1 do
-      reservation = Reservation.new( :session => sessions( :tracs_multiple_instructors ),  :user => users( :plainuser2 ), :special_accommodations => "I'd like an eggplant" )
+      reservation.special_accommodations = "I'd like an eggplant"
       reservation.save
       Delayed::Worker.new(:quiet => true).work_off
     end
+    reservation.reload
+    assert_equal "I'd like an eggplant", reservation.special_accommodations
     assert_equal ActionMailer::Base.deliveries.last.to.size, 2
     assert_equal ActionMailer::Base.deliveries.last.to[0], sessions( :tracs_multiple_instructors ).instructors[0].email
     assert_equal ActionMailer::Base.deliveries.last.to[1], sessions( :tracs_multiple_instructors ).instructors[1].email

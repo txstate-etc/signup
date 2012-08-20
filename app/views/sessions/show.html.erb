@@ -39,6 +39,7 @@
   		<% if @session.waiting_list.size > 0 %>
   			(<%=h @session.waiting_list.size %> waiting)
   		<% end %>
+  		
   		<% if @reservation %>
   		  <% if @reservation.attended == Reservation::ATTENDANCE_ATTENDED %>
   		    <p>You attended this session. <%= survey_link(@reservation) %></p>
@@ -51,25 +52,43 @@
   		  		<p>You are on the waiting list for this session.</p>
   		  	<% end %>
   		  	<div class="download-link download-calendar">
-  		  		<%= link_to "[add reservation to calendar]", { :controller => :reservations, :action => :download, :id => @reservation.id } %>
+  		  		<%= link_to "Add reservation to calendar", { :controller => :reservations, :action => :download, :id => @reservation.id } %>
   		  	</div>
   		  	<%- if @reservation.session.time > Time.now -%>
-	  		  	<div class="register-button">
-	  		  		<%= link_to "Cancel Reservation", @reservation, :method => :delete, :confirm => "Are you sure you want to cancel your reservation for \"" + @reservation.session.topic.name + "\"?", :class => 'register-button' %>
+    		  	<%= link_to_edit_reservation(@reservation) %>
+    		  	<div class="delete-link">
+	  		  		<%= link_to "Cancel Reservation", @reservation, :method => :delete, :confirm => "Are you sure you want to cancel your reservation for \"" + @reservation.session.topic.name + "\"?" %>
 	  		  	</div>
   		  	<%- end -%>
   		  <% end %>	
   		<% elsif @session.in_registration_period? %>		
-  			<% if @session.space_is_available? %>
-          <div class="register-button">
-  					<%= link_to "Register Now", new_session_reservation_path( @session ), :class => 'register-button' %>
-          </div>
 
-  			<% else %>
-  				<div class="register-button">
-  					<%= link_to "Add to Waiting List", new_session_reservation_path( @session ), :class => 'register-button' %>
-  				</div>
-  			<% end %>
+        <%  if current_user %>
+          <% if @session.space_is_available? %>
+            <div class="register-button">
+              <%#= link_to "Register Now", new_session_reservation_path( @session ), :class => 'register-button' %>
+              <% form_tag(session_reservations_path( @session )) do %>
+                <%= submit_tag "Register Now", :class => 'register-button' %>
+              <% end %>
+            </div>
+
+          <% else %>
+            <div class="notice">NOTICE: This class is full! However, you can still put yourself on the waiting
+              list. If space becomes available in the class, you will be automatically
+              registered and notified by email.
+            </div>
+            <div class="register-button">
+              <%#= link_to "Add to Waiting List", new_session_reservation_path( @session ), :class => 'register-button' %>
+              <% form_tag(session_reservations_path( @session )) do %>
+                <%= submit_tag "Add to Waiting List", :class => 'register-button' %>
+              <% end %>
+            </div>
+          <% end %>
+        <% else %>
+          <div>
+            <%= link_to "Log in to register", login_path %>
+          </div>
+        <% end %>
 			<% else %>
 			  <p>Registration is closed for this session.</p>
   		<% end %>
@@ -100,10 +119,3 @@
     <% end %>
   </dl>
 </div>
-
-<% if ( current_user && current_user.admin? ) or @session.instructor?( current_user ) %>
-<div class="admin-options">
-	<p>NOTE: Admin options are now accessed through the <strong>ADMIN TOOLS</strong> sidebar on the left.</p>
-</div>
-<% end %>
-

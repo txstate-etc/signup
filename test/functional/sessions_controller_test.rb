@@ -57,7 +57,7 @@ class SessionsControllerTest < ActionController::TestCase
     assert_response :redirect
     
     get :create, :topic_id => sessions( :tracs ).topic_id, :session => { :topic_id => sessions( :tracs ).topic_id }
-    assert_redirected_to session_path(sessions( :tracs ))
+    assert_redirected_to root_url
     assert_response :redirect
 
     delete :destroy, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
@@ -80,7 +80,7 @@ class SessionsControllerTest < ActionController::TestCase
     assert_response :redirect
     
     get :create, :topic_id => sessions( :tracs ).topic_id, :session => { :topic_id => sessions( :tracs ).topic_id }
-    assert_redirected_to session_path(sessions( :tracs ))
+    assert_redirected_to root_url
     assert_response :redirect
 
     delete :destroy, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id

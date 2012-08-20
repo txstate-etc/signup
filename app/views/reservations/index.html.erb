@@ -15,12 +15,15 @@
 								<%= link_to reservation.session.topic.name, reservation.session, :class => 'topic' %>
 								<%= link_to formatted_time_range(reservation.session.next_time, reservation.session.topic.minutes), reservation.session, :class => 'date' %>
 							</div>
-              <div class="download-link download-calendar">
-                <%= link_to "[add reservation to calendar]", :controller => :reservations, :action => :download, :id => reservation.id %>
+							<div class="reservation-actions">
+                <div class="download-link download-calendar">
+                  <%= link_to "Add reservation to calendar", :controller => :reservations, :action => :download, :id => reservation.id %>
+                </div>
+                <%= link_to_edit_reservation(reservation) %>
+  							<div class="delete-link">
+  								<%= link_to "Cancel Reservation", reservation, :method => :delete, :confirm => "Are you sure you want to cancel your reservation for \"" + reservation.session.topic.name + "\"?"%>
+  							</div>
               </div>
-							<div class="delete-link">
-								<%= link_to "Cancel Reservation", reservation, :method => :delete, :confirm => "Are you sure you want to cancel your reservation for \"" + reservation.session.topic.name + "\"?"%>
-							</div>
 						</div>
 					</li>
 				<% end %>
@@ -39,13 +42,16 @@
 							<%= link_to reservation.session.topic.name, reservation.session, :class => 'topic' %>
 							<%= link_to formatted_time_range(reservation.session.time, reservation.session.topic.minutes), reservation.session, :class => 'date' %>
 						</div>
+						<div class="reservation-actions">
               <div class="download-link download-calendar">
-                <%= link_to "[add reservation to calendar]", :controller => :reservations, :action => :download, :id => reservation.id %>
+                <%= link_to "Add reservation to calendar", :controller => :reservations, :action => :download, :id => reservation.id %>
               </div>
-						<div class="delete-link">
-							<%= link_to "Remove Name From Waiting List", reservation, :method => :delete, :confirm => "Are you sure you want to remove your name from the waiting list for \"" + reservation.session.topic.name + "\"?"%>
-						</div>
-					</div>
+              <%= link_to_edit_reservation(reservation) %>
+  						<div class="delete-link">
+  							<%= link_to "Remove Name From Waiting List", reservation, :method => :delete, :confirm => "Are you sure you want to remove your name from the waiting list for \"" + reservation.session.topic.name + "\"?"%>
+  						</div>
+  					</div>
+				  </div>
 				</li>
 			<% end %>
 		</ul>
@@ -65,9 +71,11 @@
 						<%= link_to reservation.session.topic.name, reservation.session, :class => 'topic' %>
             <%= link_to formatted_time_range(reservation.session.time, reservation.session.topic.minutes), reservation.session, :class => 'date' %>
           </div>
-					<div class="survey-link">
-						<%= survey_link(reservation) %>
-					</div>
+					<div class="reservation-actions">
+  					<div class="survey-link">
+  						<%= survey_link(reservation) %>
+  					</div>
+          </div>
         </div>
       </li>
     <% end %>
@@ -76,12 +84,14 @@
 <% end %>
 
 <% content_for :admin_tools do %>
-  <div>
-    <h3>View Another Person:</h3>
-    <% form_tag({:controller => :reservations, :action => :index}, :method => "get") do %>
-      <%= label_tag "user_login", "Net ID", :class => "admin-netid-label" %>
-      <%= text_field_tag "user_login", nil, :size => 7 %>
-      <%= submit_tag "Go" %>
-    <% end %>
-  </div>
+  <% if current_user.admin? %>
+    <div class="view-person">
+      <h3>View Another Person:</h3>
+      <% form_tag({:controller => :reservations, :action => :index}, :method => "get") do %>
+        <%= label_tag "user_login", "Net ID", :class => "admin-netid-label" %>
+        <%= text_field_tag "user_login", nil, :size => 7 %>
+        <%= submit_tag "Go" %>
+      <% end %>
+    </div>
+  <% end %>
 <% end %>

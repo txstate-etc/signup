@@ -1,0 +1,91 @@
+<% content_for :admin_tools do %>
+  <% if current_user.admin? || current_user.editor? %>
+    <p><%= link_to "Create New Topic", new_topic_path %></p>
+  <% end %>
+<% end %>
+
+
+<div id="manage-topics">
+  
+  <% if current_user.admin? || current_user.editor? %>
+    <div class="content-section">
+      <ul class="actions">
+        <li>
+          <% if @upcoming -%>
+            Showing only topics with upcoming sessions. 
+            <%= link_to "Show all topics.", '/topics/filter/topics/all' %>
+          <% else -%>
+            Showing all topics.
+            <%= link_to "Show only topics with upcoming sessions.", '/topics/filter/topics/upcoming' %>
+          <% end -%>
+        </li>
+        <% if current_user.admin? && current_user.departments.present? %>
+          <li>
+            <% if @all_depts -%>
+              Showing topics in all departments.
+              <%= link_to "Show only topics in your #{pluralize_word(current_user.departments.size, 'department')}.", '/topics/filter/departments/user' %>
+            <% else -%>
+              Showing only topics in your <%= pluralize_word(@departments.size, 'department') %>. 
+              <%= link_to "Show all departments.", '/topics/filter/departments/all' %>
+            <% end -%>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  
+  <% if @departments.blank? %>
+    <div class="content-section">
+      <h2>No topics found</h2>
+      <div class="empty-list">
+        <p>There are no topics to display.</p>
+      </div>
+    </div>
+  <% else %>
+  
+    <% @departments.each do |department| %>
+      <div class="content-section">
+        <h2><%= department.name %></h2>
+        <% topics = @topics.select { |t| t.department == department } %>
+        <% if topics.blank? %>
+          <div class="empty-list">
+            <p>There are no topics <%= @upcoming ? ' with upcoming sessions ' : '' %> in this department.</p>
+          </div>
+        <% else %>
+          <table class="topic-list">
+            <thead>
+              <tr>
+                <th scope="col" class="topic-name">Topic</th>
+                <th scope="col" class="topic-date">Next Session</th> 
+                <th scope="col" class="topic-count">Reservations</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% topics.each do |topic| %>
+                <tr class="<%= cycle("even", "odd") %>">
+                <td class="topic-name">
+                  <%= link_to topic.name, topic %>
+                </td>
+                <td class="topic-date">
+                  <% if topic.upcoming_sessions.present? %>       
+                    <%= link_to session_time_short(topic.upcoming_sessions[0]), topic.upcoming_sessions[0] %>
+                  <% else %>
+                    <div class="empty">-</div>
+                  <% end %>
+                </td>
+                <td class="topic-count">
+                  <% if topic.upcoming_sessions.present? %>       
+                    <%= session_reservations_short(topic.upcoming_sessions[0]) %>
+                  <% else %>
+                   <div class="empty">-</div>
+                  <% end %>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+          <% reset_cycle %>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+</div>
