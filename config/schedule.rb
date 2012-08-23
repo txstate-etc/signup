@@ -49,6 +49,11 @@ if @environment == 'production'
     rake "cron:import_users"
   end
 
+  # backup database nightly at 2:30am
+  every '30 2 * * *' do
+    rake "db:backup MAX=30"
+  end
+
   # restart the delayed_job daemon when the system reboots
   every :reboot do
     rake "cron:delayed_job:restart"
