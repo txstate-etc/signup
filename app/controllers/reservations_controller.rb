@@ -47,8 +47,7 @@ class ReservationsController < ApplicationController
         end
         redirect_to @reservation.session 
       else
-        @page_title = "Make a Reservation"
-        render :action => 'new'
+        redirect_to @reservation.session 
       end
     end
   end
