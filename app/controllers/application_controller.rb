@@ -35,10 +35,15 @@ class ApplicationController < ActionController::Base
   end
   
   helper_method :current_user
+  helper_method :cas_user
   helper_method :authorized?
   private
   def current_user
     @_current_user ||= session[ :user ] && User.find(session[ :user ])
+  end
+
+  def cas_user
+    session[ :cas_user ]
   end
   
   def authorized?(item=nil)

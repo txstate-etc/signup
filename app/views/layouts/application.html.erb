@@ -20,7 +20,13 @@
     <div id="container">
       <div class="left-column">
     		<div class="navigation">
-    		  <p><% if current_user %><%=h current_user.name %> <span class="logout-link">(<%= link_to("log out", '/logout') %>)</span><% end -%></p>
+    		  <p>
+    		    <% if current_user -%>
+    		      <%=h current_user.name %> <span class="logout-link">(<%= link_to("log out", '/logout') %>)</span>
+    		    <% elsif cas_user -%>
+  		        <%=h cas_user %> <span class="logout-link">(<%= link_to("log out", '/logout') %>)</span>
+    		    <% end -%>
+    		  </p>
     		  <p><%= link_to "Your&nbsp;Reservations", reservations_path %></p>
     		  <p><%= link_to "Available&nbsp;Topics", topics_path %></p>
     		</div>
