@@ -12,6 +12,7 @@ class Session < ActiveRecord::Base
   validate :at_least_one_occurrence, :at_least_one_instructor, :valid_instructor
   validates_presence_of :topic_id, :location
   validates_numericality_of :seats, :only_integer => true, :allow_nil => true
+  validate :enough_seats
   after_validation :reload_if_invalid
   accepts_nested_attributes_for :reservations  
   
@@ -42,6 +43,13 @@ class Session < ActiveRecord::Base
 
   def multiple_occurrences?
     occurrences.present? && occurrences.count > 1
+  end
+
+  def enough_seats
+    old_seats = seats_was || 0
+    if seats && seats < old_seats && seats < reservations.count
+      self.errors.add(:seats, 'can\'t be fewer than the number of current reservations')
+    end
   end
 
   def at_least_one_occurrence
