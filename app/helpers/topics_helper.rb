@@ -31,7 +31,7 @@ module TopicsHelper
   end
   
   def session_list(sessions)
-    expandible_list sessions.map{|session| link_to_session(session)}
+    expandible_list sessions.map{|session| link_to_session(session)}, 12
   end
   
   def department_select(f)

@@ -49,16 +49,16 @@ module ApplicationHelper
     link_to 'Take the survey!', url, :class => 'survey-link'
   end
   
-  def expandible_list(comments)
+  def expandible_list(comments, visible=5)
     ret = '<ul>'
-    comments[0..4].each do |comment| 
+    comments[0..(visible-1)].each do |comment| 
       ret << "<li>#{comment}</li>"
     end 
     ret << '</ul>'
     
-    if comments.size > 5
+    if comments.size > visible
       ret << '<ul style="display:none;">'
-      comments.drop(5).each do |comment|
+      comments.drop(visible).each do |comment|
         ret << "<li>#{comment}</li>"
       end
       ret << '</ul>'
