@@ -31,7 +31,6 @@ class User < ActiveRecord::Base
   
   def self.find_or_lookup_by_login(login)
     return nil unless login.present?
-    return nil if login == 'its-cms-autotest' #pretend its-cms-autotest doesn't exist for testing purposes
     
     user = User.find(:first, :conditions => ['login = ?', login ] )
     if user.blank?
@@ -143,15 +142,18 @@ class User < ActiveRecord::Base
       # Build the list
       records = records_updated = new_records = 0
       ldap.search(:base => base_dn, :filter => filter, :return_result => false ) do |entry|
-        first_name = entry.respond_to?( :givenName ) ? entry.givenName.to_s.strip : ''
-        last_name = entry.respond_to?( :sn ) ? entry.sn.to_s.strip : ''
-        if last_name.blank? && first_name.blank?
-          last_name = 'Unknown'
-        elsif last_name.blank?
-          last_name = first_name
-          first_name = ''
+        if !(entry.respond_to?( :givenName ) && entry.respond_to?( :sn ) && entry.respond_to?( :name ))
+          # logger.debug("Missing fields from following entry:")
+          # entry.each do |attribute, values|
+          #   logger.debug "   #{attribute}:"
+          #   values.each do |value|
+          #     logger.debug "      --->#{value}"
+          #   end
+          # end
+          next
         end
-        
+        first_name = entry.givenName.to_s.strip
+        last_name = entry.sn.to_s.strip
         login = entry.name.to_s.strip
         email = login + "@txstate.edu"
         department = nil
