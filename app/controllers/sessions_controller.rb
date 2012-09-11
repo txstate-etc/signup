@@ -65,11 +65,11 @@ class SessionsController < ApplicationController
     if authorized? @session
       if @session.update_attributes( params[ :session ] )
         flash[ :notice ] = "The Session's data has been updated."
+        redirect_to @session
       else        
-        flash[ :error ] = "There were problems updating this session: " + @session.errors.full_messages().to_s
+        @page_title = @session.topic.name
+        render :action => 'edit'
       end
-      @page_title = @session.time.to_s + ": " + @session.topic.name
-      redirect_to @session
     else
       redirect_to @session
     end
