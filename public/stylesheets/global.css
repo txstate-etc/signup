@@ -369,6 +369,25 @@ div.register-button {
   margin-left: -.5em;
 }
 
+div.login-link {
+  margin-top: 4px;
+  margin-left: -22px;
+}
+
+div.login-link a {
+  display: inline-block;
+  font-size: 1.2em;
+  font-weight: bold;
+  padding: 4px 32px;
+  border: 1px solid #ababab;
+}
+
+div.login-link a:hover {
+  border-color: #4b4b4b;
+  background-color: #f6f6f6;
+  text-decoration: none;
+}
+
 #session-details .notice {
   font-size: .9em;
 }
