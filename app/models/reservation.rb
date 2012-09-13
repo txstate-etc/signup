@@ -12,6 +12,8 @@ class Reservation < ActiveRecord::Base
   validate_on_create :session_not_cancelled, :not_in_past
   has_one :survey_response
   
+  # The default order must be created_at. This is how we determine who gets promoted to
+  # the waiting list when someone cancels.
   default_scope :order => "reservations.created_at"
   
   def session_not_cancelled

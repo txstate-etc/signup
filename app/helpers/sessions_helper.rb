@@ -8,7 +8,7 @@ module SessionsHelper
   def mailto_all(session)
     mailto = "mailto:#{session.instructors[0].email}"
     mailto << "?subject=Update: #{session.topic.name}"
-    mailto << '&bcc=' << session.confirmed_reservations.map { |r| r.user.email }.join(',') unless session.confirmed_reservations.blank?
+    mailto << '&bcc=' << session.confirmed_reservations_by_last_name.map { |r| r.user.email }.join(',') unless session.confirmed_reservations.blank?
     mailto
   end
 end

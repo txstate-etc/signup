@@ -136,19 +136,33 @@ class Session < ActiveRecord::Base
     return false
   end
   
-  def confirmed_reservations
-    results = self.seats ? reservations[ 0, self.seats ] : reservations
-    return results.sort { |a,b| a.user.last_name <=> b.user.last_name }
-  end
-  
   def seats_remaining
     seats - confirmed_reservations.size if seats
+  end
+  
+  # Returns the list of confirmed reservations (ie those not on the waiting list)
+  # in order of when they signed up. Certain logic regarding the waiting list requires
+  # this order, so no sorting here.
+  def confirmed_reservations
+    self.seats ? reservations[ 0, self.seats ] : reservations
+  end
+
+  # Returns the list of confirmed reservations (ie those not on the waiting list)
+  # sorted by last name. This method is appropriate for use in views, when 
+  # displaying the list to users, but should not be called when
+  # determining who should get promoted to the waiting list. Use confirmed_reservations for that.
+  def confirmed_reservations_by_last_name
+    confirmed_reservations.sort { |a,b| a.user.last_name <=> b.user.last_name }
   end
   
   def waiting_list
     self.seats && confirmed_reservations.size == self.seats ? reservations[ self.seats, reservations.size - self.seats ] : []
   end
   
+  def waiting_list_by_last_name
+    waiting_list.sort { |a,b| a.user.last_name <=> b.user.last_name }
+  end
+
   def to_cal
     calendar = RiCal.Calendar
     events = self.to_event

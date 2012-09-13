@@ -120,18 +120,62 @@ class ReservationsControllerTest < ActionController::TestCase
   
   test "When a reservation is deleted, the first person in the waiting list should be promoted and get an email" do
     login_as( users( :plainuser1 ) )
+
+    assert_equal 3, sessions( :gato_overbooked ).reservations.size
+    assert_equal 1, sessions( :gato_overbooked ).waiting_list.size
+    assert_equal 2, sessions( :gato_overbooked ).confirmed_reservations.size
     
+    assert_equal users( :plainuser2 ).name, sessions( :gato_overbooked ).confirmed_reservations.first.user.name
+    assert_equal users( :plainuser1 ).name, sessions( :gato_overbooked ).confirmed_reservations.last.user.name
+    assert_equal users( :plainuser3 ).name, sessions( :gato_overbooked ).waiting_list.first.user.name
+
     assert_difference 'ActionMailer::Base.deliveries.size', +1 do
       delete :destroy, :id => reservations( :overbooked_plainuser1 )
+      assert_redirected_to reservations_path
+      assert_match "has been cancelled", flash[:notice]
       Delayed::Worker.new(:quiet => true).work_off
     end
+
+    sessions( :gato_overbooked ).reload
+    assert_equal 2, sessions( :gato_overbooked ).reservations.size
+    assert_equal 0, sessions( :gato_overbooked ).waiting_list.size
+    assert_equal 2, sessions( :gato_overbooked ).confirmed_reservations.size
+    
+    assert_equal users( :plainuser2 ).name, sessions( :gato_overbooked ).confirmed_reservations.first.user.name
+    assert_equal users( :plainuser3 ).name, sessions( :gato_overbooked ).confirmed_reservations.last.user.name
     
     promotion_email = ActionMailer::Base.deliveries.last
     assert_equal "Now Enrolled: " + topics( :gato ).name, promotion_email.subject
     assert_equal users( :plainuser3 ).email, promotion_email.to[0]
     
+  end
+
+  test "When a waiting-list reservation is deleted, no emails are sent" do
+    login_as( users( :plainuser3 ) )
+
+    assert_equal 3, sessions( :gato_overbooked ).reservations.size
+    assert_equal 1, sessions( :gato_overbooked ).waiting_list.size
+    assert_equal 2, sessions( :gato_overbooked ).confirmed_reservations.size
+    
+    assert_equal users( :plainuser2 ).name, sessions( :gato_overbooked ).confirmed_reservations.first.user.name
+    assert_equal users( :plainuser1 ).name, sessions( :gato_overbooked ).confirmed_reservations.last.user.name
+    assert_equal users( :plainuser3 ).name, sessions( :gato_overbooked ).waiting_list.first.user.name
+
+    assert_difference 'ActionMailer::Base.deliveries.size', 0 do
+      delete :destroy, :id => reservations( :overbooked_plainuser3 )
+      assert_redirected_to reservations_path
+      assert_match "has been cancelled", flash[:notice]
+      Delayed::Worker.new(:quiet => true).work_off
+    end
+
+    sessions( :gato_overbooked ).reload
+    assert_equal 2, sessions( :gato_overbooked ).reservations.size
     assert_equal 0, sessions( :gato_overbooked ).waiting_list.size
     assert_equal 2, sessions( :gato_overbooked ).confirmed_reservations.size
+    
+    assert_equal users( :plainuser2 ).name, sessions( :gato_overbooked ).confirmed_reservations.first.user.name
+    assert_equal users( :plainuser1 ).name, sessions( :gato_overbooked ).confirmed_reservations.last.user.name
+        
   end
   
   test "Show what training sessions user is registered for" do

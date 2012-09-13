@@ -9,7 +9,7 @@ class AttendanceReport < Prawn::Document
       first_occurrence = false
       first_page = page_count
       total_pages = 1
-      items = session.confirmed_reservations
+      items = session.confirmed_reservations_by_last_name
       while items.size > 0
         page_header(session, occurrence)
         bounding_box([20,630], :width => 500, :height =>550) do

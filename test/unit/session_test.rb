@@ -179,7 +179,12 @@ class SessionTest < ActiveSupport::TestCase
   
   test "Confirmed Reservations should be alphabetized by last name" do
     test_session = sessions( :gato_overbooked )
-    assert_equal test_session.confirmed_reservations, test_session.confirmed_reservations.sort { |a,b| a.user.last_name <=> b.user.last_name }
+    assert_equal 2, sessions( :gato_overbooked ).confirmed_reservations.size
+    assert_equal users( :plainuser2 ).name, test_session.confirmed_reservations.first.user.name
+    assert_equal users( :plainuser1 ).name, test_session.confirmed_reservations.last.user.name
+    assert_equal users( :plainuser1 ).name, test_session.confirmed_reservations_by_last_name.first.user.name
+    assert_equal users( :plainuser2 ).name, test_session.confirmed_reservations_by_last_name.last.user.name
+    assert_equal test_session.confirmed_reservations_by_last_name, test_session.confirmed_reservations.sort { |a,b| a.user.last_name <=> b.user.last_name }
   end
   
   test "Try reminder emails for a multi time session" do

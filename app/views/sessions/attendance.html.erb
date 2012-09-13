@@ -65,7 +65,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<% @session.confirmed_reservations.each do |reservation| %>
+					<% @session.confirmed_reservations_by_last_name.each do |reservation| %>
 					<tr class="<%= cycle("even", "odd") %>">
 						<% session_form.fields_for :reservations, reservation do |reservation_fields|%>
 							<td class="attendance-user">	
@@ -112,6 +112,7 @@
 					<th scope="col" class="attendance-actions">Actions</th>	
 			</thead>
 			<tbody>
+			  <!-- Not sorting by last name here because we want to see who is next to be promoted if someone cancels -->
 				<% @session.waiting_list.each do |reservation| %>
 				<tr class="<%= cycle("even", "odd") %>">
 						<td class="attendance-user">	

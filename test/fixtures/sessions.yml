@@ -80,7 +80,7 @@ gato_huge:
 gato_overbooked:
   instructors: instructor1
   topic: gato
-  location: JCK 1100
+  location: JCK Overbooked
   cancelled: false
   seats: 2
 
