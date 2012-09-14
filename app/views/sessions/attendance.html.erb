@@ -132,13 +132,11 @@
 	</div>
 <% end %>
 
-<% if @session.time > Time.now %>
-	<div class="content-section">
-		<h2>Enroll Another Person</h2>
-		<%= form_tag :controller => :reservations, :action => :create, :session_id => @session.id %>
-			<%= label_tag "user_login", "Login ID:" %>
-			<%= text_field_tag "user_login", nil, :size => 7 %>
-			<%= submit_tag "Enroll" %>
-		</form>
-	</div>
-<% end %>
+<div class="content-section">
+	<h2>Enroll Another Person</h2>
+	<%= form_tag :controller => :reservations, :action => :create, :session_id => @session.id %>
+		<%= label_tag "user_login", "Login ID:" %>
+		<%= text_field_tag "user_login", nil, :size => 7 %>
+		<%= submit_tag "Enroll" %>
+	</form>
+</div>

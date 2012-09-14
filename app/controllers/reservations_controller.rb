@@ -20,6 +20,10 @@ class ReservationsController < ApplicationController
         redirect_to attendance_path(@reservation.session)
         return
       end
+    elsif !@session.in_registration_period?
+      flash[ :error ] = "Registration is closed for this session."
+      redirect_to @session 
+      return
     else
       @reservation.user = current_user
     end
