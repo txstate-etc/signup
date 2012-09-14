@@ -1,6 +1,6 @@
-Hi there <%= @reservation.user.name %>,
+Hi there <%= @user.name %>,
 
-Sad news: the session on "<%= @reservation.session.topic.name %>" for which you
+Sad news: the session on "<%= @session.topic.name %>" for which you
 had signed up has been cancelled.
 
 <% if @custom_message.present? -%>
@@ -10,22 +10,22 @@ had signed up has been cancelled.
 If you'd like to sign up to take the class at a different time, you can
 see a list of times it is offered here:
 
-<%= url_for :action => "show", :controller => "topics", :id => @reservation.session.topic.id, :only_path => false %>
+<%= url_for :action => "show", :controller => "topics", :id => @session.topic.id, :only_path => false %>
 
 ----
 
 The Cancelled Reservation
 
-What: <%= @reservation.session.topic.name %>
-<% if @reservation.session.multiple_occurrences? -%>
-When: This session meets <%= @reservation.session.occurrences.count %> times:
-<% @reservation.session.occurrences.each do |o| -%>
-  <%= formatted_time_range(o.time, @reservation.session.topic.minutes) %>
+What: <%= @session.topic.name %>
+<% if @session.multiple_occurrences? -%>
+When: This session meets <%= @session.occurrences.count %> times:
+<% @session.occurrences.each do |o| -%>
+  <%= formatted_time_range(o.time, @session.topic.minutes) %>
 <% end -%>
 <% else -%>
-When: <%= formatted_time_range(@reservation.session.time, @reservation.session.topic.minutes) %>
+When: <%= formatted_time_range(@session.time, @session.topic.minutes) %>
 <% end -%>
-Who:  <%= @reservation.user.name %>
+Who:  <%= @user.name %>
 
 ----
 

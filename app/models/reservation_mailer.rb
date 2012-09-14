@@ -77,20 +77,20 @@ class ReservationMailer < ActionMailer::Base
     attachment :content_type => "text/calendar", :body => reservation.session.to_cal
   end
 
-  def cancellation_notice( reservation, custom_message = '' )
-    subject    'Class Cancelled: ' + reservation.session.topic.name
-    recipients reservation.user.email_header
-    from       reservation.session.instructors[0].email_header
+  def cancellation_notice( session, user, custom_message = '' )
+    subject    'Class Cancelled: ' + session.topic.name
+    recipients user.email_header
+    from       session.instructors[0].email_header
     content_type 'multipart/alternative'
     
     url = url_for( :controller => "reservations" )
     
     part :content_type => "text/plain",
-      :body => render_message( "cancellation-notice-as-text", {:reservation => reservation, :custom_message => custom_message} ),
+      :body => render_message( "cancellation-notice-as-text", { :session => session, :user => user, :custom_message => custom_message} ),
       :transfer_encoding => "base64"
     
     part :content_type => "text/html",
-      :body => render_message( "cancellation-notice-as-html", {:reservation => reservation, :custom_message => custom_message} )
+      :body => render_message( "cancellation-notice-as-html", { :session => session, :user => user, :custom_message => custom_message} )
     
   end
   

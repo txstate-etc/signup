@@ -99,7 +99,8 @@ class ReservationMailerTest < ActionMailer::TestCase
     @expected.from    = 'i12345@dev.nul'
     @expected.to      = 'pu12345@dev.nul'
 
-    actual = ReservationMailer.create_cancellation_notice( reservations( :plainuser1 ) )
+    reservation = reservations( :plainuser1 )
+    actual = ReservationMailer.create_cancellation_notice( reservation.session, reservation.user )
     
     # For Cheater Driven Development: uncomment the following line to save the 'actual' email
     # to the fixture file to make it the new 'expected' body

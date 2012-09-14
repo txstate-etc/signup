@@ -226,4 +226,36 @@ class SessionTest < ActiveSupport::TestCase
   test "ics for multi time sessions has multiple events" do
     assert_equal 2, RiCal.parse_string(sessions( :multi_time_topic ).to_cal).first.events.size
   end
+  
+  test "emails sent to reservations after cancellation" do
+    assert_difference 'ActionMailer::Base.deliveries.size', +3 do
+      sessions( :gato_overbooked ).cancel!
+      Delayed::Worker.new(:quiet => true).work_off
+    end
+
+    cancellation_emails = ActionMailer::Base.deliveries.last(3)
+    cancellation_emails.each do |email|
+      assert_equal "Class Cancelled: " + topics( :gato ).name, email.subject
+    end    
+    assert_equal users( :instructor1 ).email, cancellation_emails[0].to[0]
+    assert_equal users( :plainuser2 ).email, cancellation_emails[1].to[0]
+    assert_equal users( :plainuser1 ).email, cancellation_emails[2].to[0]
+  end
+
+  test "emails sent to instructors after cancellation" do
+    assert_difference 'ActionMailer::Base.deliveries.size', +3 do
+      sessions( :tracs_multiple_instructors ).cancel!
+      Delayed::Worker.new(:quiet => true).work_off
+    end
+
+    cancellation_emails = ActionMailer::Base.deliveries.last(3)
+    cancellation_emails.each do |email|
+      assert_equal "Class Cancelled: " + topics( :tracs ).name, email.subject
+    end    
+    assert_equal users( :instructor1 ).email, cancellation_emails[0].to[0]
+    assert_equal users( :instructor2 ).email, cancellation_emails[1].to[0]
+    assert_equal users( :plainuser1 ).email, cancellation_emails[2].to[0]
+  end
+  
+  
 end

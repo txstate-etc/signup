@@ -115,8 +115,11 @@ class Session < ActiveRecord::Base
   def cancel!(custom_message = '')
     self.cancelled = true
     self.save
+    instructors.each do |instructor|
+      ReservationMailer.delay.deliver_cancellation_notice( self, instructor, custom_message )
+    end
     confirmed_reservations.each do |reservation|
-      ReservationMailer.delay.deliver_cancellation_notice( reservation, custom_message )
+      ReservationMailer.delay.deliver_cancellation_notice( self, reservation.user, custom_message )
     end
   end
   

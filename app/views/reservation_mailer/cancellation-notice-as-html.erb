@@ -40,9 +40,9 @@
 </head>
 
 <body>
-	<p>Hi there <%= @reservation.user.name %>,</p>
+	<p>Hi there <%= @user.name %>,</p>
 
-<p>Sad news: the session on "<%= @reservation.session.topic.name %>" for which you
+<p>Sad news: the session on "<%= @session.topic.name %>" for which you
 	had signed up has been cancelled.</p>
 
 <% if @custom_message.present? %>
@@ -50,23 +50,23 @@
 <%end%>
 	
 <p>If you'd like to sign up to take the class at a different time, you can
-	see a list of times it is offered <%= link_to "here", :action => "show", :controller => "topics", :id => @reservation.session.topic.id, :only_path => false %>.</p>
+	see a list of times it is offered <%= link_to "here", :action => "show", :controller => "topics", :id => @session.topic.id, :only_path => false %>.</p>
 
 <div class="reservationContainer">
 	<div class="reservationCard">
 		<h2>The Cancelled Reservation:</h2>
 		<dl>
 			<dt>What:</dt>
-			<dd><%=h @reservation.session.topic.name %></dd>
+			<dd><%=h @session.topic.name %></dd>
       <dt>When:</dt>
-      <% if @reservation.session.multiple_occurrences? %>
-        <dd>This session meets <%= @reservation.session.occurrences.count %> times:</dd>
+      <% if @session.multiple_occurrences? %>
+        <dd>This session meets <%= @session.occurrences.count %> times:</dd>
       <% end %>
-      <% @reservation.session.occurrences.each do |o| %>
-        <dd><%=h formatted_time_range(o.time, @reservation.session.topic.minutes) %></dd>
+      <% @session.occurrences.each do |o| %>
+        <dd><%=h formatted_time_range(o.time, @session.topic.minutes) %></dd>
       <% end %>
 			<dt>Who:</dt>
-			<dd><%=h @reservation.user.name %></dd>
+			<dd><%=h @user.name %></dd>
 		</dl>
 	</div>
 </div>
