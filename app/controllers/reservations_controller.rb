@@ -39,7 +39,8 @@ class ReservationsController < ApplicationController
           flash[ :notice ] = "#{@reservation.user.name} has been added to the waiting list."
         end
       else
-        flash[ :error ] = "Unable to make reservation for " + params[ :user_login ]
+        errors = @reservation.errors.full_messages.join(" ")
+        flash[ :error ] = "Unable to make reservation for " + params[ :user_login ] + ". " + errors
       end
       redirect_to attendance_path(@reservation.session) 
     else

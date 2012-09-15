@@ -8,7 +8,7 @@ class Reservation < ActiveRecord::Base
   belongs_to :user
   validates_presence_of :user_id, :message => "not recognized"
   validates_presence_of :session_id
-  validates_uniqueness_of :user_id, :scope => [ :session_id ], :message => "This user has already registered for this session."
+  validates_uniqueness_of :user_id, :scope => [ :session_id ], :message => "has already registered for this session."
   validate_on_create :session_not_cancelled
   has_one :survey_response
   
