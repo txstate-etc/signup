@@ -392,6 +392,10 @@ div.login-link a:hover {
   font-size: .9em;
 }
 
+#session-details a.download-link {
+  padding-left: 20px;
+}
+
 .button-link a {
   display: block;
   padding: .25em;

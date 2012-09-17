@@ -100,6 +100,11 @@ class SessionsController < ApplicationController
       @page_title = @session.topic.name
       respond_to do |format|
         format.html
+        format.csv do
+          send_data @session.to_csv,
+            :type => 'text/csv; charset=iso-8859-1; header=present',
+            :disposition => "attachment; filename=#{@session.to_param}.csv"
+        end
         format.pdf { send_data AttendanceReport.new.to_pdf(@session), :disposition => 'inline', :type => 'application/pdf' }
       end
     else

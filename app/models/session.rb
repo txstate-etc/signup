@@ -186,6 +186,21 @@ class Session < ActiveRecord::Base
     end
     return events
   end
+
+  def to_csv
+    FasterCSV.generate do |csv|
+      csv << [ "Topic", "Session ID", "Session Time", "Session Cancelled", "Attendee Name", "Attendee Login", "Attendee Email", "Reservation Confirmed?", "Attended?" ]
+      self.reservations.each do |reservation|
+        attended = ""
+        if reservation.attended == Reservation::ATTENDANCE_MISSED
+          attended = "MISSED"
+        elsif reservation.attended == Reservation::ATTENDANCE_ATTENDED
+          attended = "ATTENDED"
+        end
+        csv << [ self.topic.name, self.id, self.time, self.cancelled, reservation.user.name, reservation.user.login, reservation.user.email, reservation.confirmed?, attended ]
+      end
+    end
+  end
   
   def self.send_reminders( start_time, end_time, only_first_occurrence = false )
     logger.info "#{DateTime.now.strftime("%F %T")}: Sending session reminders for #{start_time.strftime("%F %T")}..."

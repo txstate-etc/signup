@@ -43,6 +43,7 @@
   		<% end %>
   		<% if @session.confirmed_reservations.size > 0 %>
 			  <br/><%= link_to 'Print Attendance Sheet', {:action => :attendance, :id => @session, :format => "pdf" } %>
+			  <br/><%= link_to "Download Attendance Details", {:action => :attendance, :id => @session, :format => "csv" }, :class => "download-link download-csv" %>
 			  <br/><%= link_to 'Email All Participants', mailto_all(@session) %>
 			<% end %>
 		</dd>
