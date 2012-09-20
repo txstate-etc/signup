@@ -5,6 +5,10 @@ module ApplicationHelper
     ((count == 1 || count == '1') ? singular : (plural || singular.pluralize))
   end
   
+  def pluralize_word_with_count(count, singular, plural = nil)
+    "#{count} #{pluralize_word(count, singular, plural)}"
+  end
+  
   def friendly_time(time)
     if (time.hour == 12 && time.min == 0) 
       "Noon"

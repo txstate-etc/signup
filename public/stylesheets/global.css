@@ -215,6 +215,15 @@ label.admin-netid-label {
   padding-left: 1.75em;
 }
 
+.inactive-topic-message {
+  color: #B00;
+  font-family: helvetica;
+  font-weight: bold;
+  border: 2px solid;
+  margin: 10px;
+  padding: 10px;
+}
+
 #error {
   color: #D00;
   border: 2px solid #D00;
@@ -1085,4 +1094,19 @@ div#manage-topics div.empty-list {
   font-size: .9em;
   margin-top: -1em;
   padding: 0 .5em;
+}
+
+div#delete-topic p {
+  padding-bottom: 6px;
+}
+
+div#delete-topic p.confirmation {
+  font-weight: bold;
+  font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', serif;
+}
+
+div#delete-topic a.delete-button {
+  color: #B00 !important;
+  margin-top: 15px;
+  margin-right: 15px;
 }

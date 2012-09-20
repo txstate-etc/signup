@@ -3,7 +3,7 @@ require 'prawn/core'
 require 'prawn/layout'
 
 class Session < ActiveRecord::Base
-  has_many :reservations
+  has_many :reservations, :dependent => :destroy
   has_many :occurrences, :dependent => :destroy
   accepts_nested_attributes_for :occurrences, :reject_if => lambda { |a| a[:time].blank? }, :allow_destroy => true
   belongs_to :topic

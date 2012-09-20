@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120808164437) do
+ActiveRecord::Schema.define(:version => 20120920165906) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -109,7 +109,7 @@ ActiveRecord::Schema.define(:version => 20120808164437) do
   end
 
   create_table "topics", :force => true do |t|
-    t.string   "name",                         :null => false
+    t.string   "name",                             :null => false
     t.text     "description"
     t.string   "url"
     t.integer  "minutes"
@@ -118,6 +118,7 @@ ActiveRecord::Schema.define(:version => 20120808164437) do
     t.integer  "survey_type",   :default => 1
     t.string   "survey_url"
     t.integer  "department_id"
+    t.boolean  "inactive",      :default => false
   end
 
   create_table "users", :force => true do |t|

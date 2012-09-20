@@ -6,13 +6,19 @@ class Topic < ActiveRecord::Base
   SURVEY_EXTERNAL = 2
 
   belongs_to :department
-  has_many :sessions
+  has_many :sessions, :dependent => :destroy
   has_many :documents, :dependent => :destroy
   accepts_nested_attributes_for :documents, :allow_destroy => true, :reject_if => lambda { |t| t['item'].nil? }
   validates_presence_of :name, :description, :minutes, :department
   validates_associated :department
   validates_presence_of :survey_url, :if => Proc.new{ |topic| topic.survey_type == SURVEY_EXTERNAL }, :message => "must be specified to use an external survey."
+  validate :inactive_with_no_upcoming_sessions
   default_scope :order => 'name'
+  named_scope :active, :conditions => { :inactive => false }
+  
+  def inactive_with_no_upcoming_sessions
+    errors.add_to_base("You cannot delete a topic with upcoming sessions. Cancel the sessions first.") if inactive? && upcoming_sessions.present?
+  end
   
   def after_validation
     if !self.errors.empty?
@@ -44,6 +50,16 @@ class Topic < ActiveRecord::Base
   
   def past_sessions
     @_past_sessions ||= sessions.find( :all, :conditions => [ "occurrences.time < ? AND cancelled = false", Time.now ], :order => "occurrences.time", :include => :occurrences )
+  end
+  
+  def deactivate!
+    # if this is a brand new topic (no non-cancelled sessions), just go ahead and delete it
+    if upcoming_sessions.blank? && past_sessions.blank?
+      return self.destroy
+    end
+    
+    self.inactive = true
+    self.save
   end
   
   def to_csv

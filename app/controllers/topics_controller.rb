@@ -27,7 +27,7 @@ class TopicsController < ApplicationController
     @topics = []
     if current_user.admin? || current_user.editor?
       # Show upcoming or all based on filter
-      @topics = @upcoming ? Topic.upcoming : Topic.all
+      @topics = @upcoming ? Topic.upcoming : Topic.active
       @topics = @topics.select { |t| @departments.include? t.department }
     end
     
@@ -104,6 +104,23 @@ class TopicsController < ApplicationController
     end
   end
   
+  # This doesn't actually do the delete action (destroy does that)
+  # It just display a confirmation/warning page here with a link to the destroy action
+  def delete
+    begin
+      @topic = Topic.find( params[:id] )
+    rescue ActiveRecord::RecordNotFound
+      render(:file => 'shared/404.erb', :status => 404, :layout => true) unless @topic
+      return
+    end
+
+    if authorized? @topic
+      @page_title = @topic.name
+    else
+      redirect_to @topic
+    end
+  end
+  
   def create
     @topic = Topic.new( params[ :topic ] )
     if authorized? @topic
@@ -136,7 +153,21 @@ class TopicsController < ApplicationController
     end
   end
   
-  
+  def destroy
+    topic = Topic.find( params[ :id ] )
+    if authorized? topic
+      if topic.deactivate!
+        flash[ :notice ] = "The topic \"#{topic.name}\" has been deleted."
+        redirect_to manage_topics_path
+        return
+      else
+        errors = topic.errors.full_messages.join(" ")
+        flash[ :error ] = "Unable to delete topic \"#{topic.name}\". " + errors
+      end
+    end
+    redirect_to topic
+  end
+    
   def download
     topic = Topic.find( params[ :id ] )
     calendar = RiCal.Calendar
