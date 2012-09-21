@@ -38,7 +38,7 @@ module TopicsHelper
     # for existing topics, only admins can modify dept
     # for new topics, limit selection to user's departments (for non-admins. Admins can select any dept).
     disabled = !(current_user.admin? || f.object.new_record?)
-    departments = current_user.admin? ? Department.all : current_user.departments
+    departments = current_user.admin? ? Department.active : current_user.departments
     include_blank = f.object.new_record? && departments.size > 1
     f.collection_select :department_id, departments, :id, :name, { :include_blank => include_blank }, { :disabled => disabled }
   end

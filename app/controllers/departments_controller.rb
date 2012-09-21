@@ -2,7 +2,7 @@ class DepartmentsController < ApplicationController
   before_filter :authenticate, :except => [ :show, :index ]
 
   def index
-    @departments = Department.all
+    @departments = Department.active
     @page_title = "Departments Offering Training"
   end
 
@@ -12,7 +12,7 @@ class DepartmentsController < ApplicationController
   end
 
   def manage
-    @departments = Department.all
+    @departments = Department.active
     @page_title = "Manage Departments"
   end
 
@@ -77,18 +77,18 @@ class DepartmentsController < ApplicationController
   end
   
   def destroy
-    @department = Department.find( params[ :id ] )
-    if authorized? @department   
-      if @department.topics.present?
-        flash[ :error ] = "Cannot delete department! There are topics assigned to it."
-        redirect_to @department
-      else
-        @department.destroy
-        flash[ :notice ] = "The department #{@department.name} has been deleted."
+    department = Department.find( params[ :id ] )
+    if authorized? department
+      if department.deactivate!
+        flash[ :notice ] = "The department \"#{department.name}\" has been deleted."
         redirect_to manage_departments_path
-      end    
-    else
-      redirect_to @department
+        return
+      else
+        errors = department.errors.full_messages.join(" ")
+        flash[ :error ] = "Unable to delete department \"#{department.name}\". " + errors
+      end
     end
-  end  
+    redirect_to department
+  end
+
 end

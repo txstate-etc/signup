@@ -20,7 +20,7 @@ class TopicsController < ApplicationController
     # Admins: show topics for their departments by default. Show all depts based on filter
     # Instructors: show departments for topics that they are instructors of plus any in
     @departments = current_user.departments
-    @departments = Department.all if (current_user.admin? && (@all_depts || @departments.blank?))
+    @departments = Department.active if (current_user.admin? && (@all_depts || @departments.blank?))
     
     #FIXME: most of this work should be done by the database
     
