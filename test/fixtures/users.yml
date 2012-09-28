@@ -21,6 +21,13 @@ plainuser3:
     last_name: User3
     admin: false
 
+plainuser4:
+    login: pu45678
+    email: pu45678@dev.nul
+    first_name: Plain
+    last_name: User4
+    admin: false
+
 admin1:
     login: a12345
     email: a12345@dev.nul

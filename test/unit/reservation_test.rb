@@ -3,14 +3,20 @@ require 'test_helper'
 class ReservationTest < ActiveSupport::TestCase
   fixtures :topics, :reservations, :users
   
-  test "Shouldn't be able to make reservations for sessions in the past" do
-    reservation = Reservation.new( :session => sessions( :gato_past ), :user => users( :plainuser1 ) )
-    assert !reservation.save
+  # We prevent this at the controller level, but not at the model level because
+  # admins can make reservations for walkins after the class is over,
+  # and the model has no knowledge of who is logged on.
+  test "Should be able to make reservations for sessions in the past" do
+    reservation = Reservation.new( :session => sessions( :gato_past ), :user => users( :plainuser4 ) )
+    assert reservation.save
   end
 
-  test "Shouldn't be able to make reservations for sessions that have started" do
+  # We prevent this at the controller level, but not at the model level because
+  # admins can make reservations for walkins after the class is over,
+  # and the model has no knowledge of who is logged on.
+  test "Should be able to make reservations for sessions that have started" do
     reservation = Reservation.new( :session => sessions( :multi_time_topic_started ), :user => users( :plainuser2 ) )
-    assert !reservation.save
+    assert reservation.save
   end
   
   test "Shouldn't be able to make reservations for sessions that have been cancelled" do
