@@ -1,3 +1,9 @@
+<% content_for :head do %>
+  <% if @department.inactive? %>
+    <meta name="robots" content="noindex">
+  <% end %>
+<% end %>
+
 <% if @department.topics.size > 0 %>
 <ul id="topic-list">
 	<% @department.topics.each do |topic| %>

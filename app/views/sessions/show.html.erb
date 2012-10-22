@@ -1,3 +1,9 @@
+<% content_for :head do %>
+  <% if @session.cancelled? || @session.in_past? %>
+    <meta name="robots" content="noindex">
+  <% end %>
+<% end %>
+
 <div id="session-details" class="content-section">
   <h2>Session Details</h2>
   <dl>

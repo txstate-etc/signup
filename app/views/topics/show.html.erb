@@ -1,3 +1,9 @@
+<% content_for :head do %>
+  <% if @topic.inactive? %>
+    <meta name="robots" content="noindex">
+  <% end %>
+<% end %>
+
 <div id="session-details" class="session-list content-section">
   <h2>Upcoming Sessions</h2>
   <% if @topic.upcoming_sessions.present? %>

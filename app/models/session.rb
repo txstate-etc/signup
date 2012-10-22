@@ -41,6 +41,11 @@ class Session < ActiveRecord::Base
     end
   end
 
+  def in_past?
+    last = self.last_time
+    last && last < Time.now
+  end
+
   def multiple_occurrences?
     occurrences.present? && occurrences.count > 1
   end
