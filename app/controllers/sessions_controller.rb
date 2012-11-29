@@ -121,4 +121,15 @@ class SessionsController < ApplicationController
     end
   end
   
+  def email
+    session = Session.find( params[ :id ] )
+    if authorized? session
+      session.email_all(params[:message_text])
+      flash[ :notice ] = "Your email has been sent."
+      redirect_to attendance_path(session)
+    else
+      redirect_to session
+    end
+  end
+  
 end

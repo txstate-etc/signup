@@ -127,6 +127,15 @@ class Session < ActiveRecord::Base
       ReservationMailer.delay.deliver_cancellation_notice( self, reservation.user, custom_message )
     end
   end
+
+  def email_all(message)
+    instructors.each do |instructor|
+      ReservationMailer.delay.deliver_session_message( self, instructor, message )
+    end
+    confirmed_reservations.each do |reservation|
+      ReservationMailer.delay.deliver_session_message( self, reservation.user, message )
+    end
+  end
   
   def registration_period_defined?
     reg_start.present? || reg_end.present?

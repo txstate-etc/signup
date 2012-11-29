@@ -93,6 +93,21 @@ class ReservationMailer < ActionMailer::Base
       :body => render_message( "cancellation-notice-as-html", { :session => session, :user => user, :custom_message => custom_message} )
     
   end
+
+  def session_message( session, user, message )
+    subject    'Update: ' + session.topic.name
+    recipients user.email_header
+    from       session.instructors[0].email_header
+    content_type 'multipart/alternative'
+    
+    part :content_type => "text/plain",
+      :body => render_message( "session-message-as-text", { :session => session, :user => user, :message => message} ),
+      :transfer_encoding => "base64"
+    
+    part :content_type => "text/html",
+      :body => render_message( "session-message-as-html", { :session => session, :user => user, :message => message} )
+    
+  end
   
   def update_notice( reservation )
     subject    'Class Details Updated: ' + reservation.session.topic.name

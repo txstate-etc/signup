@@ -1,0 +1,43 @@
+Hi there <%= @user.name %>,
+
+<%= @message %>
+
+----
+
+Your Reservation
+
+What: <%= @session.topic.name %>
+<% if @session.multiple_occurrences? -%>
+When: This session meets <%= @session.occurrences.count %> times:
+<% @session.occurrences.each do |o| -%>
+  <%= formatted_time_range(o.time, @session.topic.minutes) %>
+<% end -%>
+<% else -%>
+When: <%= formatted_time_range(@session.time, @session.topic.minutes) %>
+<% end -%>
+Who:  <%= @user.name %>
+Description: <%=  auto_link( @session.topic.description ) %>
+
+----
+<% if @session.topic.documents.present? -%>
+Download class materials:
+<% @session.topic.documents.each do |d| -%>
+<%= d.friendly_name + ' : ' + ReservationMailer.absolute_url(d.item.url) %>
+<% end -%>
+----
+<% end -%>
+
+----
+
+If you're unable to attend the class for any reason, please cancel your
+reservation here:
+
+<%= url_for :controller => "reservations", :only_path => false %>
+
+If you'd like to sign up to take the class at a different time, you can
+see a list of times it is offered here: (Be sure to cancel your existing
+reservation first!)
+
+<%= url_for :action => "show", :controller => "topics", :id => @session.topic.id, :only_path => false %>
+
+

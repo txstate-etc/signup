@@ -895,7 +895,7 @@ div.admin-options strong {
   color: #501214;
 }
 
-#cancel-session-dialog {
+#cancel-session-dialog, #email-dialog {
   width: 500px;
   padding: 2em;
 }

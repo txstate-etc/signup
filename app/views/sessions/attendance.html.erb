@@ -44,7 +44,9 @@
   		<% if @session.confirmed_reservations.size > 0 %>
 			  <br/><%= link_to 'Print Attendance Sheet', {:action => :attendance, :id => @session, :format => "pdf" } %>
 			  <br/><%= link_to "Download Attendance Details", {:action => :attendance, :id => @session, :format => "csv" }, :class => "download-link download-csv" %>
-			  <br/><%= link_to 'Email All Participants', mailto_all(@session) %>
+			  <br/><span class="mailto-link"><%= link_to 'Email All Participants', '#', :id => 'email-dialog-link' %></span>
+			       <span class="mailto-link"><%= link_to '(use desktop mail client)', mailto_all(@session) %></span>
+			       <span class="mailto-link"><%= link_to '(use outlook)', mailto_all(@session, true) %></span>
 			<% end %>
 		</dd>
   </dl>
@@ -141,3 +143,5 @@
 		<%= submit_tag "Enroll" %>
 	</form>
 </div>
+
+<%= render :partial => "email_dialog", :locals => { :session => @session }%>

@@ -43,6 +43,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.attendance 'sessions/attendance/:id.:format', :controller => :sessions, :action => :attendance
   map.connect 'sessions/download', :controller => :sessions, :action => :download
+  map.connect 'sessions/email/:id', :controller => :sessions, :action => :email
   map.connect 'topics/download/:id', :controller => :topics, :action => :download
   map.connect 'topics/filter/*filter', :controller => :topics, :action => :filter
   map.logout 'logout', :controller => :users, :action => :logout
