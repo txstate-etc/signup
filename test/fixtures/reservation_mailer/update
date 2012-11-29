@@ -30,7 +30,7 @@ http://localhost:3000/topics/419328395
 <html>
 
 <head>
-	<title>Reservation Confirmation</title>
+	<title>Reservation Update</title>
 	<style type="text/css">
 	div.reservationCard {
 		background-color: #eeeeaa;
