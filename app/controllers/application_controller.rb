@@ -3,6 +3,7 @@
 
 class ApplicationController < ActionController::Base
   include ExceptionNotification::Notifiable
+  before_filter :cas_setup
   helper :all # include all helpers, all the time
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
 
@@ -20,6 +21,7 @@ class ApplicationController < ActionController::Base
       user = User.find_or_lookup_by_login(session[ :cas_user ])
       session[ :user ] = user.id if user
     else
+      session[:cas_redirect] = request.url
       return false unless CASClient::Frameworks::Rails::Filter.filter( self )
       user = User.find_or_lookup_by_login(session[ :cas_user ]) if session[ :cas_user ] 
       session[ :user ] = user.id if user
@@ -32,6 +34,13 @@ class ApplicationController < ActionController::Base
     end
     
     return true
+  end
+
+  # hard to generate the login URL in the config file where we set up
+  # all the other CAS options
+  # So we set it here and put it in a filter
+  def cas_setup
+    CASClient::Frameworks::Rails::Filter.config[:service_url] = url_for :login
   end
   
   helper_method :current_user

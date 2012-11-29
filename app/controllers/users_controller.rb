@@ -10,12 +10,4 @@ class UsersController < ApplicationController
     @users = User.all(:select => "first_name, last_name, login", :conditions => [conditions.join(" AND ")] + values)
   end
 
-  def logout
-    CASClient::Frameworks::Rails::Filter.logout(self, root_url)
-  end
-
-  def login
-    session[:cas_redirect] ||= request.referrer || root_url
-    redirect_to session[:cas_redirect] if authenticate      
-  end  
 end

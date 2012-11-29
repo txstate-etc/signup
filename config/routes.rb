@@ -46,25 +46,25 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'sessions/email/:id', :controller => :sessions, :action => :email
   map.connect 'topics/download/:id', :controller => :topics, :action => :download
   map.connect 'topics/filter/*filter', :controller => :topics, :action => :filter
-  map.logout 'logout', :controller => :users, :action => :logout
-  map.login 'login', :controller => :users, :action => :login, :conditions => { :method => [:post, :get] }
-  
+  map.login 'login', :controller => :authentication, :action => :login
+  map.logout 'logout', :controller => :authentication, :action => :logout
+
   map.resources :departments, :collection => { :manage => :get }
   map.resources :users, :only => [ :index ]
   
   map.resources :topics, :shallow => true, :member => { :delete => :get }, :collection => { :manage => :get } do |topic|
     topic.resources :sessions do |session|
-      session.resources :reservations, :new => { :new => [:post, :get] }
+      session.resources :reservations, :new 
     end
   end
 
   map.resources :reservations, :only => :edit
-  map.reservations 'reservations', :controller => :reservations, :action => :index, :conditions => { :method => [:post, :get] }
+  map.reservations 'reservations', :controller => :reservations, :action => :index
   
   map.connect 'reservations/download/:id', :controller => :reservations, :action => :download
   map.send_reminder 'reservations/send_reminder/:id', :controller => :reservations, :action => :send_reminder
   map.resources :survey_responses, :only => [ :create ]
-  map.new_survey_response 'survey_responses/new', :controller => :survey_responses, :action => :new, :conditions => { :method => [:post, :get] }
+  map.new_survey_response 'survey_responses/new', :controller => :survey_responses, :action => :new
   map.topic_survey_results 'topics/:id/survey_results', :controller => :topics, :action => :survey_results
   map.session_survey_results 'sessions/:id/survey_results', :controller => :sessions, :action => :survey_results
 end

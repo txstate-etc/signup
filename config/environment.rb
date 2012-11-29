@@ -44,7 +44,8 @@ Rails::Initializer.run do |config|
 end
 
 CASClient::Frameworks::Rails::Filter.configure(
-  :cas_base_url => "https://llavero.its.txstate.edu/cas"
+  :cas_base_url => "https://llavero.its.txstate.edu/cas",
+  :enable_single_sign_out => true
 )
 
 ActiveSupport::CoreExtensions::Date::Conversions::DATE_FORMATS.merge!(:default => "%A %m/%d/%Y")
