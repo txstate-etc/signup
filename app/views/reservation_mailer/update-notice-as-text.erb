@@ -21,6 +21,15 @@ Who:  <%= @reservation.user.name %>
 Description: <%=  auto_link( @reservation.session.topic.description ) %>
 
 ----
+<% if @reservation.session.topic.documents.present? -%>
+Download class materials:
+<% @reservation.session.topic.documents.each do |d| -%>
+<%= d.friendly_name + ' : ' + ReservationMailer.absolute_url(d.item.url) %>
+<% end -%>
+----
+<% end -%>
+
+----
 
 If you're unable to attend the class for any reason, please cancel your
 reservation here:

@@ -1,7 +1,7 @@
 <html>
 
 <head>
-	<title>Reservation Confirmation</title>
+	<title>Reservation Update</title>
 	<style type="text/css">
 	div.reservationCard {
 		background-color: #eeeeaa;
@@ -69,6 +69,12 @@
 			<dd><%=h @reservation.user.name %></dd>
       <dt>Description:</dt>
       <dd><%= auto_link( simple_format( h( @reservation.session.topic.description ) ) ) %></dd>
+      <%- if @reservation.session.topic.documents.present? -%>
+        <dt>Download Class Materials:</dt>
+        <%- @reservation.session.topic.documents.each do |d| -%>
+          <dd><%= link_to d.friendly_name, ReservationMailer.absolute_url(d.item.url), :only_path => false %></dd>
+        <%- end -%>
+      <%- end -%>
 		</dl>
 	</div>
 </div>
