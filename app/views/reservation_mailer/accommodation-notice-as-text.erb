@@ -5,7 +5,7 @@ Hi there <%=h @reservation.session.topic.name %> instructors,
 accommodations for his/her needs:
 
 <%- if @reservation.special_accommodations.blank? -%>
-  < None. The student has deleted his previous request. >
+  < None. The student has deleted his/her previous request. >
 <%- else -%>	
   <%= @reservation.special_accommodations %>
 <%- end -%>

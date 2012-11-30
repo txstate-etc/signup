@@ -47,7 +47,7 @@
 	accommodations for his/her needs:</p>
 	
 <%- if @reservation.special_accommodations.blank? -%>
-  <p>&lt; None. The student has deleted his previous request. &gt;</p>
+  <p>&lt; None. The student has deleted his/her previous request. &gt;</p>
 <%- else -%>
   <p><%=h @reservation.special_accommodations %></p>
 <%- end -%>
