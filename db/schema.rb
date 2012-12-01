@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121129194835) do
+ActiveRecord::Schema.define(:version => 20121130194959) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -133,15 +133,17 @@ ActiveRecord::Schema.define(:version => 20121129194835) do
   end
 
   create_table "users", :force => true do |t|
-    t.string   "login",                         :null => false
-    t.string   "email",                         :null => false
-    t.boolean  "admin",      :default => false, :null => false
+    t.string   "login",                          :null => false
+    t.string   "email",                          :null => false
+    t.boolean  "admin",       :default => false, :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "active",     :default => true
+    t.boolean  "active",      :default => true
     t.string   "department"
     t.string   "first_name"
     t.string   "last_name"
+    t.string   "name_prefix"
+    t.string   "title"
   end
 
   add_index "users", ["active"], :name => "index_users_on_active"

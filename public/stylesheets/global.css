@@ -725,6 +725,7 @@ table.attendance-list tr.even {
 table.attendance-list td {
   padding: 4px 8px;
   border-bottom: 1px #C6C6C6 solid;
+  vertical-align: middle;
 }
 
 table.attendance-list .attendance-radios {
@@ -733,7 +734,7 @@ table.attendance-list .attendance-radios {
 }
 
 table.attendance-list .attendance-actions {
-  width: 40px;
+  width: 56px;
   text-align: center;
   border-left: 1px #C6C6C6 solid;
 }
@@ -752,12 +753,24 @@ table.attendance-list .attendance-actions {
   height: 2em;
 }
 
+table.attendance-list .user-info {
+  display: block;
+  font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', serif;
+  font-size: 0.75em;
+  line-height: 1.61803399;
+}
+
+table.attendance-list a.email-link,
 table.attendance-list a.remind-link,
 table.attendance-list a.cancel-link {
     display: inline-block;
     color: transparent;
     width: 16px;
     height: 26px;
+}
+
+table.attendance-list a.email-link {
+    background: url(/images/email_go.png) center no-repeat;
 }
 
 table.attendance-list a.remind-link {
@@ -1011,7 +1024,14 @@ ul.instructor-list {
 }
 
 ul.instructor-list li {
-/*  padding-bottom: 0.5em;*/
+  margin-bottom: 0.5em;
+}
+
+ul.instructor-list li .instructor-info {
+  display: block;
+  font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', serif;
+  font-size: 0.85em;
+  line-height: 1.61803399;
 }
 
 #contents div.dialog {

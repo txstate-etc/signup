@@ -31,7 +31,10 @@
   	<dd>
   	  <ul class="instructor-list">
   	    <% @session.instructors.each do |instructor| %>
-  	      <li><%= link_to instructor.name , 'mailto:' + instructor.email %></li>
+  	      <li>
+  	        <span class="instructor-name"><%= link_to_user_directory(instructor) %></span>
+  	        <span class="instructor-info"><%= instructor.title_and_department %></span>
+  	      </li>
   	    <% end %>
   	  </ul>
   	</dd>

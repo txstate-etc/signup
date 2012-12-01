@@ -27,7 +27,10 @@
   	<dd>
   	  <ul class="instructor-list">
   	    <% @session.instructors.each do |instructor| %>
-  	      <li><%= link_to instructor.name , 'mailto:' + instructor.email %></li>
+  	      <li>
+  	        <span class="instructor-name"><%= link_to_user_directory(instructor) %></span>
+  	        <span class="instructor-info"><%= instructor.title_and_department %></span>
+  	      </li>
   	    <% end %>
   	  </ul>
   	</dd>
@@ -72,8 +75,8 @@
 					<tr class="<%= cycle("even", "odd") %>">
 						<% session_form.fields_for :reservations, reservation do |reservation_fields|%>
 							<td class="attendance-user">	
-								<%= link_to reservation.user.name, 'mailto:' + reservation.user.email %>
-								<%=h ', ' + reservation.user.department if !reservation.user.department.blank? %>
+								<%= link_to_user_directory(reservation.user) %>
+								<span class="user-info"><%= reservation.user.title_and_department %></span>
 								<% if !reservation.special_accommodations.blank? %>
 									<p class="special-accommodations collapsed" title="<%=h reservation.special_accommodations %>"><%=h reservation.special_accommodations %></p>
 								<% end %>
@@ -83,6 +86,7 @@
 								<% if @session.last_time >= Time.now %>
 								  <%= link_to 'remind', send_reminder_path(reservation), {:title => 'Send reminder', :class => "remind-link", :confirm => "Are you sure you want to send an email reminder to #{reservation.user.name}?"}%>
 								<% end %>
+								<%= link_to 'email', "mailto:#{reservation.user.email}", :title => 'Send email', :class => "email-link" %>
 							</td>
 							<td class="attendance-radios"><span class="radio-span">
 								<%= reservation_fields.radio_button :attended, Reservation::ATTENDANCE_UNKNOWN %>

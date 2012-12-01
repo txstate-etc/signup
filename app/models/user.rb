@@ -7,12 +7,23 @@ class User < ActiveRecord::Base
   validates_presence_of :last_name, :login, :email
   
   def name
-    [first_name, last_name].join(" ").strip
+    [(name_prefix + "." if name_prefix), first_name, last_name].join(" ").strip
   end
   
   def name_and_login
      return nil unless name && login
      name + " (" + login + ")"
+  end
+  
+  def title_and_department
+    return title unless department.present?
+    return department unless title.present?
+    [title, department].join(", ")
+  end
+  
+  def directory_url
+    #FIXME: what if the people search has no results?
+    DIRECTORY_URL_BASE.gsub(/##LOGIN##/, login)
   end
     
   def email_header
@@ -156,25 +167,32 @@ class User < ActiveRecord::Base
         last_name = entry.sn.to_s.strip
         login = entry.name.to_s.strip
         email = login + "@txstate.edu"
-        department = nil
+        name_prefix = entry.personalTitle.to_s if entry.respond_to?( :personalTitle )
         department = entry.department.to_s if entry.respond_to?( :department )
-        user = User.find_or_initialize_by_login :first_name => first_name, :last_name => last_name, :login => login, :email => email, :department => department
-        if user.first_name != first_name || user.last_name != last_name || user.department != department
-          user.first_name = first_name
-          user.last_name = last_name
-          user.department = department
-          user.save
+        title = entry.title.to_s if entry.respond_to?( :title )
+        
+        user = User.find_or_initialize_by_login(login)
+
+        user.email = email
+        user.first_name = first_name
+        user.last_name = last_name
+        user.name_prefix = name_prefix
+        user.department = department
+        user.title = title
+
+        if user.new_record?
+          user.save!
+          new_records += 1
+        elsif user.changed?
+          user.save!
           logger.info( "Updated: " + email )
-          records_updated = records_updated + 1
-        elsif user.new_record?
-          user.save
-          new_records = new_records + 1
+          records_updated += 1
         else
           # update timestamp so that we can delete old records later
           user.active = true
           user.save
         end
-        records = records + 1
+        records += 1
       end
       
       # mark inactive records that haven't been updated for 7 days
