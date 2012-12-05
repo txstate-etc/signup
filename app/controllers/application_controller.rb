@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
       user = User.find_or_lookup_by_login(session[ :cas_user ])
       session[ :user ] = user.id if user
     else
-      session[:cas_redirect] = request.url
+      session[:cas_redirect] ||= request.url
       return false unless CASClient::Frameworks::Rails::Filter.filter( self )
       user = User.find_or_lookup_by_login(session[ :cas_user ]) if session[ :cas_user ] 
       session[ :user ] = user.id if user

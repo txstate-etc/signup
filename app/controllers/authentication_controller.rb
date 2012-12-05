@@ -1,12 +1,12 @@
 class AuthenticationController < ApplicationController
   skip_before_filter :authenticate
-  before_filter CASClient::Frameworks::Rails::Filter, :only => :login
   skip_before_filter :verify_authenticity_token, :only => :login
   
   def login
-    if session[:cas_user] then
-      session[:cas_redirect] ||= request.referrer || root_url
+    session[:cas_redirect] ||= request.referrer || root_url
+    if authenticate then
       redirect_to session[:cas_redirect]
+      session[:cas_redirect] = nil
     end
   end
 
