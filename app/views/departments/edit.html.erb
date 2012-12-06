@@ -13,3 +13,5 @@
 		<%= link_to "Cancel", manage_departments_path %>
 	<% end %>
 </div>
+
+<%= render :partial => "users/new_instructor_dialog", :locals => { :item => @department }%>

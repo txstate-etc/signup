@@ -1,4 +1,4 @@
-<% if authorized?(session) %>
+<% if authorized?(item) %>
   <%= javascript_include_tag 'modal' %>
   <div id="new-instructor-dialog" class="content-section">
     <h2>Add New Instructor</h2>
@@ -8,18 +8,7 @@
       :success => "new_instructor_completed(request)", 
       :failure => "new_instructor_failed(request)"
       } do |f| %>
-      <%= f.label :name_prefix, "Title (e.g., Dr):", :class => 'field-label' %>
-      <%= f.text_field :name_prefix, :size => 6 %>
-      <%= f.label :first_name, "First Name:", :class => 'field-label' %>
-      <%= f.text_field :first_name, :size => 25 %>
-      <%= f.label :last_name, "Last Name:", :class => 'field-label' %>
-      <%= f.text_field :last_name, :size => 25 %>
-      <%= f.label :email, "Email Address:", :class => 'field-label' %>
-      <%= f.text_field :email, :size => 50 %>
-      <%= f.label :department, "Organization:", :class => 'field-label' %>
-      <%= f.text_field :department, :size => 50 %>
-      <%= f.label :title, "Job title:", :class => 'field-label' %>
-      <%= f.text_field :title, :size => 50 %>
+      <%= render :partial => "users/form_fields", :locals => { :f => f }%>	
       <br/>
       <%= f.submit "Submit" %>
       <%= link_to_function "Cancel", "new_instructor_modal.hide()" %>

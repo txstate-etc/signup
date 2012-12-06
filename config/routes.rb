@@ -50,7 +50,7 @@ ActionController::Routing::Routes.draw do |map|
   map.logout 'logout', :controller => :authentication, :action => :logout
 
   map.resources :departments, :collection => { :manage => :get }
-  map.resources :users, :only => [ :index, :create ]
+  map.resources :users, :except => [:show], :collection => { :search => :get } 
   
   map.resources :topics, :shallow => true, :member => { :delete => :get }, :collection => { :manage => :get } do |topic|
     topic.resources :sessions do |session|

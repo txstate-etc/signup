@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121206024704) do
+ActiveRecord::Schema.define(:version => 20121206061654) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -145,6 +145,7 @@ ActiveRecord::Schema.define(:version => 20121206024704) do
     t.string   "name_prefix"
     t.string   "title"
     t.boolean  "manual",      :default => false
+    t.boolean  "inactive",    :default => false
   end
 
   add_index "users", ["active"], :name => "index_users_on_active"

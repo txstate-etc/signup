@@ -41,6 +41,7 @@
             <p><%= link_to "Manage Topics", manage_topics_path %></p>
             <% if current_user.admin? %>
               <p><%= link_to "Manage Departments", manage_departments_path %></p>
+              <p><%= link_to "Manage Users", users_path %></p>
             <% end %>
           </div>
         <% end %>

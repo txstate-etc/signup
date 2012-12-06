@@ -7,13 +7,16 @@ class User < ActiveRecord::Base
   validates_presence_of :last_name, :login, :email
   validates_uniqueness_of :login
   
+  named_scope :active, :conditions => { :inactive => false }
+  named_scope :manual, :conditions => { :manual => true }
+  
   [:first_name, :last_name, :name_prefix, :title, :department].each do |field|
     define_method(field) do
       s = super
-      # titleize, but works with names like "O'Brien". 
-      # Also doesn't downcase things that are all uppercase. FIXME: should we? Not for acronyms, but maybe for entire strings in all caps? These strings aren't really long enough for us to make an informed decision about
-      # FIXME: Doesn't work with "van der Houten" or "MacGuyver"
-      s.gsub(/\b([\S])/){|m| m.upcase} if s 
+      # if the title is all uppercase or all lowercase, titleize it
+      # if there is at least 1 upper and 1 lower case letter, leave it alone
+      # and assume the user knew what they wanted.
+      s =~ /(?=.*[\p{Upper}])(?=.*[\p{Lower}])/u ? s : s.titleize if s
     end
   end
   
@@ -64,6 +67,18 @@ class User < ActiveRecord::Base
     end
     
     user
+  end
+  
+  def deactivate!
+    # if this is a brand new user (no sessions, reservations, departments), just go ahead and delete it
+    if Reservation.count(:all, :conditions => { :user_id => self.id }) == 0 &&
+       Permission.count(:all, :conditions => { :user_id => self.id }) == 0 &&
+       Session.count(:all, :joins => :instructors, :conditions => {:sessions_users => {:user_id => self.id}}) == 0 
+      return self.destroy
+    end
+    
+    self.inactive = true
+    self.save
   end
   
   def authorized?(item=nil)
