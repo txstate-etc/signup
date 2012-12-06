@@ -1,0 +1,5 @@
+<% if @user.errors.present? %>
+  <%= { :errors => @user.errors.full_messages.reject { |m| m =~ /login.*blank/i }.map { |m| m.sub("Login","Email") } }.to_json %>
+<% else %>
+  <%= { :user => @user.name_and_login }.to_json %>
+<% end %>

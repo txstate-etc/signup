@@ -5,9 +5,22 @@ class User < ActiveRecord::Base
   has_many :departments, :through => :permissions
   
   validates_presence_of :last_name, :login, :email
+  validates_uniqueness_of :login
+  
+  [:first_name, :last_name, :name_prefix, :title, :department].each do |field|
+    define_method(field) do
+      s = super
+      # titleize, but works with names like "O'Brien". 
+      # Also doesn't downcase things that are all uppercase. FIXME: should we? Not for acronyms, but maybe for entire strings in all caps? These strings aren't really long enough for us to make an informed decision about
+      # FIXME: Doesn't work with "van der Houten" or "MacGuyver"
+      s.gsub(/\b([\S])/){|m| m.upcase} if s 
+    end
+  end
   
   def name
-    [(name_prefix + "." if name_prefix), first_name, last_name].join(" ").strip
+    s = (name_prefix || '').strip.sub(/([^.])$/) { $1 + '.' }
+    s << ' ' << [first_name, last_name].join(" ")
+    s.strip
   end
   
   def name_and_login
@@ -23,7 +36,7 @@ class User < ActiveRecord::Base
   
   def directory_url
     #FIXME: what if the people search has no results?
-    DIRECTORY_URL_BASE.gsub(/##LOGIN##/, login)
+    DIRECTORY_URL_BASE.gsub(/##LOGIN##/, login) unless manual?
   end
     
   def email_header
@@ -84,6 +97,12 @@ class User < ActiveRecord::Base
     # Instructors can edit reservations for sessions they are the instructor of.
     if item.is_a? Reservation 
       return self.departments.include?(item.session.topic.department) || item.session.instructor?( self )
+    end
+    
+    # Non-admins and Instructors can create new users (e.g., for Instructors who are not in the system)
+    # Only admins can edit them
+    if item.is_a? User
+      return item.new_record?
     end
     
     # default deny

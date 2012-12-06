@@ -9,3 +9,5 @@
 		<%= link_to "Cancel", @session.topic %>
 	<% end %>
 </div>
+
+<%= render :partial => "new_instructor_dialog", :locals => { :session => @session }%>

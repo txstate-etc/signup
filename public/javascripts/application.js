@@ -48,6 +48,15 @@ function add_fields(link, association, content, init_func) {
   if(window[init_func]) window[init_func](link);
 }    
 
+function after_update_instructor(element, value) {
+  if (value.hasClassName('add-new')) {
+    element.value = ""; 
+
+    // trigger modal ajax form for adding new user
+    show_instructor_dialog(element);
+  }
+}
+
 function set_initial_occurrence_value(link) {
   // Set the initial value of a new occurrence field to the same
   // time as the previous (non-deleted) field, but on the next day.

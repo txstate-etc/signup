@@ -1,4 +1,10 @@
 <div class="fields">
-  <%= f.text_field_with_auto_complete :name_and_login, { :minChars => 2 }, { :url => users_path( :js ), :method => :get, :with => "'search=' + element.value" } %>
+  <%= f.text_field_with_auto_complete :name_and_login, 
+    { :minChars => 2, :size => 55 }, 
+    { :url => users_path( :js ), 
+      :method => :get, 
+      :with => "'search=' + element.value", 
+      :after_update_element => "after_update_instructor"
+    } %>
   <%= link_to_remove_fields "remove", f %>
 </div>

@@ -1,1 +1,7 @@
-<%= auto_complete_result @users, :name_and_login %>
+<ul >
+  <% if @users.present? %>
+    <%= @users.map { |user| content_tag("li", h(user.name_and_login)) }.uniq.join %>
+  <% end %>
+  
+  <li class='add-new'>Add new...</li>
+</ul>

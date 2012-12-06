@@ -1,0 +1,75 @@
+<% if authorized?(session) %>
+  <%= javascript_include_tag 'modal' %>
+  <div id="new-instructor-dialog" class="content-section">
+    <h2>Add New Instructor</h2>
+    <div class="error-messages"></div>
+    <% remote_form_for User.new, {
+      :before => "new_instructor_before(request)", 
+      :success => "new_instructor_completed(request)", 
+      :failure => "new_instructor_failed(request)"
+      } do |f| %>
+      <%= f.label :name_prefix, "Title (e.g., Dr):", :class => 'field-label' %>
+      <%= f.text_field :name_prefix, :size => 6 %>
+      <%= f.label :first_name, "First Name:", :class => 'field-label' %>
+      <%= f.text_field :first_name, :size => 25 %>
+      <%= f.label :last_name, "Last Name:", :class => 'field-label' %>
+      <%= f.text_field :last_name, :size => 25 %>
+      <%= f.label :email, "Email Address:", :class => 'field-label' %>
+      <%= f.text_field :email, :size => 50 %>
+      <%= f.label :department, "Organization:", :class => 'field-label' %>
+      <%= f.text_field :department, :size => 50 %>
+      <%= f.label :title, "Job title:", :class => 'field-label' %>
+      <%= f.text_field :title, :size => 50 %>
+      <br/>
+      <%= f.submit "Submit" %>
+      <%= link_to_function "Cancel", "new_instructor_modal.hide()" %>
+    <% end %>
+  </div>
+  <script type="text/javascript">
+    var new_instructor_input = null;
+    var new_instructor_modal = new modal($('new-instructor-dialog'));
+    
+    function show_instructor_dialog(input) {     
+      new_instructor_input = input;
+      new_instructor_modal.content.down('.error-messages').update();
+      new_instructor_modal.content.down('form').reset();
+      new_instructor_modal.show();
+    }
+     
+    function new_instructor_completed(request) {
+      // find the form element for the new instructor and inject the data
+      // then close the dialog
+      var o = eval(request.responseText.evalJSON());
+      if (o.user) {
+        if (new_instructor_input) {
+          new_instructor_input.setValue(o.user);
+        }
+        new_instructor_modal.hide();
+      } else if (o.errors) {
+        var msg = "<div class='errorExplanation' id='errorExplanation'>" +
+          "<h2>" + o.errors.length + " errors prohibited this instructor from being saved</h2>" +
+          "<p>There were problems with the following fields:</p>" +
+          "<ul>";
+          o.errors.each(function(error) {
+            msg += "<li>" + error + "</li>";
+          });
+          msg += "</ul></div>";
+        
+        $('new-instructor-dialog').down('.error-messages').update(msg);
+        
+      }
+    }
+    
+    function new_instructor_before(request) {
+      $('new-instructor-dialog').down('.error-messages').update();
+    }
+    
+    function new_instructor_failed(request) {
+      var msg = 
+        "<div class='errorExplanation' id='errorExplanation'>" +
+          "<h3>Failed to Create Instructor!</h3>" +
+        "</div>";
+      $('new-instructor-dialog').down('.error-messages').update(msg);
+    }
+  </script>
+<% end %>

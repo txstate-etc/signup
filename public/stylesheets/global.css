@@ -249,8 +249,9 @@ label.admin-netid-label {
   margin-top: 0.5em;
 }
 
-.errorExplanation h2 {
+.errorExplanation h2, .errorExplanation h3 {
   color: #bb0000;
+  font-size: 1em;
 }
 
 .errorExplanation ul {
@@ -908,7 +909,7 @@ div.admin-options strong {
   color: #501214;
 }
 
-#cancel-session-dialog, #email-dialog {
+#cancel-session-dialog, #email-dialog, #new-instructor-dialog {
   width: 500px;
   padding: 2em;
 }
