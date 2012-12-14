@@ -698,12 +698,11 @@ table#topic-grid caption {
   font-weight: bold;
 }
 table#topic-grid caption a {
-  color: inherit;
+  color: #501214;
 }
 
 table#topic-grid td, table#topic-grid th {
-  border-top: 1px solid #8D8D8D;
-  border-right: 1px solid #8D8D8D;
+  border: 1px solid #8D8D8D;
   padding: 0 6px;
   width: 14.29%;
   font-size: .8em;
@@ -712,9 +711,6 @@ table#topic-grid td, table#topic-grid th {
 table#topic-grid th {
   text-align: center;
   border: none;
-}
-table#topic-grid tr td:last-child {
-  border-right: none;
 }
 
 table#topic-grid td.cur-month .day {
