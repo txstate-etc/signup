@@ -5,9 +5,49 @@ class TopicsController < ApplicationController
   
   def index
     @topics = Topic.upcoming
-    @page_title = "Available Topics"
+    @page_title = t(:'topics.index.title')
     
-    render :layout => 'application'
+    render :layout => 'topic_collection'
+  end
+
+  def by_department
+    @page_title = t(:'topics.index.title')
+    
+    @topics = Hash.new { |h,k| h[k] = Array.new }
+    Topic.upcoming.each do |topic|
+      @topics[topic.department] << topic 
+    end
+
+    render :layout => 'topic_collection'
+  end
+
+  def upcoming
+    @topics = Topic.upcoming
+    @page_title = t(:'topics.index.title')
+    
+    @sessions = Hash.new { |h,k| h[k] = Array.new }
+    @topics.each do |topic|
+      # FIXME: multiple occurrences??
+      topic.upcoming_sessions.each do |session| 
+        @sessions[session.time.to_date] << session 
+      end
+    end
+
+    render :layout => 'topic_collection'
+  end
+
+  def grid
+    @topics = Topic.upcoming
+    @page_title = t(:'topics.index.title')
+    
+    @cur_month = begin Date.new(params[:year].to_i, params[:month].to_i) rescue Date.today end
+
+    @occurrences = Hash.new { |h,k| h[k] = Array.new }
+    Occurrence.in_month(@cur_month).each do |occurrence|
+      @occurrences[occurrence.time.to_date] << occurrence
+    end
+          
+    render :layout => 'topic_collection'
   end
 
   def manage

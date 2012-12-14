@@ -16,6 +16,10 @@ class Session < ActiveRecord::Base
   after_validation :reload_if_invalid
   accepts_nested_attributes_for :reservations  
   
+  def <=>(other)
+    [self.time, self.topic.minutes] <=> [other.time, other.topic.minutes]
+  end
+  
   def time
     if occurrences.present?
       occurrences[0].time

@@ -9,3 +9,6 @@ en:
         occurrences: "Session Time"
       document:
         item_file_size: "Document size"
+  topics:
+    index:
+      title: "Available Topics"

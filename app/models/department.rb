@@ -17,6 +17,14 @@ class Department < ActiveRecord::Base
     "#{id}-#{name.parameterize}"
   end
   
+  def <=>(other)
+    self.name <=> other.name
+  end
+  
+  def upcoming
+    Topic.find( :all, :conditions => [ "topics.id IN ( select topic_id from sessions, occurrences where sessions.id = occurrences.session_id AND occurrences.time > ? AND cancelled = false AND department_id = ? )", Time.now, self.id ] )
+  end
+  
   def deactivate!
     # if this is a brand new department (no topics, active or inactive), just go ahead and delete it
     if Topic.count(:all, :conditions => [ 'department_id = ?', self.id ]) == 0

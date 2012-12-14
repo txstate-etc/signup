@@ -44,6 +44,10 @@ class Topic < ActiveRecord::Base
     "#{id}-#{name.parameterize}"
   end
   
+  def <=>(other)
+    self.name <=> other.name
+  end
+  
   def upcoming_sessions
     @_upcoming_sessions ||= sessions.find( :all, :conditions => [ "cancelled = false AND sessions.id NOT IN (SELECT session_id FROM occurrences WHERE occurrences.time <= ?)", Time.now ], :order => "occurrences.time", :include => :occurrences )
   end

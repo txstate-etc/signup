@@ -1,17 +1,9 @@
-<% content_for :sidebar do %>
-  <div class="download-link download-calendar">
-    <%= link_to "[add all topics to calendar]", :protocol => "webcal", :controller => 'sessions', :host => request.host, :port => request.port, :action => 'download' %>
-  </div>
-<% end %>
-   
-<div id="group-by-dept" class="notice"><%= link_to '(group by department)', departments_path %></div>
-
 <% if @topics.count == 0 %>
   <div class="empty-list">
     <p>Sorry, there are no upcoming sessions at this time. Please check again later!</p>
   </div>
 <% else %>
-  <ul id="topic-list">
+  <ul class="topic-list">
   	<% @topics.each do |topic| %>
   		<li>
   			<%= link_to topic.name, topic %>

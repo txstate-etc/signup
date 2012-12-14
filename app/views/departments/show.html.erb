@@ -5,13 +5,34 @@
 <% end %>
 
 <% if @department.topics.size > 0 %>
-<ul id="topic-list">
-	<% @department.topics.each do |topic| %>
-		<li>
-			<%= link_to topic.name, topic %>
-		</li>
-	<% end %>
-</ul>
+  <div class="content-section">
+    <h2>Upcoming sessions</h2>
+    <% if @topics.size > 0 %>
+      <ul class="topic-list">
+        <% @topics.each do |topic| %>
+          <li>
+            <%= link_to topic.name, topic %>
+            <% if topic.upcoming_sessions.present? %>       
+              <div class="session-info"><%= link_to_session topic.upcoming_sessions[0] %></div>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <div>This department does not currently have any upcoming sessions.</div>
+    <% end %>
+  </div>
+
+  <div class="content-section">
+    <h2>All topics offered by this department</h2>
+    <ul class="topic-list">
+      <% @department.topics.each do |topic| %>
+        <li>
+          <%= link_to topic.name, topic %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
 <% else %>
-	<div class="empty-list">This department does not currently have any topics available.</div>
+  <div class="empty-list">This department does not currently have any topics available.</div>
 <% end %>

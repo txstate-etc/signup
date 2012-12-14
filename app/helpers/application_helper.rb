@@ -19,12 +19,29 @@ module ApplicationHelper
     end  
   end
   
-  def formatted_time_range(start_time, duration)
+  def formatted_time_range(start_time, duration, include_date = true)
     return nil unless start_time && duration
     end_time = duration.minutes.since start_time
-    start_time.strftime('%A, %B %e, %Y, ') + friendly_time(start_time) + " - " + friendly_time(end_time)
+    s = ''
+    s << start_time.strftime('%A, %B %e, %Y, ') if include_date
+    s << friendly_time(start_time) << " - " << friendly_time(end_time)
   end
 
+  def full_month(date)
+    start = date.beginning_of_month
+    last =  date.end_of_month
+
+    # Rails thinks that the beginning_of_week is Monday. At least this is configurable in Rails >= 3.2
+    start = start.beginning_of_week - 1 unless start.wday == 0
+    last = last.end_of_week - 1 unless last.wday == 6
+    
+    (start..last).to_a
+  end
+  
+  def date_class(date, cur)
+    (date.today? ? 'today ' : '') << ((date.month == cur.month && date.year == cur.year) ? 'cur-month' : '')
+  end
+  
   def link_to_remove_fields(name, f, options={})
     f.hidden_field(:_destroy) + link_to_function(name, "remove_fields(this)", options)
   end

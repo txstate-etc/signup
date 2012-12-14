@@ -1,7 +1,10 @@
 module TopicsHelper
 
-  def session_info(session)
-    session_info = "#{formatted_time_range(session.time, session.topic.minutes)} ("
+  def session_info(session, opts={})
+    print_date = !(opts[:print_date] == false) #default to true unless explicitly set to false    
+    session_info = ""
+    session_info << "#{session.topic.name} " if opts[:print_name] == true
+    session_info << "#{formatted_time_range(session.time, session.topic.minutes, print_date)} ("
     session_info << " #{session.confirmed_reservations.size}"
     if session.seats
       session_info << " / #{session.seats}"
@@ -13,8 +16,8 @@ module TopicsHelper
     session_info << " )"
   end
 
-  def link_to_session(session)
-    link_to session_info(session), session
+  def link_to_session(session, opts={})
+    link_to session_info(session, opts), session
   end
 
   def session_time_short(session)

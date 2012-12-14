@@ -8,7 +8,8 @@ class DepartmentsController < ApplicationController
 
   def show
     @department = Department.find( params[ :id ] )
-    @page_title = "Topics Offered By: " + @department.name
+    @topics = @department.upcoming
+    @page_title = @department.name
   end
 
   def manage
