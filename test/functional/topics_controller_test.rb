@@ -7,9 +7,22 @@ class TopicsControllerTest < ActionController::TestCase
     get :index
     assert_response :success
     
+    get :grid
+    assert_response :success
+
+    get :upcoming
+    assert_response :success
+
+    get :by_department
+    assert_response :success
+
     get :show, :id => topics( :gato )
     assert_response :success
     
+    get :manage
+    assert_response :redirect
+    assert_redirected_to CASClient::Frameworks::Rails::Filter.login_url(@controller)
+  
     get :new
     assert_response :redirect
     assert_redirected_to CASClient::Frameworks::Rails::Filter.login_url(@controller)
@@ -19,6 +32,10 @@ class TopicsControllerTest < ActionController::TestCase
     assert_redirected_to CASClient::Frameworks::Rails::Filter.login_url(@controller)
     
     put :update, :id => topics( :gato )
+    assert_response :redirect
+    assert_redirected_to CASClient::Frameworks::Rails::Filter.login_url(@controller)
+
+    put :destroy, :id => topics( :gato )
     assert_response :redirect
     assert_redirected_to CASClient::Frameworks::Rails::Filter.login_url(@controller)
   end
@@ -28,10 +45,22 @@ class TopicsControllerTest < ActionController::TestCase
     get :index
     assert_response :success
   
+    get :grid
+    assert_response :success
+
+    get :upcoming
+    assert_response :success
+
+    get :by_department
+    assert_response :success
+
     get :show, :id => topics( :gato )
     assert_response :success
       
     get :new
+    assert_response :success
+  
+    get :manage
     assert_response :success
   
     get :create
@@ -41,16 +70,98 @@ class TopicsControllerTest < ActionController::TestCase
     assert_match(/has been updated/, flash[:notice])
     assert_response :redirect
     assert_redirected_to topic_path(assigns(:topic))
+
+    put :destroy, :id => topics( :topic_to_make_inactive )
+    assert_match(/has been deleted/, flash[:notice])
+    assert_response :redirect
+    assert_redirected_to manage_topics_path
+  end
+
+  test "Editors should be able to do anything in their departments." do
+    login_as( users( :editor1 ) )
+    get :index
+    assert_response :success
+  
+    get :grid
+    assert_response :success
+
+    get :upcoming
+    assert_response :success
+
+    get :by_department
+    assert_response :success
+
+    get :show, :id => topics( :gato )
+    assert_response :success
+      
+    get :new
+    assert_response :success
+  
+    get :manage
+    assert_response :success
+  
+    get :create
+    assert_response :success  
+    
+    get :edit, :id => topics( :gato )
+    assert_response :success
+
+    put :update, :id => topics( :gato )
+    assert_match(/has been updated/, flash[:notice])
+    assert_response :redirect
+    assert_redirected_to topic_path(assigns(:topic))
+
+    get :delete, :id => topics( :topic_to_make_inactive )
+    assert_response :success
+
+    put :destroy, :id => topics( :topic_to_make_inactive )
+    assert_match(/has been deleted/, flash[:notice])
+    assert_response :redirect
+    assert_redirected_to manage_topics_path
+  end
+
+  test "Editors should NOT be able to do anything in other departments." do
+    login_as( users( :editor1 ) )
+
+    get :edit, :id => topics( :no_survey_topic )
+    assert_response :redirect
+    assert_redirected_to topic_path(assigns(:topic))
+        
+    get :delete, :id => topics( :no_survey_topic )
+    assert_response :redirect
+    assert_redirected_to topic_path(assigns(:topic))
+        
+    put :update, :id => topics( :no_survey_topic )
+    assert_no_match(/has been updated/, flash[:notice])
+    assert_response :redirect
+    assert_redirected_to topic_path(assigns(:topic))
+
+    put :destroy, :id => topics( :topic_to_delete )
+    assert_no_match(/has been deleted/, flash[:notice])
+    assert_response :redirect
+    assert_redirected_to topics( :topic_to_delete )
   end
 
   test "Once logged as instructor, should be able to view topics, but not modify them." do
     login_as( users( :instructor1 ) )
     get :index
     assert_response :success
-  
+
+    get :grid
+    assert_response :success
+
+    get :upcoming
+    assert_response :success
+
+    get :by_department
+    assert_response :success
+
     get :show, :id => topics( :gato )
     assert_response :success
     
+    get :manage
+    assert_response :success
+  
     get :new
     assert_response :redirect
     assert_redirected_to topics_url
@@ -62,6 +173,11 @@ class TopicsControllerTest < ActionController::TestCase
     put :update, :id => topics( :gato )
     assert_response :redirect
     assert_redirected_to topic_path(assigns(:topic))
+
+    put :destroy, :id => topics( :topic_to_make_inactive )
+    assert_response :redirect
+    assert_redirected_to topic_path(topics( :topic_to_make_inactive ))
+    assert_equal false, topics( :topic_to_make_inactive ).inactive
   end
 
   test "Once logged as nobody special, should be able to view topics, but not modify them." do
@@ -83,6 +199,11 @@ class TopicsControllerTest < ActionController::TestCase
     put :update, :id => topics( :gato )
     assert_response :redirect
     assert_redirected_to topic_path(assigns(:topic))
+
+    put :destroy, :id => topics( :topic_to_make_inactive )
+    assert_response :redirect
+    assert_redirected_to topic_path(topics( :topic_to_make_inactive ))
+    assert_equal false, topics( :topic_to_make_inactive ).inactive
   end
   
   test "Should be able to download a topic's calendar" do
@@ -123,15 +244,23 @@ class TopicsControllerTest < ActionController::TestCase
     get :manage
     assert_response :success
     assert_equal 3, assigns( :departments ).count
-    assert_equal 5, assigns( :topics ).count
+    assert_equal 7, assigns( :topics ).count
   end
   
   test "Editors can manage topics in their department" do
     login_as( users( :editor1 ) )
+    @request.session[ :topics ] = 'all'
+    @request.session[ :departments ] = 'all'
     get :manage
     assert_response :success
     assert_equal 1, assigns( :departments ).count
     assert_equal 3, assigns( :topics ).count
+
+    login_as( users( :editor2 ) )
+    get :manage
+    assert_response :success
+    assert_equal 2, assigns( :departments ).count
+    assert_equal 7, assigns( :topics ).count
   end
   
   test "Instructors can manage topics they are instructors for" do
@@ -141,7 +270,7 @@ class TopicsControllerTest < ActionController::TestCase
     get :manage
     assert_response :success
     assert_equal 2, assigns( :departments ).count
-    assert_equal 4, assigns( :topics ).count
+    assert_equal 5, assigns( :topics ).count
 
     login_as( users( :instructor2 ) )
     get :manage
@@ -156,6 +285,56 @@ class TopicsControllerTest < ActionController::TestCase
     assert_response :redirect
     assert_redirected_to topics_url
   end
+
+  test "Grid view shows the correct month" do
+    get :grid
+    assert_response :success
+    assert_equal Date.today, assigns(:cur_month)
+    
+    get :grid, :month => '03', :year => '2010'
+    assert_response :success
+    assert_equal "2010-03-01", assigns(:cur_month).strftime('%Y-%m-%d') 
+  end
+
+  test "Grid view shows the correct occurrences for the selected month" do
+    get :grid, :month => '06', :year => '2035'
+    assert_response :success
+    assert_equal "2035-06-01", assigns(:cur_month).strftime('%Y-%m-%d')
+    assert_equal 2, assigns(:occurrences).keys.length
+    assert_equal 4, assigns(:occurrences)[Date.new(2035, 6, 2)].length
+    assert_equal 1, assigns(:occurrences)[Date.new(2035, 6, 15)].length
+
+    get :grid, :month => '05', :year => '2045'
+    assert_response :success
+    assert_equal "2045-05-01", assigns(:cur_month).strftime('%Y-%m-%d')
+    assert_equal 2, assigns(:occurrences).keys.length
+    assert_equal 1, assigns(:occurrences)[Date.new(2045, 5, 7)].length
+    assert_equal 2, assigns(:occurrences)[Date.new(2045, 5, 9)].length
+  end
+
+  test "Upcoming view shows the correct sessions organized by date" do
+    get :upcoming
+    assert_response :success
+
+    assert_equal 6, assigns(:sessions).keys.length
+    assert_equal 4, assigns(:sessions)[Date.new(2035, 6, 2)].length
+    #CANCELLED: assert_equal 1, assigns(:sessions)[Date.new(2035, 8, 2)].length
+    assert_equal 1, assigns(:sessions)[Date.new(2035, 9, 2)].length
+    assert_equal 1, assigns(:sessions)[Date.new(2035, 6, 15)].length
+    assert_equal 1, assigns(:sessions)[Date.new(2035, 7, 1)].length
+    assert_equal 1, assigns(:sessions)[Date.new(2037, 7, 1)].length
+    assert_equal 1, assigns(:sessions)[Date.new(2045, 5, 7)].length
+    # 2nd OCCURRENCE: assert_equal 2, assigns(:sessions)[Date.new(2045, 5, 9)].length
+  end
   
+  test "By Department view shows the correct sessions organized by department" do
+    get :by_department
+    assert_response :success
+
+    assert_equal 2, assigns(:topics).keys.length
+    assert_equal 2, assigns(:topics)[departments( :its )].length
+    assert_equal 1, assigns(:topics)[departments( :tr )].length
+  end
+    
 end
 

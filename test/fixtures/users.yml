@@ -46,6 +46,12 @@ editor1:
     last_name: Editor1
     admin: false
 
+editor2:
+    login: e22345
+    email: e22345@dev.nul
+    last_name: Editor2
+    admin: false
+
 instructor1:
     login: i12345
     email: i12345@dev.nul

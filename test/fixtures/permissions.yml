@@ -7,3 +7,12 @@ admin1_its:
 editor1_its:
   department: its
   user: editor1
+
+editor2_its:
+  department: its
+  user: editor2
+
+editor2_tr:
+  department: tr
+  user: editor2
+

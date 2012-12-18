@@ -75,3 +75,11 @@ multi_time_topic_completed1:
 multi_time_topic_completed2:
   session: multi_time_topic_completed
   time: 2010-05-09 13:00:00
+  
+inactive_topic:
+  session: inactive_topic
+  time: 2010-05-23 11:00:00
+
+topic_to_make_inactive:
+  session: topic_to_make_inactive
+  time: 2010-05-24 11:00:00

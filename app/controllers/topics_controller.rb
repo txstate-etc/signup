@@ -22,11 +22,11 @@ class TopicsController < ApplicationController
   end
 
   def upcoming
-    @topics = Topic.upcoming
+    topics = Topic.upcoming
     @page_title = t(:'topics.index.title')
     
     @sessions = Hash.new { |h,k| h[k] = Array.new }
-    @topics.each do |topic|
+    topics.each do |topic|
       # FIXME: multiple occurrences??
       topic.upcoming_sessions.each do |session| 
         @sessions[session.time.to_date] << session 
@@ -37,7 +37,6 @@ class TopicsController < ApplicationController
   end
 
   def grid
-    @topics = Topic.upcoming
     @page_title = t(:'topics.index.title')
     
     @cur_month = begin Date.new(params[:year].to_i, params[:month].to_i) rescue Date.today end
@@ -73,7 +72,7 @@ class TopicsController < ApplicationController
     
     if current_user.instructor?
       # Add topics for which the current user is the instructor
-      @topics = (@topics + Topic.by_instructor(current_user, @upcoming)).flatten.uniq
+      @topics = (@topics + Topic.active.by_instructor(current_user, @upcoming)).flatten.uniq
       @departments = (@departments + @topics.map(&:department)).flatten.uniq
     end
     

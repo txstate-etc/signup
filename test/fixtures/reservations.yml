@@ -82,3 +82,7 @@ multi_time_topic_started_plainuser1:
 multi_time_topic_completed_plainuser2:
     user: plainuser2
     session: multi_time_topic_completed
+
+inactive_topic_plainuser2:
+  user: plainuser2
+  session: inactive_topic

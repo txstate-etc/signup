@@ -29,7 +29,7 @@ multi_time_topic:
   description: You've got to show up twice.
   minutes: 60
   survey_type: 1
-  department: its
+  department: tr
 
 topic_with_attached_documents:
   name: Topic with Attached Documents
@@ -37,3 +37,26 @@ topic_with_attached_documents:
   minutes: 60
   survey_type: 1
   department: tr
+
+inactive_topic:
+  name: Topic that is Inactive
+  description: This topic is inactive. It should not show up in a normal listing.
+  minutes: 60
+  survey_type: 0
+  department: tr
+  inactive: true
+
+topic_to_make_inactive:
+  name: Topic that will be Made Inactive
+  description: This topic has one past session. It should be made inactive when deleted.
+  minutes: 60
+  survey_type: 0
+  department: its
+
+topic_to_delete:
+  name: Topic that will be Deleted
+  description: This topic has no past sessions. It should be actually deleted when deleted.
+  minutes: 60
+  survey_type: 0
+  department: tr
+

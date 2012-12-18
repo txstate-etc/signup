@@ -111,3 +111,18 @@ multi_time_topic_completed:
   location: Alkek 155
   cancelled: false
   seats: 20
+
+inactive_topic:
+  instructors: instructor1
+  topic: inactive_topic
+  location: Alkek 155
+  cancelled: false
+  seats: 20
+
+topic_to_make_inactive:
+  instructors: instructor1
+  topic: topic_to_make_inactive
+  location: Alkek 155
+  cancelled: false
+  seats: 20
+    
