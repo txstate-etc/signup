@@ -8,3 +8,13 @@ tr:
   
 library:
   name: Library
+
+inactive_department:
+  name: Department that is Inactive
+  inactive: true
+
+department_to_make_inactive:
+  name: Department to be made Inactive
+
+department_to_be_deleted:
+  name: Department to be Deleted

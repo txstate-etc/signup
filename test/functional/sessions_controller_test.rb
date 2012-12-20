@@ -7,11 +7,18 @@ class SessionsControllerTest < ActionController::TestCase
     get :show, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
     assert_response :success
     
+    get :download
+    assert_response :success
+    
     get :new, :topic_id => sessions( :tracs ).topic_id
     assert_response :redirect
     assert_redirected_to CASClient::Frameworks::Rails::Filter.login_url(@controller)
     
     get :create, :topic_id => sessions( :tracs ).topic_id
+    assert_response :redirect
+    assert_redirected_to CASClient::Frameworks::Rails::Filter.login_url(@controller)
+
+    get :edit, :id => sessions( :tracs )
     assert_response :redirect
     assert_redirected_to CASClient::Frameworks::Rails::Filter.login_url(@controller)
 
@@ -24,6 +31,21 @@ class SessionsControllerTest < ActionController::TestCase
     assert_response :redirect    
     assert_redirected_to CASClient::Frameworks::Rails::Filter.login_url(@controller)
     assert_not_equal "The Session's data has been updated.", flash[:notice]
+
+    # reset the response object or it will give a redirect loop error after five redirects
+    setup_controller_request_and_response
+
+    get :attendance, :id => sessions( :tracs )
+    assert_response :redirect
+    assert_redirected_to CASClient::Frameworks::Rails::Filter.login_url(@controller)
+
+    get :survey_results, :id => sessions( :tracs )
+    assert_response :redirect
+    assert_redirected_to CASClient::Frameworks::Rails::Filter.login_url(@controller)
+
+    get :email, :id => sessions( :tracs )
+    assert_response :redirect
+    assert_redirected_to CASClient::Frameworks::Rails::Filter.login_url(@controller)
   end
   
   test "Admins can do anything" do
@@ -31,7 +53,13 @@ class SessionsControllerTest < ActionController::TestCase
     get :show, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
     assert_response :success
     
+    get :download
+    assert_response :success
+    
     get :new, :topic_id => sessions( :tracs ).topic_id
+    assert_response :success
+    
+    get :edit, :id => sessions( :tracs )
     assert_response :success
     
     get :create, :topic_id => sessions( :tracs ).topic_id, :session => { :topic_id => sessions( :tracs ).topic_id }
@@ -45,6 +73,16 @@ class SessionsControllerTest < ActionController::TestCase
     post :update, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
     assert_redirected_to session_path(sessions( :tracs ))
     assert_equal "The Session's data has been updated.", flash[:notice]
+
+    get :attendance, :id => sessions( :tracs )
+    assert_response :success
+
+    get :survey_results, :id => sessions( :tracs )
+    assert_response :success
+
+    get :email, :id => sessions( :tracs )
+    assert_response :redirect
+    assert_redirected_to attendance_path(sessions( :tracs ))
   end
   
   test "Instructors can delete and update own sessions" do
@@ -52,9 +90,15 @@ class SessionsControllerTest < ActionController::TestCase
     get :show, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
     assert_response :success
     
+    get :download
+    assert_response :success
+    
     get :new, :topic_id => sessions( :tracs ).topic_id
     assert_redirected_to topic_path(sessions( :tracs ).topic)
     assert_response :redirect
+    
+    get :edit, :id => sessions( :tracs )
+    assert_response :success
     
     get :create, :topic_id => sessions( :tracs ).topic_id, :session => { :topic_id => sessions( :tracs ).topic_id }
     assert_redirected_to root_url
@@ -68,16 +112,154 @@ class SessionsControllerTest < ActionController::TestCase
     post :update, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
     assert_redirected_to session_path(sessions( :tracs ))
     assert_equal "The Session's data has been updated.", flash[:notice]
+
+    get :attendance, :id => sessions( :tracs )
+    assert_response :success
+
+    get :survey_results, :id => sessions( :tracs )
+    assert_response :success
+
+    get :email, :id => sessions( :tracs )
+    assert_response :redirect
+    assert_redirected_to attendance_path(sessions( :tracs ))
   end
   
-  test "Regular users should be able to view, but not make changes" do
-    login_as( users( :plainuser1 ) )
+  test "Instructors can NOT delete and update other sessions" do
+    login_as( users( :instructor1 ) )
     get :show, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
+    assert_response :success
+    
+    get :download
     assert_response :success
     
     get :new, :topic_id => sessions( :tracs ).topic_id
     assert_redirected_to topic_path(sessions( :tracs ).topic)
     assert_response :redirect
+    
+    get :edit, :id => sessions( :tracs )
+    assert_response :redirect
+    assert_redirected_to session_path(sessions( :tracs ))
+    
+    get :create, :topic_id => sessions( :tracs ).topic_id, :session => { :topic_id => sessions( :tracs ).topic_id }
+    assert_redirected_to root_url
+    assert_response :redirect
+
+    delete :destroy, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
+    assert_response :redirect    
+    assert_redirected_to topic_path(sessions( :tracs ).topic)
+    assert !sessions( :tracs ).reload.cancelled
+    
+    post :update, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
+    assert_redirected_to session_path(sessions( :tracs ))
+    assert_not_equal "The Session's data has been updated.", flash[:notice]
+
+    get :attendance, :id => sessions( :tracs )
+    assert_response :redirect
+    assert_redirected_to session_path(sessions( :tracs ))
+
+    get :survey_results, :id => sessions( :tracs )
+    assert_response :redirect
+    assert_redirected_to session_path(sessions( :tracs ))
+
+    get :email, :id => sessions( :tracs )
+    assert_response :redirect
+    assert_redirected_to session_path(sessions( :tracs ))
+  end
+
+  test "Editors can delete and update own sessions" do
+    login_as( users( :editor1 ) )
+    get :show, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
+    assert_response :success
+    
+    get :download
+    assert_response :success
+    
+    get :new, :topic_id => sessions( :tracs ).topic_id
+    assert_response :success
+    
+    get :edit, :id => sessions( :tracs )
+    assert_response :success
+    
+    get :create, :topic_id => sessions( :tracs ).topic_id, :session => { :topic_id => sessions( :tracs ).topic_id }
+    assert_response :success
+
+    delete :destroy, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
+    assert_response :redirect    
+    assert_redirected_to topic_path(sessions( :tracs ).topic)
+    assert sessions( :tracs ).reload.cancelled
+    
+    post :update, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
+    assert_redirected_to session_path(sessions( :tracs ))
+    assert_equal "The Session's data has been updated.", flash[:notice]
+
+    get :attendance, :id => sessions( :tracs )
+    assert_response :success
+
+    get :survey_results, :id => sessions( :tracs )
+    assert_response :success
+
+    get :email, :id => sessions( :tracs )
+    assert_response :redirect
+    assert_redirected_to attendance_path(sessions( :tracs ))
+  end
+  
+  test "Editors can NOT delete and update other sessions" do
+    login_as( users( :editor1 ) )
+    get :show, :topic_id => sessions( :multi_time_topic ).topic_id, :id => sessions( :multi_time_topic ).id
+    assert_response :success
+    
+    get :download
+    assert_response :success
+    
+    get :new, :topic_id => sessions( :multi_time_topic ).topic_id
+    assert_redirected_to topic_path(sessions( :multi_time_topic ).topic)
+    assert_response :redirect
+    
+    get :edit, :id => sessions( :multi_time_topic )
+    assert_response :redirect
+    assert_redirected_to session_path(sessions( :multi_time_topic ))
+    
+    get :create, :topic_id => sessions( :multi_time_topic ).topic_id, :session => { :topic_id => sessions( :multi_time_topic ).topic_id }
+    assert_redirected_to root_url
+    assert_response :redirect
+
+    delete :destroy, :topic_id => sessions( :multi_time_topic ).topic_id, :id => sessions( :multi_time_topic ).id
+    assert_response :redirect    
+    assert_redirected_to topic_path(sessions( :multi_time_topic ).topic)
+    assert !sessions( :multi_time_topic ).reload.cancelled
+    
+    post :update, :topic_id => sessions( :multi_time_topic ).topic_id, :id => sessions( :multi_time_topic ).id
+    assert_redirected_to session_path(sessions( :multi_time_topic ))
+    assert_not_equal "The Session's data has been updated.", flash[:notice]
+
+    get :attendance, :id => sessions( :multi_time_topic )
+    assert_response :redirect
+    assert_redirected_to session_path(sessions( :multi_time_topic ))
+
+    get :survey_results, :id => sessions( :multi_time_topic )
+    assert_response :redirect
+    assert_redirected_to session_path(sessions( :multi_time_topic ))
+
+    get :email, :id => sessions( :multi_time_topic )
+    assert_response :redirect
+    assert_redirected_to session_path(sessions( :multi_time_topic ))
+  end
+
+  test "Regular users should be able to view, but not make changes" do
+    login_as( users( :plainuser1 ) )
+    get :show, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
+    assert_response :success
+    
+    get :download
+    assert_response :success
+
+    get :new, :topic_id => sessions( :tracs ).topic_id
+    assert_redirected_to topic_path(sessions( :tracs ).topic)
+    assert_response :redirect
+    
+    get :edit, :id => sessions( :tracs )
+    assert_response :redirect
+    assert_redirected_to session_path(sessions( :tracs ))
     
     get :create, :topic_id => sessions( :tracs ).topic_id, :session => { :topic_id => sessions( :tracs ).topic_id }
     assert_redirected_to root_url
@@ -91,6 +273,18 @@ class SessionsControllerTest < ActionController::TestCase
     post :update, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
     assert_redirected_to session_path(sessions( :tracs ))
     assert_response :redirect
+
+    get :attendance, :id => sessions( :tracs )
+    assert_response :redirect
+    assert_redirected_to session_path(sessions( :tracs ))
+
+    get :survey_results, :id => sessions( :tracs )
+    assert_response :redirect
+    assert_redirected_to session_path(sessions( :tracs ))
+
+    get :email, :id => sessions( :tracs )
+    assert_response :redirect
+    assert_redirected_to session_path(sessions( :tracs ))
   end
   
   test "Session page should show whether a user is registered" do

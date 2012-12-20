@@ -120,6 +120,12 @@ class User < ActiveRecord::Base
       return item.new_record?
     end
     
+    # If item is an array of items, recursively call ourself on each one.
+    # Only return true if they are all authorized
+    if item.is_a? Array
+      return item.all? { |i| authorized? i }
+    end
+
     # default deny
     return false
   end

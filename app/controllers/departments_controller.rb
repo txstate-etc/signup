@@ -14,7 +14,11 @@ class DepartmentsController < ApplicationController
 
   def manage
     @departments = Department.active
-    @page_title = "Manage Departments"
+    if authorized? @departments
+      @page_title = "Manage Departments"
+    else
+      redirect_to departments_path
+    end
   end
 
   def new

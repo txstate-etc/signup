@@ -103,9 +103,33 @@ class ReservationsControllerTest < ActionController::TestCase
     assert_response :redirect
   end
   
+  test "Editors should be able to delete a user's reservation in their department" do
+    login_as( users( :editor1 ) )
+    assert_difference 'Reservation.count', -1 do
+      delete :destroy, :id => reservations( :plainuser1 )
+    end
+    assert_response :redirect
+  end
+  
+  test "Editors should NOT be able to delete a user's reservation in other departments" do
+    login_as( users( :editor1 ) )
+    assert_difference 'Reservation.count', +0 do
+      delete :destroy, :id => reservations( :no_survey_topic_past_plainuser1 )
+    end
+    assert_response :redirect
+  end
+  
   test "The instructor for a session should be able to delete a user's reservation" do
     login_as( users( :instructor1 ) )
     assert_difference 'Reservation.count', -1 do
+      delete :destroy, :id => reservations( :plainuser1 )
+    end
+    assert_response :redirect
+  end
+  
+  test "The instructor should NOT be able to delete a user's reservation for sessions he is not the instructor for" do
+    login_as( users( :instructor2 ) )
+    assert_difference 'Reservation.count', +0 do
       delete :destroy, :id => reservations( :plainuser1 )
     end
     assert_response :redirect

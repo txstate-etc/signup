@@ -243,7 +243,7 @@ class TopicsControllerTest < ActionController::TestCase
     @request.session[ :departments ] = 'all'
     get :manage
     assert_response :success
-    assert_equal 3, assigns( :departments ).count
+    assert_equal 5, assigns( :departments ).count
     assert_equal 7, assigns( :topics ).count
   end
   

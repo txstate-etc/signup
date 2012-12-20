@@ -14,7 +14,11 @@ class UsersController < ApplicationController
 
   def index
     @users = User.manual.active
-    @page_title = "Manage Users"
+    if authorized? @users
+      @page_title = "Manage Users"
+    else
+      redirect_to root_url
+    end
   end
   
   def new

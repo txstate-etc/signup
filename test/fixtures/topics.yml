@@ -43,7 +43,7 @@ inactive_topic:
   description: This topic is inactive. It should not show up in a normal listing.
   minutes: 60
   survey_type: 0
-  department: tr
+  department: department_to_make_inactive
   inactive: true
 
 topic_to_make_inactive:
