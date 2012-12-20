@@ -122,7 +122,7 @@ class User < ActiveRecord::Base
     
     # If item is an array of items, recursively call ourself on each one.
     # Only return true if they are all authorized
-    if item.is_a? Array
+    if item.is_a?(Array) && item.size > 0
       return item.all? { |i| authorized? i }
     end
 

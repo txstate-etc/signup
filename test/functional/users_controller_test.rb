@@ -11,4 +11,158 @@ class UsersControllerTest < ActionController::TestCase
     assert_response :success
     assert_equal 1, assigns( :users ).size
   end
+  
+  test "Login Required for every action" do
+    get :search
+    assert_response :redirect
+    assert_redirected_to CASClient::Frameworks::Rails::Filter.login_url(@controller)
+  
+    get :index
+    assert_response :redirect
+    assert_redirected_to CASClient::Frameworks::Rails::Filter.login_url(@controller)
+    
+    get :new
+    assert_response :redirect
+    assert_redirected_to CASClient::Frameworks::Rails::Filter.login_url(@controller)
+    
+    get :edit, :id => users( :plainuser1 )
+    assert_response :redirect
+    assert_redirected_to CASClient::Frameworks::Rails::Filter.login_url(@controller)
+    
+    get :create
+    assert_response :redirect
+    assert_redirected_to CASClient::Frameworks::Rails::Filter.login_url(@controller)
+    
+    # reset the response object or it will give a redirect loop error after five redirects
+    setup_controller_request_and_response
+
+    put :update, :id => users( :plainuser1 )
+    assert_response :redirect
+    assert_redirected_to CASClient::Frameworks::Rails::Filter.login_url(@controller)
+
+    put :destroy, :id => users( :plainuser1 )
+    assert_response :redirect
+    assert_redirected_to CASClient::Frameworks::Rails::Filter.login_url(@controller)
+  end
+
+  test "Admins should be able to do anything." do
+    login_as( users( :admin1 ) )
+    get :index
+    assert_response :success
+  
+    get :search, :format => :js
+    assert_response :success
+  
+    get :new
+    assert_response :success
+  
+    get :edit, :id => users( :plainuser1 )
+    assert_response :success
+      
+    get :create
+    assert_response :success  
+    
+    put :update, :id => users( :plainuser1 )
+    assert_match(/has been updated/, flash[:notice])
+    assert_response :redirect
+    assert_redirected_to users_path
+
+    put :destroy, :id => users( :plainuser1 )
+    assert_match(/has been deleted/, flash[:notice])
+    assert_response :redirect
+    assert_redirected_to users_path
+  end
+  
+  test "Editors can only create and search." do
+    login_as( users( :editor1 ) )
+    get :index
+    assert_response :redirect
+    assert_redirected_to root_url
+  
+    get :search, :format => :js
+    assert_response :success
+  
+    get :new
+    assert_response :success
+  
+    get :edit, :id => users( :plainuser1 )
+    assert_response :redirect
+    assert_redirected_to root_url
+    
+    get :create
+    assert_response :success  
+    
+    put :update, :id => users( :plainuser1 )
+    assert_no_match(/has been updated/, flash[:notice])
+    assert_response :redirect
+    assert_redirected_to root_url
+
+    put :destroy, :id => users( :plainuser1 )
+    assert_no_match(/has been deleted/, flash[:notice])
+    assert_response :redirect
+    assert_redirected_to root_url
+  end
+
+  test "Instructors can only create and search." do
+    login_as( users( :instructor1 ) )
+    get :index
+    assert_response :redirect
+    assert_redirected_to root_url
+  
+    get :search, :format => :js
+    assert_response :success
+  
+    get :new
+    assert_response :success
+  
+    get :edit, :id => users( :plainuser1 )
+    assert_response :redirect
+    assert_redirected_to root_url
+    
+    get :create
+    assert_response :success  
+    
+    put :update, :id => users( :plainuser1 )
+    assert_no_match(/has been updated/, flash[:notice])
+    assert_response :redirect
+    assert_redirected_to root_url
+
+    put :destroy, :id => users( :plainuser1 )
+    assert_no_match(/has been deleted/, flash[:notice])
+    assert_response :redirect
+    assert_redirected_to root_url
+  end
+
+  test "Normal Users can only search." do
+    login_as( users( :plainuser1 ) )
+    get :index
+    assert_response :redirect
+    assert_redirected_to root_url
+  
+    get :search, :format => :js
+    assert_response :success
+  
+    get :new
+    assert_response :redirect
+    assert_redirected_to root_url
+  
+    get :edit, :id => users( :plainuser1 )
+    assert_response :redirect
+    assert_redirected_to root_url
+    
+    get :create
+    assert_response :redirect
+    assert_redirected_to root_url
+    
+    put :update, :id => users( :plainuser1 )
+    assert_no_match(/has been updated/, flash[:notice])
+    assert_response :redirect
+    assert_redirected_to root_url
+
+    put :destroy, :id => users( :plainuser1 )
+    assert_no_match(/has been deleted/, flash[:notice])
+    assert_response :redirect
+    assert_redirected_to root_url
+  end
+
 end

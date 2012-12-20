@@ -64,3 +64,16 @@ instructor2:
     last_name: Instructor2
     admin: false
 
+manual1:
+    login: m12345
+    email: m12345@dev.nul
+    last_name: Manual2
+    admin: false
+    manual: true
+
+manual2:
+    login: m23456
+    email: m23456@dev.nul
+    last_name: Manual2
+    admin: false
+    manual: true
