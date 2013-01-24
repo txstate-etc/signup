@@ -17,7 +17,7 @@
   <h2>Topic Details</h2>
   <dl>
     <dt>Description:</dt>
-    <dd><%= auto_link( simple_format( h( @topic.description ) ) ) %></dd>
+    <dd class="topic-description"><%= auto_link( simple_format( h( @topic.description ) ) ) %></dd>
     <dt>Duration:</dt>
     <dd><%=h @topic.minutes %> minutes</dd>
     <dt>Department:</dt>

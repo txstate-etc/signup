@@ -111,7 +111,7 @@
   	<dt>Topic:</dt>
   	<dd><%= link_to @session.topic.name, @session.topic%></dd>
     <dt>Description:</dt>
-  	<dd><%= auto_link( simple_format( h( @session.topic.description ) ) ) %></dd>
+  	<dd class="topic-description"><%= auto_link( simple_format( h( @session.topic.description ) ) ) %></dd>
   	<dt>Duration:</dt>
   	<dd><%=h @session.topic.minutes %> minutes</dd>
   	<dt>Department:</dt>

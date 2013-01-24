@@ -40,6 +40,11 @@
 		border: 3px outset black;
 		cursor: pointer;
 	}
+
+	dd.topic-description p {
+    margin-bottom: 1em;
+  }
+
 	</style>
 </head>
 
@@ -71,7 +76,7 @@
 			<dt>Who:</dt>
 			<dd><%=h @reservation.user.name %></dd>
       <dt>Description:</dt>
-      <dd><%= auto_link( simple_format( h( @reservation.session.topic.description ) ) ) %></dd>
+      <dd class="topic-description"><%= auto_link( simple_format( h( @reservation.session.topic.description ) ) ) %></dd>
       <%- if @reservation.session.topic.documents.present? -%>
         <dt>Download Class Materials:</dt>
         <%- @reservation.session.topic.documents.each do |d| -%>

@@ -117,6 +117,10 @@ dd p {
   
 }
 
+dd.topic-description p {
+  margin-bottom: 1em;
+}
+
 dt {
   font-weight: bold;
   font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', serif;

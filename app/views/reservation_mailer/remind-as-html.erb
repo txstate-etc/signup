@@ -41,6 +41,10 @@
 		cursor: pointer;
 	}
 		
+	dd.topic-description p {
+    margin-bottom: 1em;
+  }
+
 	</style>
 </head>
 
@@ -70,7 +74,7 @@ please do so <%= link_to "here", :controller => "reservations", :only_path => fa
 			<dt>Who:</dt>
 			<dd><%=h @user.name %></dd>
       <dt>Description:</dt>
-      <dd><%= auto_link( simple_format( h( @session.topic.description ) ) ) %></dd>
+      <dd class="topic-description"><%= auto_link( simple_format( h( @session.topic.description ) ) ) %></dd>
       <%- if @session.topic.documents.present? -%>
         <dt>Download Class Materials:</dt>
         <%- @session.topic.documents.each do |d| -%>
