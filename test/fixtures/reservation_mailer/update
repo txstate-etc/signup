@@ -69,6 +69,11 @@ http://localhost:3000/topics/419328395
 		border: 3px outset black;
 		cursor: pointer;
 	}
+
+	dd.topic-description p {
+    margin-bottom: 1em;
+  }
+
 	</style>
 </head>
 
@@ -95,7 +100,7 @@ http://localhost:3000/topics/419328395
 			<dt>Who:</dt>
 			<dd>Plain User1</dd>
       <dt>Description:</dt>
-      <dd><p>All about our Content Management System.</p></dd>
+      <dd class="topic-description"><p>All about our Content Management System.</p></dd>
 		</dl>
 	</div>
 </div>

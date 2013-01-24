@@ -65,6 +65,10 @@ You can use the attached ICS file to add the session to your calendar software.
 		cursor: pointer;
 	}
 		
+	dd.topic-description p {
+    margin-bottom: 1em;
+  }
+
 	</style>
 </head>
 
@@ -92,7 +96,7 @@ please do so <a href="http://localhost:3000/reservations">here</a>.</p>
 			<dt>Who:</dt>
 			<dd>Plain User1</dd>
       <dt>Description:</dt>
-      <dd><p>All about our Content Management System.</p></dd>
+      <dd class="topic-description"><p>All about our Content Management System.</p></dd>
 		</dl>
 	</div>
 </div>
