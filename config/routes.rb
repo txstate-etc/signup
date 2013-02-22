@@ -57,7 +57,7 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :topics, :shallow => true, :member => { :delete => :get }, :collection => { :manage => :get } do |topic|
     topic.resources :sessions do |session|
-      session.resources :reservations, :new 
+      session.resources :reservations, :create 
     end
   end
 

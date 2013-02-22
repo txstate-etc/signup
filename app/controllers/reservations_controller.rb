@@ -1,13 +1,6 @@
 class ReservationsController < ApplicationController
   before_filter :authenticate, :except => :download
   
-  def new
-    @session = Session.find( params[ :session_id ] )
-    @reservation = Reservation.new
-    @reservation.session = @session
-    @page_title = "Make a Reservation"
-  end
-  
   def create
     @reservation = Reservation.new( params[ :reservation ] )
     @session = Session.find( params[ :session_id ] )
