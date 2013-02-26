@@ -18,7 +18,7 @@ When: This session meets <%= @reservation.session.occurrences.count %> times:
 <% else -%>
 When: <%= formatted_time_range(@reservation.session.time, @reservation.session.topic.minutes) %>
 <% end -%>
-Where: <%= @reservation.session.location %>
+Where: <%= @reservation.session.loc_with_site %>
 Who:  <%= @reservation.user.name %>
 Description: <%= auto_link( @reservation.session.topic.description ) %>
 

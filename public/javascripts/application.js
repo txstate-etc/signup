@@ -89,7 +89,7 @@ Event.observe(document, 'dom:loaded', function () {
   
   // special case: highlight "Available Topics" link on any related page:
   // group by department, group by date, month at a glance
-  if (['/topics$', '/topics/upcoming', '/topics/grid', '/topics/by-department'].any(function(s) { return cur_url.match(s); })) {
+  if (['/topics$', '/topics/upcoming', '/topics/grid', '/topics/by-site', '/topics/by-department'].any(function(s) { return cur_url.match(s); })) {
     $('topic-list-link').addClassName('selected');
     $('topic-list-nav').select('a').each(function(link) {
       if (link.href == cur_url) {

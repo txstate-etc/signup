@@ -10,7 +10,10 @@
         <% @sessions[date].sort.each do |session| %>
           <li>
             <%= link_to session.topic.name, session.topic %>
-  				  <div class="session-info"><%= link_to_session session, :print_date => false %></div>
+            <div class="session-info">
+              <span class="session-link"><%= link_to_session session, :print_date => false %></span>
+              <%= session_site(session) %>
+            </div>
           </li>
         <% end %>
       </ul>

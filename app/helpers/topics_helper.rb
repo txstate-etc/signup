@@ -19,6 +19,17 @@ module TopicsHelper
   def link_to_session(session, opts={})
     link_to session_info(session, opts), session
   end
+  
+  def session_site(session)
+    if session.site 
+      s = '<span class="site'
+      s << ' default' if session.site.default?
+      s << '">'
+      s << session.site.name 
+      s << '</span>'
+      s
+    end
+  end
 
   def session_time_short(session)
     # strftime doesn't have the formats we want on OSX. We'll
@@ -34,7 +45,11 @@ module TopicsHelper
   end
   
   def session_list(sessions)
-    expandible_list sessions.map{|session| link_to_session(session)}, 12
+    list = sessions.map do |session| 
+      "#{link_to_session(session)} #{session_site(session)}"
+    end
+    
+    expandible_list list, 12
   end
   
   def department_select(f)

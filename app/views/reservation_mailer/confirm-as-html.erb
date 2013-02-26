@@ -68,7 +68,7 @@ to cancel your reservation for any reason, you can do so <%= link_to "here", :co
         <dd><%=h formatted_time_range(o.time, @reservation.session.topic.minutes) %></dd>
       <% end %>
 			<dt>Where:</dt>
-			<dd><%=h @reservation.session.location %></dd>
+			<dd><%=h @reservation.session.loc_with_site %></dd>
 			<dt>Who:</dt>
 			<dd><%=h @reservation.user.name %></dd>
 			<dt>Description:</dt>

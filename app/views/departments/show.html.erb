@@ -13,7 +13,11 @@
           <li>
             <%= link_to topic.name, topic %>
             <% if topic.upcoming_sessions.present? %>       
-              <div class="session-info"><%= link_to_session topic.upcoming_sessions[0] %></div>
+              <% session = topic.upcoming_sessions[0] %>
+              <div class="session-info">
+                <span class="session-link"><%= link_to_session session %></span>
+                <%= session_site(session) %>
+              </div>
             <% end %>
           </li>
         <% end %>

@@ -7,14 +7,19 @@ class Session < ActiveRecord::Base
   has_many :occurrences, :dependent => :destroy
   accepts_nested_attributes_for :occurrences, :reject_if => lambda { |a| a[:time].blank? }, :allow_destroy => true
   belongs_to :topic
+  belongs_to :site
   has_and_belongs_to_many :instructors, :class_name => "User", :uniq => true
   accepts_nested_attributes_for :instructors, :reject_if => lambda { |a| true }, :allow_destroy => false
   validate :at_least_one_occurrence, :at_least_one_instructor, :valid_instructor
-  validates_presence_of :topic_id, :location
+  validates_presence_of :topic_id, :location, :site
   validates_numericality_of :seats, :only_integer => true, :allow_nil => true
   validate :enough_seats
   after_validation :reload_if_invalid
   accepts_nested_attributes_for :reservations  
+  
+  def loc_with_site
+    site.present? ? "#{location} (#{site.name})" : location
+  end
   
   def <=>(other)
     [self.time, self.topic.minutes] <=> [other.time, other.topic.minutes]
@@ -113,7 +118,7 @@ class Session < ActiveRecord::Base
   end
   
   def after_update
-    send_update = @occurrences_dirty || location_changed?
+    send_update = @occurrences_dirty || location_changed? || site_id_changed?
     if send_update
       confirmed_reservations.each do |reservation|
         ReservationMailer.delay.deliver_update_notice( reservation )
@@ -199,7 +204,7 @@ class Session < ActiveRecord::Base
       event.dtstart = o.time
       event.dtend = o.time + topic.minutes * 60
       event.url = topic.url
-      event.location = location 
+      event.location = loc_with_site
       event
     end
     return events

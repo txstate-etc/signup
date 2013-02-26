@@ -1,22 +1,18 @@
-<% if @topics.count == 0 %>
+<% if @sessions.count == 0 %>
   <div class="empty-list">
     <p>Sorry, there are no upcoming sessions at this time. Please check again later!</p>
   </div>
 <% else %>
-  <% @topics.keys.sort.each do |department| %>
+  <% @sessions.keys.sort.each do |site| %>
     <div class="content-section">
-      <h2><%= department.name %></h2>
+      <h2><%= site.name %></h2>
       <ul class="topic-list">
-        <% @topics[department].sort {|a,b| a.name <=> b.name }.each do |topic| %>
+        <% @sessions[site].sort {|a,b| a.topic.name <=> b.topic.name }.each do |session| %>
           <li>
-            <%= link_to topic.name, topic %>
-            <% if topic.upcoming_sessions.present? %>       
-            <% session = topic.upcoming_sessions[0] %>
+            <%= link_to session.topic.name, session.topic %>
             <div class="session-info">
               <span class="session-link"><%= link_to_session session %></span>
-              <%= session_site(session) %>
             </div>
-            <% end %>
           </li>
         <% end %>
       </ul>

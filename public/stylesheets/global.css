@@ -202,6 +202,14 @@ label.admin-netid-label {
   font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', serif;
 }
 
+.location-block {
+  height: 80px;
+}
+
+.location-block .location-field, .location-block .site-field {
+  float: left;
+}
+
 #notification {
   color: #000;
   border: 2px solid #94a74d;
@@ -349,6 +357,14 @@ input.submit-button {
   border-radius: 15px;*/
 
   
+}
+
+span.site {
+  margin-left: 0.5em;
+  font-weight: bold;
+  font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', serif;
+  font-size: .9em;
+  color: rgb(51, 91, 103);
 }
 
 a.register-button, input.register-button {
@@ -665,7 +681,7 @@ ul.topic-list li, ul#department-list li  {
 }
 
 ul.topic-list li a:link, ul#department-list li a:link  {
-  display: block;
+/*  display: block;*/
   text-decoration: none;
   color: #836c31;
   
@@ -680,10 +696,11 @@ ul.topic-list li div.session-info {
   margin-top: -0.5em;
 }
 
-ul.topic-list li span {
+/*ul.topic-list li span {
   font-size: 0.85em;
   color: #4B4B4B;
 }
+*/
 
 div.content-section ul.topic-list {
   margin-top: -1em;

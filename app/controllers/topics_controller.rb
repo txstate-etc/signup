@@ -21,6 +21,19 @@ class TopicsController < ApplicationController
     render :layout => 'topic_collection'
   end
 
+  def by_site
+    @page_title = t(:'topics.index.title')
+    
+    @sessions = Hash.new { |h,k| h[k] = Array.new }
+    Topic.upcoming.each do |topic|
+      topic.upcoming_sessions.each do |session| 
+        @sessions[session.site] << session if session.site
+      end
+    end
+
+    render :layout => 'topic_collection'
+  end
+
   def upcoming
     topics = Topic.upcoming
     @page_title = t(:'topics.index.title')

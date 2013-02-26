@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121206061654) do
+ActiveRecord::Schema.define(:version => 20130226035041) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -41,15 +41,6 @@ ActiveRecord::Schema.define(:version => 20121206061654) do
     t.string   "item_content_type"
     t.integer  "item_file_size"
     t.datetime "item_updated_at"
-  end
-
-  create_table "email_logs", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "session_id"
-    t.string   "message_type"
-    t.string   "content"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   create_table "http_sessions", :force => true do |t|
@@ -101,12 +92,21 @@ ActiveRecord::Schema.define(:version => 20121206061654) do
     t.boolean  "survey_sent", :default => false
     t.datetime "reg_start"
     t.datetime "reg_end"
+    t.integer  "site_id"
   end
 
   create_table "sessions_users", :id => false, :force => true do |t|
     t.integer "session_id", :null => false
     t.integer "user_id",    :null => false
   end
+
+  create_table "sites", :force => true do |t|
+    t.string   "name",       :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "sites", ["name"], :name => "index_sites_on_name"
 
   create_table "survey_responses", :force => true do |t|
     t.integer  "reservation_id"

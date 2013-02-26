@@ -7,8 +7,13 @@ en:
     attributes:
       session:
         occurrences: "Session Time"
+        site: "Site"
       document:
         item_file_size: "Document size"
   topics:
     index:
       title: "Available Topics"
+      by_site: "group by site"
+  sessions:
+    edit:
+      site_label: "Site:"

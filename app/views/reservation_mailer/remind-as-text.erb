@@ -21,7 +21,7 @@ When: This session meets <%= @session.occurrences.count %> times:
 <% else -%>
 When: <%= formatted_time_range(@session.time, @session.topic.minutes) %>
 <% end -%>
-Where: <%= @session.location %>
+Where: <%= @session.loc_with_site %>
 Who:  <%= @user.name %>
 Description: <%= auto_link( @session.topic.description ) %>
 
