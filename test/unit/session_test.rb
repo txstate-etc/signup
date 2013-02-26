@@ -132,6 +132,7 @@ class SessionTest < ActiveSupport::TestCase
     test_session2 = Session.new( { 
       :occurrences_attributes =>{"0"=>{"time"=>"May 25, 2015 12:00 PM", "_destroy"=>""}}, 
       :location => "Alkek 155", 
+      :site_id => sites( :sanmarcos ).id,
       :topic_id => topics( :gato ).id,
       :instructors_attributes => {
         "1305227580344" => {"name_and_login"=>"Instructor2 (i23456)", "_destroy"=>""},
@@ -167,6 +168,7 @@ class SessionTest < ActiveSupport::TestCase
     test_session.topic = topics( :gato )
     test_session.occurrences.build(:time => DateTime.parse( '15 June 2035 00:00' ))
     test_session.location = "Tijuana"
+    test_session.site = sites( :sanmarcos )
     test_session.instructor_ids = [ users( :instructor2 ).id ]
     assert test_session.save
   end

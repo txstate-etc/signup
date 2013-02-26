@@ -62,7 +62,11 @@ class User < ActiveRecord::Base
     user = User.find(:first, :conditions => ['login = ?', login ] )
     if user.blank?
       # try to find in ldap
-      import_users(login)
+      begin
+        import_users(login)
+      rescue Net::LDAP::LdapError => e
+        logger.error("There was a problem importing the data from LDAP. " + e)
+      end
       user = User.find(:first, :conditions => ['login = ?', login ] )
     end
     

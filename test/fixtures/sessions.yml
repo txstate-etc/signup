@@ -4,6 +4,7 @@ gato_past:
   instructors: instructor1
   topic: gato
   location: Alkek 155
+  site: sanmarcos
   cancelled: false
   seats: 20
   
@@ -11,6 +12,7 @@ tracs_past:
   instructors: instructor1
   topic: tracs
   location: Alkek 155
+  site: sanmarcos
   cancelled: false
   seats: 20
 
@@ -18,6 +20,7 @@ no_survey_topic_past:
   instructors: instructor1
   topic: no_survey_topic
   location: Alkek 155
+  site: sanmarcos
   cancelled: false
   seats: 20
 
@@ -25,6 +28,7 @@ gato_past_surveys_sent:
   instructors: instructor1
   topic: gato
   location: Alkek 155
+  site: sanmarcos
   cancelled: false
   seats: 20
   survey_sent: true
@@ -33,6 +37,7 @@ gato:
   instructors: instructor1
   topic: gato
   location: Alkek 155
+  site: sanmarcos
   cancelled: false
   seats: 20
 
@@ -40,6 +45,7 @@ gato_cancelled:
   instructors: instructor1
   topic: gato
   location: Alkek 155
+  site: sanmarcos
   cancelled: true
   seats: 20
 
@@ -47,6 +53,7 @@ gato_2:
   instructors: instructor1
   topic: gato
   location: Alkek 155
+  site: sanmarcos
   cancelled: false
   seats: 20
 
@@ -54,6 +61,7 @@ tracs:
   instructors: instructor2
   topic: tracs
   location: JCK 1100
+  site: sanmarcos
   cancelled: false
   seats: 15
 
@@ -61,6 +69,7 @@ tracs_tiny:
   instructors: instructor2
   topic: tracs
   location: JCK 1100
+  site: sanmarcos
   cancelled: false
   seats: 1
   
@@ -68,6 +77,7 @@ tracs_tiny_full:
   instructors: instructor2
   topic: tracs
   location: JCK 1100
+  site: sanmarcos
   cancelled: false
   seats: 1
   
@@ -75,12 +85,14 @@ gato_huge:
   instructors: instructor1
   topic: gato
   location: Alkek 155
+  site: sanmarcos
   cancelled: false
 
 gato_overbooked:
   instructors: instructor1
   topic: gato
   location: JCK Overbooked
+  site: sanmarcos
   cancelled: false
   seats: 2
 
@@ -88,6 +100,7 @@ tracs_multiple_instructors:
   instructors: instructor1, instructor2
   topic: tracs
   location: JCK 1100
+  site: sanmarcos
   cancelled: false
   seats: 2
     
@@ -95,6 +108,7 @@ multi_time_topic:
   instructors: instructor1
   topic: multi_time_topic
   location: Alkek 155
+  site: sanmarcos
   cancelled: false
   seats: 20
 
@@ -102,6 +116,7 @@ multi_time_topic_started:
   instructors: instructor1
   topic: multi_time_topic
   location: Alkek 155
+  site: sanmarcos
   cancelled: false
   seats: 20
   
@@ -109,6 +124,7 @@ multi_time_topic_completed:
   instructors: instructor1
   topic: multi_time_topic
   location: Alkek 155
+  site: sanmarcos
   cancelled: false
   seats: 20
 
@@ -116,6 +132,7 @@ inactive_topic:
   instructors: instructor1
   topic: inactive_topic
   location: Alkek 155
+  site: sanmarcos
   cancelled: false
   seats: 20
 
@@ -123,6 +140,7 @@ topic_to_make_inactive:
   instructors: instructor1
   topic: topic_to_make_inactive
   location: Alkek 155
+  site: sanmarcos
   cancelled: false
   seats: 20
     
