@@ -7,11 +7,11 @@
     <div class="content-section">
       <h2><%= site.name %></h2>
       <ul class="topic-list">
-        <% @sessions[site].sort {|a,b| a.topic.name <=> b.topic.name }.each do |session| %>
+        <% @sessions[site].keys.sort {|a,b| a.name <=> b.name }.each do |topic| %>
           <li>
-            <%= link_to session.topic.name, session.topic %>
+            <%= link_to topic.name, topic %>
             <div class="session-info">
-              <span class="session-link"><%= link_to_session session %></span>
+              <span class="session-link"><%= link_to_session @sessions[site][topic] %></span>
             </div>
           </li>
         <% end %>

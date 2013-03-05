@@ -310,6 +310,8 @@ div#topic-list-nav a {
 }
 div#topic-list-nav a:last-child {
   border: none;
+  margin-right: 0;
+  padding-right: 0;
 } 
 
 input.submit-button {
@@ -361,10 +363,12 @@ input.submit-button {
 
 span.site {
   margin-left: 0.5em;
-  font-weight: bold;
   font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', serif;
-  font-size: .9em;
-  color: rgb(51, 91, 103);
+  color: #335B67;
+}
+
+dd span.site {
+  font-size: 0.95em;
 }
 
 a.register-button, input.register-button {
@@ -456,7 +460,7 @@ div.login-link a:hover {
 }
 
 div#container {
-  min-width: 920px;
+  min-width: 980px;
   background-color: #FFF;
   margin-top: -22px;
   margin-left: 20px;

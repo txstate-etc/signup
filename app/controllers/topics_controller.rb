@@ -24,10 +24,10 @@ class TopicsController < ApplicationController
   def by_site
     @page_title = t(:'topics.index.title')
     
-    @sessions = Hash.new { |h,k| h[k] = Array.new }
+    @sessions = Hash.new { |h,k| h[k] = Hash.new }
     Topic.upcoming.each do |topic|
       topic.upcoming_sessions.each do |session| 
-        @sessions[session.site] << session if session.site
+        @sessions[session.site][topic] = session if session.site && @sessions[session.site][topic] == nil
       end
     end
 
