@@ -136,6 +136,51 @@ class ReservationMailerTest < ActionMailer::TestCase
     # I'm apparently not smart enough to figure out how to test this properly with multipart emails with attachments. :-P
     # assert_equal @expected.encoded, ReservationMailer.create_confirm( reservations( :bill ), "http://test.url.com" ).encoded
   end
+
+  test "survey" do
+    @expected.subject = 'Feedback Requested: Teaching with TRACS'
+    @expected.body    = read_fixture('survey')
+    @expected.date    = Time.now
+    @expected.from    = 'i12345@dev.nul'
+    @expected.to      = 'pu12345@dev.nul'
+
+    actual = ReservationMailer.create_survey_mail( reservations( :tracs_multiple_instructors_plainuser1 ) )
+ 
+    # For Cheater Driven Development: uncomment the following line to save the 'actual' email
+    # to the fixture file to make it the new 'expected' body
+    #File.open("#{Rails.root}/test/fixtures/reservation_mailer/survey", 'w') {|f| f.write(actual.body) }
+
+    assert_equal @expected.body, actual.body
+    assert_equal @expected.subject, actual.subject
+    assert_equal @expected.from, actual.from
+    assert_equal @expected.to, actual.to
+   
+    # I'm apparently not smart enough to figure out how to test this properly with multipart emails with attachments. :-P
+    # assert_equal @expected.encoded, ReservationMailer.create_confirm( reservations( :bill ), "http://test.url.com" ).encoded
+  end
+  
+  test "session_message" do
+    @expected.subject = 'Update: Teaching with TRACS'
+    @expected.body    = read_fixture('session-message')
+    @expected.date    = Time.now
+    @expected.from    = 'i12345@dev.nul'
+    @expected.to      = 'pu12345@dev.nul'
+
+    reservation = reservations( :tracs_multiple_instructors_plainuser1 )
+    actual = ReservationMailer.create_session_message( reservation.session, reservation.user, "Don't forget to bring a towel!" )
+ 
+    # For Cheater Driven Development: uncomment the following line to save the 'actual' email
+    # to the fixture file to make it the new 'expected' body
+    #File.open("#{Rails.root}/test/fixtures/reservation_mailer/session-message", 'w') {|f| f.write(actual.body) }
+
+    assert_equal @expected.body, actual.body
+    assert_equal @expected.subject, actual.subject
+    assert_equal @expected.from, actual.from
+    assert_equal @expected.to, actual.to
+   
+    # I'm apparently not smart enough to figure out how to test this properly with multipart emails with attachments. :-P
+    # assert_equal @expected.encoded, ReservationMailer.create_confirm( reservations( :bill ), "http://test.url.com" ).encoded
+  end
   
   test "Should generate sane urls" do
     host = ActionMailer::Base.default_url_options[:host]
