@@ -38,6 +38,6 @@
   
   <div class="site-field">
     <%= f.label :site, t(:'sessions.edit.site_label'), :class => 'field-label' %>
-    <%= f.select :site_id, Site.all.collect { |s| [ (s.default? ? "#{s.name} (default)" : s.name), s.id ] } %>
+    <%= f.select :site_id, Site.all.collect { |s| [ s.name, s.id ] } %>
   </div>
 </div>

@@ -439,6 +439,10 @@ div.login-link a:hover {
   padding-left: 20px;
 }
 
+#session-details input#session_location {
+  margin-top: 5px;
+}
+
 .button-link a {
   display: block;
   padding: .25em;
