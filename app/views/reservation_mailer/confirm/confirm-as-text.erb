@@ -1,0 +1,11 @@
+Hi there <%= @reservation.user.name %>,
+
+Your reservation for <%= @reservation.session.topic.name %> has been confirmed. If you need
+to cancel your reservation for any reason, you can do so here:
+
+<%= url_for :controller => "reservations", :only_path => false %>
+
+<%= render :partial => "reservation_details_text", :locals => { :session => @reservation.session, :user => @reservation.user } -%>
+
+You can use the attached ICS file to add the session to your calendar software.
+

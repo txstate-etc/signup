@@ -104,7 +104,7 @@ class ReservationMailerTest < ActionMailer::TestCase
     
     # For Cheater Driven Development: uncomment the following line to save the 'actual' email
     # to the fixture file to make it the new 'expected' body
-    #File.open("#{Rails.root}/test/fixtures/reservation_mailer/cancel.actual", 'w') {|f| f.write(actual.body) }
+    #File.open("#{Rails.root}/test/fixtures/reservation_mailer/cancel", 'w') {|f| f.write(actual.body) }
     
     assert_equal @expected.body, actual.body
     assert_equal @expected.subject, actual.subject

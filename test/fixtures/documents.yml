@@ -7,3 +7,11 @@ attached_document_1:
 attached_document_2:
   topic: topic_with_attached_documents
   item_file_name: attached_document_2.txt
+
+gato_document_1:
+  topic: gato
+  item_file_name: gato_document_1.txt
+
+gato_document_2:
+  topic: gato
+  item_file_name: gato_document_2.txt

@@ -1,0 +1,20 @@
+Hi there <%= @reservation.user.name %>,
+
+The session on "<%= @reservation.session.topic.name %>" for which you
+had signed up has had some of its details changed. Please review the
+updated class information below.
+
+<%= render :partial => "reservation_details_text", :locals => { :title => "Your Updated Reservation", :session => @reservation.session, :user => @reservation.user } -%>
+
+If you're unable to attend the class for any reason, please cancel your
+reservation here:
+
+<%= url_for :controller => "reservations", :only_path => false %>
+
+If you'd like to sign up to take the class at a different time, you can
+see a list of times it is offered here: (Be sure to cancel your existing
+reservation first!)
+
+<%= url_for :action => "show", :controller => "topics", :id => @reservation.session.topic.id, :only_path => false %>
+
+

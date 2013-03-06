@@ -20,6 +20,10 @@ Who:  Plain User1
 Description: All about our Content Management System.
 
 ----
+Download class materials:
+Gato Document 1 : http://localhost:3000/system/items/777370824/original/gato_document_1.txt
+Gato Document 2 : http://localhost:3000/system/items/928836992/original/gato_document_2.txt
+----
 
 You can use the attached ICS file to add the session to your calendar software.
 
@@ -100,6 +104,9 @@ You can use the attached ICS file to add the session to your calendar software.
 			<dd>Plain User1</dd>
       <dt>Description:</dt>
       <dd class="topic-description"><p>All about our Content Management System.</p></dd>
+        <dt>Download Class Materials:</dt>
+          <dd><a href="http://localhost:3000/system/items/777370824/original/gato_document_1.txt" only_path="false">Gato Document 1</a></dd>
+          <dd><a href="http://localhost:3000/system/items/928836992/original/gato_document_2.txt" only_path="false">Gato Document 2</a></dd>
 		</dl>
 	</div>
 </div>

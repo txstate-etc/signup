@@ -29,19 +29,23 @@ class ReservationMailer < ActionMailer::Base
     logger.flush
   end
 
+  def render_multipart(opts={})
+    template = opts.delete(:template) || "#{@template.dasherize}"
+
+    content_type 'multipart/alternative'
+    part :content_type => "text/plain",
+      :body => render_message("#{@mailer_name}/#{template}/#{template}-as-text", opts),
+      :transfer_encoding => "base64"
+    
+    part :content_type => "text/html",
+      :body => render_message("#{@mailer_name}/#{template}/#{template}-as-html", opts)
+  end
+
   def confirm( reservation )
     subject    'Reservation Confirmation For: ' + reservation.user.name
     recipients reservation.user.email_header
     from       reservation.session.instructors[0].email_header
-    content_type 'multipart/alternative'
-        
-    part :content_type => "text/plain",
-      :body => render_message( "confirm-as-text", :reservation => reservation ),
-      :transfer_encoding => "base64"
-    
-    part :content_type => "text/html",
-      :body => render_message( "confirm-as-html", :reservation => reservation )
-    
+    render_multipart :reservation => reservation
     attachment :content_type => "text/calendar", :body => reservation.session.to_cal
   end
 
@@ -49,15 +53,7 @@ class ReservationMailer < ActionMailer::Base
     subject    'Reminder: ' + session.topic.name
     recipients user.email_header
     from       session.instructors[0].email_header
-    content_type 'multipart/alternative'
-    
-    part :content_type => "text/plain",
-      :body => render_message( "remind-as-text", :session => session, :user => user ),
-      :transfer_encoding => "base64"
-    
-    part :content_type => "text/html",
-      :body => render_message( "remind-as-html", :session => session, :user => user )
-    
+    render_multipart :session => session, :user => user
     attachment :content_type => "text/calendar", :body => session.to_cal
   end
 
@@ -65,15 +61,7 @@ class ReservationMailer < ActionMailer::Base
     subject    'Now Enrolled: ' + reservation.session.topic.name
     recipients reservation.user.email_header
     from       reservation.session.instructors[0].email_header
-    content_type 'multipart/alternative'
-    
-    part :content_type => "text/plain",
-      :body => render_message( "promotion-notice-as-text", :reservation => reservation ),
-      :transfer_encoding => "base64"
-    
-    part :content_type => "text/html",
-      :body => render_message( "promotion-notice-as-html", :reservation => reservation )
-    
+    render_multipart :reservation => reservation
     attachment :content_type => "text/calendar", :body => reservation.session.to_cal
   end
 
@@ -81,78 +69,35 @@ class ReservationMailer < ActionMailer::Base
     subject    'Class Cancelled: ' + session.topic.name
     recipients user.email_header
     from       session.instructors[0].email_header
-    content_type 'multipart/alternative'
-    
-    url = url_for( :controller => "reservations" )
-    
-    part :content_type => "text/plain",
-      :body => render_message( "cancellation-notice-as-text", { :session => session, :user => user, :custom_message => custom_message} ),
-      :transfer_encoding => "base64"
-    
-    part :content_type => "text/html",
-      :body => render_message( "cancellation-notice-as-html", { :session => session, :user => user, :custom_message => custom_message} )
-    
+    render_multipart :session => session, :user => user, :custom_message => custom_message
   end
 
   def session_message( session, user, message )
     subject    'Update: ' + session.topic.name
     recipients user.email_header
     from       session.instructors[0].email_header
-    content_type 'multipart/alternative'
-    
-    part :content_type => "text/plain",
-      :body => render_message( "session-message-as-text", { :session => session, :user => user, :message => message} ),
-      :transfer_encoding => "base64"
-    
-    part :content_type => "text/html",
-      :body => render_message( "session-message-as-html", { :session => session, :user => user, :message => message} )
-    
+    render_multipart :session => session, :user => user, :message => message
   end
   
   def update_notice( reservation )
     subject    'Class Details Updated: ' + reservation.session.topic.name
     recipients reservation.user.email_header
     from       reservation.session.instructors[0].email_header
-    content_type 'multipart/alternative'
-    
-    url = url_for( :controller => "reservations" )
-    
-    part :content_type => "text/plain",
-      :body => render_message( "update-notice-as-text", :reservation => reservation ),
-      :transfer_encoding => "base64"
-    
-    part :content_type => "text/html",
-      :body => render_message( "update-notice-as-html", :reservation => reservation )
-    
+    render_multipart :reservation => reservation
   end
   
   def survey_mail( reservation )
     subject    'Feedback Requested: ' + reservation.session.topic.name
     recipients reservation.user.email_header
     from       reservation.session.instructors[0].email_header
-    content_type 'multipart/alternative'
-    
-    part :content_type => "text/plain",
-      :body => render_message( "survey-mail-as-text", :reservation => reservation ),
-      :transfer_encoding => "base64"
-    
-    part :content_type => "text/html",
-      :body => render_message( "survey-mail-as-html", :reservation => reservation )
-    
+    render_multipart :reservation => reservation
   end  
   
   def accommodation_notice( reservation )
     subject    'Special Accommodations Needed for: ' + reservation.session.topic.name
     recipients reservation.session.instructors.collect {|i| i.email_header }
     from       reservation.user.email_header
-    content_type 'multipart/alternative'
-    
-    part :content_type => "text/plain",
-      :body => render_message( "accommodation-notice-as-text", :reservation => reservation ),
-      :transfer_encoding => "base64"
-    
-    part :content_type => "text/html",
-      :body => render_message( "accommodation-notice-as-html", :reservation => reservation )
+    render_multipart :reservation => reservation
   end
 
 end

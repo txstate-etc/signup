@@ -1,0 +1,30 @@
+<%- except ||= {} -%>
+----
+
+<%= title ||= "Your Reservation" %>
+
+What: <%= session.topic.name %>
+<% if session.multiple_occurrences? -%>
+When: This session meets <%= session.occurrences.count %> times:
+<% session.occurrences.each do |o| -%>
+  <%= formatted_time_range(o.time, session.topic.minutes) %>
+<% end -%>
+<% else -%>
+When: <%= formatted_time_range(session.time, session.topic.minutes) %>
+<% end -%>
+<%- unless (except.include? :where) -%>
+Where: <%= session.loc_with_site %>
+<%- end -%>
+Who:  <%= user.name %>
+<%- unless (except.include? :description) -%>
+Description: <%= auto_link( session.topic.description ) %>
+<%- end -%>
+
+----
+<%- if !except.include?(:documents) && session.topic.documents.present? -%>
+Download class materials:
+<% session.topic.documents.each do |d| -%>
+<%= d.friendly_name + ' : ' + ReservationMailer.absolute_url(d.item.url) %>
+<% end -%>
+----
+<% end -%>
