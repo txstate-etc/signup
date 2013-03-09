@@ -94,7 +94,7 @@ class ReservationMailer < ActionMailer::Base
   def render_multipart(opts={})
     template = opts.delete(:template) || "#{@template.dasherize}"
 
-    html = render_message("#{@mailer_name}/#{template}/#{template}-as-html", opts)
+    html = render_message("#{@mailer_name}/#{template}-as-html", opts)
     text = convert_to_text(html)
 
     content_type 'multipart/alternative'
