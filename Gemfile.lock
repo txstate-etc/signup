@@ -26,6 +26,7 @@ GEM
       activesupport (~> 2.0)
       daemons (= 1.0.10)
     fastercsv (1.5.3)
+    htmlentities (4.3.1)
     json (1.7.0)
     mime-types (1.18)
     mysql (2.8.1)
@@ -69,6 +70,7 @@ DEPENDENCIES
   calendar_date_select (= 1.16.2)
   delayed_job (~> 2.0.4)
   fastercsv (= 1.5.3)
+  htmlentities (~> 4.3.1)
   mysql
   net-ldap (= 0.1.1)
   paperclip (~> 2.7.0)

@@ -1,0 +1,30 @@
+Hi there Plain User1,
+
+Your reservation for Introduction to Gato has been confirmed.
+If you need to cancel your reservation for any reason, you can do
+so here (http://localhost:3000/reservations).
+
+----------------
+Your Reservation
+----------------
+
+What:
+- Introduction to Gato
+When:
+- Saturday, June 2, 2035, 7:00AM - 8:00AM
+Where:
+- Alkek 155 (San Marcos)
+Who:
+- Plain User1
+Description:
+- All about our Content Management System.
+
+Download Class Materials:
+- Gato Document 1
+(http://localhost:3000/system/items/777370824/original/gato_document_1.txt)
+- Gato Document 2
+(http://localhost:3000/system/items/928836992/original/gato_document_2.txt)
+
+You can use the attached ICS file to add the session to
+your calendar software.
+

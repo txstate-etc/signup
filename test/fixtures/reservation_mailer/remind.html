@@ -40,7 +40,7 @@
     border: 3px outset black;
     cursor: pointer;
   }
-  
+    
   dd.topic-description p {
     margin-bottom: 1em;
   }
@@ -49,36 +49,33 @@
 </head>
 
 <body>
-  <p>Hi there <%= @reservation.user.name %>,</p>
+  <p>Hi there Plain User1,</p>
 
-<p>Your reservation for <%= @reservation.session.topic.name %> has been confirmed. If you need
-to cancel your reservation for any reason, you can do so <%= link_to "here", :controller => "reservations", :only_path => false %>.</p>
+<p>Just a friendly reminder: the "Introduction to Gato" class you signed up
+for is coming up! If your plans have changed and you can no longer make it to the class,
+or you need to cancel your reservation for any other reason, 
+please do so <a href="http://localhost:3000/reservations">here</a>.</p>
 
 <div class="reservationContainer">
   <div class="reservationCard">
     <h2>Your Reservation</h2>
     <dl>
       <dt>What:</dt>
-      <dd><%=h @reservation.session.topic.name %></dd>
+      <dd>Introduction to Gato</dd>
       <dt>When:</dt>
-      <% if @reservation.session.multiple_occurrences? %>
-        <dd>This session meets <%= @reservation.session.occurrences.count %> times:</dd>
-      <% end %>
-      <% @reservation.session.occurrences.each do |o| %>
-        <dd><%=h formatted_time_range(o.time, @reservation.session.topic.minutes) %></dd>
-      <% end %>
+      
+      
+        <dd>Saturday, June  2, 2035,  7:00AM -  8:00AM</dd>
+      
       <dt>Where:</dt>
-      <dd><%=h @reservation.session.loc_with_site %></dd>
+      <dd>Alkek 155 (San Marcos)</dd>
       <dt>Who:</dt>
-      <dd><%=h @reservation.user.name %></dd>
+      <dd>Plain User1</dd>
       <dt>Description:</dt>
-      <dd class="topic-description"><%= auto_link( simple_format( h( @reservation.session.topic.description ) ) ) %></dd>
-      <%- if @reservation.session.topic.documents.present? -%>
+      <dd class="topic-description"><p>All about our Content Management System.</p></dd>
         <dt>Download Class Materials:</dt>
-        <%- @reservation.session.topic.documents.each do |d| -%>
-          <dd><%= link_to d.friendly_name, ReservationMailer.absolute_url(d.item.url) %></dd>
-        <%- end -%>
-      <%- end -%>
+          <dd><a href="http://localhost:3000/system/items/777370824/original/gato_document_1.txt" only_path="false">Gato Document 1</a></dd>
+          <dd><a href="http://localhost:3000/system/items/928836992/original/gato_document_2.txt" only_path="false">Gato Document 2</a></dd>
     </dl>
   </div>
 </div>

@@ -1,77 +1,77 @@
 <html>
 
 <head>
-	<title>Reservation Update</title>
-	<style type="text/css">
-	div.reservationCard {
-		background-color: #eeeeaa;
-		color: #000000;
-		padding: 1em;
-		margin-bottom: 1em;
-	}
-	
-	div.reservationCard h2 {
-		font-family: Palatino, serif;
-		font-style: italic;
-		text-align: center;
-		margin-top: 0px;
-		font-size: 200%;
-		font-weight: bold;
-	}
+  <title>Reservation Update</title>
+  <style type="text/css">
+  div.reservationCard {
+    background-color: #eeeeaa;
+    color: #000000;
+    padding: 1em;
+    margin-bottom: 1em;
+  }
+  
+  div.reservationCard h2 {
+    font-family: Palatino, serif;
+    font-style: italic;
+    text-align: center;
+    margin-top: 0px;
+    font-size: 200%;
+    font-weight: bold;
+  }
 
   div.reservationCard dd {
     padding-bottom: 0.5em;
   }
   
-	div.reservationContainer {
-		width: 50%;
-		margin-left: auto;
-		margin-right: auto;
-	}
+  div.reservationContainer {
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+  }
 
-	div.reservationContainer input {
-		width: 100%;
-		height: 3em;
-		color: white;
-		font-weight: bold;
-		margin-bottom: 1em;
-		font-size: 1em;
-		font-weight: bold;
-		border: 3px outset black;
-		cursor: pointer;
-	}
+  div.reservationContainer input {
+    width: 100%;
+    height: 3em;
+    color: white;
+    font-weight: bold;
+    margin-bottom: 1em;
+    font-size: 1em;
+    font-weight: bold;
+    border: 3px outset black;
+    cursor: pointer;
+  }
 
-	dd.topic-description p {
+  dd.topic-description p {
     margin-bottom: 1em;
   }
 
-	</style>
+  </style>
 </head>
 
 <body>
-	<p>Hi there <%= @reservation.user.name %>,</p>
+  <p>Hi there <%= @reservation.user.name %>,</p>
 
 <p>The session on "<%= @reservation.session.topic.name %>" for which you
-	had signed up has had some of its details changed. Please review the
-	updated class information below.</p>
-	
+  had signed up has had some of its details changed. Please review the
+  updated class information below.</p>
+  
 <div class="reservationContainer">
-	<div class="reservationCard">
-		<h2>Your Updated Reservation:</h2>
-		<dl>
-			<dt>What:</dt>
-			<dd><%=h @reservation.session.topic.name %></dd>
-			<dt>When:</dt>
+  <div class="reservationCard">
+    <h2>Your Updated Reservation:</h2>
+    <dl>
+      <dt>What:</dt>
+      <dd><%=h @reservation.session.topic.name %></dd>
+      <dt>When:</dt>
       <% if @reservation.session.multiple_occurrences? %>
         <dd>This session meets <%= @reservation.session.occurrences.count %> times:</dd>
       <% end %>
       <% @reservation.session.occurrences.each do |o| %>
         <dd><%=h formatted_time_range(o.time, @reservation.session.topic.minutes) %></dd>
       <% end %>
-			<dt>Where:</dt>
-			<dd><%=h @reservation.session.loc_with_site %></dd>
-			<dt>Who:</dt>
-			<dd><%=h @reservation.user.name %></dd>
+      <dt>Where:</dt>
+      <dd><%=h @reservation.session.loc_with_site %></dd>
+      <dt>Who:</dt>
+      <dd><%=h @reservation.user.name %></dd>
       <dt>Description:</dt>
       <dd class="topic-description"><%= auto_link( simple_format( h( @reservation.session.topic.description ) ) ) %></dd>
       <%- if @reservation.session.topic.documents.present? -%>
@@ -80,8 +80,8 @@
           <dd><%= link_to d.friendly_name, ReservationMailer.absolute_url(d.item.url), :only_path => false %></dd>
         <%- end -%>
       <%- end -%>
-		</dl>
-	</div>
+    </dl>
+  </div>
 </div>
 
 <p>If you're unable to attend the class for any reason, please cancel your

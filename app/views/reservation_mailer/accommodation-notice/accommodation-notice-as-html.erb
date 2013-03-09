@@ -1,61 +1,67 @@
 <html>
 
 <head>
-	<title>Reservation Confirmation</title>
-	<style type="text/css">
-	div.reservationCard {
-		background-color: #eeeeaa;
-		color: #000000;
-		padding: 1em;
-		margin-bottom: 1em;
-	}
-	
-	div.reservationCard h2 {
-		font-family: Palatino, serif;
-		font-style: italic;
-		text-align: center;
-		margin-top: 0px;
-		font-size: 200%;
-		font-weight: bold;
-	}
+  <title>Reservation Confirmation</title>
+  <style type="text/css">
+  div.reservationCard {
+    background-color: #eeeeaa;
+    color: #000000;
+    padding: 1em;
+    margin-bottom: 1em;
+  }
+  
+  div.reservationCard h2 {
+    font-family: Palatino, serif;
+    font-style: italic;
+    text-align: center;
+    margin-top: 0px;
+    font-size: 200%;
+    font-weight: bold;
+  }
 
-	div.reservationContainer {
-		width: 50%;
-		margin-left: auto;
-		margin-right: auto;
-	}
+  div.reservationContainer {
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+  }
 
-	div.reservationContainer input {
-		width: 100%;
-		height: 3em;
-		color: white;
-		font-weight: bold;
-		margin-bottom: 1em;
-		font-size: 1em;
-		font-weight: bold;
-		border: 3px outset black;
-		cursor: pointer;
-	}
-	</style>
+  div.reservationContainer input {
+    width: 100%;
+    height: 3em;
+    color: white;
+    font-weight: bold;
+    margin-bottom: 1em;
+    font-size: 1em;
+    font-weight: bold;
+    border: 3px outset black;
+    cursor: pointer;
+  }
+  </style>
 </head>
 
 <body>
-	<p>Hi there <%=h @reservation.session.topic.name %> instructors,</p>
+  <p>Hi there <%=h @reservation.session.topic.name %> instructors,</p>
 
-<p><%=h @reservation.user.name %>, one of the students in your upcoming 
-	"<%=h @reservation.session.topic.name %>" class on <%=h formatted_time_range(@reservation.session.time, @reservation.session.topic.minutes) %>, has requested special
-	accommodations for his/her needs:</p>
-	
-<%- if @reservation.special_accommodations.blank? -%>
-  <p>&lt; None. The student has deleted his/her previous request. &gt;</p>
+<%- if @reservation.special_accommodations.present? -%>
+  <%- message = "has requested special accommodations for his/her needs:" -%>
+  <%- addendum = "If you have any questions about this request" -%>
 <%- else -%>
-  <p><%=h @reservation.special_accommodations %></p>
+  <%- message = "has removed his previous request for special accommodations." -%>
+  <%- addendum = "If you have any questions" -%>
 <%- end -%>
 
-<p>If you have any questions about this request, you can reach 
-	<%=h @reservation.user.name %> at 
-	<a href="mailto:<%=h @reservation.user.email %>"><%=h @reservation.user.email %></a>.
-	</p>
+<p>
+  <%=h @reservation.user.name %>, one of the students in your upcoming "<%=h @reservation.session.topic.name %>" 
+  class on <%=h formatted_time_range(@reservation.session.time, @reservation.session.topic.minutes) %>, 
+  <%= message %>
+</p>
+
+<p><%=h @reservation.special_accommodations %></p>
+
+<p><%= addendum %>, you can reach 
+  <%=h @reservation.user.name %> at 
+  <a href="mailto:<%=h @reservation.user.email %>"><%=h @reservation.user.email %></a>.
+</p>
 
 </body>
 

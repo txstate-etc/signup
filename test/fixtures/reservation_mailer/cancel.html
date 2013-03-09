@@ -40,33 +40,29 @@
 </head>
 
 <body>
-  <p>Hi there <%= @user.name %>,</p>
+  <p>Hi there Plain User1,</p>
 
-<p>Sad news: the session on "<%= @session.topic.name %>" for which you
+<p>Sad news: the session on "Introduction to Gato" for which you
   had signed up has been cancelled.</p>
 
-<% if @custom_message.present? %>
-  <p><%= @custom_message %></p>
-<%end%>
+
   
 <p>If you'd like to sign up to take the class at a different time, you can
-  see a list of times it is offered <%= link_to "here", :action => "show", :controller => "topics", :id => @session.topic.id, :only_path => false %>.</p>
+  see a list of times it is offered <a href="http://localhost:3000/topics/419328395">here</a>.</p>
 
 <div class="reservationContainer">
   <div class="reservationCard">
     <h2>The Cancelled Reservation:</h2>
     <dl>
       <dt>What:</dt>
-      <dd><%=h @session.topic.name %></dd>
+      <dd>Introduction to Gato</dd>
       <dt>When:</dt>
-      <% if @session.multiple_occurrences? %>
-        <dd>This session meets <%= @session.occurrences.count %> times:</dd>
-      <% end %>
-      <% @session.occurrences.each do |o| %>
-        <dd><%=h formatted_time_range(o.time, @session.topic.minutes) %></dd>
-      <% end %>
+      
+      
+        <dd>Saturday, June  2, 2035,  7:00AM -  8:00AM</dd>
+      
       <dt>Who:</dt>
-      <dd><%=h @user.name %></dd>
+      <dd>Plain User1</dd>
     </dl>
   </div>
 </div>

@@ -59,7 +59,7 @@ class TopicTest < ActiveSupport::TestCase
     topic.minutes = nil
     assert_equal 2, topic.documents.size
     document = topic.documents.build
-    document.item = File.new("#{Rails.root}/test/fixtures/reservation_mailer/confirm")
+    document.item = File.new("#{Rails.root}/test/fixtures/topics.yml")
     assert document.new_record?
     assert_equal 3, topic.documents.size
     assert_equal false, topic.valid?

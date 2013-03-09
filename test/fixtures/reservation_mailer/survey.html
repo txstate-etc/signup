@@ -40,18 +40,15 @@
 </head>
 
 <body>
-  <p>Hi there <%= @reservation.user.name %>,</p>
+  <p>Hi there Plain User1,</p>
 
-<p>Our records show that you were registered for the recent class "<%= @reservation.session.topic.name %>".
+<p>Our records show that you were registered for the recent class "Teaching with TRACS".
   Now that the class has concluded, we'd love to get your feedback!</p>
 
-<% if @reservation.session.topic.survey_type == 1 %>
-  <p>We've prepared a very quick, 3 question survey that won't take more than 2 minutes of your time --
-    we promise! Please <a href="<%= url_for :controller => "survey_responses", :action => "new", :only_path => false %>?reservation_id=<%= @reservation.id %>">click here</a> to take the survey, and accept our thanks.</p>
-<% else %>  
+  
   <p>The instructor for this course has set up a survey to collect feedback on this course. Please
-    <a href="<%=h @reservation.session.topic.survey_url%>">click here</a> to complete the survey. Thank you!</p>
-<% end %>
+    <a href="http://localhost/tracssurvey">click here</a> to complete the survey. Thank you!</p>
+
 
 <p>Thanks in advance for your feedback!</p>
 

@@ -1,6 +1,7 @@
 class ReservationMailer < ActionMailer::Base
   helper :application
-
+  include HtmlToPlainText
+  
   def self.absolute_url(path)
     protocol = ActionMailer::Base.default_url_options[:protocol] || 'http://'
     host = ActionMailer::Base.default_url_options[:host] || 'localhost'
@@ -27,18 +28,6 @@ class ReservationMailer < ActionMailer::Base
     # do post-deliver stuff (catch exceptions, do exception stuff, and re-throw)
     logger.info("#{@template} mail sent successfully")  
     logger.flush
-  end
-
-  def render_multipart(opts={})
-    template = opts.delete(:template) || "#{@template.dasherize}"
-
-    content_type 'multipart/alternative'
-    part :content_type => "text/plain",
-      :body => render_message("#{@mailer_name}/#{template}/#{template}-as-text", opts),
-      :transfer_encoding => "base64"
-    
-    part :content_type => "text/html",
-      :body => render_message("#{@mailer_name}/#{template}/#{template}-as-html", opts)
   end
 
   def confirm( reservation )
@@ -98,6 +87,23 @@ class ReservationMailer < ActionMailer::Base
     recipients reservation.session.instructors.collect {|i| i.email_header }
     from       reservation.user.email_header
     render_multipart :reservation => reservation
+  end
+
+  private
+  
+  def render_multipart(opts={})
+    template = opts.delete(:template) || "#{@template.dasherize}"
+
+    html = render_message("#{@mailer_name}/#{template}/#{template}-as-html", opts)
+    text = convert_to_text(html)
+
+    content_type 'multipart/alternative'
+    part :content_type => "text/plain",
+      :body => text,
+      :transfer_encoding => "base64"
+    
+    part :content_type => "text/html",
+      :body => html
   end
 
 end
