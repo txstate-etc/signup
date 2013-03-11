@@ -11,9 +11,9 @@ class ReservationMailerTest < ActionMailer::TestCase
   def read_combined_fixture
     parts = []
     begin
-      parts << read_fixture("#{fixture_name('txt')}") 
-      parts << read_fixture("#{fixture_name('html')}")
-      parts << read_fixture("#{fixture_name('ics')}")
+      parts << read_fixture("#{fixture_name('txt')}").to_s
+      parts << read_fixture("#{fixture_name('html')}").to_s
+      parts << read_fixture("#{fixture_name('ics')}").to_s
     rescue
     end
     parts
@@ -50,7 +50,7 @@ class ReservationMailerTest < ActionMailer::TestCase
     
     assert_equal expected_parts.length, @actual.parts.length
     expected_parts.each_index do |i|
-      expected_parts[i] == @actual.parts[i].body
+      assert_equal expected_parts[i], @actual.parts[i].body
     end
    
   end

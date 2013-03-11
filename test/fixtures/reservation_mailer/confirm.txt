@@ -25,6 +25,6 @@ Download Class Materials:
 - Gato Document 2
 (http://localhost:3000/system/items/928836992/original/gato_document_2.txt)
 
-You can use the attached ICS file to add the session to
-your calendar software.
+You can use the attached ICS file to add the session to your
+calendar software.
 

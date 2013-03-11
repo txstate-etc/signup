@@ -1,5 +1,4 @@
 <html>
-
 <head>
   <title>Reservation Confirmation</title>
   <style type="text/css">
@@ -19,6 +18,10 @@
     font-weight: bold;
   }
 
+  div.reservationCard dd {
+    padding-bottom: 0.5em;
+  }
+
   div.reservationContainer {
     width: 50%;
     margin-left: auto;
@@ -36,11 +39,16 @@
     border: 3px outset black;
     cursor: pointer;
   }
-  </style>
-</head>
 
+  dd.topic-description p {
+    margin-bottom: 1em;
+  }
+
+</style>
+</head>
 <body>
-  <p>Hi there Plain User1,</p>
+
+<p>Hi there Plain User1,</p>
 
 <p>Sad news: the session on "Introduction to Gato" for which you
   had signed up has been cancelled.</p>
@@ -52,23 +60,18 @@
 
 <div class="reservationContainer">
   <div class="reservationCard">
-    <h2>The Cancelled Reservation:</h2>
+    <h2>The Cancelled Reservation</h2>
     <dl>
       <dt>What:</dt>
       <dd>Introduction to Gato</dd>
       <dt>When:</dt>
-      
-      
         <dd>Saturday, June  2, 2035,  7:00AM -  8:00AM</dd>
-      
       <dt>Who:</dt>
       <dd>Plain User1</dd>
     </dl>
   </div>
 </div>
-
 <p>Our sincere apologies for the inconvenience.</p>
+
 </body>
-
 </html>
-

@@ -2,9 +2,9 @@ Hi there Plain User1,
 
 Don't forget to bring a towel!
 
------------------
-Your Reservation:
------------------
+----------------
+Your Reservation
+----------------
 
 What:
 - Teaching with TRACS
