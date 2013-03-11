@@ -120,8 +120,11 @@ class Session < ActiveRecord::Base
   def after_update
     send_update = @occurrences_dirty || location_changed? || site_id_changed?
     if send_update
+      instructors.each do |instructor|
+        ReservationMailer.delay.deliver_update_notice_instructor( self, instructor )
+      end
       confirmed_reservations.each do |reservation|
-        ReservationMailer.delay.deliver_update_notice( reservation )
+        ReservationMailer.delay.deliver_update_notice( self, reservation.user )
       end
     end
   end
@@ -130,7 +133,7 @@ class Session < ActiveRecord::Base
     self.cancelled = true
     self.save
     instructors.each do |instructor|
-      ReservationMailer.delay.deliver_cancellation_notice( self, instructor, custom_message )
+      ReservationMailer.delay.deliver_cancellation_notice_instructor( self, instructor, custom_message )
     end
     confirmed_reservations.each do |reservation|
       ReservationMailer.delay.deliver_cancellation_notice( self, reservation.user, custom_message )
@@ -139,7 +142,7 @@ class Session < ActiveRecord::Base
 
   def email_all(message)
     instructors.each do |instructor|
-      ReservationMailer.delay.deliver_session_message( self, instructor, message )
+      ReservationMailer.delay.deliver_session_message_instructor( self, instructor, message )
     end
     confirmed_reservations.each do |reservation|
       ReservationMailer.delay.deliver_session_message( self, reservation.user, message )
@@ -239,7 +242,7 @@ class Session < ActiveRecord::Base
       end
       # now send one to each instructor
       session.instructors.each do |instructor|
-        ReservationMailer.delay.deliver_remind( session, instructor )
+        ReservationMailer.delay.deliver_remind_instructor( session, instructor )
       end
     end
   end

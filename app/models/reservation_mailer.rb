@@ -46,6 +46,10 @@ class ReservationMailer < ActionMailer::Base
     attachment :content_type => "text/calendar", :body => session.to_cal
   end
 
+  def remind_instructor(session, user)
+    remind(session, user)
+  end
+
   def promotion_notice( reservation )
     subject    'Now Enrolled: ' + reservation.session.topic.name
     recipients reservation.user.email_header
@@ -61,6 +65,10 @@ class ReservationMailer < ActionMailer::Base
     render_multipart :session => session, :user => user, :custom_message => custom_message
   end
 
+  def cancellation_notice_instructor(session, user, custom_message = '')
+    cancellation_notice(session, user, custom_message)
+  end
+
   def session_message( session, user, message )
     subject    'Update: ' + session.topic.name
     recipients user.email_header
@@ -68,13 +76,21 @@ class ReservationMailer < ActionMailer::Base
     render_multipart :session => session, :user => user, :message => message
   end
   
-  def update_notice( reservation )
-    subject    'Class Details Updated: ' + reservation.session.topic.name
-    recipients reservation.user.email_header
-    from       reservation.session.instructors[0].email_header
-    render_multipart :reservation => reservation
+  def session_message_instructor(session, user, message)
+    session_message(session, user, message)
+  end
+
+  def update_notice( session, user )
+    subject    'Class Details Updated: ' + session.topic.name
+    recipients user.email_header
+    from       session.instructors[0].email_header
+    render_multipart :session => session, :user => user
   end
   
+  def update_notice_instructor(session, user)
+    update_notice(session, user)
+  end
+
   def survey_mail( reservation )
     subject    'Feedback Requested: ' + reservation.session.topic.name
     recipients reservation.user.email_header

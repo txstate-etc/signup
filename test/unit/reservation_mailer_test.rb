@@ -80,6 +80,19 @@ class ReservationMailerTest < ActionMailer::TestCase
     do_common_assertions 
   end
 
+  test "remind_instructor" do
+    @expected.subject = 'Reminder: Introduction to Gato'
+    #@expected.body    = ???
+    @expected.date    = Time.now
+    @expected.from    = 'i12345@dev.nul'
+    @expected.to      = 'i12345@dev.nul'
+
+    reservation = reservations( :plainuser1 )
+    @actual = ReservationMailer.create_remind_instructor( reservation.session, reservation.session.instructors[0] )
+    
+    do_common_assertions 
+  end
+
   test "promote" do
     @expected.subject = 'Now Enrolled: Introduction to Gato'
     #@expected.body    = ???
@@ -99,7 +112,21 @@ class ReservationMailerTest < ActionMailer::TestCase
     @expected.from    = 'i12345@dev.nul'
     @expected.to      = 'pu12345@dev.nul'
 
-    @actual = ReservationMailer.create_update_notice( reservations( :plainuser1 ) )
+    reservation = reservations( :plainuser1 )
+    @actual = ReservationMailer.create_update_notice( reservation.session, reservation.user )
+    
+    do_common_assertions 
+  end
+
+  test "update_instructor" do
+    @expected.subject = 'Class Details Updated: Introduction to Gato'
+    #@expected.body    = ???
+    @expected.date    = Time.now
+    @expected.from    = 'i12345@dev.nul'
+    @expected.to      = 'i12345@dev.nul'
+
+    reservation = reservations( :plainuser1 )
+    @actual = ReservationMailer.create_update_notice_instructor( reservation.session, reservation.session.instructors[0] )
     
     do_common_assertions 
   end
@@ -113,6 +140,19 @@ class ReservationMailerTest < ActionMailer::TestCase
 
     reservation = reservations( :plainuser1 )
     @actual = ReservationMailer.create_cancellation_notice( reservation.session, reservation.user )
+    
+    do_common_assertions 
+  end
+
+  test "cancel_instructor" do
+    @expected.subject = 'Class Cancelled: Introduction to Gato'
+    #@expected.body    = ???
+    @expected.date    = Time.now
+    @expected.from    = 'i12345@dev.nul'
+    @expected.to      = 'i12345@dev.nul'
+
+    reservation = reservations( :plainuser1 )
+    @actual = ReservationMailer.create_cancellation_notice_instructor( reservation.session, reservation.session.instructors[0], "Zombies ate the instructor's brain." )
     
     do_common_assertions 
   end
@@ -150,6 +190,19 @@ class ReservationMailerTest < ActionMailer::TestCase
 
     reservation = reservations( :tracs_multiple_instructors_plainuser1 )
     @actual = ReservationMailer.create_session_message( reservation.session, reservation.user, "Don't forget to bring a towel!" )
+ 
+    do_common_assertions 
+  end
+
+  test "session_message_instructor" do
+    @expected.subject = 'Update: Teaching with TRACS'
+    #@expected.body    = ???
+    @expected.date    = Time.now
+    @expected.from    = 'i12345@dev.nul'
+    @expected.to      = 'i12345@dev.nul'
+
+    reservation = reservations( :tracs_multiple_instructors_plainuser1 )
+    @actual = ReservationMailer.create_session_message_instructor( reservation.session, reservation.session.instructors[0], "Don't forget to bring a towel!" )
  
     do_common_assertions 
   end

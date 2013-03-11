@@ -1,6 +1,6 @@
 <html>
 <head>
-  <title>Reservation Reminder</title>
+  <title>Session Reminder</title>
   <style type="text/css">
   div.reservationCard {
     background-color: #eeeeaa;
@@ -48,16 +48,20 @@
 </head>
 <body>
 
-<p>Hi there Plain User1,</p>
+<p>Hi there Instructor1,</p>
 
-<p>Just a friendly reminder: the "Introduction to Gato" class you signed up
-for is coming up! If your plans have changed and you can no longer make it to the class,
-or you need to cancel your reservation for any other reason, 
-please do so <a href="http://localhost:3000/reservations">here</a>.</p>
+<p> 
+  Just a friendly reminder: the "Introduction to Gato" class you are teaching
+  is coming up! You can view the current list of confirmed reservations
+  <a href="http://localhost:3000/sessions/attendance/419328395-introduction-to-gato" only_path="false">here</a>. 
+  Don't forget to record the attendance after the session!
+</p>
+
+
 
 <div class="reservationContainer">
   <div class="reservationCard">
-    <h2>Your Reservation</h2>
+    <h2>Session Details</h2>
     <dl>
       <dt>What:</dt>
       <dd>Introduction to Gato</dd>
@@ -65,8 +69,6 @@ please do so <a href="http://localhost:3000/reservations">here</a>.</p>
         <dd>Saturday, June  2, 2035,  7:00AM -  8:00AM</dd>
         <dt>Where:</dt>
         <dd>Alkek 155 (San Marcos)</dd>
-      <dt>Who:</dt>
-      <dd>Plain User1</dd>
         <dt>Description:</dt>
         <dd class="topic-description"><p>All about our Content Management System.</p></dd>
         <dt>Download Class Materials:</dt>

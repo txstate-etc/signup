@@ -1,0 +1,30 @@
+Hi there Instructor1,
+
+Just a friendly reminder: the "Introduction to Gato" class
+you are teaching is coming up! You can view the current list of
+confirmed reservations here
+(http://localhost:3000/sessions/attendance/419328395-introduction-to-gato).
+Don't forget to record the attendance after the session!
+
+---------------
+Session Details
+---------------
+
+What:
+- Introduction to Gato
+When:
+- Saturday, June 2, 2035, 7:00AM - 8:00AM
+Where:
+- Alkek 155 (San Marcos)
+Description:
+- All about our Content Management System.
+
+Download Class Materials:
+- Gato Document 1
+(http://localhost:3000/system/items/777370824/original/gato_document_1.txt)
+- Gato Document 2
+(http://localhost:3000/system/items/928836992/original/gato_document_2.txt)
+
+You can use the attached ICS file to add the session to your
+calendar software.
+

@@ -1,4 +1,4 @@
-<%- except ||= {} -%>
+<%- except ||= [] -%>
 <div class="reservationContainer">
   <div class="reservationCard">
     <h2><%= title ||= "Your Reservation" %></h2>
@@ -16,8 +16,10 @@
         <dt>Where:</dt>
         <dd><%=h session.loc_with_site %></dd>
       <%- end -%>
+      <%- unless (except.include? :who) -%>
       <dt>Who:</dt>
       <dd><%=h user.name %></dd>
+      <%- end -%>
       <%- unless (except.include? :description) -%>
         <dt>Description:</dt>
         <dd class="topic-description"><%= auto_link( simple_format( h( session.topic.description ) ) ) %></dd>

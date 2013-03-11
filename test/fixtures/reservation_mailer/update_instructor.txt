@@ -1,0 +1,29 @@
+Hi there Instructor1,
+
+This notice is to confirm that the session on "Introduction to
+Gato", which you are assigned to teach, has had some of its
+details changed. Please review the updated class information
+below.
+
+-----------------------
+Updated Session Details
+-----------------------
+
+What:
+- Introduction to Gato
+When:
+- Saturday, June 2, 2035, 7:00AM - 8:00AM
+Where:
+- Alkek 155 (San Marcos)
+Description:
+- All about our Content Management System.
+
+Download Class Materials:
+- Gato Document 1
+(http://localhost:3000/system/items/777370824/original/gato_document_1.txt)
+- Gato Document 2
+(http://localhost:3000/system/items/928836992/original/gato_document_2.txt)
+
+You may view or update the details of this session here
+(http://localhost:3000/sessions/419328395-introduction-to-gato).
+

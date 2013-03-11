@@ -28,13 +28,13 @@ class SessionTest < ActiveSupport::TestCase
   end
   
   test "Users should be updated when location or time of a class changes" do
-    assert_difference 'ActionMailer::Base.deliveries.size', +2 do
+    assert_difference 'ActionMailer::Base.deliveries.size', +3 do
       sessions( :gato_overbooked ).location = "The Third Circle of Hell"
       sessions( :gato_overbooked ).save
       Delayed::Worker.new(:quiet => true).work_off
     end
 
-    assert_difference 'ActionMailer::Base.deliveries.size', +2 do
+    assert_difference 'ActionMailer::Base.deliveries.size', +3 do
       sessions( :gato_overbooked ).occurrences[0].time = Time.now()
       sessions( :gato_overbooked ).save
       Delayed::Worker.new(:quiet => true).work_off
