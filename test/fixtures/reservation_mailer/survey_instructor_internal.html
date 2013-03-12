@@ -1,6 +1,6 @@
 <html>
 <head>
-  <title>Session Reminder</title>
+  <title>Attendance Reminder</title>
   <style type="text/css">
   div.reservationCard {
     background-color: #eeeeaa;
@@ -51,11 +51,18 @@
 <p>Hi there Instructor1,</p>
 
 <p> 
-  Just a friendly reminder: the "Introduction to Gato" class you are teaching
-  is coming up! You can view the current list of confirmed reservations
-  <a href="http://localhost:3000/sessions/attendance/419328395-introduction-to-gato" only_path="false">here</a>. 
-  Don't forget to record the attendance after the session!
+  Now that the "Introduction to Gato" class you taught
+  has ended it is a good time to record attendance, if you have not
+  already done so. You may view or update the attendance record <a href="http://localhost:3000/sessions/attendance/419328395-introduction-to-gato" only_path="false">here</a>.
 </p>
+
+
+  <p>
+    A link to the class survey has been sent to all attendees. 
+    When completed, you will be able to view the results
+    <a href="http://localhost:3000/sessions/419328395-introduction-to-gato/survey_results" only_path="false">here</a>.
+  </p>
+
 
 <div class="reservationContainer">
   <div class="reservationCard">
@@ -75,7 +82,5 @@
     </dl>
   </div>
 </div>
-<p>You can use the attached ICS file to add the session to your calendar software.</p>
-
 </body>
 </html>

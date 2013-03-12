@@ -11,7 +11,7 @@
   Now that the class has concluded, we'd love to get your feedback!</p>
 
 <% if @reservation.session.topic.survey_type == 1 %>
-  <p>We've prepared a very quick, 3 question survey that won't take more than 2 minutes of your time --
+  <p>We've prepared a very quick, 5 question survey that won't take more than 3 minutes of your time --
     we promise! Please <a href="<%= url_for :controller => "survey_responses", :action => "new", :only_path => false %>?reservation_id=<%= @reservation.id %>">click here</a> to take the survey, and accept our thanks.</p>
 <% else %>  
   <p>The instructor for this course has set up a survey to collect feedback on this course. Please

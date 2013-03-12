@@ -97,6 +97,13 @@ class ReservationMailer < ActionMailer::Base
     from       reservation.session.instructors[0].email_header
     render_multipart :reservation => reservation
   end  
+
+  def survey_mail_instructor( session, user )
+    subject    'Post-session Wrap-up: ' + session.topic.name
+    recipients user.email_header
+    from       session.instructors[0].email_header
+    render_multipart :session => session, :user => user
+  end
   
   def accommodation_notice( reservation )
     subject    'Special Accommodations Needed for: ' + reservation.session.topic.name

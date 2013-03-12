@@ -130,6 +130,8 @@ class ReservationMailerTest < ActionMailer::TestCase
     
     do_common_assertions 
   end
+  
+  CANCEL_MSG = "Zombies ate the instructor's brain, and we cannot find a replacement at this short notice."
 
   test "cancel" do
     @expected.subject = 'Class Cancelled: Introduction to Gato'
@@ -139,7 +141,7 @@ class ReservationMailerTest < ActionMailer::TestCase
     @expected.to      = 'pu12345@dev.nul'
 
     reservation = reservations( :plainuser1 )
-    @actual = ReservationMailer.create_cancellation_notice( reservation.session, reservation.user )
+    @actual = ReservationMailer.create_cancellation_notice( reservation.session, reservation.user, CANCEL_MSG )
     
     do_common_assertions 
   end
@@ -152,12 +154,12 @@ class ReservationMailerTest < ActionMailer::TestCase
     @expected.to      = 'i12345@dev.nul'
 
     reservation = reservations( :plainuser1 )
-    @actual = ReservationMailer.create_cancellation_notice_instructor( reservation.session, reservation.session.instructors[0], "Zombies ate the instructor's brain." )
+    @actual = ReservationMailer.create_cancellation_notice_instructor( reservation.session, reservation.session.instructors[0], CANCEL_MSG )
     
     do_common_assertions 
   end
   
-  test "accommodations" do
+  test "accommodations_added" do
     @expected.subject = 'Special Accommodations Needed for: Teaching with TRACS'
     #@expected.body    = ???
     @expected.date    = Time.now
@@ -169,7 +171,31 @@ class ReservationMailerTest < ActionMailer::TestCase
     do_common_assertions 
   end
 
-  test "survey" do
+  test "accommodations_removed" do
+    @expected.subject = 'Special Accommodations Needed for: Introduction to Gato'
+    #@expected.body    = ???
+    @expected.date    = Time.now
+    @expected.from    = 'pu12345@dev.nul'
+    @expected.to      = 'i12345@dev.nul'
+
+    @actual = ReservationMailer.create_accommodation_notice( reservations( :plainuser1 ) )
+    
+    do_common_assertions 
+  end
+
+  test "survey_internal" do
+    @expected.subject = 'Feedback Requested: Introduction to Gato'
+    #@expected.body    = ???
+    @expected.date    = Time.now
+    @expected.from    = 'i12345@dev.nul'
+    @expected.to      = 'pu12345@dev.nul'
+
+    @actual = ReservationMailer.create_survey_mail( reservations( :plainuser1 ) )
+ 
+    do_common_assertions 
+  end
+  
+  test "survey_external" do
     @expected.subject = 'Feedback Requested: Teaching with TRACS'
     #@expected.body    = ???
     @expected.date    = Time.now
@@ -177,6 +203,32 @@ class ReservationMailerTest < ActionMailer::TestCase
     @expected.to      = 'pu12345@dev.nul'
 
     @actual = ReservationMailer.create_survey_mail( reservations( :tracs_multiple_instructors_plainuser1 ) )
+ 
+    do_common_assertions 
+  end
+  
+  test "survey_instructor_internal" do
+    @expected.subject = 'Post-session Wrap-up: Introduction to Gato'
+    #@expected.body    = ???
+    @expected.date    = Time.now
+    @expected.from    = 'i12345@dev.nul'
+    @expected.to      = 'i12345@dev.nul'
+
+    reservation = reservations( :plainuser1 )
+    @actual = ReservationMailer.create_survey_mail_instructor( reservation.session, reservation.session.instructors[0] )
+ 
+    do_common_assertions 
+  end
+  
+  test "survey_instructor_external" do
+    @expected.subject = 'Post-session Wrap-up: Teaching with TRACS'
+    #@expected.body    = ???
+    @expected.date    = Time.now
+    @expected.from    = 'i12345@dev.nul'
+    @expected.to      = 'i12345@dev.nul'
+
+    reservation = reservations( :tracs_multiple_instructors_plainuser1 )
+    @actual = ReservationMailer.create_survey_mail_instructor( reservation.session, reservation.session.instructors[0] )
  
     do_common_assertions 
   end
