@@ -249,15 +249,17 @@ class Session < ActiveRecord::Base
   
   def self.send_surveys
     logger.info "#{DateTime.now.strftime("%F %T")}: Sending survey reminders..."
-    session_list = Session.all( :joins => :topic, :conditions => ['occurrences.time < ? AND survey_sent = ? AND survey_type != ? AND cancelled = ?', DateTime.now, false, Topic::SURVEY_NONE, false ], :readonly => false, :order => "occurrences.time", :include => :occurrences )
+    session_list = Session.all( :joins => :topic, :conditions => ['occurrences.time < ? AND survey_sent = ? AND cancelled = ?', DateTime.now, false, false ], :readonly => false, :order => "occurrences.time", :include => :occurrences )
     session_list.each do |session|
       session.reload #Force it to load in all occurrences
       next if session.last_time > Time.now #wait until the last occurrance
       session.instructors.each do |instructor|
         ReservationMailer.delay.deliver_survey_mail_instructor( session, instructor )
       end
-      session.confirmed_reservations.each do |reservation|
-        ReservationMailer.delay.deliver_survey_mail( reservation ) if reservation.survey_response.nil? && reservation.attended != Reservation::ATTENDANCE_MISSED
+      if session.topic.survey_type != Topic::SURVEY_NONE
+        session.confirmed_reservations.each do |reservation|
+          ReservationMailer.delay.deliver_survey_mail( reservation ) if reservation.survey_response.nil? && reservation.attended != Reservation::ATTENDANCE_MISSED
+        end
       end
       session.survey_sent = true
       session.save
