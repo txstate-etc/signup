@@ -31,9 +31,18 @@ module ApplicationHelper
     start = date.beginning_of_month
     last =  date.end_of_month
 
-    # Rails thinks that the beginning_of_week is Monday. At least this is configurable in Rails >= 3.2
+    # FIXME: Rails thinks that the beginning_of_week is Monday and end_of_week is Sunday.
+    #        At least this is configurable in Rails >= 3.2
+    # start = start.beginning_of_week(:sunday)
+    # last = last.end_of_week(:sunday)
+    
+    # Make the first date we return be a Sunday so we return full weeks.
     start = start.beginning_of_week - 1 unless start.wday == 0
-    last = last.end_of_week - 1 unless last.wday == 6
+    
+    # For the same reason, make the last date we return be a Saturday. This one's trickier:
+    # ex. last = Sunday; last+1 = Monday; (last+1).end_of_week - 1 = Saturday
+    # if we don't add 1, then last would already be end_of_week, so end_of_week-1 would be the previous day.
+    last = (last+1).end_of_week - 1 unless last.wday == 6
     
     (start..last).to_a
   end
