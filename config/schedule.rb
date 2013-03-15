@@ -54,6 +54,11 @@ if @environment == 'production'
     rake "db:backup MAX=30"
   end
 
+  # clean up old http_sessions nightly at 2:40am
+  every '40 2 * * *' do
+    rake "db:session_clean DAYS=30"
+  end
+
   # restart the delayed_job daemon when the system reboots
   every :reboot do
     rake "cron:delayed_job:restart"

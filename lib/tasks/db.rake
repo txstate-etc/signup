@@ -29,5 +29,16 @@ namespace :db do
     end
     puts "Deleted #{unwanted_backups.length} backups, #{all_backups.length - unwanted_backups.length} backups available" 
   end
+  
+  desc "Delete old sessions. Options: DAYS=30" 
+  task :session_clean => [:environment] do
+    tbl = ActiveRecord::SessionStore::Session.table_name
+    age = (ENV["DAYS"].to_i if ENV["DAYS"].to_i > 0) || 30
+    date = age.days.ago.utc.beginning_of_day.to_date
+    sql = "DELETE FROM #{tbl} WHERE updated_at < '#{date.to_s(:db)}'"
+    #puts "About to execute \"#{sql}\""
+    ActiveRecord::Base.connection.execute(sql)
+  end
+  
 end
 
