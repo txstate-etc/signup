@@ -7,6 +7,6 @@
 User-Agent: *
 Disallow: /login
 Disallow: /logout
-Disallow: /reservations/*
-Disallow: /sessions/*/reservations/*
-Disallow: /topics/grid/*
+Disallow: /reservations
+Disallow: /sessions/*/reservations
+Disallow: /topics/grid/
