@@ -137,8 +137,8 @@ class SessionTest < ActiveSupport::TestCase
       :site_id => sites( :sanmarcos ).id,
       :topic_id => topics( :gato ).id,
       :instructors_attributes => {
-        "1305227580344" => {"name_and_login"=>"Instructor2 (i23456)", "_destroy"=>""},
-                    "0" => {"name_and_login"=>"Instructor1 (i12345)", "_destroy"=>""}
+        "0" => {"name_and_login"=>"Instructor2 (i23456)", "_destroy"=>""},
+        "1305227580344" => {"name_and_login"=>"Instructor1 (i12345)", "_destroy"=>""}
       }
     })       
      

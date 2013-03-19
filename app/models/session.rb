@@ -300,7 +300,8 @@ class Session < ActiveRecord::Base
     #logger.info("in build_instructors_attributes, instructors = #{instructors.nil? ? "nil" : instructors}")
     
     ids = []
-    attributes.values.each do |attr|      
+    attributes.keys.sort { |a,b| a.to_i <=> b.to_i }.each do |key|
+      attr = attributes[key]
       next if attr["_destroy"] == "1"      
       if(update && attr.include?("id") && instructors.find(attr["id"]).name_and_login == attr["name_and_login"])
         ids << attr["id"]        
