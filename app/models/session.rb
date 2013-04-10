@@ -215,7 +215,7 @@ class Session < ActiveRecord::Base
 
   def to_csv
     FasterCSV.generate do |csv|
-      csv << [ "Topic", "Session ID", "Session Time", "Session Cancelled", "Attendee Name", "Attendee Login", "Attendee Email", "Reservation Confirmed?", "Attended?" ]
+      csv << [ "Topic", "Session ID", "Session Time", "Session Cancelled", "Attendee Name", "Attendee Login", "Attendee Email", "Attendee Title", "Attendee Department", "Reservation Confirmed?", "Attended?" ]
       self.reservations.each do |reservation|
         attended = ""
         if reservation.attended == Reservation::ATTENDANCE_MISSED
@@ -223,7 +223,7 @@ class Session < ActiveRecord::Base
         elsif reservation.attended == Reservation::ATTENDANCE_ATTENDED
           attended = "ATTENDED"
         end
-        csv << [ self.topic.name, self.id, self.time, self.cancelled, reservation.user.name, reservation.user.login, reservation.user.email, reservation.confirmed?, attended ]
+        csv << [ self.topic.name, self.id, self.time, self.cancelled, reservation.user.name, reservation.user.login, reservation.user.email, reservation.user.title, reservation.user.department, reservation.confirmed?, attended ]
       end
     end
   end
