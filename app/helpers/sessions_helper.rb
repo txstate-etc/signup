@@ -9,9 +9,10 @@ module SessionsHelper
     sep = outlook ? ';' : ','
     recipients = session.instructors.map { |user| user.email } unless session.instructors.blank?
     recipients << session.confirmed_reservations_by_last_name.map { |r| r.user.email } unless session.confirmed_reservations.blank?
+    subject = "Update: #{session.topic.name}"
     
     mailto = "mailto:#{session.instructors[0].email}"
-    mailto << "?subject=Update: #{session.topic.name}"
+    mailto << "?subject=#{subject.gsub(/[^a-zA-Z0-9_\-.]/n){ sprintf("%%%02X", $&.unpack("C")[0]) }}"
     mailto << '&bcc=' << recipients.join(sep)
     mailto
   end
