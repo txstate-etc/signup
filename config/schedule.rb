@@ -25,47 +25,45 @@ job_type :envcommand, 'cd :path && RAILS_ENV=:environment :task'
 
 set :output, "log/cron_log.log"
 
-if @environment == 'production'
-  # send out email reminders for classes that are 3 days
-  # out every night at 10:02pm.
-  every '2 22 * * *' do
-    rake "cron:send_reminders[3]"
-  end
-
-  # send out email reminders for classes that are today
-  # every morning at 12:02am.
-  every '2 0 * * *' do
-    rake "cron:send_reminders[0]"
-  end
-
-  # send out survey emails
-  # every morning at 12:10am.
-  every '10 0 * * *' do
-    rake "cron:send_surveys"
-  end
-
-  # update Users table nightly at 11:02pm
-  every '2 21 * * *' do
-    rake "cron:import_users"
-  end
-
-  # backup database nightly at 2:30am
-  every '30 2 * * *' do
-    rake "db:backup MAX=30"
-  end
-
-  # clean up old http_sessions nightly at 2:40am
-  every '40 2 * * *' do
-    rake "db:session_clean DAYS=30"
-  end
-
-  # restart the delayed_job daemon when the system reboots
-  every :reboot do
-    rake "cron:delayed_job:restart"
-  end
-  
-  every 1.hour do
-    rake "cron:delayed_job:restart"
-  end
-  
+# send out email reminders for classes that are 3 days
+# out every night at 10:02pm.
+every '2 22 * * *' do
+  rake "cron:send_reminders[3]"
 end
+
+# send out email reminders for classes that are today
+# every morning at 12:02am.
+every '2 0 * * *' do
+  rake "cron:send_reminders[0]"
+end
+
+# send out survey emails
+# every morning at 12:10am.
+every '10 0 * * *' do
+  rake "cron:send_surveys"
+end
+
+# update Users table nightly at 11:02pm
+every '2 21 * * *' do
+  rake "cron:import_users"
+end
+
+# backup database nightly at 2:30am
+every '30 2 * * *' do
+  rake "db:backup MAX=30"
+end
+
+# clean up old http_sessions nightly at 2:40am
+every '40 2 * * *' do
+  rake "db:session_clean DAYS=30"
+end
+
+# restart the delayed_job daemon when the system reboots
+every :reboot do
+  rake "cron:delayed_job:restart"
+end
+
+every 1.hour do
+  rake "cron:delayed_job:restart"
+end
+
