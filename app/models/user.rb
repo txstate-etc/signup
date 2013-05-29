@@ -20,6 +20,10 @@ class User < ActiveRecord::Base
     end
   end
   
+  def <=>(other)
+    [self.last_name, self.first_name] <=> [other.last_name, other.first_name]
+  end
+
   def name
     s = (name_prefix || '').strip.sub(/([^.])$/) { $1 + '.' }
     s << ' ' << [first_name, last_name].join(" ")

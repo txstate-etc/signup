@@ -112,6 +112,13 @@ class ReservationMailer < ActionMailer::Base
     render_multipart :reservation => reservation
   end
 
+  def raw_message( user, from_addr, subj, message )
+    subject    subj
+    recipients user.email_header
+    from       from_addr
+    body message
+  end
+
   private
   
   def render_multipart(opts={})
