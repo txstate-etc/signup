@@ -118,7 +118,7 @@ class Session < ActiveRecord::Base
   end
   
   def after_update
-    send_update = @occurrences_dirty || location_changed? || site_id_changed?
+    send_update = !in_past? && (@occurrences_dirty || location_changed? || site_id_changed?)
     if send_update
       instructors.each do |instructor|
         ReservationMailer.delay.deliver_update_notice_instructor( self, instructor )
@@ -132,11 +132,13 @@ class Session < ActiveRecord::Base
   def cancel!(custom_message = '')
     self.cancelled = true
     self.save
-    instructors.each do |instructor|
-      ReservationMailer.delay.deliver_cancellation_notice_instructor( self, instructor, custom_message )
-    end
-    confirmed_reservations.each do |reservation|
-      ReservationMailer.delay.deliver_cancellation_notice( self, reservation.user, custom_message )
+    if !in_past?
+      instructors.each do |instructor|
+        ReservationMailer.delay.deliver_cancellation_notice_instructor( self, instructor, custom_message )
+      end
+      confirmed_reservations.each do |reservation|
+        ReservationMailer.delay.deliver_cancellation_notice( self, reservation.user, custom_message )
+      end
     end
   end
 

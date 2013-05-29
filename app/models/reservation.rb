@@ -21,11 +21,11 @@ class Reservation < ActiveRecord::Base
   end
   
   def after_create
-    ReservationMailer.delay.deliver_accommodation_notice( self ) if !special_accommodations.blank?
+    ReservationMailer.delay.deliver_accommodation_notice( self ) if !special_accommodations.blank? && !session.in_past?
   end
 
   def after_update
-    ReservationMailer.delay.deliver_accommodation_notice( self ) if special_accommodations_changed?
+    ReservationMailer.delay.deliver_accommodation_notice( self ) if special_accommodations_changed? && !session.in_past?
   end
   
   def before_destroy
@@ -37,7 +37,7 @@ class Reservation < ActiveRecord::Base
   def after_destroy
     # Send promotion notice only if THIS reservation (the one we just deleted) was confirmed
     session.reload
-    if @was_confirmed && !session.space_is_available?
+    if @was_confirmed && !session.space_is_available? && !session.in_past?
       new_confirmed_reservation = session.confirmed_reservations.last
       ReservationMailer.delay.deliver_promotion_notice( new_confirmed_reservation )
     end
