@@ -30,19 +30,26 @@ class SessionTest < ActiveSupport::TestCase
   test "Users should be updated when location or time of a class changes" do
     assert_difference 'ActionMailer::Base.deliveries.size', +3 do
       sessions( :gato_overbooked ).location = "The Third Circle of Hell"
-      sessions( :gato_overbooked ).save
+      sessions( :gato_overbooked ).save!
       Delayed::Worker.new(:quiet => true).work_off
     end
 
     assert_difference 'ActionMailer::Base.deliveries.size', +3 do
-      sessions( :gato_overbooked ).occurrences[0].time = Time.now()
-      sessions( :gato_overbooked ).save
+      sessions( :gato_overbooked ).occurrences[0].time = Time.now + 1.day
+      sessions( :gato_overbooked ).save!
+      Delayed::Worker.new(:quiet => true).work_off
+    end
+
+    # Should not send for sessions in the past
+    assert_difference 'ActionMailer::Base.deliveries.size', +0 do
+      sessions( :gato_overbooked ).occurrences[0].time = Time.now - 1.day
+      sessions( :gato_overbooked ).save!
       Delayed::Worker.new(:quiet => true).work_off
     end
     
     assert_difference 'ActionMailer::Base.deliveries.size', +0 do
       sessions( :gato_overbooked ).instructors << users( :instructor1 )
-      sessions( :gato_overbooked ).save
+      sessions( :gato_overbooked ).save!
       Delayed::Worker.new(:quiet => true).work_off
     end
     
@@ -244,7 +251,13 @@ class SessionTest < ActiveSupport::TestCase
     assert_equal users( :instructor1 ).email, cancellation_emails[0].to[0]
     assert_equal users( :plainuser2 ).email, cancellation_emails[1].to[0]
     assert_equal users( :plainuser1 ).email, cancellation_emails[2].to[0]
-  end
+  
+    # no emails for sessions in the past
+    assert_difference 'ActionMailer::Base.deliveries.size', +0 do
+      sessions( :gato_past ).cancel!
+      Delayed::Worker.new(:quiet => true).work_off
+    end
+end
 
   test "emails sent to instructors after cancellation" do
     assert_difference 'ActionMailer::Base.deliveries.size', +3 do

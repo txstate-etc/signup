@@ -6,7 +6,7 @@ gato_past:
   location: Alkek 155
   site: sanmarcos
   cancelled: false
-  seats: 20
+  seats: 3
   
 tracs_past:
   instructors: instructor1

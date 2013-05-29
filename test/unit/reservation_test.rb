@@ -56,6 +56,32 @@ class ReservationTest < ActiveSupport::TestCase
     assert !reservations( :gato_huge_plainuser1 ).on_waiting_list?
   end
   
+  test "Promoted reservations get emails" do
+    assert_difference 'ActionMailer::Base.deliveries.size', +1 do
+      reservations( :overbooked_plainuser1 ).destroy
+      Delayed::Worker.new(:quiet => true).work_off
+    end
+
+    # No emails sent if session is in past
+    reservation = Reservation.new( :session => sessions( :gato_past ), :user => users( :plainuser4 ) )
+    assert reservation.save
+    assert_equal users( :plainuser4 ), sessions( :gato_past ).waiting_list.last.user
+    assert_equal 1, sessions( :gato_past ).waiting_list.size
+    assert_equal 4, sessions( :gato_past ).reservations.size
+    assert_equal 3, sessions( :gato_past ).confirmed_reservations.size
+    assert_difference 'ActionMailer::Base.deliveries.size', +0 do
+      reservation = reservations( :gato_past_plainuser1 )
+      reservation.destroy
+      Delayed::Worker.new(:quiet => true).work_off
+    end
+    sessions( :gato_past ).reload
+    assert_equal 3, sessions( :gato_past ).reservations.size
+    assert_equal 3, sessions( :gato_past ).confirmed_reservations.size
+    assert_equal 0, sessions( :gato_past ).waiting_list.size
+    assert_equal users( :plainuser4 ), sessions( :gato_past ).confirmed_reservations.last.user
+
+  end
+
   test "Instructor should receive email if special accomodations are needed" do
     reservation = Reservation.new( :session => sessions( :tracs_multiple_instructors ),  :user => users( :plainuser2 ) )
     reservation.save
@@ -71,5 +97,13 @@ class ReservationTest < ActiveSupport::TestCase
     assert_equal ActionMailer::Base.deliveries.last.to.size, 2
     assert_equal ActionMailer::Base.deliveries.last.to[0], sessions( :tracs_multiple_instructors ).instructors[0].email
     assert_equal ActionMailer::Base.deliveries.last.to[1], sessions( :tracs_multiple_instructors ).instructors[1].email
+
+    # no emails for sessions in the past
+    assert_difference 'ActionMailer::Base.deliveries.size', +0 do
+      reservation = reservations( :gato_past_plainuser1 )
+      reservation.special_accommodations = "I'd like an eggplant"
+      reservation.save
+      Delayed::Worker.new(:quiet => true).work_off
+    end
   end
 end
