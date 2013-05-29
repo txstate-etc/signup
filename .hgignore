@@ -1,6 +1,7 @@
 log/
 \.sqlite3$
 \.project
+\.DS_Store
 tmproj
 password
 tmp/
