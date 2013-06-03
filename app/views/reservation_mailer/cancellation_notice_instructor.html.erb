@@ -13,7 +13,9 @@
 
 <% if @custom_message.present? %>
   <p>The following message was sent to all attendees:</p>
-  <p><%= @custom_message %></p>
+  <div class="custom-message">
+    <%= auto_link(simple_format(@custom_message)) %>
+  </div>
 <%end%>
   
 <%= render :partial => "reservation", :locals => {

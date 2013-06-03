@@ -1014,13 +1014,27 @@ div.admin-options strong {
   padding: 2em;
 }
 
-#cancel-session-dialog p {
+#cancel-session-dialog h2 {
+  font-size: 1.2em;
+}
+
+#cancel-session-dialog p.cancel-session-confirm {
+  margin-top: 1em;
+  margin-bottom: 2em;
+}
+
+#cancel-session-dialog p.cancel-session-instructions {
+  font-size: .85em;
+  line-height: 1.5;
+}
+
+#cancel-session-dialog textarea {
   margin-top: 1em;
   margin-bottom: 1.5em;
 }
 
 #cancel-session-dialog input[type=submit] {
-  margin-top: 1em;
+  margin-top: 3em;
   margin-bottom: 1.5em;
 }
 

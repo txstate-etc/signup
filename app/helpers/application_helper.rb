@@ -107,4 +107,8 @@ module ApplicationHelper
     ret << link_to_function("show fewer ▲", 'collapse_list(this)')
     ret << '</div>'
   end
+
+  def default_cancellation_message(session)
+    "Sad news: the session on \"#{session.topic.name}\" for which you had signed up has been cancelled."
+  end
 end

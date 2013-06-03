@@ -7,11 +7,12 @@
 
 <p>Hi there <%= @user.name %>,</p>
 
-<p>Sad news: the session on "<%= @session.topic.name %>" for which you
-  had signed up has been cancelled.</p>
-
 <% if @custom_message.present? %>
-  <p><%= @custom_message %></p>
+  <div class="custom-message">
+    <%= auto_link(simple_format(@custom_message)) %>
+  </div>
+<% else %>
+  <p><%= default_cancellation_message(@session) %></p>
 <%end%>
   
 <p>If you'd like to sign up to take the class at a different time, you can
