@@ -1,10 +1,7 @@
 Hi there Plain User1,
 
-Sad news: the session on "Introduction to Gato" for which you
-had signed up has been cancelled.
-
-Zombies ate the instructor's brain, and we cannot find a
-replacement at this short notice.
+Zombies ate the instructor's brain, and we cannot find
+a replacement at this short notice.
 
 If you'd like to sign up to take the class at a different
 time, you can see a list of times it is offered here
