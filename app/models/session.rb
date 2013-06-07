@@ -14,6 +14,7 @@ class Session < ActiveRecord::Base
   validates_presence_of :topic_id, :location, :site
   validates_numericality_of :seats, :only_integer => true, :allow_nil => true
   validate :enough_seats
+  validate :valid_registration_period
   after_validation :reload_if_invalid
   accepts_nested_attributes_for :reservations  
   
@@ -148,6 +149,17 @@ class Session < ActiveRecord::Base
     end
     confirmed_reservations.each do |reservation|
       ReservationMailer.delay.deliver_session_message( self, reservation.user, message )
+    end
+  end
+  
+  def valid_registration_period
+    reg_start_time = self.reg_start.blank? ? self.created_at : self.reg_start
+    reg_end_time = self.reg_end.blank? ? self.time : self.reg_end
+    if reg_start_time > reg_end_time
+      self.errors.add(:reg_start, 'must be earlier than end time.')
+    end
+    if reg_end_time > self.time
+      self.errors.add(:reg_end, 'must be earlier than the session time.')
     end
   end
   

@@ -8,6 +8,8 @@ en:
       session:
         occurrences: "Session Time"
         site: "Site"
+        reg_start: "Registration start time"
+        reg_end: "Registration end time"
       document:
         item_file_size: "Document size"
   topics:
