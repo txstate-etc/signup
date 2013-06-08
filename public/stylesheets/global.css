@@ -210,6 +210,11 @@ label.admin-netid-label {
   float: left;
 }
 
+.site-field select {
+  margin-left: 2px;
+  margin-top: 5px;
+}
+
 #notification {
   color: #000;
   border: 2px solid #94a74d;
