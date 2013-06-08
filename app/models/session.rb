@@ -153,11 +153,15 @@ class Session < ActiveRecord::Base
   end
   
   def valid_registration_period
-    reg_start_time = self.reg_start.blank? ? self.created_at : self.reg_start
+    return unless registration_period_defined?
+
+    reg_start_time = (self.reg_start.blank? ? self.created_at : self.reg_start) || Time.now
     reg_end_time = self.reg_end.blank? ? self.time : self.reg_end
+    
     if reg_start_time > reg_end_time
       self.errors.add(:reg_start, 'must be earlier than end time.')
     end
+    
     if reg_end_time > self.time
       self.errors.add(:reg_end, 'must be earlier than the session time.')
     end
