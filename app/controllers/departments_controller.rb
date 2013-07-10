@@ -10,6 +10,10 @@ class DepartmentsController < ApplicationController
     @department = Department.find( params[ :id ] )
     @topics = @department.upcoming
     @page_title = @department.name
+    respond_to do |format|
+      format.html
+      format.atom
+    end
   end
 
   def manage

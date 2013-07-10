@@ -366,6 +366,14 @@ input.submit-button {
   
 }
 
+a.feed-link {
+    display: inline-block;
+    color: transparent;
+    height: 16px;
+    background: url(/images/feed.png) left no-repeat;
+    margin-left: 4px;
+}
+
 span.site {
   margin-left: 0.5em;
   font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', serif;

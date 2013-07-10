@@ -6,7 +6,12 @@
 
 <% if @department.topics.size > 0 %>
   <div class="content-section">
-    <h2>Upcoming sessions</h2>
+    <h2>Upcoming sessions
+      <%= link_to( 
+        "Subscribe to the XML feed for this department",
+         department_path(@department, :format => :atom),
+         :class => 'feed-link') %>
+    </h2>
     <% if @topics.size > 0 %>
       <ul class="topic-list">
         <% @topics.each do |topic| %>

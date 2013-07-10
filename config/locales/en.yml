@@ -19,3 +19,6 @@ en:
   sessions:
     edit:
       site_label: "Site:"
+  departments:
+    show:
+      atom_title_prefix: "Upcoming Sessions for "
