@@ -7,7 +7,7 @@
     <div class="content-section">
       <h2><%= department.name %></h2>
       <ul class="topic-list">
-        <% @topics[department].sort {|a,b| a.name <=> b.name }.each do |topic| %>
+        <% @topics[department].sort_by {|a| a.name.downcase }.each do |topic| %>
           <li>
             <%= link_to topic.name, topic %>
             <% if topic.upcoming_sessions.present? %>       
