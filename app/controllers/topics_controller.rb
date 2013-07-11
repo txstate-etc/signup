@@ -118,17 +118,19 @@ class TopicsController < ApplicationController
       render(:file => 'shared/404.erb', :status => 404, :layout => true) unless @topic
       return
     end
-
-    respond_to do |wants|
-      wants.html do
-        @page_title = @topic.name
-      end
+    
+    @page_title = @topic.name
       
-      wants.csv do
+    respond_to do |format|
+      format.html
+      format.atom
+      format.csv do
         send_data @topic.to_csv,
           :type => 'text/csv; charset=iso-8859-1; header=present',
           :disposition => "attachment; filename=#{@topic.to_param}.csv"
       end
+
+      
     end
   end
   

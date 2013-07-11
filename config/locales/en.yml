@@ -16,6 +16,8 @@ en:
     index:
       title: "Available Topics"
       by_site: "group by site"
+    show:
+      atom_title_prefix: "Upcoming Sessions for "
   sessions:
     edit:
       site_label: "Site:"

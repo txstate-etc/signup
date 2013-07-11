@@ -1,10 +1,7 @@
 atom_feed(:root_url => department_url(@department)) do |feed|
   feed.title(t(:'.atom_title_prefix') + @page_title)
-  updated = @topics.min { |a, b| a.upcoming_sessions[0].updated_at <=> b.upcoming_sessions[0].updated_at }
+  updated = @topics.max { |a, b| a.upcoming_sessions[0].updated_at <=> b.upcoming_sessions[0].updated_at }
   feed.updated(updated ? updated.upcoming_sessions[0].updated_at : Time.now)
-
-  # FIXME: sort the sessions the same way that the html page does
-        # Gato sorts by publish date, newest to oldest.
 
   if @topics.size > 0
     for topic in @topics
