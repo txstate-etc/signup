@@ -9,10 +9,16 @@
   <dl>
     <dt>Time:</dt>
   	<% if @session.multiple_occurrences? %>
-      <dd>This session meets <%= @session.occurrences.count %> times:</dd>
+      <% meets_met = @session.in_past? ? "met" : "meets" %>          
+      <dd>This session <%= meets_met %> <%= @session.occurrences.count %> times:</dd>
     <% end %>
     <% @session.occurrences.each do |o| %>
       <dd><%=h formatted_time_range(o.time, @session.topic.minutes) %></dd>
+    <% end %>
+    <% if @session.in_past? %>
+      <dd class="in-past">This session has already taken place.</dd>
+    <% elsif @session.started? %>
+      <dd class="in-past">This session has already commenced.</dd>
     <% end %>
   	<% if @session.topic.upcoming_sessions.size > 1 %>
   	  <dd><%= link_to 'Need to look for another session?', @session.topic %></dd>
@@ -53,12 +59,13 @@
   		  <% if @reservation.attended == Reservation::ATTENDANCE_ATTENDED %>
   		    <p>You attended this session. <%= survey_link(@reservation) %></p>
   		  <% elsif @reservation.attended == Reservation::ATTENDANCE_MISSED %>
-		    <p>You registered for this session, but were marked absent. </p>
+          <p>You registered for this session, but were marked absent. </p>
 				<% else %>
+          <% are_were = @session.in_past? ? "were" : "are" %>
   		  	<% if @reservation.confirmed? %>
-  		  		<p>You are registered for this session. <%= survey_link(@reservation) %></p>
+  		  		<p>You <%= are_were %> registered for this session. <%= survey_link(@reservation) %></p>
   		  	<% else %>
-  		  		<p>You are on the waiting list for this session.</p>
+  		  		<p>You <%= are_were %> on the waiting list for this session.</p>
   		  	<% end %>
   		  	<div class="download-link download-calendar">
   		  		<%= link_to "Add reservation to calendar", { :controller => :reservations, :action => :download, :id => @reservation.id } %>
@@ -86,7 +93,6 @@
               registered and notified by email.
             </div>
             <div class="register-button">
-              <%#= link_to "Add to Waiting List", new_session_reservation_path( @session ), :class => 'register-button' %>
               <% form_tag(session_reservations_path( @session )) do %>
                 <%= submit_tag "Add to Waiting List", :class => 'register-button' %>
               <% end %>

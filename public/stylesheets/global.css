@@ -444,6 +444,11 @@ div.login-link a:hover {
   text-decoration: none;
 }
 
+#session-details dd.in-past {
+  color: #501214;
+  font-weight: bold;
+}
+
 #session-details .notice {
   font-size: .9em;
 }

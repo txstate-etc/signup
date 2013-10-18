@@ -5,8 +5,8 @@
 		<%- if @session.last_time < Time.now -%>
 			<p><%= link_to "View Survey Results", session_survey_results_path( @session ) %>
 		<%- end -%>
-		<p><%= link_to "Update Session Details", edit_session_path %>
 		<% if @session.time > Time.now && !@session.cancelled %>
+			<p><%= link_to "Update Session Details", edit_session_path %>
 			<p><%= link_to "Cancel Session", '#', :id => 'cancel-session-link' %>
 		<% end %>
 	<% end %>

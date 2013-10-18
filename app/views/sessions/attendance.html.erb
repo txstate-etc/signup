@@ -4,11 +4,17 @@
   <h2>Session Details</h2>
   <dl>
     <dt>Time:</dt>
-  	<% if @session.multiple_occurrences? %>
-      <dd>This session meets <%= @session.occurrences.count %> times:</dd>
+    <% if @session.multiple_occurrences? %>
+      <% meets_met = @session.in_past? ? "met" : "meets" %>          
+      <dd>This session <%= meets_met %> <%= @session.occurrences.count %> times:</dd>
     <% end %>
     <% @session.occurrences.each do |o| %>
       <dd><%=h formatted_time_range(o.time, @session.topic.minutes) %></dd>
+    <% end %>
+    <% if @session.in_past? %>
+      <dd class="in-past">This session has already taken place.</dd>
+    <% elsif @session.started? %>
+      <dd class="in-past">This session has already commenced.</dd>
     <% end %>
   	<% if @session.topic.upcoming_sessions.size > 1 %>
   	  <dd><%= link_to 'Need to look for another session?', @session.topic %></dd>
@@ -82,8 +88,8 @@
 								<% end %>
 							</td>
 							<td class="attendance-actions">
-								<%= link_to 'cancel', reservation, :title => 'Cancel reservation', :class => "cancel-link", :method => :delete, :confirm => "Are you sure you want to cancel this reservation?" %>
 								<% if @session.last_time >= Time.now %>
+                  <%= link_to 'cancel', reservation, :title => 'Cancel reservation', :class => "cancel-link", :method => :delete, :confirm => "Are you sure you want to cancel this reservation?" %>
 								  <%= link_to 'remind', send_reminder_path(reservation), {:title => 'Send reminder', :class => "remind-link", :confirm => "Are you sure you want to send an email reminder to #{reservation.user.name}?"}%>
 								<% end %>
 								<%= link_to 'email', "mailto:#{reservation.user.email}", :title => 'Send email', :class => "email-link" %>
