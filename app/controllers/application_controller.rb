@@ -46,6 +46,12 @@ class ApplicationController < ActionController::Base
   helper_method :current_user
   helper_method :cas_user
   helper_method :authorized?
+
+  protected
+  def authorized?(item=nil)
+    current_user && current_user.authorized?(item)
+  end
+
   private
   def current_user
     @_current_user ||= session[ :user ] && User.find(session[ :user ])
@@ -55,9 +61,6 @@ class ApplicationController < ActionController::Base
     session[ :cas_user ]
   end
   
-  def authorized?(item=nil)
-    current_user && current_user.authorized?(item)
-  end
   
   
 end

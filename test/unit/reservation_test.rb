@@ -58,7 +58,7 @@ class ReservationTest < ActiveSupport::TestCase
   
   test "Promoted reservations get emails" do
     assert_difference 'ActionMailer::Base.deliveries.size', +1 do
-      reservations( :overbooked_plainuser1 ).destroy
+      reservations( :overbooked_plainuser1 ).cancel!
       Delayed::Worker.new(:quiet => true).work_off
     end
 
@@ -71,7 +71,7 @@ class ReservationTest < ActiveSupport::TestCase
     assert_equal 3, sessions( :gato_past ).confirmed_reservations.size
     assert_difference 'ActionMailer::Base.deliveries.size', +0 do
       reservation = reservations( :gato_past_plainuser1 )
-      reservation.destroy
+      reservation.cancel!
       Delayed::Worker.new(:quiet => true).work_off
     end
     sessions( :gato_past ).reload

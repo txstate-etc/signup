@@ -2,27 +2,44 @@ class ReservationsController < ApplicationController
   before_filter :authenticate, :except => :download
   
   def create
-    @reservation = Reservation.new( params[ :reservation ] )
-    @session = Session.find( params[ :session_id ] )
-    @reservation.session = @session
+    unless current_user
+      redirect_to root_url
+      return
+    end
+
+    user = if params[ :user_login ]
+      User.find_by_login( params[ :user_login ] )
+    else
+      current_user
+    end
+
+    @reservation = Reservation.find_by_user_id_and_session_id(user.id, params[ :session_id ])
+    unless @reservation
+      @reservation = Reservation.new( params[ :reservation ] )
+      @reservation.session = Session.find( params[ :session_id ] )
+      @reservation.user = user
+    end
+
     admin_is_enrolling_someone_else = params[ :user_login ] && authorized?(@reservation)
     if admin_is_enrolling_someone_else
-      @reservation.user = User.find_by_login( params[ :user_login ] )
       if @reservation.user.nil?
         flash[ :error ] = "Could not find user with Login ID #{params[ :user_login ]}"
         redirect_to attendance_path(@reservation.session)
         return
       end
-    elsif !@session.in_registration_period?
+    elsif !@reservation.session.in_registration_period?
       flash[ :error ] = "Registration is closed for this session."
-      redirect_to @session 
+      redirect_to @reservation.session 
       return
-    else
-      @reservation.user = current_user
     end
     
-    success = @reservation.save
-    ReservationMailer.delay.deliver_confirm( @reservation ) if success &&  @reservation.confirmed?
+    success = if @reservation.cancelled? && !@reservation.new_record?
+      @reservation.uncancel! 
+    else
+      @reservation.save
+    end
+    
+    ReservationMailer.delay.deliver_confirm( @reservation ) if success && @reservation.confirmed?
  
     if admin_is_enrolling_someone_else
       if success
@@ -43,10 +60,11 @@ class ReservationsController < ApplicationController
         else
           flash[ :notice ] = "You have been added to the waiting list."
         end
-        redirect_to @reservation.session 
       else
-        redirect_to @reservation.session 
+        errors = @reservation.errors.full_messages.join(" ")
+        flash[ :error ] = "Unable to make reservation. " + errors
       end
+      redirect_to @reservation.session 
     end
   end
   
@@ -94,11 +112,11 @@ class ReservationsController < ApplicationController
       @page_title = "Your Reservations"
     end
     
-    reservations = Reservation.find( :all, :conditions => ["user_id = ? AND sessions.cancelled = false", user.id ], :include => [ :session ] )
-    current_reservations = reservations.find_all{ |reservation| reservation.session.last_time > Time.now }.sort {|a,b| a.session.next_time <=> b.session.next_time}
-    @past_reservations = reservations.find_all{ |reservation| reservation.session.last_time <= Time.now && reservation.attended != Reservation::ATTENDANCE_MISSED }
+    reservations = Reservation.active.find( :all, :conditions => ["user_id = ? AND sessions.cancelled = false", user.id ], :include => [ :session ] )
+    current_reservations = reservations.find_all{ |reservation| !reservation.session.in_past? }.sort {|a,b| a.session.next_time <=> b.session.next_time}
+    @past_reservations = reservations.find_all{ |reservation| reservation.session.in_past? && reservation.attended != Reservation::ATTENDANCE_MISSED }
     @confirmed_reservations = current_reservations.find_all{ |reservation| reservation.confirmed? }
-    @waiting_list_signups = current_reservations.find_all{ |reservation| reservation.session.time > Time.now && !reservation.confirmed? }
+    @waiting_list_signups = current_reservations.find_all{ |reservation| reservation.on_waiting_list? }
   end
   
   def destroy
@@ -106,11 +124,11 @@ class ReservationsController < ApplicationController
     superuser =  authorized? @reservation
     
     if @reservation.user != current_user && !superuser
-      flash[ :error ] = "Reservations can only be cancelled by their owner, an admin, or an instructor." + current_user.to_s + " & " + @reservation.user.to_s
+      flash[ :error ] = "Reservations can only be cancelled by their owner, an admin, or an instructor."
     elsif @reservation.session.time <= Time.now && !superuser
       flash[ :error ] = "Reservations cannot be cancelled once the session has begun."      
     else
-      @reservation.destroy
+      @reservation.cancel!
       if @reservation.user == current_user
         flash[ :notice ] = "Your reservation has been cancelled."
       else
@@ -118,10 +136,12 @@ class ReservationsController < ApplicationController
       end
     end
     
-    if !superuser
-      redirect_to reservations_path
-    else
+    if request.referrer.present?
       redirect_to request.referrer
+    elsif superuser
+      redirect_to attendance_path( @reservation.session )
+    else
+      redirect_to reservations_path
     end
   end
   
@@ -131,7 +151,7 @@ class ReservationsController < ApplicationController
     superuser =  authorized? @reservation
     
     if @reservation.user != current_user && !superuser
-      flash[ :error ] = "Reminders can only be sent by their owner, an admin, or an instructor." + current_user.to_s + " & " + @reservation.user.to_s
+      flash[ :error ] = "Reminders can only be sent by their owner, an admin, or an instructor."
     elsif @reservation.session.last_time < Time.now && !superuser
       flash[ :error ] = "Reminders cannot be sent once the session has ended."      
     else
@@ -152,7 +172,7 @@ class ReservationsController < ApplicationController
     superuser =  authorized? @reservation
     
     if @reservation.user != current_user && !superuser
-      flash[ :error ] = "Survey reminders can only be sent by their owner, an admin, or an instructor." + current_user.to_s + " & " + @reservation.user.to_s
+      flash[ :error ] = "Survey reminders can only be sent by their owner, an admin, or an instructor."
     else
       @reservation.send_survey
       flash[ :notice ] = "A survey reminder has been sent to #{@reservation.user.name}."

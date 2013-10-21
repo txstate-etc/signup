@@ -64,7 +64,8 @@ module ApplicationHelper
   end
   
   def survey_link(reservation)
-    return '' if reservation.session.last_time > Time.now || 
+    return '' if reservation.cancelled? ||
+      reservation.session.last_time > Time.now || 
       reservation.attended == Reservation::ATTENDANCE_MISSED || 
       reservation.survey_response.present? || 
       reservation.session.topic.survey_type == 0 ||

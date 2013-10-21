@@ -27,7 +27,7 @@ class ReservationsControllerTest < ActionController::TestCase
   test "Try making reservations" do
     login_as( users( :plainuser3 ) )
     
-    assert_difference 'Reservation.count', + 1, "Couldn't create reservation" do
+    assert_difference 'Reservation.active.count', + 1, "Couldn't create reservation" do
       get :create, :session_id => sessions( :gato )
     end
     assert_redirected_to sessions( :gato )
@@ -55,7 +55,7 @@ class ReservationsControllerTest < ActionController::TestCase
   
   test "Admin should be able to make a reservation on someone else's behalf" do
     login_as( users( :admin1 ) )
-    assert_difference 'Reservation.count', +1, "Admin couldn't create reservation" do
+    assert_difference 'Reservation.active.count', +1, "Admin couldn't create reservation" do
       get :create, :session_id => sessions( :gato ), :session => { :session_id => sessions( :gato) }, :user_login => users( :plainuser3 ).login
     end
     assert_redirected_to attendance_path( sessions( :gato ) )
@@ -76,12 +76,12 @@ class ReservationsControllerTest < ActionController::TestCase
   
   test "Users should only be able to delete their own reservations" do
     login_as( users( :plainuser1 ) )
-    assert_difference 'Reservation.count', -1 do
+    assert_difference 'Reservation.active.count', -1 do
       delete :destroy, :id => reservations( :plainuser1 )
     end
     assert_response :redirect
     
-    assert_difference 'Reservation.count', 0, "One user was able to delete another's reservation." do
+    assert_difference 'Reservation.active.count', 0, "One user was able to delete another's reservation." do
       delete :destroy, :id => reservations( :plainuser3 )
     end
     assert_response :redirect
@@ -89,7 +89,7 @@ class ReservationsControllerTest < ActionController::TestCase
   
   test "Users should only be able to delete reservations before the class has begun" do
     login_as( users( :plainuser1 ) )
-    assert_difference 'Reservation.count', 0, "User was able to delete a reservation from the past." do
+    assert_difference 'Reservation.active.count', 0, "User was able to delete a reservation from the past." do
       delete :destroy, :id => reservations( :gato_past_plainuser1 )
     end
     assert_response :redirect
@@ -97,7 +97,7 @@ class ReservationsControllerTest < ActionController::TestCase
   
   test "Admins should be able to delete a user's reservation" do
     login_as( users( :admin1 ) )
-    assert_difference 'Reservation.count', -1 do
+    assert_difference 'Reservation.active.count', -1 do
       delete :destroy, :id => reservations( :plainuser1 )
     end
     assert_response :redirect
@@ -105,7 +105,7 @@ class ReservationsControllerTest < ActionController::TestCase
   
   test "Editors should be able to delete a user's reservation in their department" do
     login_as( users( :editor1 ) )
-    assert_difference 'Reservation.count', -1 do
+    assert_difference 'Reservation.active.count', -1 do
       delete :destroy, :id => reservations( :plainuser1 )
     end
     assert_response :redirect
@@ -113,7 +113,7 @@ class ReservationsControllerTest < ActionController::TestCase
   
   test "Editors should NOT be able to delete a user's reservation in other departments" do
     login_as( users( :editor1 ) )
-    assert_difference 'Reservation.count', +0 do
+    assert_difference 'Reservation.active.count', +0 do
       delete :destroy, :id => reservations( :no_survey_topic_past_plainuser1 )
     end
     assert_response :redirect
@@ -121,7 +121,7 @@ class ReservationsControllerTest < ActionController::TestCase
   
   test "The instructor for a session should be able to delete a user's reservation" do
     login_as( users( :instructor1 ) )
-    assert_difference 'Reservation.count', -1 do
+    assert_difference 'Reservation.active.count', -1 do
       delete :destroy, :id => reservations( :plainuser1 )
     end
     assert_response :redirect
@@ -129,7 +129,7 @@ class ReservationsControllerTest < ActionController::TestCase
   
   test "The instructor should NOT be able to delete a user's reservation for sessions he is not the instructor for" do
     login_as( users( :instructor2 ) )
-    assert_difference 'Reservation.count', +0 do
+    assert_difference 'Reservation.active.count', +0 do
       delete :destroy, :id => reservations( :plainuser1 )
     end
     assert_response :redirect
@@ -155,7 +155,7 @@ class ReservationsControllerTest < ActionController::TestCase
 
     assert_difference 'ActionMailer::Base.deliveries.size', +1 do
       delete :destroy, :id => reservations( :overbooked_plainuser1 )
-      assert_redirected_to reservations_path
+      assert_redirected_to root_path
       assert_match "has been cancelled", flash[:notice]
       Delayed::Worker.new(:quiet => true).work_off
     end
@@ -187,7 +187,7 @@ class ReservationsControllerTest < ActionController::TestCase
 
     assert_difference 'ActionMailer::Base.deliveries.size', 0 do
       delete :destroy, :id => reservations( :overbooked_plainuser3 )
-      assert_redirected_to reservations_path
+      assert_redirected_to root_path
       assert_match "has been cancelled", flash[:notice]
       Delayed::Worker.new(:quiet => true).work_off
     end

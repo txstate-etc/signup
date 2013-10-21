@@ -12,7 +12,7 @@ class SessionsController < ApplicationController
     end
         
     @page_title = @session.topic.name
-    @reservation = Reservation.find_by_user_id_and_session_id( current_user.id, @session.id ) if current_user
+    @reservation = Reservation.active.find_by_user_id_and_session_id( current_user.id, @session.id ) if current_user
   end
   
   def new

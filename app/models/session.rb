@@ -3,7 +3,7 @@ require 'prawn/core'
 require 'prawn/layout'
 
 class Session < ActiveRecord::Base
-  has_many :reservations, :dependent => :destroy
+  has_many :reservations, :conditions => { :cancelled => false }, :dependent => :destroy
   has_many :occurrences, :dependent => :destroy
   accepts_nested_attributes_for :occurrences, :reject_if => lambda { |a| a[:time].blank? }, :allow_destroy => true
   belongs_to :topic
@@ -181,15 +181,13 @@ class Session < ActiveRecord::Base
     reg_end_time = self.reg_end.blank? ? self.time : self.reg_end
     return reg_start_time <= Time.now && reg_end_time >= Time.now
   end
-  
-  def space_is_available?
-    return true if self.seats == nil
-    return true if self.seats > Reservation.count( :conditions => ["session_id = ?", self.id ] )
-    return false
-  end
-  
+
   def seats_remaining
     seats - confirmed_reservations.size if seats
+  end
+  
+  def space_is_available?
+    self.seats ? seats_remaining > 0 : true
   end
   
   # Returns the list of confirmed reservations (ie those not on the waiting list)
@@ -208,13 +206,21 @@ class Session < ActiveRecord::Base
   end
   
   def waiting_list
-    self.seats && confirmed_reservations.size == self.seats ? reservations[ self.seats, reservations.size - self.seats ] : []
+    space_is_available? ? [] : reservations[ self.seats, reservations.size - self.seats ]
   end
   
   def waiting_list_by_last_name
     waiting_list.sort { |a,b| a.user.last_name <=> b.user.last_name }
   end
 
+  def confirmed?(reservation)
+    confirmed_reservations.include?(reservation)
+  end
+  
+  def on_waiting_list?(reservation)
+    waiting_list.include?(reservation)
+  end
+  
   def to_cal
     calendar = RiCal.Calendar
     events = self.to_event
