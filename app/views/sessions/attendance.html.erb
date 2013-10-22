@@ -136,7 +136,10 @@
 							<% end %>
 						</td>
 						<td class="attendance-actions">
-							<%= link_to 'cancel', reservation, :title => 'Cancel reservation', :class => "cancel-link", :method => :delete, :confirm => "Are you sure you want to cancel this reservation?" %>
+						  <% if @session.last_time >= Time.now %>
+            	  <%= link_to 'cancel', reservation, :title => 'Cancel reservation', :class => "cancel-link", :method => :delete, :confirm => "Are you sure you want to cancel this reservation?" %>
+              <% end %>
+              <%= link_to 'email', "mailto:#{reservation.user.email}", :title => 'Send email', :class => "email-link" %>
 						</td>
 					</tr>
 				<% end%>
