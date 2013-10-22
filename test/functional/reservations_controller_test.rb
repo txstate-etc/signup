@@ -135,6 +135,29 @@ class ReservationsControllerTest < ActionController::TestCase
     assert_response :redirect
   end
   
+  test "Deleting a reservation just marks it as cancelled" do
+    reservation = reservations( :plainuser1 )
+    login_as( users( :plainuser1 ) )
+    assert_differences [['Reservation.count', +0], ['Reservation.active.count', -1]] do
+      delete :destroy, :id => reservation
+    end
+    reservation.reload
+    assert_equal true, reservation.cancelled?
+  end
+
+  test "Re-Creating a cancelled reservation uncancells the existing one" do
+    reservation = reservations( :plainuser1 )
+    reservation.cancel!
+
+    login_as( users( :plainuser1 ) )
+    assert_differences [['Reservation.count', +0], ['Reservation.active.count', +1]] do
+      get :create, :session_id => sessions( :gato )
+    end
+
+    reservation.reload
+    assert_equal false, reservation.cancelled?
+  end
+
   test "Deleting a reservation with no waiting list shouldn't trigger any emails" do
     login_as( users( :plainuser1 ) )
     assert_difference 'ActionMailer::Base.deliveries.size', +0 do

@@ -106,4 +106,112 @@ class ReservationTest < ActiveSupport::TestCase
       Delayed::Worker.new(:quiet => true).work_off
     end
   end
+
+
+  # FIXME:
+  # test cancel
+    # shouldn't show up in session reservations list
+    # should still exist, with cancelled == true
+    # Reservation.count - Reservation.active.count == 1
+  # test uncancel
+    # same object used
+    # cancelled == false
+    # shows up in session reservations list again
+    # created_at timestamp updated
+    # at end of reservations list
+    # doesn't kick anyone off of confirmed list
+
+
+    test "Cancelled reservations should not be deleted" do
+      reservation = reservations( :overbooked_plainuser1 )
+      res_id = reservation.id
+      assert_equal reservation, Reservation.find(res_id), "Cancelling does not remove the object"
+      assert_equal false, reservation.cancelled?
+      assert_equal true, reservation.confirmed?
+      assert_equal false, reservation.on_waiting_list?
+      assert_equal true, reservation.session.reservations.include?(reservation)
+
+      assert_differences [['Reservation.count', +0], ['Reservation.active.count', -1]] do
+        assert reservation.cancel!, "Cancelling should return true"
+      end
+
+      reservation.reload
+      assert_equal reservation, Reservation.find(res_id), "Cancelling does not remove the object"
+      assert_equal true, reservation.cancelled?
+      assert_equal false, reservation.confirmed?
+      assert_equal false, reservation.on_waiting_list?
+      assert_equal false, reservation.session.reservations.include?(reservation)
+    end
+
+    test "UnCancelled reservations should not reuse same object" do
+      reservation = reservations( :overbooked_plainuser1 )
+      res_id = reservation.id
+      reservation.cancel!
+      reservation.reload
+      assert_equal true, reservation.cancelled?
+      
+      assert_differences [['Reservation.count', +0], ['Reservation.active.count', +1]] do
+        assert reservation.uncancel!, "Cancelling should return true"
+      end
+
+      reservation.reload
+      assert_equal reservation, Reservation.find(res_id), "UnCancelling does not create a new object"
+      assert_equal false, reservation.cancelled?
+      assert_equal true, reservation.session.reservations.include?(reservation)
+    end
+
+    test "UnCancelled reservations should go to the end of the line" do
+      # Sanity check to make sure the reservations are ordered the way we think
+      # The session has 2 seats, so the 3rd reservation is on the waiting list.
+      # The created_ats are ordered 2,1,3
+      reservations = [
+        reservations( :overbooked_plainuser2 ),
+        reservations( :overbooked_plainuser1 ),
+        reservations( :overbooked_plainuser3 ) 
+      ]
+      session = sessions(:gato_overbooked)
+      assert_equal reservations, session.reservations.to_a
+      assert_equal reservations[0..1], session.confirmed_reservations.to_a
+      assert_equal reservations[2], session.waiting_list[0]
+
+      # We have to update the created_ats here because the ones
+      # defined in the fixtures are far in the future.
+      time = Time.now - 6.minutes 
+      reservations.each do |r|
+        r.created_at = time
+        r.save
+        r.reload
+        time += 1.minute
+      end
+
+      # Now we'll cancel the first reservation and make sure
+      # he is removed from the list
+      reservation = reservations[0]
+      created_at = reservation.created_at
+      reservation.cancel!
+      reservation.reload
+      session.reload
+      assert_equal true, reservation.cancelled?
+
+      reservations = [
+        reservations( :overbooked_plainuser1 ),
+        reservations( :overbooked_plainuser3 ),
+        reservations( :overbooked_plainuser2 ) 
+      ]
+      assert_equal reservations[0..1], session.reservations.to_a
+
+      # Now, we'll uncancel the same reservation and make sure
+      # he is added back to the end of the list.
+      reservation.uncancel!
+      reservation.reload
+      session.reload
+      assert_equal false, reservation.cancelled?
+      assert_equal false, reservation.confirmed?
+      assert_equal true, reservation.on_waiting_list?
+      assert_not_equal created_at, reservation.created_at, "created_at should have been updated when UnCancelled"
+      assert_equal reservations, session.reservations.to_a
+      assert_equal reservations[0..1], session.confirmed_reservations.to_a
+      assert_equal reservations[2], session.waiting_list[0]
+    end
+
 end
