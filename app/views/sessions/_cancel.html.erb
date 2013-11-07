@@ -1,6 +1,6 @@
 <% if authorized?(session) && !session.new_record? && session.time && session.time > Time.now && !session.cancelled %>
 	<%= javascript_include_tag 'modal' %>
-	<div id="cancel-session-dialog" class="content-section">
+	<div id="cancel-session-dialog" class="content-section" style="display:none">
 		<h2>Cancel Session</h2>
 		<p class="cancel-session-confirm">
 			Are you sure you want to cancel this class? All registered attendees will be notified that the session has been cancelled.
@@ -23,7 +23,7 @@
 		function validateform() {
 			if ($('custom_message').value == "") {
 				alert('The cancellation message may not be blank');
-				$('custom_message').value = '<%=default_cancellation_message(@session)%>';
+				$('custom_message').value = '<%=escape_javascript(default_cancellation_message(@session))%>';
 				return false;
 			}
 			return true;
