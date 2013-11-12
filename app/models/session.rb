@@ -61,6 +61,14 @@ class Session < ActiveRecord::Base
     start && start < Time.now
   end
 
+  def in_future?
+    !started?
+  end
+
+  def not_finished?
+    !in_past?
+  end
+
   def multiple_occurrences?
     occurrences.present? && occurrences.count > 1
   end
@@ -281,7 +289,7 @@ class Session < ActiveRecord::Base
     session_list = Session.all( :joins => :topic, :conditions => ['occurrences.time < ? AND survey_sent = ? AND cancelled = ?', DateTime.now, false, false ], :readonly => false, :order => "occurrences.time", :include => :occurrences )
     session_list.each do |session|
       session.reload #Force it to load in all occurrences
-      next if session.last_time > Time.now #wait until the last occurrance
+      next if session.not_finished? #wait until the last occurrance
       session.instructors.each do |instructor|
         ReservationMailer.delay.deliver_survey_mail_instructor( session, instructor )
       end

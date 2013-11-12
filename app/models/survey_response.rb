@@ -5,9 +5,9 @@ class SurveyResponse < ActiveRecord::Base
   default_scope :order => 'created_at DESC'
   
   def validate
-    if self.reservation.session.time > Time.now
+    if self.reservation.session.in_future?
       errors.add_to_base "You can't provide feedback on a session that hasn't yet occurred" 
-    elsif self.reservation.session.last_time > Time.now
+    elsif self.reservation.session.not_finished?
       errors.add_to_base "You can't provide feedback on a session until the last meeting has occurred"
     end
   end

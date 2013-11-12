@@ -70,7 +70,7 @@
   		  	<div class="download-link download-calendar">
   		  		<%= link_to "Add reservation to calendar", { :controller => :reservations, :action => :download, :id => @reservation.id } %>
   		  	</div>
-  		  	<%- if @reservation.session.time > Time.now -%>
+  		  	<%- if @reservation.session.in_future? -%>
     		  	<%= link_to_edit_reservation(@reservation) %>
     		  	<div class="delete-link">
 	  		  		<%= link_to "Cancel Reservation", @reservation, :method => :delete, :confirm => "Are you sure you want to cancel your reservation for \"" + @reservation.session.topic.name + "\"?" %>

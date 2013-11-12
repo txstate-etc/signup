@@ -125,7 +125,7 @@ class ReservationsController < ApplicationController
     
     if @reservation.user != current_user && !superuser
       flash[ :error ] = "Reservations can only be cancelled by their owner, an admin, or an instructor."
-    elsif @reservation.session.time <= Time.now && !superuser
+    elsif @reservation.session.started? && !superuser
       flash[ :error ] = "Reservations cannot be cancelled once the session has begun."      
     else
       @reservation.cancel!
@@ -152,7 +152,7 @@ class ReservationsController < ApplicationController
     
     if @reservation.user != current_user && !superuser
       flash[ :error ] = "Reminders can only be sent by their owner, an admin, or an instructor."
-    elsif @reservation.session.last_time < Time.now && !superuser
+    elsif @reservation.session.in_past? && !superuser
       flash[ :error ] = "Reminders cannot be sent once the session has ended."      
     else
       @reservation.send_reminder

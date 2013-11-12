@@ -1,4 +1,4 @@
-<% if authorized?(session) && !session.new_record? && session.time && session.time > Time.now && !session.cancelled %>
+<% if authorized?(session) && !session.new_record? && session.in_future? && !session.cancelled %>
 	<%= javascript_include_tag 'modal' %>
 	<div id="cancel-session-dialog" class="content-section" style="display:none">
 		<h2>Cancel Session</h2>
