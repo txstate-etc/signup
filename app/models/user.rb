@@ -219,6 +219,9 @@ class User < ActiveRecord::Base
         department = entry.department.to_s if entry.respond_to?( :department )
         title = entry.title.to_s if entry.respond_to?( :title )
         
+        # Strip name_prefix from first_name if it's there
+        first_name.gsub!(/^\s*#{name_prefix}\s*/, '')
+
         user = User.find_or_initialize_by_login(login)
 
         user.email = email
