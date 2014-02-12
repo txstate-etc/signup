@@ -781,9 +781,8 @@ table#topic-grid td .grid-cell-topic-list {
 }
 
 table#topic-grid td .grid-cell-topic-list div {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  line-height: 1.25em;
+  padding: 5px;
 }
 
 .session-list ul {
