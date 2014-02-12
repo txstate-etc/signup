@@ -27,7 +27,9 @@
       <%- if !except.include?(:documents) && session.topic.documents.present? -%>
         <dt>Download Class Materials:</dt>
         <%- session.topic.documents.each do |d| -%>
-          <dd><%= link_to_document d, :url => ReservationMailer.absolute_url(d.item.url) %></dd>
+          <dd>
+            <%= link_to_document d, :url_proc => Proc.new { |p| ReservationMailer.absolute_url p } %>
+          </dd>
         <%- end -%>
       <%- end -%>
     </dl>

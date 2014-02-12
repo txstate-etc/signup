@@ -19,9 +19,9 @@ Description:
 - All about our Content Management System.
 
 Download Class Materials:
-- Gato Document 1
+- txt file Gato Document 1
 (http://localhost:3000/system/items/777370824/original/gato_document_1.txt)
-- Gato Document 2
+- txt file Gato Document 2
 (http://localhost:3000/system/items/928836992/original/gato_document_2.txt)
 
 You may view or update the details of this session here

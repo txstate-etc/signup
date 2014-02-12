@@ -1,5 +1,7 @@
 class ReservationMailer < ActionMailer::Base
   helper :application
+  helper :document
+  helper :file_icon
   include HtmlToPlainText
   
   def self.absolute_url(path)
