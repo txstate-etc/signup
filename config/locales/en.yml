@@ -12,6 +12,8 @@ en:
         reg_end: "Registration end time"
       document:
         item_file_size: "Document size"
+  file_icon:
+    type: "%{type} file"
   topics:
     index:
       title: "Available Topics"

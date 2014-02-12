@@ -34,7 +34,7 @@
     <% if !@topic.documents.blank? %>
       <dt>Workshop Materials:</dt>
       <% @topic.documents.each do |document| %>
-        <dd><%= link_to document.friendly_name, document.item.url %></dd>
+        <dd><%= link_to_document(document) %></dd>
       <% end %>
     <% end %>
   </dl>

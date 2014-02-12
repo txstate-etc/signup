@@ -41,7 +41,7 @@
   <label class="field-label">Workshop Materials:</label>
 	<% f.fields_for :documents do |builder| %>
 	  <div class="fields">
-      <%= link_to builder.object.friendly_name, builder.object.item.url, :class => 'document' %>
+      <%= link_to_document builder.object, :class => 'document' %>
       <%= link_to_remove_fields "remove", builder, :class => 'remove' %>
     </div>
 	<% end %>
