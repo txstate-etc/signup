@@ -1,5 +1,6 @@
 class Site < ActiveRecord::Base
-
+  has_paper_trail
+  
   def <=>(other)
     self.name <=> other.name
   end

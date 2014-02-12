@@ -17,6 +17,7 @@ gem "delayed_job", '~>2.0.4'
 gem "whenever"
 gem "paperclip", '~>2.7.0'
 gem "htmlentities", '~>4.3.1'
+gem "paper_trail", '~>1'
 
 group :development, :test do
   gem 'rake', '~> 0.9.2.2'

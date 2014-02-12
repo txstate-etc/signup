@@ -31,6 +31,9 @@ GEM
     mime-types (1.18)
     mysql (2.8.1)
     net-ldap (0.1.1)
+    paper_trail (1.6.5)
+      actionpack (~> 2.3)
+      activerecord (~> 2.3)
     paperclip (2.7.0)
       activerecord (>= 2.3.0)
       activesupport (>= 2.3.2)
@@ -73,6 +76,7 @@ DEPENDENCIES
   htmlentities (~> 4.3.1)
   mysql
   net-ldap (= 0.1.1)
+  paper_trail (~> 1)
   paperclip (~> 2.7.0)
   pdf-reader
   prawn (= 0.11.1)

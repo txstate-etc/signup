@@ -3,6 +3,7 @@ class SurveyResponse < ActiveRecord::Base
   validates_presence_of :class_rating, :instructor_rating, :applicability
   validates_uniqueness_of :reservation_id, :message => "A survey has already been submitted for this reservation."
   default_scope :order => 'created_at DESC'
+  has_paper_trail
   
   def validate
     if self.reservation.session.in_future?

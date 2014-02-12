@@ -5,6 +5,7 @@ class Department < ActiveRecord::Base
   accepts_nested_attributes_for :permissions, :reject_if => lambda { |p| p['name_and_login'].blank? }, :allow_destroy => true
   default_scope :order => "name"
   named_scope :active, :conditions => { :inactive => false }
+  has_paper_trail
   
   validate :inactive_with_no_active_topics
   validates_presence_of :name

@@ -3,6 +3,7 @@ class Occurrence < ActiveRecord::Base
   default_scope :order => 'time'  
   validates_presence_of :time
   validates_uniqueness_of :time, :scope => :session_id
+  has_paper_trail
 
   def self.in_range(first, last)
     Occurrence.find( :all, :joins => :session, :conditions => [ "occurrences.time >= ? AND occurrences.time <= ? AND sessions.cancelled = false", first.to_time, last.to_time ] )

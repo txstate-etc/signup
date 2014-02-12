@@ -17,6 +17,7 @@ class Session < ActiveRecord::Base
   validate :valid_registration_period
   after_validation :reload_if_invalid
   accepts_nested_attributes_for :reservations  
+  has_paper_trail
 
   CSV_HEADER = [ "Topic", "Session ID", "Session Date", "Session Time", "Session Cancelled", "Attendee Name", "Attendee Login", "Attendee Email", "Attendee Title", "Attendee Department", "Reservation Confirmed?", "Attended?" ]  
 

@@ -15,6 +15,7 @@ class Topic < ActiveRecord::Base
   validate :inactive_with_no_upcoming_sessions
   default_scope :order => 'name'
   named_scope :active, :conditions => { :inactive => false }
+  has_paper_trail
   
   def inactive_with_no_upcoming_sessions
     errors.add_to_base("You cannot delete a topic with upcoming sessions. Cancel the sessions first.") if inactive? && upcoming_sessions.present?

@@ -12,6 +12,7 @@ class Reservation < ActiveRecord::Base
   validate_on_create :session_not_cancelled
   has_one :survey_response
   named_scope :active, :conditions => { :cancelled => false }
+  has_paper_trail
   
   # The default order must be created_at. This is how we determine who gets promoted to
   # the waiting list when someone cancels.

@@ -3,6 +3,7 @@ require 'net/ldap'
 class User < ActiveRecord::Base
   has_many :permissions
   has_many :departments, :through => :permissions
+  has_paper_trail
   
   validates_presence_of :last_name, :login, :email
   validates_uniqueness_of :login

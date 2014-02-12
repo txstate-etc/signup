@@ -7,6 +7,14 @@ class ApplicationController < ActionController::Base
   helper :all # include all helpers, all the time
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
 
+  def info_for_paper_trail
+    { :ip => request.remote_ip, :user_agent => request.user_agent }
+  end
+
+  def user_for_paper_trail
+    current_user ? current_user : 'anonymous'
+  end
+
   # Scrub sensitive parameters from your log
   # filter_parameter_logging :password
   
