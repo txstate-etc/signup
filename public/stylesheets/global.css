@@ -1062,6 +1062,22 @@ span.radio-span {
   white-space: nowrap;
 }
 
+div.attendance-list {
+  position: relative;
+}
+
+.radio-all-wrap {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding-right: 12px;
+  white-space: nowrap;
+}
+
+.radio-all-label {
+  padding-right: 0.3em;
+}
+
 form#new_survey_response h2 {
   margin: 2em 0;
 }

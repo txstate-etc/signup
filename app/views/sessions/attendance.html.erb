@@ -64,8 +64,23 @@
 
 
 <% if @session.confirmed_reservations.size > 0 %>
-	<div class="content-section">
+	<div class="content-section attendance-list">
 		<h2>Confirmed Reservations</h2>
+    <div class="radio-all-wrap">
+      <span class="radio-all-label">Mark all:</span>
+      <span class="radio-span">
+        <input type="radio" id="radio-all-unknown" name="radio-all" value="<%= Reservation::ATTENDANCE_UNKNOWN %>">
+        <label for="radio-all-unknown">?</label>
+      </span>
+      <span class="radio-span">
+        <input type="radio" id="radio-all-attended" name="radio-all" value="<%= Reservation::ATTENDANCE_ATTENDED %>">
+        <label for="radio-all-attended">Attended</label>
+      </span>
+      <span class="radio-span">
+        <input type="radio" id="radio-all-missed" name="radio-all" value="<%= Reservation::ATTENDANCE_MISSED %>">
+        <label for="radio-all-missed">Missed</label>
+      </span>
+    </div>
 		<% form_for @session, :url => { :action => "update" } do |session_form| %>
 			<%= hidden_field :reservations_update, :true %>
 			<table id="confirmed-reservations" class="attendance-list" >
