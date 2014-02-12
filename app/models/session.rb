@@ -17,7 +17,9 @@ class Session < ActiveRecord::Base
   validate :valid_registration_period
   after_validation :reload_if_invalid
   accepts_nested_attributes_for :reservations  
-  
+
+  CSV_HEADER = [ "Topic", "Session ID", "Session Date", "Session Time", "Session Cancelled", "Attendee Name", "Attendee Login", "Attendee Email", "Attendee Title", "Attendee Department", "Reservation Confirmed?", "Attended?" ]  
+
   def loc_with_site
     site.present? ? "#{location} (#{site.name})" : location
   end
@@ -249,19 +251,23 @@ class Session < ActiveRecord::Base
     end
     return events
   end
-
+ 
   def to_csv
     FasterCSV.generate do |csv|
-      csv << [ "Topic", "Session ID", "Session Time", "Session Cancelled", "Attendee Name", "Attendee Login", "Attendee Email", "Attendee Title", "Attendee Department", "Reservation Confirmed?", "Attended?" ]
-      self.reservations.each do |reservation|
-        attended = ""
-        if reservation.attended == Reservation::ATTENDANCE_MISSED
-          attended = "MISSED"
-        elsif reservation.attended == Reservation::ATTENDANCE_ATTENDED
-          attended = "ATTENDED"
-        end
-        csv << [ self.topic.name, self.id, self.time, self.cancelled, reservation.user.name, reservation.user.login, reservation.user.email, reservation.user.title, reservation.user.department, reservation.confirmed?, attended ]
+      csv << CSV_HEADER
+      csv_rows(csv)
+    end
+  end
+
+  def csv_rows(csv)
+    self.reservations.each do |reservation|
+      attended = ""
+      if reservation.attended == Reservation::ATTENDANCE_MISSED
+        attended = "MISSED"
+      elsif reservation.attended == Reservation::ATTENDANCE_ATTENDED
+        attended = "ATTENDED"
       end
+      csv << [ self.topic.name, self.id, self.time.strftime('%m/%d/%Y'), self.time.strftime('%I:%M %p'), self.cancelled, reservation.user.name, reservation.user.login, reservation.user.email, reservation.user.title, reservation.user.department, reservation.confirmed?, attended ]
     end
   end
   

@@ -1198,11 +1198,15 @@ div#manage-topics ul.actions {
   list-style: disc inside;
 }
 
+div#manage-topics h2 {
+  margin: 0;
+}
+
 div#manage-topics table {
-  margin-top: -1em;
   width: 100%;
   font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', serif;
   font-size: 0.9em;
+  border-top: 1px solid #C6C6C6;
 }
 
 div#manage-topics thead tr {
@@ -1245,9 +1249,18 @@ div#manage-topics .topic-count {
 div#manage-topics div.empty-list {
   font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', serif;
   font-size: .9em;
-  margin-top: -1em;
   padding: 0 .5em;
+  border-top: 1px solid #C6C6C6;
 }
+
+div#manage-topics div.action-list {
+  font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', serif;
+  font-size: .9em;
+  padding: 0 .5em 0.25em;
+  background-color: #F6F6F6;
+  border-bottom: 1px solid #501214;
+}
+
 
 div#delete-topic p {
   padding-bottom: 6px;

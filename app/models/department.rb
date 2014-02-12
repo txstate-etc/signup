@@ -35,5 +35,17 @@ class Department < ActiveRecord::Base
     self.save
   end
   
-  
+  def to_csv
+    FasterCSV.generate do |csv|
+      csv << Session::CSV_HEADER
+      csv_rows(csv)
+    end
+  end
+
+  def csv_rows(csv)
+    topics.each do |topic|
+      topic.csv_rows(csv)
+    end
+  end
+
 end

@@ -13,6 +13,11 @@ class DepartmentsController < ApplicationController
     respond_to do |format|
       format.html
       format.atom
+      format.csv do
+        send_data @department.to_csv,
+          :type => 'text/csv; charset=iso-8859-1; header=present',
+          :disposition => "attachment; filename=#{@department.to_param}.csv"
+      end
     end
   end
 
