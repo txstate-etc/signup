@@ -28,7 +28,18 @@
     	<dd><%=h registration_period(@session) %></dd>
   	<% end %>
   	<dt>Location:</dt>
-  	<dd><span class="location"><%=h @session.location %></span><span class="site"><%=h @session.site.name if @session.site %></span></dd>
+  	<dd>
+      <span class="location">
+        <% if @session.location_url.present? %>
+          <%= link_to @session.location, @session.location_url %>
+        <% else %>
+          <%= auto_link( h(@session.location) ) %>
+        <% end %>
+      </span>
+      <span class="site">
+        <%=h @session.site.name if @session.site %>
+      </span>
+    </dd>
   	<% if @session.instructors.size > 1 %>
   	  <dt>Instructors:</dt>
 	  <% else %>

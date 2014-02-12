@@ -206,8 +206,9 @@ label.admin-netid-label {
   height: 80px;
 }
 
-.location-block .location-field, .location-block .site-field {
+.location-block .location-field, .location-block .site-field, .location-block .url-field {
   float: left;
+  padding-right: 1em;
 }
 
 .site-field select {
