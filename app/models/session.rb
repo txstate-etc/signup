@@ -223,6 +223,10 @@ class Session < ActiveRecord::Base
     waiting_list.sort { |a,b| a.user.last_name <=> b.user.last_name }
   end
 
+  def reservations_by_last_name
+    reservations.sort { |a,b| a.user.last_name <=> b.user.last_name }
+  end
+
   def confirmed?(reservation)
     confirmed_reservations.include?(reservation)
   end
@@ -260,7 +264,7 @@ class Session < ActiveRecord::Base
   end
 
   def csv_rows(csv)
-    self.reservations.each do |reservation|
+    reservations_by_last_name.each do |reservation|
       attended = ""
       if reservation.attended == Reservation::ATTENDANCE_MISSED
         attended = "MISSED"
