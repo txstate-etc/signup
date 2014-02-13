@@ -51,6 +51,12 @@ class ApplicationController < ActionController::Base
     CASClient::Frameworks::Rails::Filter.config[:service_url] = url_for :login
   end
   
+  def send_csv(csv, filename)
+    send_data csv,
+          :type => 'text/csv; charset=iso-8859-1; header=present',
+          :disposition => "attachment; filename=#{filename.to_param}.csv"
+  end
+
   helper_method :current_user
   helper_method :cas_user
   helper_method :authorized?

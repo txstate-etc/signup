@@ -55,7 +55,8 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :departments, :collection => { :manage => :get }
   map.resources :users, :except => [:show], :collection => { :search => :get } 
-  
+  map.resources :tags, :only => :show
+
   map.resources :topics, :shallow => true, :member => { :delete => :get }, :collection => { :manage => :get } do |topic|
     topic.resources :sessions do |session|
       session.resources :reservations, :create 

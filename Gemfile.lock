@@ -18,6 +18,8 @@ GEM
     activeresource (2.3.18)
       activesupport (= 2.3.18)
     activesupport (2.3.18)
+    acts-as-taggable-on (2.1.1)
+      rails
     calendar_date_select (1.16.2)
     chronic (0.6.7)
     cocaine (0.2.1)
@@ -70,6 +72,7 @@ PLATFORMS
 
 DEPENDENCIES
   Ascii85
+  acts-as-taggable-on (~> 2.1.0)
   calendar_date_select (= 1.16.2)
   delayed_job (~> 2.0.4)
   fastercsv (= 1.5.3)

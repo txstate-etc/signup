@@ -16,7 +16,8 @@ class Topic < ActiveRecord::Base
   default_scope :order => 'name'
   named_scope :active, :conditions => { :inactive => false }
   has_paper_trail
-  
+  acts_as_taggable
+
   def inactive_with_no_upcoming_sessions
     errors.add_to_base("You cannot delete a topic with upcoming sessions. Cancel the sessions first.") if inactive? && upcoming_sessions.present?
   end
@@ -28,7 +29,16 @@ class Topic < ActiveRecord::Base
     end
     true
   end
-  
+
+  def before_update
+    # Coerce tag_list to be all lower-case with no special chars
+    self.tag_list = self.tag_list.join(' ').split(/\s*[,;]\s*|\s+/).map {|s| s.titleize.parameterize.to_s}
+  end
+
+  def self.upcoming_tagged_with(tag)
+    Topic.tagged_with(tag).find( :all, :conditions => [ "topics.id IN ( select topic_id from sessions, occurrences where sessions.id = occurrences.session_id AND occurrences.time > ? AND cancelled = false )", Time.now ] )
+  end
+
   def self.upcoming
     Topic.find( :all, :conditions => [ "topics.id IN ( select topic_id from sessions, occurrences where sessions.id = occurrences.session_id AND occurrences.time > ? AND cancelled = false )", Time.now ] )
   end
@@ -67,6 +77,15 @@ class Topic < ActiveRecord::Base
     self.save
   end
   
+  def self.to_csv(topics)
+    FasterCSV.generate do |csv|
+      csv << Session::CSV_HEADER
+      topics.each do |topic|
+        topic.csv_rows(csv)
+      end
+    end
+  end
+
   def to_csv
     FasterCSV.generate do |csv|
       csv << Session::CSV_HEADER

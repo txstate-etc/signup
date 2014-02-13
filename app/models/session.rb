@@ -244,10 +244,14 @@ class Session < ActiveRecord::Base
   end
   
   def to_event
+    description = topic.description + "\n\nInstructor(s): " << instructors.collect{|i| i.name}.join(", ")
+    if topic.tag_list.present?
+      description << "\n\nTags: " << topic.tag_list.join(", ")
+    end
     events = occurrences.map do |o|
       event = RiCal.Event 
       event.summary = topic.name
-      event.description = topic.description + "\n\nInstructor(s): " + instructors.collect{|i| i.name}.join(", ")
+      event.description = description
       event.dtstart = o.time
       event.dtend = o.time + topic.minutes * 60
       event.url = topic.url

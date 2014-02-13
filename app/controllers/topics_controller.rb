@@ -124,13 +124,7 @@ class TopicsController < ApplicationController
     respond_to do |format|
       format.html
       format.atom
-      format.csv do
-        send_data @topic.to_csv,
-          :type => 'text/csv; charset=iso-8859-1; header=present',
-          :disposition => "attachment; filename=#{@topic.to_param}.csv"
-      end
-
-      
+      format.csv { send_csv @topic.to_csv, @topic.to_param }
     end
   end
   
