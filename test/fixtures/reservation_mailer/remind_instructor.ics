@@ -23,7 +23,7 @@ BEGIN:VEVENT
 DTEND;TZID=America/Chicago;VALUE=DATE-TIME:20350602T080000
 DTSTART;TZID=America/Chicago;VALUE=DATE-TIME:20350602T070000
 DESCRIPTION:All about our Content Management System.\n\nInstructor(s): In
- structor1
+ structor1\n\nTags: gato\, its
 URL:http://gato.its.txstate.edu
 SUMMARY:Introduction to Gato
 LOCATION:Alkek 155 (San Marcos)

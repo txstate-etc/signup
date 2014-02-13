@@ -1,0 +1,7 @@
+gato:
+  id: <%= Fixtures.identify :gato %>
+  name: gato
+
+its:
+  id: <%= Fixtures.identify :its %>
+  name: its
