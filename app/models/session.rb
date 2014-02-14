@@ -246,7 +246,7 @@ class Session < ActiveRecord::Base
   def to_event
     description = topic.description + "\n\nInstructor(s): " << instructors.collect{|i| i.name}.join(", ")
     if topic.tag_list.present?
-      description << "\n\nTags: " << topic.tag_list.join(", ")
+      description << "\n\nTags: " << topic.sorted_tag_list.join(", ")
     end
     events = occurrences.map do |o|
       event = RiCal.Event 

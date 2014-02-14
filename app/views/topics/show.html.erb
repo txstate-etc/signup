@@ -25,7 +25,7 @@
     <dd class="topic-description"><%= auto_link( simple_format( h( @topic.description ) ) ) %></dd>
     <% if !@topic.tags.blank? %>
       <dt>Tags:</dt>
-      <dd><%= @topic.tags.map { |t| link_to t, tag_path(t) }.join(', ') %></dd>
+      <dd><%= @topic.sorted_tags.map { |t| link_to t, tag_path(t) }.join(', ') %></dd>
     <% end %>
     <dt>Duration:</dt>
     <dd><%=h @topic.minutes %> minutes</dd>

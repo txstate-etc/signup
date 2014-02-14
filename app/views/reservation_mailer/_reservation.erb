@@ -26,7 +26,7 @@
         <% if !session.topic.tags.blank? %>
           <dt>Tags:</dt>
           <dd>
-            <%= session.topic.tags.map do |t| 
+            <%= session.topic.sorted_tags.map do |t| 
                   link_to t, ReservationMailer.absolute_url(tag_path(t))
                 end.join(', ') 
             %>

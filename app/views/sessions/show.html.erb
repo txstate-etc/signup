@@ -130,7 +130,7 @@
   	<dd class="topic-description"><%= auto_link( simple_format( h( @session.topic.description ) ) ) %></dd>
     <% if !@session.topic.tags.blank? %>
       <dt>Tags:</dt>
-      <dd><%= @session.topic.tags.map { |t| link_to t, tag_path(t) }.join(', ') %></dd>
+      <dd><%= @session.topic.sorted_tags.map { |t| link_to t, tag_path(t) }.join(', ') %></dd>
     <% end %>
   	<dt>Duration:</dt>
   	<dd><%=h @session.topic.minutes %> minutes</dd>

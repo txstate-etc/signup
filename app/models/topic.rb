@@ -59,6 +59,14 @@ class Topic < ActiveRecord::Base
     self.name <=> other.name
   end
   
+  def sorted_tags
+    tags.sort { |a,b| a.name <=> b.name }
+  end
+
+  def sorted_tag_list
+    tag_list.sort
+  end
+
   def upcoming_sessions
     @_upcoming_sessions ||= sessions.find( :all, :conditions => [ "cancelled = false AND sessions.id NOT IN (SELECT session_id FROM occurrences WHERE occurrences.time <= ?)", Time.now ], :order => "occurrences.time", :include => :occurrences )
   end
