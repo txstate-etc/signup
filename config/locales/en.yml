@@ -3,6 +3,7 @@
 
 en:
   hello: "Hello world"
+  footer_text: "The Signup Reservation System is a tool developed by the Texas State Education Technology Center.</br> Details regarding the system are available at the <a href='http://www.its.txstate.edu/departments/etc/signup.html'>Signup website</a>."
   activerecord:
     attributes:
       session:
