@@ -473,13 +473,12 @@ div.login-link a:hover {
   font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', serif;
 }
 
+.delete-link {
+  background-image: url(/images/delete.png);
+}
+
 .delete-link a {
-  padding: .25em 0;
-  text-decoration: none;
   color: #501214;
-  font-size: .85em;
-  font-weight: normal;
-  font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', serif;
 }
 
 div#container {
@@ -982,12 +981,12 @@ div.reservation-group .reservation-actions {
   font-size: .95em;
 }
 
-.download-link, .edit-reservation-link {
+.download-link, .edit-reservation-link, .delete-link {
   background-repeat: no-repeat;
   background-position: 0px 50%;
 }
 
-.download-link a, .edit-reservation-link a {
+.download-link a, .edit-reservation-link a, .delete-link a {
   font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', serif;
   padding-left: 25px;
   font-size: .85em;
