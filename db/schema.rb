@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140212230941) do
+ActiveRecord::Schema.define(:version => 20140216210000) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -149,6 +149,7 @@ ActiveRecord::Schema.define(:version => 20140212230941) do
     t.string   "survey_url"
     t.integer  "department_id"
     t.boolean  "inactive",      :default => false
+    t.boolean  "certificate",   :default => false
   end
 
   create_table "users", :force => true do |t|

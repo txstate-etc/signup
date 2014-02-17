@@ -190,4 +190,21 @@ class ReservationsController < ApplicationController
     send_data(reservation.session.to_cal, :type => 'text/calendar', :disposition => 'inline; filename=training.ics', :filename=>'training.ics')
   end
   
+  def certificate
+    @reservation = Reservation.find( params[ :id ] )
+    superuser =  authorized? @reservation
+
+    if @reservation.user != current_user && !superuser
+      flash[ :error ] = "Certificates can only be downloaded by their owner, an admin, or an instructor."
+      if request.referrer.present?
+        redirect_to request.referrer
+      else
+        redirect_to root_url
+      end
+    end
+
+    respond_to do |format|
+      format.pdf { send_data CompletionCertificate.new.to_pdf(@reservation), :disposition => 'inline', :type => 'application/pdf' }
+    end
+  end
 end

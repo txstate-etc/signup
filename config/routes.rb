@@ -68,6 +68,7 @@ ActionController::Routing::Routes.draw do |map|
   
   map.connect 'reservations/download/:id', :controller => :reservations, :action => :download
   map.send_reminder 'reservations/send_reminder/:id', :controller => :reservations, :action => :send_reminder
+  map.certificate 'reservations/certificate/:id.:format', :controller => :reservations, :action => :certificate
   map.resources :survey_responses, :only => [ :create ]
   map.new_survey_response 'survey_responses/new', :controller => :survey_responses, :action => :new
   map.topic_survey_results 'topics/:id/survey_results', :controller => :topics, :action => :survey_results

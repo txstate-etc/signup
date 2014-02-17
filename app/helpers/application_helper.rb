@@ -80,6 +80,17 @@ module ApplicationHelper
     link_to 'Take the survey!', url, :class => 'survey-link'
   end
   
+  def certificate_link(reservation)
+    return '' if reservation.cancelled? ||
+      reservation.session.not_finished? || 
+      reservation.attended != Reservation::ATTENDANCE_ATTENDED || 
+      !reservation.session.topic.certificate ||
+      current_user.nil? ||
+      current_user != reservation.user
+ 
+    link_to 'Certificate of Completion', certificate_url(reservation, :format => :pdf), :class => 'certificate-link'
+ end
+
   def expandible_list(comments, visible=5)
     ret = '<ul>'
     comments[0..(visible-1)].each do |comment| 

@@ -40,6 +40,18 @@
 	</div>
 </div>
 
+<div class="certificate-options">
+	<label class="field-label">Certificate of Completion:</label>
+	<span class="radio-span">
+		<%= f.radio_button :certificate, false %>
+		<%= f.label :certificate_false, 'No' %>
+	</span>
+	<span class="radio-span">
+		<%= f.radio_button :certificate, true %>
+		<%= f.label :certificate_true, 'Yes' %>
+	</span>
+</div>
+
 <div class="workshop-materials">
   <label class="field-label">Workshop Materials:</label>
 	<% f.fields_for :documents do |builder| %>
