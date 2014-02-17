@@ -43,8 +43,6 @@ class CompletionCertificate < Prawn::Document
           dynamic reservation.session.topic.department.name, :ydelta => LINE_HEIGHT
           dynamic I18n.t(:organization), :ydelta => LINE_HEIGHT
           if (File.exists?("#{Rails.root}/public/images/cert-logo.jpg"))
-            stroke_color 'ffffff'
-            fill_color 'ffffff'
             image "#{Rails.root}/public/images/cert-logo.jpg", :position => :center, :vposition => :bottom
           end
         end
@@ -71,13 +69,6 @@ class CompletionCertificate < Prawn::Document
   def ypos(opts)
     @ypos ||= TOP
     @ypos -= opts.delete(:ydelta) || LINE_SPACING
-  end
-
-  def page_header(session, occurrence)
-    text_box session.topic.name, :at => [20, 730], :size => 16, :align => :center, :style => :bold, :single_line => true, :overflow => :ellipses
-    text_box session.loc_with_site, :at => [20, 710], :size => 14, :align => :center, :style => :bold, :single_line => true, :overflow => :ellipses
-    text_box formatted_time_range(occurrence.time, session.topic.minutes), :at => [20, 690], :size => 14, :align => :center, :style => :bold
-    text_box "Attendance List", :at => [20, 650], :size => 14, :align => :center, :style => :bold          
   end
   
 end
