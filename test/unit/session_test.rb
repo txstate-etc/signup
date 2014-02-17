@@ -85,7 +85,7 @@ class SessionTest < ActiveSupport::TestCase
   test "Sessions with automatic or external surveys should get emails, but only for folks not marked as absent" do
     assert_difference 'ActionMailer::Base.deliveries.size', +8 do
       assert_difference 'Session.all(:conditions => ["survey_sent = ?", false]).size', -6 do
-        Session.send_surveys
+        Session.send_followups
         Delayed::Worker.new(:quiet => true).work_off
       end
     end

@@ -965,7 +965,7 @@ div.reservation-group a.date {
   margin-left: .5em;
 }
 
-div.reservation-group div.survey-link {
+div.reservation-group div.survey-link, div.reservation-group div.certificate-link {
   margin-left: -.2em;  
 }
 
@@ -973,6 +973,11 @@ div.reservation-group a.survey-link {
   color: #501214;
   font-size: .9em;
   margin-top: 1em;
+}
+
+.certificate-link a {
+  font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', serif;
+  font-size: .9em;
 }
 
 div.reservation-group .reservation-actions {

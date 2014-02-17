@@ -167,14 +167,14 @@ class ReservationsController < ApplicationController
   end
   
   # send an email reminder to the student
-  def send_survey
+  def send_followup
     @reservation = Reservation.find( params[ :id ] )
     superuser =  authorized? @reservation
     
     if @reservation.user != current_user && !superuser
       flash[ :error ] = "Survey reminders can only be sent by their owner, an admin, or an instructor."
     else
-      @reservation.send_survey
+      @reservation.send_followup
       flash[ :notice ] = "A survey reminder has been sent to #{@reservation.user.name}."
     end
     

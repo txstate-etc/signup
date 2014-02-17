@@ -93,14 +93,18 @@ class ReservationMailer < ActionMailer::Base
     update_notice(session, user)
   end
 
-  def survey_mail( reservation )
-    subject    'Feedback Requested: ' + reservation.session.topic.name
+  def followup( reservation )
+    if (reservation.session.topic.survey_type != Topic::SURVEY_NONE)
+      subject    'Feedback Requested: ' + reservation.session.topic.name
+    else 
+      subject    'Post-session Wrap-up: ' + reservation.session.topic.name
+    end
     recipients reservation.user.email_header
     from       reservation.session.instructors[0].email_header
     render_multipart :reservation => reservation
   end  
 
-  def survey_mail_instructor( session, user )
+  def followup_instructor( session, user )
     subject    'Post-session Wrap-up: ' + session.topic.name
     recipients user.email_header
     from       session.instructors[0].email_header

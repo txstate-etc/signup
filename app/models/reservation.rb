@@ -38,6 +38,18 @@ class Reservation < ActiveRecord::Base
     session.on_waiting_list?(self)
   end
   
+  def attended?
+    attended == Reservation::ATTENDANCE_ATTENDED
+  end
+
+  def missed?
+    attended == Reservation::ATTENDANCE_MISSED
+  end
+
+  def need_survey?
+    !missed? && session.topic.survey_type != Topic::SURVEY_NONE && survey_response.nil?
+  end
+
   def cancel!
     was_confirmed = confirmed?
 
@@ -72,8 +84,8 @@ class Reservation < ActiveRecord::Base
     ReservationMailer.delay.deliver_remind( session, user )
   end
   
-  def send_survey
-    ReservationMailer.delay.deliver_survey_mail( self )
+  def send_followup
+    ReservationMailer.delay.deliver_followup( self )
   end
   
 end

@@ -190,7 +190,7 @@ class ReservationMailerTest < ActionMailer::TestCase
     @expected.from    = 'i12345@dev.nul'
     @expected.to      = 'pu12345@dev.nul'
 
-    @actual = ReservationMailer.create_survey_mail( reservations( :plainuser1 ) )
+    @actual = ReservationMailer.create_followup( reservations( :plainuser1 ) )
  
     do_common_assertions 
   end
@@ -202,7 +202,7 @@ class ReservationMailerTest < ActionMailer::TestCase
     @expected.from    = 'i12345@dev.nul'
     @expected.to      = 'pu12345@dev.nul'
 
-    @actual = ReservationMailer.create_survey_mail( reservations( :tracs_multiple_instructors_plainuser1 ) )
+    @actual = ReservationMailer.create_followup( reservations( :tracs_multiple_instructors_plainuser1 ) )
  
     do_common_assertions 
   end
@@ -215,7 +215,7 @@ class ReservationMailerTest < ActionMailer::TestCase
     @expected.to      = 'i12345@dev.nul'
 
     reservation = reservations( :plainuser1 )
-    @actual = ReservationMailer.create_survey_mail_instructor( reservation.session, reservation.session.instructors[0] )
+    @actual = ReservationMailer.create_followup_instructor( reservation.session, reservation.session.instructors[0] )
  
     do_common_assertions 
   end
@@ -228,7 +228,7 @@ class ReservationMailerTest < ActionMailer::TestCase
     @expected.to      = 'i12345@dev.nul'
 
     reservation = reservations( :tracs_multiple_instructors_plainuser1 )
-    @actual = ReservationMailer.create_survey_mail_instructor( reservation.session, reservation.session.instructors[0] )
+    @actual = ReservationMailer.create_followup_instructor( reservation.session, reservation.session.instructors[0] )
  
     do_common_assertions 
   end

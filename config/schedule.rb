@@ -37,10 +37,10 @@ every '2 0 * * *' do
   rake "cron:send_reminders[0]"
 end
 
-# send out survey emails
+# send out followup emails
 # every morning at 12:10am.
 every '10 0 * * *' do
-  rake "cron:send_surveys"
+  rake "cron:send_followups"
 end
 
 # update Users table nightly at 11:02pm

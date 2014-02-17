@@ -1,9 +1,9 @@
 <html>
 <head>
-  <title>Feedback Request</title>
+  <title>Post-session Wrap-up</title>
   <style type="text/css">
 
-  div.custom-message p {
+  div.custom-message p, div.followup p {
     margin-top: 1em;
     margin-bottom: 1em;
   }
@@ -57,15 +57,23 @@
 
 <p>Hi there Plain User1,</p>
 
-<p>Our records show that you were registered for the recent class "Introduction to Gato".
-  Now that the class has concluded, we'd love to get your feedback!</p>
+<div class="followup">
+  <p>
+      Our records show that you were registered for the recent class "Introduction to Gato".
+      Now that the class has concluded, we'd love to get your feedback!
+  </p>
+
+      <p>We've prepared a very quick, 5 question survey that won't take more than 3 minutes of your time --
+        we promise! Please <a href="http://localhost:3000/survey_responses/new?reservation_id=360065586">click here</a> to take the survey, and accept our thanks.</p>
 
 
-  <p>We've prepared a very quick, 5 question survey that won't take more than 3 minutes of your time --
-    we promise! Please <a href="http://localhost:3000/survey_responses/new?reservation_id=360065586">click here</a> to take the survey, and accept our thanks.</p>
+  <p>
+      Thanks in advance for your feedback!
+    We really hope you enjoyed the class. To find more classes offered by 
+    ITS or other departments,
+    check out the list of upcoming sessions <a href="http://localhost:3000/">here</a>.
+  </p>
 
-
-<p>Thanks in advance for your feedback!</p>
-
+</div>
 </body>
 </html>

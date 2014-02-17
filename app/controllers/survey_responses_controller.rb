@@ -17,7 +17,7 @@ class SurveyResponsesController < ApplicationController
     if authorized? @survey_response
       if @survey_response.save
         flash[ :notice ] = "Your survey results have been recorded. Thank you for your input!"
-        redirect_to topics_path
+        redirect_to reservations_path
       else
         @page_title = @survey_response.reservation.session.topic.name
         render :action => 'new'

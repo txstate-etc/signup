@@ -11,6 +11,9 @@
   Now that the "<%= @session.topic.name %>" class you taught
   has ended it is a good time to record attendance, if you have not
   already done so. You may view or update the attendance record <%= link_to "here", attendance_url(@session), :only_path => false %>.
+  <%- if @session.topic.certificate? -%>
+    Note that students are only able to download certificates of completion if their attendance has been recorded.
+  <%- end -%>
 </p>
 
 <% case @session.topic.survey_type 

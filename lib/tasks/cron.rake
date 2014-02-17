@@ -13,9 +13,9 @@ namespace :cron do
     Rails.logger.flush
   end
 
-  desc "Send out survey emails"
-  task :send_surveys => :environment do 
-    Session.send_surveys   
+  desc "Send out followup emails"
+  task :send_followups => :environment do 
+    Session.send_followups   
     Rails.logger.flush
   end
 
