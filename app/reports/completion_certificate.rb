@@ -35,8 +35,7 @@ class CompletionCertificate < Prawn::Document
           static 'This is to certify that'
           dynamic reservation.user.name
           static 'has successfully completed the course'
-          dynamic 'Gato I Training', :height => 2*LINE_HEIGHT, :overflow => :shrink_to_fit
-          #dynamic reservation.session.topic.name, :height => 2*LINE_HEIGHT, :overflow => :shrink_to_fit
+          dynamic reservation.session.topic.name, :height => 2*LINE_HEIGHT, :overflow => :shrink_to_fit
           static 'on', :ydelta => 1.7*LINE_SPACING
           dynamic reservation.session.last_time.strftime('%A, %B %e, %Y')
           static 'taught by'
