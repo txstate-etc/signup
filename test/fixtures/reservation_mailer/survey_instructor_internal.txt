@@ -25,8 +25,8 @@ Description:
 - All about our Content Management System.
 
 Tags:
-- gato (http://localhost:3000/tags/419328395-gato), its
-(http://localhost:3000/tags/974697929-its)
+- gato (http://localhost:3000/tags/gato), its
+(http://localhost:3000/tags/its)
 Download Class Materials:
 - txt file Gato Document 1
 (http://localhost:3000/system/items/777370824/original/gato_document_1.txt)
