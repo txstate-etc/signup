@@ -32,12 +32,17 @@ class ReservationMailer < ActionMailer::Base
     logger.flush
   end
 
-  def confirm( reservation )
+  def confirm( reservation, user = nil )
+    user ||= reservation.user
     subject    'Reservation Confirmation For: ' + reservation.user.name
-    recipients reservation.user.email_header
+    recipients user.email_header
     from       reservation.session.instructors[0].email_header
-    render_multipart :reservation => reservation
+    render_multipart :reservation => reservation, :user => user
     attachment :content_type => "text/calendar", :body => reservation.session.to_cal
+  end
+
+  def confirm_instructor(reservation, user)
+    confirm(reservation, user)
   end
 
   def remind( session, user )
@@ -52,12 +57,17 @@ class ReservationMailer < ActionMailer::Base
     remind(session, user)
   end
 
-  def promotion_notice( reservation )
+  def promotion_notice( reservation, user = nil )
+    user ||= reservation.user
     subject    'Now Enrolled: ' + reservation.session.topic.name
-    recipients reservation.user.email_header
+    recipients user.email_header
     from       reservation.session.instructors[0].email_header
-    render_multipart :reservation => reservation
+    render_multipart :reservation => reservation, :user => user
     attachment :content_type => "text/calendar", :body => reservation.session.to_cal
+  end
+
+  def promotion_notice_instructor(reservation, user)
+    promotion_notice(reservation, user)
   end
 
   def cancellation_notice( session, user, custom_message = '' )

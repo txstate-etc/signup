@@ -62,6 +62,11 @@ class Reservation < ActiveRecord::Base
       if was_confirmed && !session.space_is_available? && !session.in_past?
         new_confirmed_reservation = session.confirmed_reservations.last
         ReservationMailer.delay.deliver_promotion_notice( new_confirmed_reservation )
+        if session.next_time.today?
+          session.instructors.each do |instructor|
+            ReservationMailer.delay.deliver_promotion_notice_instructor( new_confirmed_reservation, instructor )
+          end
+        end
       end
     end
     

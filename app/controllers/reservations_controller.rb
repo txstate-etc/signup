@@ -39,8 +39,16 @@ class ReservationsController < ApplicationController
       @reservation.save
     end
     
-    ReservationMailer.delay.deliver_confirm( @reservation ) if success && @reservation.confirmed?
+    if success && @reservation.confirmed?
+      ReservationMailer.delay.deliver_confirm( @reservation ) 
  
+      if @reservation.session.next_time.today?
+        @reservation.session.instructors.each do |instructor|
+          ReservationMailer.delay.deliver_confirm_instructor( @reservation, instructor )
+        end
+      end
+    end
+
     if admin_is_enrolling_someone_else
       if success
         if @reservation.confirmed?
