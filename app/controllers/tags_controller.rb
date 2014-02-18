@@ -9,7 +9,7 @@ class TagsController < ApplicationController
   def show
     begin
       tag_param = params[:id]
-      if tag_param =~ /^\d+$/
+      if tag_param =~ /^\d+/
         @tag = ActsAsTaggableOn::Tag.find( tag_param )
       else
         @tag = ActsAsTaggableOn::Tag.find_by_name( tag_param )
