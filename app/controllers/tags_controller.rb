@@ -8,7 +8,12 @@ class TagsController < ApplicationController
 
   def show
     begin
-      @tag = ActsAsTaggableOn::Tag.find( params[ :id ] )
+      tag_param = params[:id]
+      if tag_param =~ /^\d+$/
+        @tag = ActsAsTaggableOn::Tag.find( tag_param )
+      else
+        @tag = ActsAsTaggableOn::Tag.find_by_name( tag_param )
+      end
     rescue ActiveRecord::RecordNotFound
       render(:file => 'shared/404.erb', :status => 404, :layout => true) unless @tag
       return
