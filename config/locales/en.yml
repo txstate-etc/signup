@@ -28,3 +28,6 @@ en:
   departments:
     show:
       atom_title_prefix: "Upcoming Sessions for "
+  tags:
+    show:
+      atom_title_prefix: "Upcoming Sessions for "
