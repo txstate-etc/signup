@@ -85,23 +85,21 @@ function set_initial_occurrence_value(link) {
 
 // Highlight the sidebar link that matches the page we are on, if any.
 Event.observe(document, 'dom:loaded', function () {
-  var cur_url = window.location.href.split("#")[0];
-  
-  // special case: highlight "Available Topics" link on any related page:
-  // group by department, group by date, month at a glance
-  if (['/topics$', '/topics/upcoming', '/topics/grid', '/topics/by-site', '/topics/by-department'].any(function(s) { return cur_url.match(s); })) {
+  if (window.location.pathname == '/') {
     $('topic-list-link').addClassName('selected');
-    $('topic-list-nav').select('a').each(function(link) {
-      if (link.href == cur_url) {
-        link.addClassName('selected');
-      }
-    });
+    $('topic-list-nav').select('a')[0].addClassName('selected');
   } else {
-    $$('div.navigation a', 'div.admin-tools a').each(function(link) {
-      if (link.href == cur_url) {
-        link.addClassName('selected');
-      }
-    });
-  }
+    var cur_url = window.location.href.split("#")[0];
   
+    // special case: highlight "Available Topics" link on any related page:
+    // group by department, group by date, month at a glance
+    if (['/topics$', '/topics/alpha', '/topics/grid', '/topics/by-site', '/topics/by-department'].any(function(s) { return cur_url.match(s); })) {
+      $('topic-list-link').addClassName('selected');
+    } //else {
+      $$('#topic-list-link', 'div#topic-list-nav a', 'div.navigation a', 'div.admin-tools a').each(function(link) {
+        if (link.href == cur_url) {
+          link.addClassName('selected');
+        }
+      });
+  }  
 });

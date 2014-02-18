@@ -3,7 +3,7 @@ require 'ri_cal'
 class TopicsController < ApplicationController
   before_filter :authenticate, :except => [ :download, :show, :index, :by_department, :by_site, :upcoming, :grid ]
   
-  def index
+  def alpha
     @topics = Topic.upcoming
     @page_title = t(:'topics.index.title')
     
@@ -34,7 +34,7 @@ class TopicsController < ApplicationController
     render :layout => 'topic_collection'
   end
 
-  def upcoming
+  def index
     topics = Topic.upcoming
     @page_title = t(:'topics.index.title')
     
@@ -47,6 +47,11 @@ class TopicsController < ApplicationController
     end
 
     render :layout => 'topic_collection'
+  end
+
+  def upcoming
+    # FIXME: not used anymore, but we don't want to break any links/bookmarks
+    redirect_to root_url, :status => 301
   end
 
   def grid

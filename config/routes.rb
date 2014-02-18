@@ -49,6 +49,7 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'topics/by-department', :controller => :topics, :action => :by_department
   map.connect 'topics/by-site', :controller => :topics, :action => :by_site
   map.connect 'topics/upcoming', :controller => :topics, :action => :upcoming
+  map.connect 'topics/alpha', :controller => :topics, :action => :alpha
   map.connect 'topics/grid/:year/:month', :controller => :topics, :action => :grid, :defaults => { :year => nil, :month => nil }
   map.login 'login', :controller => :authentication, :action => :login
   map.logout 'logout', :controller => :authentication, :action => :logout
