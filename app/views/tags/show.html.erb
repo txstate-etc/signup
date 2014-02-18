@@ -19,11 +19,16 @@
         <% @topics.each do |topic| %>
           <li>
             <%= link_to topic.name, topic %>
-            <% if topic.upcoming_sessions.present? %>       
-              <% session = topic.upcoming_sessions[0] %>
+            <% topic.upcoming_sessions.first(2).each do |session| %>
               <div class="session-info">
                 <span class="session-link"><%= link_to_session session %></span>
                 <%= session_site(session) %>
+              </div>
+            <% end %>
+            <% more = topic.upcoming_sessions.size - 2 %>
+            <% if more > 0 %>
+              <div class="session-info">
+                <span class="session-link"><%= link_to "#{more} more upcoming sessions", topic %></span>
               </div>
             <% end %>
           </li>

@@ -5,17 +5,25 @@ atom_feed(:root_url => tag_url(@tag)) do |feed|
 
   if @topics.size > 0
     for topic in @topics
-      session = topic.upcoming_sessions[0]
-      next unless session
-      feed.entry(session, :published => session.time) do |entry|
+      next unless topic.upcoming_sessions.present?
+      published = topic.upcoming_sessions.max { |a, b| a.updated_at <=> b.updated_at } rescue nil
+      feed.entry(topic, :published => published.updated_at) do |entry|
         entry.title(topic.name)
         
-        summary = "#{session_info(session)} — #{session.site.name}"
+        summary = []
         
-        entry.summary(summary)
+        topic.upcoming_sessions.first(2).each do |session|
+          summary << link_to_session(session)
         
-        # FIXME: add topic description, instructor, location, etc
-        #entry.content(session_info(session))
+          # FIXME: add topic description, instructor, location, etc
+          #entry.content(session_info(session))
+        end
+        
+        more = topic.upcoming_sessions.size - 2
+        summary << link_to("#{more} more upcoming sessions", topic) if more > 0
+        
+        entry.summary(summary.join("<br/>\n"))
+
       end
     end
   else
