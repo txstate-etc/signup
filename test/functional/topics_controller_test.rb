@@ -11,7 +11,8 @@ class TopicsControllerTest < ActionController::TestCase
     assert_response :success
 
     get :upcoming
-    assert_response :success
+    assert_response :redirect
+    assert_redirected_to root_path
 
     get :by_department
     assert_response :success
@@ -49,7 +50,8 @@ class TopicsControllerTest < ActionController::TestCase
     assert_response :success
 
     get :upcoming
-    assert_response :success
+    assert_response :redirect
+    assert_redirected_to root_path
 
     get :by_department
     assert_response :success
@@ -86,7 +88,8 @@ class TopicsControllerTest < ActionController::TestCase
     assert_response :success
 
     get :upcoming
-    assert_response :success
+    assert_response :redirect
+    assert_redirected_to root_path
 
     get :by_department
     assert_response :success
@@ -151,7 +154,8 @@ class TopicsControllerTest < ActionController::TestCase
     assert_response :success
 
     get :upcoming
-    assert_response :success
+    assert_response :redirect
+    assert_redirected_to root_path
 
     get :by_department
     assert_response :success
@@ -214,13 +218,13 @@ class TopicsControllerTest < ActionController::TestCase
   
   test "Normal users should only see topics with scheduled sessions" do
     login_as( users( :plainuser1 ) )
-    get :index
+    get :alpha
     assert_equal assigns( :topics ).count, 3
   end
   
   test "Admins should only see topics with scheduled sessions" do
     login_as( users( :admin1 ) )
-    get :index
+    get :alpha
     assert_equal assigns( :topics ).count, 3
   end
   
@@ -313,7 +317,7 @@ class TopicsControllerTest < ActionController::TestCase
   end
 
   test "Upcoming view shows the correct sessions organized by date" do
-    get :upcoming
+    get :index
     assert_response :success
 
     assert_equal 6, assigns(:sessions).keys.length
