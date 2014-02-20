@@ -18,7 +18,7 @@ class CompletionCertificate < Prawn::Document
     line 'has successfully completed the course', :ypos => 350, :color => '75746D'
     line reservation.session.topic.name, :ypos => 295, :height => 65, :size => 28, :style => :bold
     line fmt_date_range(reservation.session), :ypos => 185, :color => '75746D'
-    line 'instructed by:', :ypos => 125, :color => '75746D'
+    line 'presented by', :ypos => 125, :color => '75746D'
     line reservation.session.topic.department.name, :ypos => 100, :color => '75746D'
           
     # organization logo
