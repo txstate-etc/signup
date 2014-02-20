@@ -26,9 +26,8 @@ class User < ActiveRecord::Base
   end
 
   def name
-    s = (name_prefix || '').strip.sub(/([^.])$/) { $1 + '.' }
-    s << ' ' << [first_name, last_name].join(" ")
-    s.strip
+    dr = name_prefix.strip.sub(/([^.])$/) { $1 + '.' } if name_prefix =~ /dr|doc/i  
+    [dr, first_name, last_name].join(" ").strip
   end
   
   def name_and_login
