@@ -25,7 +25,9 @@ class TagsController < ApplicationController
     respond_to do |format|
       format.html
       format.atom
-      format.csv { send_csv Topic.to_csv(@all_topics), @tag.name }
+      if authorized? @tag
+        format.csv { send_csv Topic.to_csv(@all_topics), @tag.name }
+      end
     end
   end
 

@@ -13,7 +13,9 @@ class DepartmentsController < ApplicationController
     respond_to do |format|
       format.html
       format.atom
-      format.csv { send_csv @department.to_csv, @department }
+      if authorized? @department
+        format.csv { send_csv @department.to_csv, @department }
+      end
     end
   end
 

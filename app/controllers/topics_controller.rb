@@ -129,7 +129,9 @@ class TopicsController < ApplicationController
     respond_to do |format|
       format.html
       format.atom
-      format.csv { send_csv @topic.to_csv, @topic.to_param }
+      if authorized? @topic
+        format.csv { send_csv @topic.to_csv, @topic.to_param }
+      end
     end
   end
   
