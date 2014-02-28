@@ -84,18 +84,18 @@ font-weight: bold;
 }
 a:visited {
   text-decoration: none;
-  color: #836c31;
+  color: #55461f;
 }
 a:link {
-  color: #836c31;
+  color: #55461f;
   text-decoration: none;
   }
   
 a:hover {
-  color: #836c31;
+  color: #55461f;
   text-decoration:underline;
   }
-a:active {color:#836c31;}
+a:active {color:#55461f;}
 
 body {
   font-family: Palatino, 'Palatino Linotype', Times, 'Times New Roman', 'URW Bookman L', serif;
@@ -331,7 +331,7 @@ input.submit-button {
 }
 
 .confirm {
-  background-color: #836c31;
+  background-color: #55461f;
   border: 1px solid #6C5828;
   -moz-border-radius: 15px;
   border-radius: 15px;
@@ -358,13 +358,7 @@ input.submit-button {
   display: block;
   width: 8em;
   color: white;
-  margin-bottom: .5em;
-  /*background-color: #836c31;
-  border: 1px solid #6C5828;*/
-  /*-moz-border-radius: 15px;
-  border-radius: 15px;*/
-
-  
+  margin-bottom: .5em;  
 }
 
 a.feed-link {
@@ -716,10 +710,8 @@ ul.topic-list li, ul#department-list li  {
 }
 
 ul.topic-list li a:link, ul#department-list li a:link  {
-/*  display: block;*/
   text-decoration: none;
-  color: #836c31;
-  
+  color: #55461f;
 }
 
 ul.topic-list li a:hover, ul#department-list li a:hover {
@@ -730,12 +722,6 @@ ul.topic-list li div.session-info {
   font-size: 80%;
   margin-top: -0.5em;
 }
-
-/*ul.topic-list li span {
-  font-size: 0.85em;
-  color: #4B4B4B;
-}
-*/
 
 div.content-section ul.topic-list {
   margin-top: -1em;
@@ -808,7 +794,7 @@ table#topic-grid td .grid-cell-topic-list div {
 }
 
 .session-list li a:link {
-  color: #836c31;
+  color: #55461f;
 }
 
 .session-list li a:hover, ul.reservation-list a:hover {
@@ -825,7 +811,7 @@ ul.attendance-list li {
 }
 
 .session-list li a:active {
-  color: #836c31;
+  color: #55461f;
   text-decoration: none;
 }
 
@@ -933,7 +919,7 @@ ul.reservation-list li {
   text-decoration: none;
   border-bottom-width: 1px;
   border-bottom-style: dotted;
-  border-bottom-color: #836c31;
+  border-bottom-color: #55461f;
   padding-left: .25em;
   padding-bottom: .5em;
   margin-top: .75em;
@@ -1117,7 +1103,7 @@ form#new_survey_response h2 {
   -moz-border-radius: 15px;
   border-radius: 15px;
   background-color: white;
-  border: #836c31 solid 2px;
+  border: #55461f solid 2px;
   margin: 1em;
   padding-left: 1em;
   padding-right: 1em;
