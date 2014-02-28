@@ -1,7 +1,7 @@
 require 'ri_cal'
 
 class TopicsController < ApplicationController
-  before_filter :authenticate, :except => [ :download, :show, :index, :by_department, :by_site, :upcoming, :grid ]
+  before_filter :authenticate, :except => [ :download, :show, :index, :alpha, :by_department, :by_site, :upcoming, :grid ]
   
   def alpha
     @topics = Topic.upcoming
