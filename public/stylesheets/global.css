@@ -84,18 +84,18 @@ font-weight: bold;
 }
 a:visited {
   text-decoration: none;
-  color: #55461f;
+  color: #695627;
 }
 a:link {
-  color: #55461f;
+  color: #695627;
   text-decoration: none;
   }
   
 a:hover {
-  color: #55461f;
+  color: #695627;
   text-decoration:underline;
   }
-a:active {color:#55461f;}
+a:active {color:#695627;}
 
 body {
   font-family: Palatino, 'Palatino Linotype', Times, 'Times New Roman', 'URW Bookman L', serif;
@@ -331,7 +331,7 @@ input.submit-button {
 }
 
 .confirm {
-  background-color: #55461f;
+  background-color: #695627;
   border: 1px solid #6C5828;
   -moz-border-radius: 15px;
   border-radius: 15px;
@@ -711,7 +711,7 @@ ul.topic-list li, ul#department-list li  {
 
 ul.topic-list li a:link, ul#department-list li a:link  {
   text-decoration: none;
-  color: #55461f;
+  color: #695627;
 }
 
 ul.topic-list li a:hover, ul#department-list li a:hover {
@@ -794,7 +794,7 @@ table#topic-grid td .grid-cell-topic-list div {
 }
 
 .session-list li a:link {
-  color: #55461f;
+  color: #695627;
 }
 
 .session-list li a:hover, ul.reservation-list a:hover {
@@ -811,7 +811,7 @@ ul.attendance-list li {
 }
 
 .session-list li a:active {
-  color: #55461f;
+  color: #695627;
   text-decoration: none;
 }
 
@@ -919,7 +919,7 @@ ul.reservation-list li {
   text-decoration: none;
   border-bottom-width: 1px;
   border-bottom-style: dotted;
-  border-bottom-color: #55461f;
+  border-bottom-color: #695627;
   padding-left: .25em;
   padding-bottom: .5em;
   margin-top: .75em;
@@ -1103,7 +1103,7 @@ form#new_survey_response h2 {
   -moz-border-radius: 15px;
   border-radius: 15px;
   background-color: white;
-  border: #55461f solid 2px;
+  border: #695627 solid 2px;
   margin: 1em;
   padding-left: 1em;
   padding-right: 1em;
