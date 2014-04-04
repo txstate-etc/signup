@@ -22,7 +22,6 @@
 <% end %>
 
 <% content_for :content do %>
-	<%= javascript_include_tag 'topic_form' %>
 	<%= error_messages_for 'topic' %>
 	<% if @topic && @topic.inactive? %>
 	  <div class="inactive-topic-message">
