@@ -4,7 +4,7 @@
   <% f.fields_for :occurrences do |builder| %>
       <%= render "occurrence_fields", :f => builder %>
   <% end %>
-  <p><%= link_to_add_fields "add another time", f, :occurrences %></p>
+  <p><%= link_to_add_fields "add another time for multi-part sessions", f, :occurrences %></p>
 </div>
 
 <div>
