@@ -6,3 +6,4 @@ tmproj
 password
 tmp/
 public/system/items
+config/initializers/auth\.rb

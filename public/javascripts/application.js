@@ -103,3 +103,24 @@ Event.observe(document, 'dom:loaded', function () {
       });
   }  
 });
+
+// Generate Google Analytics events for link clicks
+Event.observe(document, 'dom:loaded', function() {
+  $$('a').each( function(item) {
+    item.observe('click', function() {
+      if (ga) {
+        var linkAddress = item.href;
+        var linkName = item.text;
+        var thisPageAddress = window.location;
+        var thisPageTitle = document.title;
+
+        ga('send', { 
+          'hitType': 'event', 
+          'eventCategory': 'Links', 
+          'eventAction': thisPageTitle + " <" + thisPageAddress + ">",
+          'eventLabel': linkName + " <" + linkAddress + ">" 
+        });
+      }
+    });
+  });
+});

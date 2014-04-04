@@ -9,6 +9,7 @@
     <%= calendar_date_select_includes %>    
 		<title><%= @page_title %></title>
 		<%= yield(:head) %>
+    <%= render :partial => 'shared/analytics' %>
 	</head>
 	<body>
     <div class="topbanner">
