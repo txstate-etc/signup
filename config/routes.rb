@@ -55,7 +55,7 @@ ActionController::Routing::Routes.draw do |map|
   map.logout 'logout', :controller => :authentication, :action => :logout
 
   map.resources :departments, :collection => { :manage => :get }
-  map.resources :users, :except => [:show], :collection => { :search => :get } 
+  map.resources :users, :collection => { :search => :get } 
   map.resources :tags, :only => :show
 
   map.resources :topics, :shallow => true, :member => { :delete => :get }, :collection => { :manage => :get } do |topic|
@@ -63,6 +63,7 @@ ActionController::Routing::Routes.draw do |map|
       session.resources :reservations, :create 
     end
   end
+  map.manage_topic 'topics/manage/:id.:format', :controller => :topics, :action => :manage_topic
 
   map.resources :reservations, :only => :edit
   map.reservations 'reservations', :controller => :reservations, :action => :index

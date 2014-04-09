@@ -21,6 +21,25 @@ class UsersController < ApplicationController
     end
   end
   
+  def show
+    redirect_to root_url and return unless authorized? #Not editing, just viewing. Any authorization level is OK.
+
+    begin
+      @user = User.find( params[:id] )
+    rescue ActiveRecord::RecordNotFound
+      render(:file => 'shared/404.erb', :status => 404, :layout => true) unless @user
+      return
+    end
+
+    @page_title = @user.name
+
+    @topics = Hash.new { |h,k| h[k] = Array.new }
+    @user.active_sessions.each do |session|
+      @topics[session.topic] << session
+    end
+
+  end 
+
   def new
     @user = User.new
     if authorized? @user

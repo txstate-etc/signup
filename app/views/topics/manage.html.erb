@@ -72,7 +72,7 @@
               <% topics.each do |topic| %>
                 <tr class="<%= cycle("even", "odd") %>">
                 <td class="topic-name">
-                  <%= link_to topic.name, topic %>
+                  <%= link_to topic.name, manage_topic_path(topic) %>
                 </td>
                 <td class="topic-date">
                   <% if topic.upcoming_sessions.present? %>       

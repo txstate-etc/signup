@@ -67,12 +67,16 @@ class Topic < ActiveRecord::Base
     tag_list.sort
   end
 
+  def active_sessions
+    @_active_sessions || lazy_load_sessions && @_active_sessions
+  end
+
   def upcoming_sessions
-    @_upcoming_sessions ||= sessions.find( :all, :conditions => [ "cancelled = false AND sessions.id NOT IN (SELECT session_id FROM occurrences WHERE occurrences.time <= ?)", Time.now ], :order => "occurrences.time", :include => :occurrences )
+    @_upcoming_sessions || lazy_load_sessions && @_upcoming_sessions
   end
   
   def past_sessions
-    @_past_sessions ||= sessions.find( :all, :conditions => [ "occurrences.time < ? AND cancelled = false", Time.now ], :order => "occurrences.time", :include => :occurrences )
+    @_past_sessions || lazy_load_sessions && @_past_sessions
   end
   
   def deactivate!
@@ -125,4 +129,13 @@ class Topic < ActiveRecord::Base
     ratings = survey_responses.reject { |rating| rating.applicability.nil? }
     ratings.inject(0.0) { |sum, rating| sum +rating.applicability } / ratings.size
   end
+
+  private
+  def lazy_load_sessions
+    now = Time.now
+    @_active_sessions = sessions.find( :all, :conditions => {:cancelled => false}, :order => "occurrences.time DESC", :include => [:occurrences]) 
+    @_upcoming_sessions, @_past_sessions = @_active_sessions.partition { |s| s.last_time > now }
+    @_upcoming_sessions.reverse!
+  end
+
 end

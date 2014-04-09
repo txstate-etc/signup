@@ -86,22 +86,22 @@ module ApplicationHelper
       reservation.attended != Reservation::ATTENDANCE_ATTENDED || 
       !reservation.session.topic.certificate ||
       current_user.nil? ||
-      current_user != reservation.user
+      (!current_user.admin? && current_user != reservation.user)
  
-    link_to 'Certificate of Completion', certificate_url(reservation, :format => :pdf), :class => 'certificate-link'
+    link_to 'Download Certificate', certificate_url(reservation, :format => :pdf), :class => 'certificate-link'
  end
 
-  def expandible_list(comments, visible=5)
+  def expandible_list(items, visible=5)
     ret = '<ul>'
-    comments[0..(visible-1)].each do |comment| 
-      ret << "<li>#{comment}</li>"
+    items[0..(visible-1)].each do |item| 
+      ret << "<li>#{item}</li>"
     end 
     ret << '</ul>'
     
-    if comments.size > visible
+    if items.size > visible
       ret << '<ul style="display:none;">'
-      comments.drop(visible).each do |comment|
-        ret << "<li>#{comment}</li>"
+      items.drop(visible).each do |item|
+        ret << "<li>#{item}</li>"
       end
       ret << '</ul>'
       

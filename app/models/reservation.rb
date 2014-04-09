@@ -24,10 +24,12 @@ class Reservation < ActiveRecord::Base
   
   def after_create
     ReservationMailer.delay.deliver_accommodation_notice( self ) if !special_accommodations.blank? && !session.in_past?
+    session.res_count(true)
   end
 
   def after_update
     ReservationMailer.delay.deliver_accommodation_notice( self ) if special_accommodations_changed? && !session.in_past?
+    session.res_count(true)
   end
   
   def confirmed?

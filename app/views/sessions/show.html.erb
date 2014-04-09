@@ -57,13 +57,13 @@
   	</dd>
   	<dt>Registration:</dt>
   	<dd>
-  		<%=h @session.confirmed_reservations.size %>
+  		<%=h @session.confirmed_count %>
   		<% if @session.seats %>
   			/ <%=h @session.seats %>
   		<% end %> 
   		registered
-  		<% if @session.waiting_list.size > 0 %>
-  			(<%=h @session.waiting_list.size %> waiting)
+  		<% if @session.waiting_list_count > 0 %>
+  			(<%=h @session.waiting_list_count %> waiting)
   		<% end %>
   		
   		<% if @reservation %>

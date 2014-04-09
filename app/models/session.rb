@@ -144,6 +144,8 @@ class Session < ActiveRecord::Base
         ReservationMailer.delay.deliver_update_notice( self, reservation.user )
       end
     end
+
+    res_count(true)
   end
   
   def cancel!(custom_message = '')
@@ -193,8 +195,28 @@ class Session < ActiveRecord::Base
     return reg_start_time <= Time.now && reg_end_time >= Time.now
   end
 
+  def res_count(force=false)
+    return 0 if new_record?
+    @@res_count ||= {}
+    if force || !@@res_count.key?(self.id)
+      @@res_count[self.id] = reservations.count
+    end
+    @@res_count[self.id]
+  end
+
+  def confirmed_count
+    count = res_count
+    seats && count > seats ? seats : count
+  end
+
+  def waiting_list_count
+    return 0 unless seats
+    count = res_count
+    count > seats ? count - seats : 0
+  end
+
   def seats_remaining
-    seats - confirmed_reservations.size if seats
+    seats - confirmed_count if seats
   end
   
   def space_is_available?

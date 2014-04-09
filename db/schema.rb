@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140216210000) do
+ActiveRecord::Schema.define(:version => 20140404000000) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -101,6 +101,9 @@ ActiveRecord::Schema.define(:version => 20140216210000) do
     t.integer "session_id", :null => false
     t.integer "user_id",    :null => false
   end
+
+  add_index "sessions_users", ["session_id"], :name => "index_sessions_users_on_session_id"
+  add_index "sessions_users", ["user_id"], :name => "index_sessions_users_on_user_id"
 
   create_table "sites", :force => true do |t|
     t.string   "name",       :null => false

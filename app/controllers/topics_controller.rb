@@ -98,6 +98,21 @@ class TopicsController < ApplicationController
     render :layout => 'application'
   end
 
+  def manage_topic
+    begin
+      @topic = Topic.find( params[:id] )
+    rescue ActiveRecord::RecordNotFound
+      render(:file => 'shared/404.erb', :status => 404, :layout => true) unless @topic
+      return
+    end
+
+    if authorized? @topic
+      @page_title = "Manage Topic: " + @topic.name
+    else
+      redirect_to topics_path
+    end
+  end
+
   def filter
     logger.debug "FILTER: #{params[:filter].join(',')}"
     # filter is an array of key value pairs, should be able to convert it to a hash

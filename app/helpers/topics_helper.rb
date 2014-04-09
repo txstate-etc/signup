@@ -5,13 +5,13 @@ module TopicsHelper
     session_info = ""
     session_info << "#{session.topic.name} " if opts[:print_name] == true
     session_info << "#{formatted_time_range(session.time, session.topic.minutes, print_date)} ("
-    session_info << " #{session.confirmed_reservations.size}"
+    session_info << " #{session.confirmed_count}"
     if session.seats
       session_info << " / #{session.seats}"
     end 
       session_info << " registered"
-    if session.waiting_list.size > 0 
-      session_info << ", #{session.waiting_list.size} waiting"
+    if session.waiting_list_count > 0 
+      session_info << ", #{session.waiting_list_count} waiting"
     end
     session_info << " )"
   end
@@ -39,7 +39,7 @@ module TopicsHelper
   end
 
   def session_reservations_short(session)
-    s = "#{session.confirmed_reservations.size}"
+    s = "#{session.confirmed_count}"
     s << " / #{session.seats}" if session.seats
     s
   end

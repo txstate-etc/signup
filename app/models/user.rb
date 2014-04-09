@@ -3,6 +3,7 @@ require 'net/ldap'
 class User < ActiveRecord::Base
   has_many :permissions
   has_many :departments, :through => :permissions
+  has_and_belongs_to_many :sessions
   has_paper_trail
   
   validates_presence_of :last_name, :login, :email
@@ -140,14 +141,28 @@ class User < ActiveRecord::Base
   
   # return true if the user has permissions on one or more departments
   def editor?
-    @_is_editor ||= self.departments.present?
+    defined?(@_is_editor) or @_is_editor = self.departments.present?
+    @_is_editor
   end
   
   # return true if the user is an instructor for any session (even in the past)
   def instructor?
-    @_is_instructor ||= Session.count( :conditions => [ "sessions.id in (select session_id from sessions_users where user_id = ?) AND cancelled = false", self.id ] ) > 0
+    defined?(@_is_instructor) or @_is_instructor = self.active_sessions.present?
+    @_is_instructor
   end
   
+  def active_sessions
+    @_active_sessions || lazy_load_sessions && @_active_sessions
+  end
+
+  def upcoming_sessions
+    @_upcoming_sessions || lazy_load_sessions && @_upcoming_sessions
+  end
+  
+  def past_sessions
+    @_past_sessions || lazy_load_sessions && @_past_sessions
+  end
+
   def self.import_all
     import_users(nil)
   end
@@ -259,5 +274,13 @@ class User < ActiveRecord::Base
       raise
     end
     
+  end
+
+  private
+  def lazy_load_sessions
+    now = Time.now
+    @_active_sessions = sessions.find( :all, :conditions => {:cancelled => false}, :order => "occurrences.time DESC", :include => :occurrences) 
+    @_upcoming_sessions, @_past_sessions = @_active_sessions.partition { |s| s.last_time > now }
+    @_upcoming_sessions.reverse!
   end
 end
