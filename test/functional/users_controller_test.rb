@@ -13,36 +13,21 @@ class UsersControllerTest < ActionController::TestCase
   end
   
   test "Login Required for every action" do
-    get :search
-    assert_response :redirect
-    assert_redirected_to CASClient::Frameworks::Rails::Filter.login_url(@controller)
-  
-    get :index
-    assert_response :redirect
-    assert_redirected_to CASClient::Frameworks::Rails::Filter.login_url(@controller)
     
-    get :new
-    assert_response :redirect
-    assert_redirected_to CASClient::Frameworks::Rails::Filter.login_url(@controller)
-    
-    get :edit, :id => users( :plainuser1 )
-    assert_response :redirect
-    assert_redirected_to CASClient::Frameworks::Rails::Filter.login_url(@controller)
-    
-    get :create
-    assert_response :redirect
-    assert_redirected_to CASClient::Frameworks::Rails::Filter.login_url(@controller)
-    
+    %w(search index new create).each do |action|
+      get action
+      assert_response :redirect
+      assert_redirected_to CASClient::Frameworks::Rails::Filter.login_url(@controller)
+    end
+
     # reset the response object or it will give a redirect loop error after five redirects
     setup_controller_request_and_response
 
-    put :update, :id => users( :plainuser1 )
-    assert_response :redirect
-    assert_redirected_to CASClient::Frameworks::Rails::Filter.login_url(@controller)
-
-    put :destroy, :id => users( :plainuser1 )
-    assert_response :redirect
-    assert_redirected_to CASClient::Frameworks::Rails::Filter.login_url(@controller)
+    %w(show edit update destroy).each do |action|
+      get action, :id => users( :plainuser1 )
+      assert_response :redirect
+      assert_redirected_to CASClient::Frameworks::Rails::Filter.login_url(@controller)
+    end
   end
 
   test "Admins should be able to do anything." do
@@ -56,6 +41,17 @@ class UsersControllerTest < ActionController::TestCase
     get :new
     assert_response :success
   
+    get :show, :id => users( :plainuser1 )
+    assert_response :redirect
+    assert_redirected_to root_url
+
+    get :show, :id => users( :editor2 )
+    assert_response :redirect
+    assert_redirected_to root_url
+
+    get :show, :id => users( :instructor1 )
+    assert_response :success
+
     get :edit, :id => users( :plainuser1 )
     assert_response :success
       
@@ -85,6 +81,17 @@ class UsersControllerTest < ActionController::TestCase
     get :new
     assert_response :success
   
+    get :show, :id => users( :plainuser1 )
+    assert_response :redirect
+    assert_redirected_to root_url
+
+    get :show, :id => users( :editor2 )
+    assert_response :redirect
+    assert_redirected_to root_url
+
+    get :show, :id => users( :instructor1 )
+    assert_response :success
+
     get :edit, :id => users( :plainuser1 )
     assert_response :redirect
     assert_redirected_to root_url
@@ -115,6 +122,17 @@ class UsersControllerTest < ActionController::TestCase
     get :new
     assert_response :success
   
+    get :show, :id => users( :plainuser1 )
+    assert_response :redirect
+    assert_redirected_to root_url
+
+    get :show, :id => users( :editor2 )
+    assert_response :redirect
+    assert_redirected_to root_url
+
+    get :show, :id => users( :instructor1 )
+    assert_response :success
+
     get :edit, :id => users( :plainuser1 )
     assert_response :redirect
     assert_redirected_to root_url
@@ -146,6 +164,18 @@ class UsersControllerTest < ActionController::TestCase
     assert_response :redirect
     assert_redirected_to root_url
   
+    get :show, :id => users( :plainuser1 )
+    assert_response :redirect
+    assert_redirected_to root_url
+
+    get :show, :id => users( :editor2 )
+    assert_response :redirect
+    assert_redirected_to root_url
+
+    get :show, :id => users( :instructor1 )
+    assert_response :redirect
+    assert_redirected_to root_url
+      
     get :edit, :id => users( :plainuser1 )
     assert_response :redirect
     assert_redirected_to root_url
@@ -165,4 +195,17 @@ class UsersControllerTest < ActionController::TestCase
     assert_redirected_to root_url
   end
 
+  test "Show action returns a list of sessions grouped by topic" do
+    login_as( users( :admin1 ) )
+    get :show, :id => users( :instructor1 )
+    assert_response :success
+
+    t = assigns(:topics)
+    assert t.is_a? Hash
+
+    assert_equal 6, t.keys.length
+    t.each_value { |s| assert s.is_a? Array }
+    assert_equal 6, t[topics(:gato)].length
+    assert_equal 2, t[topics(:tracs)].length
+  end
 end

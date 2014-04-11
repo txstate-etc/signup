@@ -3,26 +3,37 @@ require 'test_helper'
 class TopicTest < ActiveSupport::TestCase
   fixtures :topics, :departments
   
-  def test_upcoming_sessions
+  test "Verify that active sessions are computed correctly" do
+    active_tracs = topics( :tracs ).active_sessions
+    assert_equal 5, active_tracs.length 
+    
+    active_gato = topics( :gato ).active_sessions
+    assert_equal 6, active_gato.length
+
+    active_multi = topics( :multi_time_topic ).active_sessions
+    assert_equal 3, active_multi.length 
+  end
+
+  test "Verify that upcoming sessions are computed correctly" do
     upcoming_tracs = Topic.find( topics( :tracs ) ).upcoming_sessions
-    assert_equal( upcoming_tracs.length, 4, "TRACS should have 4 upcoming session")
+    assert_equal 4, upcoming_tracs.length, "TRACS should have 4 upcoming session"
     
     upcoming_gato = Topic.find( topics( :gato ) ).upcoming_sessions
-    assert_equal( upcoming_gato.length, 4, "Gato should have 4 upcoming sessions")
+    assert_equal 4, upcoming_gato.length, "Gato should have 4 upcoming sessions"
 
     upcoming_multi = Topic.find( topics( :multi_time_topic ) ).upcoming_sessions
-    assert_equal( upcoming_multi.length, 1, "Multi Time Topic should have 1 upcoming session")
+    assert_equal 1, upcoming_multi.length, "Multi Time Topic should have 1 upcoming session"
   end
   
   test "Verify that past sessions are computed correctly" do
     past_tracs = topics( :tracs ).past_sessions
-    assert_equal( past_tracs.length, 1 )
+    assert_equal 1, past_tracs.length 
     
     past_gato = topics( :gato ).past_sessions
-    assert_equal( past_gato.length, 2 )
+    assert_equal 2, past_gato.length
 
     past_multi = topics( :multi_time_topic ).past_sessions
-    assert_equal( past_multi.length, 2 )
+    assert_equal 2, past_multi.length 
   end
   
   test "Verify CSV" do

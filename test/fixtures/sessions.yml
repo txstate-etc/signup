@@ -128,6 +128,15 @@ multi_time_topic_completed:
   cancelled: false
   seats: 20
 
+topic_with_attached_documents:
+  instructors: editor1
+  topic: topic_with_attached_documents
+  location: Alkek 155
+  site: sanmarcos
+  cancelled: false
+  seats: 20
+  survey_sent: true
+
 inactive_topic:
   instructors: instructor1
   topic: inactive_topic

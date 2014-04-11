@@ -213,4 +213,29 @@ class DepartmentsControllerTest < ActionController::TestCase
     assert_redirected_to departments_path
   end
 
+  test "Only editors and admins should be able to download attendance history" do
+    login_as( users( :plainuser1 ) )
+    get :show, :id => departments( :its ), :format => 'csv'
+    assert_response 406, "Should NOT be able to download attendance history"
+    assert_equal 1, @response.body.length
+
+    login_as( users( :instructor1 ) )
+    get :show, :id => departments( :its ), :format => 'csv'
+    assert_response 406, "Should NOT be able to download attendance history"
+    assert_equal 1, @response.body.length
+
+    login_as( users( :admin1 ) )
+    get :show, :id => departments( :its ), :format => 'csv'
+    assert_response :success
+    assert_equal 'text/csv', @response.content_type
+
+    login_as( users( :editor1 ) )
+    get :show, :id => departments( :its ), :format => 'csv'
+    assert_response :success
+    assert_equal 'text/csv', @response.content_type
+    
+    get :show, :id => departments( :tr ), :format => 'csv'
+    assert_response 406, "Should NOT be able to download attendance history"
+    assert_equal 1, @response.body.length
+  end
 end

@@ -31,6 +31,11 @@ class UsersController < ApplicationController
       return
     end
 
+    # Currently, the 'show' page is only useful for viewing 
+    # sessions that an instructor has taught. Out of paranoiac 
+    # privacy concerns, lets block viewing anyone else for now.
+    redirect_to root_url and return unless @user.instructor?
+    
     @page_title = @user.name
 
     @topics = Hash.new { |h,k| h[k] = Array.new }

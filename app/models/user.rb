@@ -95,60 +95,75 @@ class User < ActiveRecord::Base
     # Admins can do anything
     return true if self.admin?
     
-    # Non-admins can only edit things in their own departments
+    # Editors can only edit things in their own departments.
+    # Instructors can edit sessions they are the instructor of.
+    # Regular users (i.e., students) can't do anything.
     return false if !self.editor? && !instructor?
     
-    # Return true if we are just being asked about general editing permissions
+    # Return true if we are just being asked about general editing permissions.
     return true if item.nil?
 
-    # Only admins can edit departments
+    # Only admins can edit departments.
     return false if item.is_a? Department
     
-    # Non-admins can create and edit topics in their department
-    # Instructors cannot edit topics
+    # Editors can create and edit topics in their department.
+    # Instructors cannot edit topics.
     if item.is_a? Topic 
-      return self.editor? if item.new_record?
+      return self.editor? if item.new_record? && item.department.blank?
       return self.departments.include?(item.department)
     end
     
-    # Non-admins can edit sessions for topics in their department
+    # Editors can create and edit sessions for topics in their department.
     # Instructors can edit sessions they are the instructor of.
     if item.is_a? Session 
-      return self.departments.include?(item.topic.department) || item.instructor?( self )
+      return self.editor? if item.new_record? && item.topic.blank?
+      return self.departments.include?(item.topic.department) || (!item.new_record? && item.instructor?( self ))
     end
     
-    # Non-admins can edit reservations for topics in their department
-    # Instructors can edit reservations for sessions they are the instructor of.
+    # Editors can create and edit reservations for topics in their department.
+    # Instructors can create and edit reservations for sessions they are the instructor of.
     if item.is_a? Reservation 
       return self.departments.include?(item.session.topic.department) || item.session.instructor?( self )
     end
     
-    # Non-admins and Instructors can create new users (e.g., for Instructors who are not in the system)
-    # Only admins can edit them
+    # Editors and Instructors can create new users (e.g., for Instructors who are not in the system).
+    # Only admins can edit them.
     if item.is_a? User
       return item.new_record?
     end
     
     # If item is an array of items, recursively call ourself on each one.
-    # Only return true if they are all authorized
+    # Only return true if they are all authorized.
     if item.is_a?(Array) && item.size > 0
       return item.all? { |i| authorized? i }
     end
 
-    # default deny
+    # Default deny.
     return false
   end
   
-  # return true if the user has permissions on one or more departments
-  def editor?
+  # return true if the user has permissions on one or more departments (and item==nil)
+  # if a Department is provided, return true if he is an editor for that topic
+  # if a Topic is provided, return true if he is an editor for that topic's department
+  # if a Session is provided, return true if he is an editor for that session's topic's department
+  def editor?(item=nil)
     defined?(@_is_editor) or @_is_editor = self.departments.present?
-    @_is_editor
+    return @_is_editor unless item
+    return departments.include?(item) if item.is_a? Department
+    return departments.include?(item.department) if item.is_a?(Topic) && !item.new_record?
+    return departments.include?(item.topic.department) if item.is_a?(Session) && !item.new_record?
+    false
   end
   
-  # return true if the user is an instructor for any session (even in the past)
-  def instructor?
+  # return true if the user is an instructor for any session (even in the past) [and item==nil]
+  # if a Topic is provided, return true if he is an instructor for any session for that topic
+  # if a Session is provided, return true if he is an instructor for that session
+  def instructor?(item=nil)
     defined?(@_is_instructor) or @_is_instructor = self.active_sessions.present?
-    @_is_instructor
+    return @_is_instructor unless item
+    return active_sessions.any? { |s| s.topic_id == item.id } if item.is_a? Topic
+    return active_sessions.include?(item) if item.is_a? Session
+    false
   end
   
   def active_sessions
@@ -278,9 +293,6 @@ class User < ActiveRecord::Base
 
   private
   def lazy_load_sessions
-    now = Time.now
-    @_active_sessions = sessions.find( :all, :conditions => {:cancelled => false}, :order => "occurrences.time DESC", :include => :occurrences) 
-    @_upcoming_sessions, @_past_sessions = @_active_sessions.partition { |s| s.last_time > now }
-    @_upcoming_sessions.reverse!
+    @_active_sessions, @_upcoming_sessions, @_past_sessions = Session.lazy_load_sessions(self)
   end
 end

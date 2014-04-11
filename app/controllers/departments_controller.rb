@@ -13,7 +13,7 @@ class DepartmentsController < ApplicationController
     respond_to do |format|
       format.html
       format.atom
-      if authorized? @department
+      if authorized?(@department) || (current_user && current_user.editor?(@department))
         format.csv { send_csv @department.to_csv, @department }
       end
     end

@@ -50,9 +50,11 @@
               department_path(department, :format => :atom), :class => 'feed-link') %>
         </h2>
         <div class="action-list">
-          <p class="download-link download-csv">
-            <%= link_to "Download Attendance History", department_path( department, :format => :csv ) %>
-          </p>
+          <% if authorized?(department) || current_user.editor?(department) %>
+            <p class="download-link download-csv">
+              <%= link_to "Download Attendance History", department_path( department, :format => :csv ) %>
+            </p>
+          <% end %>
         </div>
         <% topics = @topics.select { |t| t.department == department } %>
         <% if topics.blank? %>

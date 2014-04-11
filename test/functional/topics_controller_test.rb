@@ -24,6 +24,10 @@ class TopicsControllerTest < ActionController::TestCase
     assert_response :redirect
     assert_redirected_to CASClient::Frameworks::Rails::Filter.login_url(@controller)
   
+    get :manage_topic, :id => topics( :gato )
+    assert_response :redirect
+    assert_redirected_to CASClient::Frameworks::Rails::Filter.login_url(@controller)
+
     get :new
     assert_response :redirect
     assert_redirected_to CASClient::Frameworks::Rails::Filter.login_url(@controller)
@@ -35,6 +39,9 @@ class TopicsControllerTest < ActionController::TestCase
     put :update, :id => topics( :gato )
     assert_response :redirect
     assert_redirected_to CASClient::Frameworks::Rails::Filter.login_url(@controller)
+
+    # reset the response object or it will give a redirect loop error after five redirects
+    setup_controller_request_and_response
 
     put :destroy, :id => topics( :gato )
     assert_response :redirect
@@ -249,6 +256,10 @@ class TopicsControllerTest < ActionController::TestCase
     assert_response :success
     assert_equal 5, assigns( :departments ).count
     assert_equal 7, assigns( :topics ).count
+
+    get :manage_topic, :id => topics( :gato )
+    assert_response :success
+
   end
   
   test "Editors can manage topics in their department" do
@@ -257,8 +268,18 @@ class TopicsControllerTest < ActionController::TestCase
     @request.session[ :departments ] = 'all'
     get :manage
     assert_response :success
-    assert_equal 1, assigns( :departments ).count
-    assert_equal 3, assigns( :topics ).count
+    assert_equal 2, assigns( :departments ).count
+    assert_equal 4, assigns( :topics ).count
+
+    get :manage_topic, :id => topics( :gato )
+    assert_response :success, "Should be able to manage topic in his department"
+
+    get :manage_topic, :id => topics( :topic_with_attached_documents )
+    assert_response :success, "Should be able to manage topic he is an instructor for"
+
+    get :manage_topic, :id => topics( :multi_time_topic )
+    assert_response :redirect, "Should NOT be able to manage topic in other departments"
+    assert_redirected_to topics_path
 
     login_as( users( :editor2 ) )
     get :manage
@@ -276,6 +297,13 @@ class TopicsControllerTest < ActionController::TestCase
     assert_equal 2, assigns( :departments ).count
     assert_equal 5, assigns( :topics ).count
 
+    get :manage_topic, :id => topics( :gato )
+    assert_response :success, "Should be able to manage topic he is an instructor for"
+
+    get :manage_topic, :id => topics( :topic_with_attached_documents )
+    assert_response :redirect, "Should NOT be able to manage topic he is not an instructor for"
+    assert_redirected_to topics_path
+
     login_as( users( :instructor2 ) )
     get :manage
     assert_response :success
@@ -288,6 +316,37 @@ class TopicsControllerTest < ActionController::TestCase
     get :manage
     assert_response :redirect
     assert_redirected_to topics_url
+
+    get :manage_topic, :id => topics( :gato )
+    assert_response :redirect, "Should NOT be able to manage any topic"
+    assert_redirected_to topics_path
+
+  end
+
+  test "Only editors and admins should be able to download attendance history" do
+    login_as( users( :plainuser1 ) )
+    get :show, :id => topics(:gato), :format => 'csv'
+    assert_response 406, "Should NOT be able to download attendance history"
+    assert_equal 1, @response.body.length
+
+    login_as( users( :instructor1 ) )
+    get :show, :id => topics(:gato), :format => 'csv'
+    assert_response 406, "Should NOT be able to download attendance history"
+    assert_equal 1, @response.body.length
+
+    login_as( users( :admin1 ) )
+    get :show, :id => topics(:gato), :format => 'csv'
+    assert_response :success
+    assert_equal 'text/csv', @response.content_type
+
+    login_as( users( :editor1 ) )
+    get :show, :id => topics(:gato), :format => 'csv'
+    assert_response :success
+    assert_equal 'text/csv', @response.content_type
+    
+    get :show, :id => topics(:multi_time_topic), :format => 'csv'
+    assert_response 406, "Should NOT be able to download attendance history"
+    assert_equal 1, @response.body.length
   end
 
   test "Grid view shows the correct month" do

@@ -1,34 +1,36 @@
 <% content_for :admin_tools do %>
-	<% if @topic && authorized?(@topic) && !@topic.new_record? %>
-		<p class="download-link download-csv"><%= link_to "Download Attendance History", topic_path( @topic, :format => :csv ) %></p>
-		<p><%= link_to "View Topic Details", @topic %>
-		<p><%= link_to "View Survey Results", topic_survey_results_path( @topic ) %>
-		<% unless @topic.inactive? %>
-		  <p><%= link_to "Update Topic Details", edit_topic_path %></p>
-		  <% if @topic.upcoming_sessions.blank? %>
-		    <p><%= link_to "Delete Topic", delete_topic_path %></p>
-	    <% end %>
-	      <p><%= link_to "Create New Session", new_topic_session_path( @topic ) %></p>
-  	<% end %>
+  <% if @topic && !@topic.new_record? %>
+    <p><%= link_to "View Topic History", manage_topic_path( @topic ) %>
+    <p><%= link_to "View Topic Details", @topic %>
+    <% if authorized? @topic %>
+      <p><%= link_to "View Survey Results", topic_survey_results_path( @topic ) %>
+      <% unless @topic.inactive? %>
+        <p><%= link_to "Update Topic Details", edit_topic_path %></p>
+        <% if @topic.upcoming_sessions.blank? %>
+          <p><%= link_to "Delete Topic", delete_topic_path %></p>
+        <% end %>
+          <p><%= link_to "Create New Session", new_topic_session_path( @topic ) %></p>
+      <% end %>
+    <% end %>
   <% end %>
 <% end %>
 
 <% content_for :sidebar do %>
-	<% if @topic && !@topic.new_record? %>
-	  <div class="download-link download-calendar">
-	    <%= link_to "[add all sessions to calendar]", :protocol => "webcal", :host => request.host, :port => request.port, :action => 'download' %>
-	  </div>
-	<% end %>
+  <% if @topic && !@topic.new_record? %>
+    <div class="download-link download-calendar">
+      <%= link_to "[add all sessions to calendar]", :protocol => "webcal", :host => request.host, :port => request.port, :action => 'download' %>
+    </div>
+  <% end %>
 <% end %>
 
 <% content_for :content do %>
-	<%= error_messages_for 'topic' %>
-	<% if @topic && @topic.inactive? %>
-	  <div class="inactive-topic-message">
-	    <p>This topic is no longer active. No further sessions will be held.</p>
-	  </div>
-	<% end %>	
-	<%= yield %>
+  <%= error_messages_for 'topic' %>
+  <% if @topic && @topic.inactive? %>
+    <div class="inactive-topic-message">
+      <p>This topic is no longer active. No further sessions will be held.</p>
+    </div>
+  <% end %> 
+  <%= yield %>
 <% end %>
 
 <%= render :file => 'layouts/application' %>

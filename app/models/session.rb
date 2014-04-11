@@ -72,6 +72,22 @@ class Session < ActiveRecord::Base
     !in_past?
   end
 
+  ##
+  # Used by many-to-many associations to properly load the correct 
+  # sessions in the correct order
+  # NB: for our purposes, "past" sessions are ones that have already started
+  # If they have multiple occurrences, we only care that the first one has started
+  # in order to consider it "in the past"
+  # This is relatively arbitrary, so it may change, but this is how it has always been done
+  def self.lazy_load_sessions(model)
+    now = Time.now
+    active_sessions = model.sessions.find( :all, :conditions => {:cancelled => false}, :order => "occurrences.time", :include => [:occurrences]) 
+    past_sessions, upcoming_sessions = active_sessions.partition { |s| s.started? }
+    past_sessions.reverse!
+
+    [active_sessions, upcoming_sessions, past_sessions]
+  end
+
   def multiple_occurrences?
     occurrences.present? && occurrences.count > 1
   end

@@ -35,7 +35,7 @@ topic_with_attached_documents:
   name: Topic with Attached Documents
   description: Download some stuff.
   minutes: 60
-  survey_type: 1
+  survey_type: 0
   department: tr
 
 inactive_topic:

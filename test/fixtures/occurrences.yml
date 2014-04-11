@@ -42,7 +42,7 @@ tracs_tiny_full:
   
 gato_huge:
   session: gato_huge
-  time: 2035-06-02 12:00:00
+  time: 2035-06-02 15:00:00
 
 gato_overbooked:
   session: gato_overbooked
@@ -75,7 +75,11 @@ multi_time_topic_completed1:
 multi_time_topic_completed2:
   session: multi_time_topic_completed
   time: 2010-05-09 13:00:00
-  
+
+topic_with_attached_documents:
+  session: topic_with_attached_documents
+  time: 2010-05-09 13:00:00
+
 inactive_topic:
   session: inactive_topic
   time: 2010-05-23 11:00:00

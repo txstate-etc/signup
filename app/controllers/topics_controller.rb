@@ -106,8 +106,8 @@ class TopicsController < ApplicationController
       return
     end
 
-    if authorized? @topic
-      @page_title = "Manage Topic: " + @topic.name
+    if authorized?(@topic) || current_user.instructor?(@topic)
+      @page_title = "Topic History: " + @topic.name
     else
       redirect_to topics_path
     end

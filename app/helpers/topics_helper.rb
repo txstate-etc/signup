@@ -54,7 +54,7 @@ module TopicsHelper
   
   def department_select(f)
     # for existing topics, only admins can modify dept
-    # for new topics, limit selection to user's departments (for non-admins. Admins can select any dept).
+    # for new topics, limit selection to user's departments (for editors. Admins can select any dept).
     disabled = !(current_user.admin? || f.object.new_record?)
     departments = current_user.admin? ? Department.active : current_user.departments
     include_blank = f.object.new_record? && departments.size > 1

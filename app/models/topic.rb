@@ -132,10 +132,7 @@ class Topic < ActiveRecord::Base
 
   private
   def lazy_load_sessions
-    now = Time.now
-    @_active_sessions = sessions.find( :all, :conditions => {:cancelled => false}, :order => "occurrences.time DESC", :include => [:occurrences]) 
-    @_upcoming_sessions, @_past_sessions = @_active_sessions.partition { |s| s.last_time > now }
-    @_upcoming_sessions.reverse!
+    @_active_sessions, @_upcoming_sessions, @_past_sessions = Session.lazy_load_sessions(self)
   end
 
 end

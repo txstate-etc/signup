@@ -2,6 +2,11 @@ require 'test_helper'
 
 class SessionTest < ActiveSupport::TestCase
   fixtures :sessions, :topics, :users
+
+  def setup
+    Session.class_eval {class_variable_set :@@res_count, nil}
+  end
+
   test "Should determine whether space is available correctly" do
     session = Session.find( sessions( :tracs_tiny ) )
     assert session.space_is_available?
@@ -15,18 +20,50 @@ class SessionTest < ActiveSupport::TestCase
   
   test "Should distinguish waiting list vs. reservations correctly" do
     session = Session.find( sessions( :gato_overbooked ) )
-    assert_equal 2, session.confirmed_reservations.size, "Wrong number of reservations for Gato"
-    assert_equal 1, session.waiting_list.size, "Wrong number on waiting list for Gato"
+    assert_equal 2, session.confirmed_count, "Wrong number of reservations for Gato"
+    assert_equal 1, session.waiting_list_count, "Wrong number on waiting list for Gato"
     
     session = Session.find( sessions( :tracs ) )
-    assert_equal 1, session.confirmed_reservations.size, "Wrong number of reservations for TRACS"
-    assert_equal 0, session.waiting_list.size, "Wrong number on waiting list for TRACS"
+    assert_equal 1, session.confirmed_count, "Wrong number of reservations for TRACS"
+    assert_equal 0, session.waiting_list_count, "Wrong number on waiting list for TRACS"
     
     session = Session.find( sessions( :gato_cancelled ) )
-    assert_equal 1, session.confirmed_reservations.size, "Wrong number of reservations for cancelled class"
-    assert_equal 0, session.waiting_list.size, "Wrong number on waiting list for cancelled class"
+    assert_equal 1, session.confirmed_count, "Wrong number of reservations for cancelled class"
+    assert_equal 0, session.waiting_list_count, "Wrong number on waiting list for cancelled class"
   end
   
+  test "Reservation counts should be updated when reservations are created and destroyed" do
+    session = Session.find( sessions( :gato_overbooked ) )
+    assert_equal 3, session.res_count
+    reservation = session.reservations.create!(:user => users(:plainuser4))
+    assert_equal 2, session.confirmed_count, "Wrong number of reservations for Gato"
+    assert_equal 2, session.waiting_list_count, "Wrong number on waiting list for Gato"
+    assert_equal 4, session.res_count, "Res count not updated after reservation creation"
+
+    reservation.cancel!
+    assert_equal 1, session.waiting_list_count, "Wrong number on waiting list for Gato"
+    assert_equal 3, session.res_count, "Res count not updated after reservation deletion"
+
+    reservation.uncancel!
+    assert_equal 2, session.waiting_list_count, "Wrong number on waiting list for Gato"
+    assert_equal 4, session.res_count, "Res count not updated after reservation un-deletion"
+
+    session = Session.find( sessions( :tracs ) )
+    assert_equal 1, session.res_count
+    reservation = session.reservations.create!(:user => users(:plainuser4))
+    assert_equal 2, session.confirmed_count, "Wrong number of reservations for TRACS"
+    assert_equal 0, session.waiting_list_count, "Wrong number on waiting list for TRACS"
+    assert_equal 2, session.res_count, "Res count not updated after reservation creation"
+
+    reservation.cancel!
+    assert_equal 1, session.confirmed_count, "Wrong number of reservations for Gato"
+    assert_equal 1, session.res_count, "Res count not updated after reservation deletion"
+
+    reservation.uncancel!
+    assert_equal 2, session.confirmed_count, "Wrong number of reservations for Gato"
+    assert_equal 2, session.res_count, "Res count not updated after reservation un-deletion"
+  end
+
   test "Users should be updated when location or time of a class changes" do
     assert_difference 'ActionMailer::Base.deliveries.size', +3 do
       sessions( :gato_overbooked ).location = "The Third Circle of Hell"
