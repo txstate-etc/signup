@@ -30,11 +30,14 @@ class Topic < ActiveRecord::Base
     true
   end
 
-  def before_update
-    # Coerce tag_list to be all lower-case with no special chars
-    self.tag_list = self.tag_list.join(' ').split(/\s*[,;]\s*|\s+/).map {|s| s.titleize.parameterize.to_s}
+  def before_create
+    normalize_tag_names
   end
 
+  def before_update
+    normalize_tag_names
+  end
+  
   def self.upcoming_tagged_with(tag)
     Topic.tagged_with(tag).find( :all, :conditions => [ "topics.id IN ( select topic_id from sessions, occurrences where sessions.id = occurrences.session_id AND occurrences.time > ? AND cancelled = false )", Time.now ] )
   end
@@ -133,6 +136,11 @@ class Topic < ActiveRecord::Base
   private
   def lazy_load_sessions
     @_active_sessions, @_upcoming_sessions, @_past_sessions = Session.lazy_load_sessions(self)
+  end
+
+  def normalize_tag_names
+    # Coerce tag_list to be all lower-case with no special chars
+    self.tag_list = self.tag_list.join(' ').split(/\s*[,;]\s*|\s+/).map {|s| s.titleize.parameterize.to_s}
   end
 
 end
