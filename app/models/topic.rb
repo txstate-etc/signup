@@ -39,27 +39,19 @@ class Topic < ActiveRecord::Base
   end
   
   def self.upcoming_tagged_with(tag)
-    Topic.tagged_with(tag).find( :all, :conditions => [ "topics.id IN ( select topic_id from sessions, occurrences where sessions.id = occurrences.session_id AND occurrences.time > ? AND cancelled = false )", Time.now ] )
+    Topic.tagged_with(tag).find(:all, :conditions => ["occurrences.time > ? AND sessions.cancelled = false", Time.now], :joins => {:sessions => :occurrences}, :group => :name)
   end
 
   def self.upcoming
-    Topic.find( :all, :conditions => [ "topics.id IN ( select topic_id from sessions, occurrences where sessions.id = occurrences.session_id AND occurrences.time > ? AND cancelled = false )", Time.now ] )
+    Topic.find(:all, :conditions => ["occurrences.time > ? AND sessions.cancelled = false", Time.now], :joins => {:sessions => :occurrences}, :group => :name)
   end
-  
-  def self.by_instructor(user, upcoming=false)
-    sub_select = "select topic_id from sessions, sessions_users, occurrences where sessions.id = sessions_users.session_id AND sessions_users.user_id = ? AND cancelled = false"
-    sub_select << " AND sessions.id = occurrences.session_id AND occurrences.time > ?" if upcoming
-    conditions = [" topics.id IN ( #{sub_select} )", user.id]
-    conditions << Time.now if upcoming
-    Topic.find( :all, :conditions => conditions )
-  end
-  
+    
   def to_param
     "#{id}-#{name.parameterize}"
   end
   
   def <=>(other)
-    self.name <=> other.name
+    self.name.downcase <=> other.name.downcase
   end
   
   def sorted_tags

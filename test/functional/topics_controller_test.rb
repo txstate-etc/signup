@@ -254,8 +254,8 @@ class TopicsControllerTest < ActionController::TestCase
     @request.session[ :departments ] = 'all'
     get :manage
     assert_response :success
-    assert_equal 5, assigns( :departments ).count
-    assert_equal 7, assigns( :topics ).count
+    assert_equal 5, assigns( :topics ).keys.size
+    assert_equal 7, assigns( :topics ).values.reduce(0){ |s,a| s+a.size }
 
     get :manage_topic, :id => topics( :gato )
     assert_response :success
@@ -268,8 +268,8 @@ class TopicsControllerTest < ActionController::TestCase
     @request.session[ :departments ] = 'all'
     get :manage
     assert_response :success
-    assert_equal 2, assigns( :departments ).count
-    assert_equal 4, assigns( :topics ).count
+    assert_equal 2, assigns( :topics ).keys.size
+    assert_equal 4, assigns( :topics ).values.reduce(0){ |s,a| s+a.size }
 
     get :manage_topic, :id => topics( :gato )
     assert_response :success, "Should be able to manage topic in his department"
@@ -284,8 +284,8 @@ class TopicsControllerTest < ActionController::TestCase
     login_as( users( :editor2 ) )
     get :manage
     assert_response :success
-    assert_equal 2, assigns( :departments ).count
-    assert_equal 7, assigns( :topics ).count
+    assert_equal 2, assigns( :topics ).keys.size
+    assert_equal 7, assigns( :topics ).values.reduce(0){ |s,a| s+a.size }
   end
   
   test "Instructors can manage topics they are instructors for" do
@@ -294,8 +294,8 @@ class TopicsControllerTest < ActionController::TestCase
     @request.session[ :departments ] = 'all'
     get :manage
     assert_response :success
-    assert_equal 2, assigns( :departments ).count
-    assert_equal 5, assigns( :topics ).count
+    assert_equal 3, assigns( :topics ).keys.size
+    assert_equal 6, assigns( :topics ).values.reduce(0){ |s,a| s+a.size }
 
     get :manage_topic, :id => topics( :gato )
     assert_response :success, "Should be able to manage topic he is an instructor for"
@@ -307,8 +307,8 @@ class TopicsControllerTest < ActionController::TestCase
     login_as( users( :instructor2 ) )
     get :manage
     assert_response :success
-    assert_equal 1, assigns( :departments ).count
-    assert_equal 1, assigns( :topics ).count
+    assert_equal 1, assigns( :topics ).keys.size
+    assert_equal 1, assigns( :topics ).values.reduce(0){ |s,a| s+a.size }
   end
   
   test "Normal users cannot manage topics" do

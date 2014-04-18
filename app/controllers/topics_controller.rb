@@ -40,7 +40,6 @@ class TopicsController < ApplicationController
     
     @sessions = Hash.new { |h,k| h[k] = Array.new }
     topics.each do |topic|
-      # FIXME: multiple occurrences??
       topic.upcoming_sessions.each do |session| 
         @sessions[session.time.to_date] << session 
       end
@@ -50,7 +49,7 @@ class TopicsController < ApplicationController
   end
 
   def upcoming
-    # FIXME: not used anymore, but we don't want to break any links/bookmarks
+    # not used anymore, but we don't want to break any links/bookmarks
     redirect_to root_url, :status => 301
   end
 
@@ -73,25 +72,36 @@ class TopicsController < ApplicationController
     @upcoming = session[:topics] != 'all'
     @all_depts = current_user.admin? && session[:departments] == 'all'
 
-    # Non-admins: show topics for their departments only. 
+    # Editors: show topics for their departments only. 
     # Admins: show topics for their departments by default. Show all depts based on filter
     # Instructors: show departments for topics that they are instructors of plus any in
-    @departments = current_user.departments
-    @departments = Department.active if (current_user.admin? && (@all_depts || @departments.blank?))
-    
-    #FIXME: most of this work should be done by the database
-    
-    @topics = []
-    if current_user.admin? || current_user.editor?
-      # Show upcoming or all based on filter
-      @topics = @upcoming ? Topic.upcoming : Topic.active
-      @topics = @topics.select { |t| @departments.include? t.department }
+    @topics = Hash.new { |h,k| h[k] = SortedSet.new }
+    if current_user.admin? && (@all_depts || !current_user.editor?)
+      _topics = @upcoming ? Topic.upcoming : Topic.active
+      _topics.each do |topic|
+        @topics[topic.department] << topic
+      end
+      Department.active.each do |d|
+        @topics[d] ||= []
+      end
+    elsif current_user.editor?
+      departments = current_user.departments
+      _topics = @upcoming ? Topic.upcoming : Topic.active
+      _topics.each do |topic|
+        @topics[topic.department] << topic if departments.include? topic.department
+      end      
+      departments.each do |d|
+        @topics[d] ||= []
+      end
     end
     
     if current_user.instructor?
       # Add topics for which the current user is the instructor
-      @topics = (@topics + Topic.active.by_instructor(current_user, @upcoming)).flatten.uniq
-      @departments = (@departments + @topics.map(&:department)).flatten.uniq
+      # sessions = @upcoming ? current_user.upcoming_sessions : current_user.active_sessions
+      current_user.active_sessions.each do |session|
+        @topics[session.topic.department] ||= []
+        @topics[session.topic.department] << session.topic if !@upcoming || session.in_future?
+      end
     end
     
     @page_title = "Manage Topics"

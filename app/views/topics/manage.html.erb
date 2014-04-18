@@ -19,13 +19,13 @@
             <%= link_to "Show only topics with upcoming sessions.", '/topics/filter/topics/upcoming' %>
           <% end -%>
         </li>
-        <% if current_user.admin? && current_user.departments.present? %>
+        <% if current_user.admin? && current_user.editor? %>
           <li>
             <% if @all_depts -%>
               Showing topics in all departments.
               <%= link_to "Show only topics in your #{pluralize_word(current_user.departments.size, 'department')}.", '/topics/filter/departments/user' %>
             <% else -%>
-              Showing only topics in your <%= pluralize_word(@departments.size, 'department') %>. 
+              Showing only topics in your <%= pluralize_word(current_user.departments.size, 'department') %>. 
               <%= link_to "Show all departments.", '/topics/filter/departments/all' %>
             <% end -%>
           </li>
@@ -34,7 +34,7 @@
     </div>
   <% end %>
   
-  <% if @departments.blank? %>
+  <% if @topics.blank? %>
     <div class="content-section">
       <h2>No topics found</h2>
       <div class="empty-list">
@@ -43,7 +43,7 @@
     </div>
   <% else %>
   
-    <% @departments.each do |department| %>
+    <% @topics.keys.sort.each do |department| %>
       <div class="content-section">
         <h2><%= department.name %>
             <%= link_to("Subscribe to the XML feed for this department",
@@ -56,7 +56,7 @@
             </p>
           <% end %>
         </div>
-        <% topics = @topics.select { |t| t.department == department } %>
+        <% topics = @topics[department] %>
         <% if topics.blank? %>
           <div class="empty-list">
             <p>There are no topics <%= @upcoming ? ' with upcoming sessions ' : '' %> in this department.</p>

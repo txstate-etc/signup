@@ -23,7 +23,7 @@ class Department < ActiveRecord::Base
   end
   
   def upcoming
-    Topic.find( :all, :conditions => [ "topics.id IN ( select topic_id from sessions, occurrences where sessions.id = occurrences.session_id AND occurrences.time > ? AND cancelled = false AND department_id = ? )", Time.now, self.id ] )
+    Topic.find(:all, :conditions => ["department_id = ? AND occurrences.time > ? AND sessions.cancelled = false", self.id, Time.now], :joins => {:sessions => :occurrences}, :group => :name)
   end
   
   def deactivate!
