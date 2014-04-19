@@ -374,21 +374,6 @@ class TopicsControllerTest < ActionController::TestCase
     assert_equal 1, assigns(:occurrences)[Date.new(2045, 5, 7)].length
     assert_equal 2, assigns(:occurrences)[Date.new(2045, 5, 9)].length
   end
-
-  test "Upcoming view shows the correct sessions organized by date" do
-    get :index
-    assert_response :success
-
-    assert_equal 6, assigns(:sessions).keys.length
-    assert_equal 4, assigns(:sessions)[Date.new(2035, 6, 2)].length
-    #CANCELLED: assert_equal 1, assigns(:sessions)[Date.new(2035, 8, 2)].length
-    assert_equal 1, assigns(:sessions)[Date.new(2035, 9, 2)].length
-    assert_equal 1, assigns(:sessions)[Date.new(2035, 6, 15)].length
-    assert_equal 1, assigns(:sessions)[Date.new(2035, 7, 1)].length
-    assert_equal 1, assigns(:sessions)[Date.new(2037, 7, 1)].length
-    assert_equal 1, assigns(:sessions)[Date.new(2045, 5, 7)].length
-    # 2nd OCCURRENCE: assert_equal 2, assigns(:sessions)[Date.new(2045, 5, 9)].length
-  end
   
   test "By Department view shows the correct sessions organized by department" do
     get :by_department

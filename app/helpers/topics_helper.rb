@@ -61,7 +61,7 @@ module TopicsHelper
     f.collection_select :department_id, departments, :id, :name, { :include_blank => include_blank }, { :disabled => disabled }
   end
 
-  def grouped_by_date(topics, &block)
+  def grouped_by_date(topics)
     sessions = Hash.new { |h,k| h[k] = Array.new }
     topics.each do |topic|
       topic.upcoming_sessions.each do |session| 
@@ -71,6 +71,8 @@ module TopicsHelper
     
     sessions.keys.sort.each do |date| 
       yield date, sessions[date].sort_by(&:time)
-    end
+    end if block_given?
+
+    sessions
   end
 end
