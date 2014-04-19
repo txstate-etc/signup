@@ -60,4 +60,17 @@ module TopicsHelper
     include_blank = f.object.new_record? && departments.size > 1
     f.collection_select :department_id, departments, :id, :name, { :include_blank => include_blank }, { :disabled => disabled }
   end
+
+  def grouped_by_date(topics, &block)
+    sessions = Hash.new { |h,k| h[k] = Array.new }
+    topics.each do |topic|
+      topic.upcoming_sessions.each do |session| 
+        sessions[session.time.to_date] << session 
+      end
+    end
+    
+    sessions.keys.sort.each do |date| 
+      yield date, sessions[date].sort_by(&:time)
+    end
+  end
 end

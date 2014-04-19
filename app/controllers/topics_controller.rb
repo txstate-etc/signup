@@ -35,16 +35,7 @@ class TopicsController < ApplicationController
   end
 
   def index
-    topics = Topic.upcoming
     @page_title = t(:'topics.index.title')
-    
-    @sessions = Hash.new { |h,k| h[k] = Array.new }
-    topics.each do |topic|
-      topic.upcoming_sessions.each do |session| 
-        @sessions[session.time.to_date] << session 
-      end
-    end
-
     render :layout => 'topic_collection'
   end
 

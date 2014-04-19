@@ -1,7 +1,9 @@
 # Filters added to this controller apply to all controllers in the application.
 # Likewise, all the methods added will be available for all controllers.
+require 'cashier'
 
 class ApplicationController < ActionController::Base
+  include Cashier::ControllerHelper
   include ExceptionNotification::Notifiable
   before_filter :cas_setup
   helper :all # include all helpers, all the time
@@ -60,10 +62,15 @@ class ApplicationController < ActionController::Base
   helper_method :current_user
   helper_method :cas_user
   helper_method :authorized?
+  helper_method :date_slug
 
   protected
   def authorized?(item=nil)
     current_user && current_user.authorized?(item)
+  end
+
+  def date_slug(date=nil)
+    (date || Date.today).to_s.parameterize
   end
 
   private

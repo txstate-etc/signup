@@ -19,6 +19,7 @@ gem "paperclip", '~>2.7.0'
 gem "htmlentities", '~>4.3.1'
 gem "paper_trail", '~>1'
 gem 'acts-as-taggable-on', '~>2.1.0'
+gem 'cashier', '~>0.2.0'
 
 group :development, :test do
   gem 'rake', '~> 0.9.2.2'
