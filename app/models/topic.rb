@@ -13,7 +13,7 @@ class Topic < ActiveRecord::Base
   validates_associated :department
   validates_presence_of :survey_url, :if => Proc.new{ |topic| topic.survey_type == SURVEY_EXTERNAL }, :message => "must be specified to use an external survey."
   validate :inactive_with_no_upcoming_sessions
-  default_scope :order => 'name'
+  default_scope :order => 'topics.name'
   named_scope :active, :conditions => { :inactive => false }
   has_paper_trail
   acts_as_taggable

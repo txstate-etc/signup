@@ -43,59 +43,64 @@
     </div>
   <% else %>
   
-    <% @topics.keys.sort.each do |department| %>
-      <div class="content-section">
-        <h2><%= department.name %>
-            <%= link_to("Subscribe to the XML feed for this department",
-              department_path(department, :format => :atom), :class => 'feed-link') %>
-        </h2>
-        <div class="action-list">
-          <% if authorized?(department) || current_user.editor?(department) %>
-            <p class="download-link download-csv">
-              <%= link_to "Download Attendance History", department_path( department, :format => :csv ) %>
-            </p>
+    <% @topics.keys.sort_by(&:name).each do |department| %>
+      <% authorized = authorized?(department) || current_user.editor?(department) %>
+      <% cache(["topics/manage", "#{date_slug}", "#{@upcoming ? 'upcoming' : 'all'}", department, "#{authorized ? '' : 'not-'}authorized"], :tag => department.cache_key) do %>
+        <div class="content-section">
+          <h2><%= department.name %>
+              <%= link_to("Subscribe to the XML feed for this department",
+                department_path(department, :format => :atom), :class => 'feed-link') %>
+          </h2>
+          <div class="action-list">
+            <% if authorized %>
+              <p class="download-link download-csv">
+                <%= link_to "Download Attendance History", department_path( department, :format => :csv ) %>
+              </p>
+            <% end %>
+          </div>
+          <% topics = @topics[department] %>
+          <% if topics.blank? %>
+            <div class="empty-list">
+              <p>There are no topics <%= @upcoming ? ' with upcoming sessions ' : '' %> in this department.</p>
+            </div>
+          <% else %>
+            <table class="topic-list">
+              <thead>
+                <tr>
+                  <th scope="col" class="topic-name">Topic</th>
+                  <th scope="col" class="topic-date">Next Session</th> 
+                  <th scope="col" class="topic-count">Reservations</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% topics.each do |topic| %>
+                  <% cache(["topics/manage", "#{date_slug}", "#{@upcoming ? 'upcoming' : 'all'}", topic], :tag => topic.cache_key) do %>
+                    <tr class="<%= cycle("even", "odd") %>">
+                    <td class="topic-name">
+                      <%= link_to topic.name, manage_topic_path(topic) %>
+                    </td>
+                    <td class="topic-date">
+                      <% if topic.upcoming_sessions.present? %>       
+                        <%= link_to session_time_short(topic.upcoming_sessions[0]), topic.upcoming_sessions[0] %>
+                      <% else %>
+                        <div class="empty">-</div>
+                      <% end %>
+                    </td>
+                    <td class="topic-count">
+                      <% if topic.upcoming_sessions.present? %>       
+                        <%= session_reservations_short(topic.upcoming_sessions[0]) %>
+                      <% else %>
+                       <div class="empty">-</div>
+                      <% end %>
+                    </tr>
+                  <% end %>
+                <% end %>
+              </tbody>
+            </table>
+            <% reset_cycle %>
           <% end %>
         </div>
-        <% topics = @topics[department] %>
-        <% if topics.blank? %>
-          <div class="empty-list">
-            <p>There are no topics <%= @upcoming ? ' with upcoming sessions ' : '' %> in this department.</p>
-          </div>
-        <% else %>
-          <table class="topic-list">
-            <thead>
-              <tr>
-                <th scope="col" class="topic-name">Topic</th>
-                <th scope="col" class="topic-date">Next Session</th> 
-                <th scope="col" class="topic-count">Reservations</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% topics.each do |topic| %>
-                <tr class="<%= cycle("even", "odd") %>">
-                <td class="topic-name">
-                  <%= link_to topic.name, manage_topic_path(topic) %>
-                </td>
-                <td class="topic-date">
-                  <% if topic.upcoming_sessions.present? %>       
-                    <%= link_to session_time_short(topic.upcoming_sessions[0]), topic.upcoming_sessions[0] %>
-                  <% else %>
-                    <div class="empty">-</div>
-                  <% end %>
-                </td>
-                <td class="topic-count">
-                  <% if topic.upcoming_sessions.present? %>       
-                    <%= session_reservations_short(topic.upcoming_sessions[0]) %>
-                  <% else %>
-                   <div class="empty">-</div>
-                  <% end %>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-          <% reset_cycle %>
-        <% end %>
-      </div>
+      <% end %>
     <% end %>
   <% end %>
 </div>

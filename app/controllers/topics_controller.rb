@@ -53,19 +53,17 @@ class TopicsController < ApplicationController
         @topics[d] ||= []
       end
     elsif current_user.editor?
-      departments = current_user.departments
-      _topics = @upcoming ? Topic.upcoming : Topic.active
+      _topics = @upcoming ? current_user.upcoming_topics : current_user.active_topics
       _topics.each do |topic|
-        @topics[topic.department] << topic if departments.include? topic.department
+        @topics[topic.department] << topic
       end      
-      departments.each do |d|
+      current_user.departments.each do |d|
         @topics[d] ||= []
       end
     end
     
     if current_user.instructor?
       # Add topics for which the current user is the instructor
-      # sessions = @upcoming ? current_user.upcoming_sessions : current_user.active_sessions
       current_user.active_sessions.each do |session|
         @topics[session.topic.department] ||= []
         @topics[session.topic.department] << session.topic if !@upcoming || session.in_future?

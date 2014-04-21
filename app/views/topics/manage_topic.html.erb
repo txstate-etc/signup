@@ -32,26 +32,29 @@
       </thead>
       <tbody>
         <% @topic.active_sessions.each do |session| %>
-          <tr class="<%= cycle("even", "odd") %>">
-          <td class="topic-name">
-            <%= link_to formatted_time_range(session.time, @topic.minutes), session, :class => 'date' %>
-          </td>
-          <td class="topic-site">
-            <%= session.site.name %>
-          </td>
-          <td class="topic-instructors">
-            <%= session.instructors.map do |user|
-                  link_to user.name, user_path(user)
-                end.join(', ') 
-            %>
-          </td>
-          <td class="topic-count">
-            <% if authorized? session %>
-              <%= link_to session_reservations_short(session), attendance_path( session ) %>
-            <% else %>
-              <%= session_reservations_short(session) %>
-            <% end %>
-          </tr>
+          <% authorized = authorized? session %>
+          <% cache(["topics/manage_topic", session, "#{authorized ? '' : 'not-'}authorized"], :tag => session.cache_key) do %>
+            <tr class="<%= cycle("even", "odd") %>">
+            <td class="topic-name">
+              <%= link_to formatted_time_range(session.time, @topic.minutes), session, :class => 'date' %>
+            </td>
+            <td class="topic-site">
+              <%= session.site.name %>
+            </td>
+            <td class="topic-instructors">
+              <%= session.instructors.map do |user|
+                    link_to user.name, user_path(user)
+                  end.join(', ') 
+              %>
+            </td>
+            <td class="topic-count">
+              <% if authorized %>
+                <%= link_to session_reservations_short(session), attendance_path( session ) %>
+              <% else %>
+                <%= session_reservations_short(session) %>
+              <% end %>
+            </tr>
+          <% end %>
         <% end %>
       </tbody>
     </table>

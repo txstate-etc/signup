@@ -166,6 +166,14 @@ class User < ActiveRecord::Base
     false
   end
   
+  def active_topics
+    Topic.active.find(:all, :conditions => ["permissions.user_id = ?", self.id], :include => { :department => :permissions }, :group => 'topics.name')
+  end
+ 
+  def upcoming_topics
+    Topic.find(:all, :conditions => ["permissions.user_id = ? AND occurrences.time > ? AND sessions.cancelled = false", self.id, Time.now], :include => {:sessions => :occurrences, :department => :permissions }, :group => 'topics.name')
+  end
+
   def active_sessions
     @_active_sessions || lazy_load_sessions && @_active_sessions
   end
