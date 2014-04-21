@@ -2,13 +2,11 @@ class DepartmentsController < ApplicationController
   before_filter :authenticate, :except => [ :show, :index ]
 
   def index
-    @departments = Department.active
     @page_title = "Departments Offering Training"
   end
 
   def show
     @department = Department.find( params[ :id ] )
-    @topics = @department.upcoming
     @page_title = @department.name
     respond_to do |format|
       format.html

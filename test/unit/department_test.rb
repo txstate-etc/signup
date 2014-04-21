@@ -29,10 +29,12 @@ class DepartmentTest < ActiveSupport::TestCase
   end
   
   test "Deleting a department with topics makes it inactive" do
+    assert_equal 5, Department.active.count
     d = departments(:department_to_make_inactive)
     d.deactivate!
     d.reload
     assert_equal true, d.inactive
+    assert_equal 4, Department.active.count
   end
 
   test "Deleting a department with NO topics actually deletes it" do
@@ -40,5 +42,16 @@ class DepartmentTest < ActiveSupport::TestCase
     assert_raise ActiveRecord::RecordNotFound do
       Department.find(departments(:department_to_be_deleted)) 
     end
+  end
+
+  test "Upcoming topics generated correctly" do
+    upcoming = departments( :its ).upcoming
+    assert_equal 2, upcoming.size
+    assert_match(/Gato/, upcoming[0].name)
+    assert_match(/TRACS/, upcoming[1].name)
+
+    upcoming = departments( :tr ).upcoming
+    assert_equal 1, upcoming.size
+    assert_match(/Multiple/, upcoming[0].name)
   end
 end

@@ -6,14 +6,10 @@ class DepartmentsControllerTest < ActionController::TestCase
   test "Can get index and detail pages for departments" do
     get :index
     assert_response :success
-    assert_equal 5, assigns( :departments ).count
 
     get :show, :id => departments( :its )
     assert_response :success
     assert_match(/ITS/, assigns(:department).name)
-    assert_equal 2, assigns( :topics ).count
-    assert_match(/Gato/, assigns(:topics)[0].name)
-    assert_match(/TRACS/, assigns(:topics)[1].name)
 
     get :manage
     assert_response :redirect

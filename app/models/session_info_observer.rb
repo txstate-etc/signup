@@ -11,8 +11,11 @@ class SessionInfoObserver < ActiveRecord::Observer
       Cashier.expire *record.occurrences.map(&:cache_key)
       Cashier.expire record.topic.cache_key
     when Topic
+      Cashier.expire record.department.cache_key
       Cashier.expire *record.sessions.map(&:cache_key)
       Cashier.expire *record.sessions.map(&:occurrences).flatten.map(&:cache_key)
+    when Department
+      Cashier.expire 'department-list'
     when Site
       Cashier.expire *record.sessions.map(&:cache_key)
       Cashier.expire *record.sessions.map(&:topic).uniq.map(&:cache_key)
