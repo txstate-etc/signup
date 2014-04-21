@@ -75,4 +75,41 @@ module TopicsHelper
 
     sessions
   end
+
+  def grouped_by_department(topics)
+    groups = Hash.new { |h,k| h[k] = Array.new }
+    topics.each do |topic|
+      groups[topic.department] << topic 
+    end
+    
+    groups.keys.sort.each do |department| 
+      yield department, groups[department].sort_by {|a| a.name.downcase }
+    end if block_given?
+
+    groups
+  end
+
+  def grouped_by_site(topics)
+    sessions = Hash.new { |h,k| h[k] = Hash.new }
+    topics.each do |topic|
+      topic.upcoming_sessions.each do |session| 
+        sessions[session.site][topic] = session if session.site && sessions[session.site][topic] == nil
+      end
+    end
+
+    sessions.keys.sort.each do |site|
+      yield site, sessions[site]
+    end if block_given?
+
+    sessions
+  end
+
+  def in_month(month)
+    occurrences = Hash.new { |h,k| h[k] = Array.new }
+    Occurrence.in_month(month).each do |occurrence|
+      occurrences[occurrence.time.to_date] << occurrence
+    end
+
+    occurrences
+  end
 end

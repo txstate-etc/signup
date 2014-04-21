@@ -13,12 +13,12 @@ class OccurrenceTest < ActiveSupport::TestCase
   end
   
   test "Occurrence without time is not valid" do
-    test_occurrence = Occurrence.new
+    test_occurrence = Occurrence.new(:session => sessions( :gato ))
     assert !test_occurrence.save
   end
 
   test "Occurrence with time is valid" do
-    test_occurrence = Occurrence.new(:time => DateTime.parse('2025-04-29T12:00:00'))    
+    test_occurrence = Occurrence.new(:time => DateTime.parse('2025-04-29T12:00:00'), :session => sessions( :gato ))    
     assert test_occurrence.save
   end
 

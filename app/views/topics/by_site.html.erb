@@ -1,21 +1,26 @@
-<% if @sessions.count == 0 %>
-  <div class="empty-list">
-    <p>Sorry, there are no upcoming sessions at this time. Please check again later!</p>
-  </div>
-<% else %>
-  <% @sessions.keys.sort.each do |site| %>
-    <div class="content-section">
-      <h2><%= site.name %></h2>
-      <ul class="topic-list">
-        <% @sessions[site].keys.sort_by {|a| a.name.downcase }.each do |topic| %>
-          <li>
-            <%= link_to topic.name, topic %>
-            <div class="session-info">
-              <span class="session-link"><%= link_to_session @sessions[site][topic] %></span>
-            </div>
-          </li>
-        <% end %>
-      </ul>
+<% cache({:action => :by_site, :action_suffix => "#{date_slug}"}, :tag => 'session-info')  do %>
+  <% @topics = Topic.upcoming %>
+  <% if @topics.count == 0 %>
+    <div class="empty-list">
+      <p>Sorry, there are no upcoming sessions at this time. Please check again later!</p>
     </div>
+  <% else %>
+    <% grouped_by_site(@topics) do |site, sessions| %>
+      <div class="content-section">
+        <h2><%= site.name %></h2>
+        <ul class="topic-list">
+          <% sessions.keys.sort_by {|a| a.name.downcase }.each do |topic| %>
+            <% cache(["topics/by_site", topic], :tag => topic.cache_key) do %>
+              <li>
+                <%= link_to topic.name, topic %>
+                <div class="session-info">
+                  <span class="session-link"><%= link_to_session sessions[topic] %></span>
+                </div>
+              </li>
+            <% end %>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
   <% end %>
 <% end %>

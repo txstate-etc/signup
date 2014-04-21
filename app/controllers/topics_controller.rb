@@ -4,33 +4,17 @@ class TopicsController < ApplicationController
   before_filter :authenticate, :except => [ :download, :show, :index, :alpha, :by_department, :by_site, :upcoming, :grid ]
   
   def alpha
-    @topics = Topic.upcoming
     @page_title = t(:'topics.index.title')
-    
     render :layout => 'topic_collection'
   end
 
   def by_department
     @page_title = t(:'topics.index.title')
-    
-    @topics = Hash.new { |h,k| h[k] = Array.new }
-    Topic.upcoming.each do |topic|
-      @topics[topic.department] << topic 
-    end
-
     render :layout => 'topic_collection'
   end
 
   def by_site
     @page_title = t(:'topics.index.title')
-    
-    @sessions = Hash.new { |h,k| h[k] = Hash.new }
-    Topic.upcoming.each do |topic|
-      topic.upcoming_sessions.each do |session| 
-        @sessions[session.site][topic] = session if session.site && @sessions[session.site][topic] == nil
-      end
-    end
-
     render :layout => 'topic_collection'
   end
 
@@ -45,15 +29,8 @@ class TopicsController < ApplicationController
   end
 
   def grid
-    @page_title = t(:'topics.index.title')
-    
+    @page_title = t(:'topics.index.title')    
     @cur_month = begin Date.new(params[:year].to_i, params[:month].to_i) rescue Date.today end
-
-    @occurrences = Hash.new { |h,k| h[k] = Array.new }
-    Occurrence.in_month(@cur_month).each do |occurrence|
-      @occurrences[occurrence.time.to_date] << occurrence
-    end
-          
     render :layout => 'topic_collection'
   end
 
