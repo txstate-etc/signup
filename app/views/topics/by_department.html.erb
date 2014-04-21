@@ -10,7 +10,7 @@
         <h2><%= department.name %></h2>
         <ul class="topic-list">
           <% topics.each do |topic| %>
-            <% cache(["topics/by_department", topic], :tag => topic.cache_key) do %>
+            <% cache(["topics/by_department", "#{date_slug}", topic], :tag => topic.cache_key) do %>
               <li>
                 <%= link_to topic.name, topic %>
                 <% if topic.upcoming_sessions.present? %>       
