@@ -121,7 +121,10 @@ class TopicsController < ApplicationController
       format.html
       format.atom
       if authorized? @topic
-        format.csv { send_csv @topic.to_csv, @topic.to_param }
+        data = cache ['topics/csv', @topic], :tag => @topic.cache_key do 
+          @topic.to_csv
+        end
+        format.csv { send_csv data, @topic.to_param }
       end
     end
   end
@@ -218,6 +221,7 @@ class TopicsController < ApplicationController
     topic = Topic.find( params[ :id ] )
     calendar = RiCal.Calendar
     calendar.add_x_property 'X-WR-CALNAME', topic.name
+    #FIXME: cache. 
     topic.sessions.each do |session|
       session.to_event.each { |event| calendar.add_subcomponent( event ) } if !session.cancelled
     end

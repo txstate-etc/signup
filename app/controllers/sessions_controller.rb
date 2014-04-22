@@ -88,6 +88,7 @@ class SessionsController < ApplicationController
   def download
     calendar = RiCal.Calendar
     calendar.add_x_property 'X-WR-CALNAME', 'All Training Sessions'
+    #FIXME: cache. should we only return upcoming sessions?
     Session.find_all_by_cancelled( false ).each do |session|
       session.to_event.each { |event| calendar.add_subcomponent( event ) }
     end

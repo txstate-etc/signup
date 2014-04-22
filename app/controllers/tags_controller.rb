@@ -19,14 +19,16 @@ class TagsController < ApplicationController
       return
     end
 
-    @topics = Topic.upcoming_tagged_with(@tag)
-    @all_topics = Topic.tagged_with(@tag).active
     @page_title = "Topics Tagged With '" + @tag.name + "'"
     respond_to do |format|
       format.html
       format.atom
       if authorized? @tag
-        format.csv { send_csv Topic.to_csv(@all_topics), @tag.name }
+        data = cache ['tags/csv', @tag], :tag => 'session-info' do 
+          topics = Topic.tagged_with(@tag).active
+          Topic.to_csv(topics)
+        end
+        format.csv { send_csv data, @tag.name }
       end
     end
   end
