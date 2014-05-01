@@ -132,7 +132,6 @@ class TopicsController < ApplicationController
     @topic = Topic.new
     if authorized? @topic
       @page_title = "Create New Topic"
-      render :layout => 'topic_form'
     else
       redirect_to topics_path
     end
@@ -148,7 +147,6 @@ class TopicsController < ApplicationController
 
     if authorized? @topic
       @page_title = "Update Topic Details"
-      render :layout => 'topic_form'
     else
       redirect_to @topic
     end
