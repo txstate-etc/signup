@@ -95,12 +95,15 @@ Event.observe(document, 'dom:loaded', function () {
     // group by department, group by date, month at a glance
     if (['/topics$', '/topics/alpha', '/topics/grid', '/topics/by-site', '/topics/by-department'].any(function(s) { return cur_url.match(s); })) {
       $('topic-list-link').addClassName('selected');
-    } //else {
-      $$('#topic-list-link', 'div#topic-list-nav a', 'div.navigation a', 'div.admin-tools a').each(function(link) {
-        if (link.href == cur_url) {
-          link.addClassName('selected');
-        }
-      });
+    }    
+    $$('#topic-list-link', 'div#topic-list-nav a', 'div.navigation a', 'div.admin-tools a').each(function(link) {
+      if (link.href == cur_url) {
+        link.addClassName('selected');
+      }
+    });
+    if (cur_url.match('/topics/grid')) {
+      $$('a[href=/topics/grid]')[0].addClassName('selected');
+    }
   }  
 });
 
