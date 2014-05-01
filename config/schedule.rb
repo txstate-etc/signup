@@ -67,3 +67,12 @@ every 1.hour do
   rake "cron:delayed_job:restart"
 end
 
+# Cleanup and Prewarm the File-based cache store nightly at 1am.
+# Deletes any datestamped directories older than today.
+# Deletes all other items that haven't been accessed in 30 days.
+# Warms the cache for today's entries.
+every :day, :at => '1:05 am' do
+  rake "cache:prune_dates"
+  rake "cache:cleanup[30]"
+  rake "cache:warm"
+end

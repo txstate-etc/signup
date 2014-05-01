@@ -30,7 +30,7 @@ class TopicsController < ApplicationController
 
   def grid
     @page_title = t(:'topics.index.title')    
-    @cur_month = begin Date.new(params[:year].to_i, params[:month].to_i) rescue Date.today end
+    @cur_month = begin Date.new(params[:year].to_i, params[:month].to_i) rescue Date.today.beginning_of_month end
     render :layout => 'topic_collection'
   end
 
@@ -121,10 +121,9 @@ class TopicsController < ApplicationController
       format.html
       format.atom
       if authorized? @topic
-        data = cache ['topics/csv', @topic], :tag => @topic.cache_key do 
-          @topic.to_csv
+        format.csv do
+          send_csv @topic.to_csv, @topic.to_param 
         end
-        format.csv { send_csv data, @topic.to_param }
       end
     end
   end
@@ -133,6 +132,7 @@ class TopicsController < ApplicationController
     @topic = Topic.new
     if authorized? @topic
       @page_title = "Create New Topic"
+      render :layout => 'topic_form'
     else
       redirect_to topics_path
     end
@@ -148,6 +148,7 @@ class TopicsController < ApplicationController
 
     if authorized? @topic
       @page_title = "Update Topic Details"
+      render :layout => 'topic_form'
     else
       redirect_to @topic
     end

@@ -1,4 +1,4 @@
-<% cache({:action => :index, :action_suffix => "#{date_slug}"}, :tag => 'session-info')  do %>
+<% cache("#{date_slug}/topics/by-date", :tag => 'session-info')  do %>
   <% @topics = Topic.upcoming %>
   <% if @topics.count == 0 %>
     <div class="empty-list">

@@ -302,19 +302,23 @@ class Session < ActiveRecord::Base
   def to_csv
     FasterCSV.generate do |csv|
       csv << CSV_HEADER
-      csv_rows(csv)
+      csv_rows.each { |row| csv << row }
     end
   end
 
-  def csv_rows(csv)
-    reservations_by_last_name.each do |reservation|
-      attended = ""
-      if reservation.attended == Reservation::ATTENDANCE_MISSED
-        attended = "MISSED"
-      elsif reservation.attended == Reservation::ATTENDANCE_ATTENDED
-        attended = "ATTENDED"
+  def csv_rows
+    key = "csv_rows/#{cache_key}"
+    Rails.cache.fetch(key) do
+      Cashier.store_fragment(key, cache_key)
+      reservations_by_last_name.map do |reservation|
+        attended = ""
+        if reservation.attended == Reservation::ATTENDANCE_MISSED
+          attended = "MISSED"
+        elsif reservation.attended == Reservation::ATTENDANCE_ATTENDED
+          attended = "ATTENDED"
+        end
+        [ self.topic.name, self.id, self.time.strftime('%m/%d/%Y'), self.time.strftime('%I:%M %p'), self.cancelled, reservation.user.name, reservation.user.login, reservation.user.email, reservation.user.title, reservation.user.department, reservation.confirmed?, attended ]
       end
-      csv << [ self.topic.name, self.id, self.time.strftime('%m/%d/%Y'), self.time.strftime('%I:%M %p'), self.cancelled, reservation.user.name, reservation.user.login, reservation.user.email, reservation.user.title, reservation.user.department, reservation.confirmed?, attended ]
     end
   end
   

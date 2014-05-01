@@ -70,7 +70,7 @@ class ApplicationController < ActionController::Base
   end
 
   def date_slug(date=nil)
-    (date || Date.today).to_s.parameterize
+    (date || Date.today).strftime('%Y-%m-%d')
   end
 
   private

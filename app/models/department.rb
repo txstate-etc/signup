@@ -39,13 +39,15 @@ class Department < ActiveRecord::Base
   def to_csv
     FasterCSV.generate do |csv|
       csv << Session::CSV_HEADER
-      csv_rows(csv)
+      csv_rows.each { |row| csv << row }
     end
   end
 
-  def csv_rows(csv)
-    topics.each do |topic|
-      topic.csv_rows(csv)
+  def csv_rows
+    key = "csv_rows/#{cache_key}"
+    Rails.cache.fetch(key) do
+      Cashier.store_fragment(key, cache_key)
+      topics.map { |topic| topic.csv_rows }.flatten(1)
     end
   end
 

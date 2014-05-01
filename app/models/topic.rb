@@ -88,21 +88,27 @@ class Topic < ActiveRecord::Base
     FasterCSV.generate do |csv|
       csv << Session::CSV_HEADER
       topics.each do |topic|
-        topic.csv_rows(csv)
+        topic.csv_rows.each { |row| csv << row }
       end
     end
   end
 
   def to_csv
-    FasterCSV.generate do |csv|
-      csv << Session::CSV_HEADER
-      csv_rows(csv)
+    key = "to_csv/#{cache_key}"
+    Rails.cache.fetch(key) do
+      Cashier.store_fragment(key, cache_key)
+      FasterCSV.generate do |csv|
+        csv << Session::CSV_HEADER
+        csv_rows.each { |row| csv << row }
+      end
     end
   end
   
-  def csv_rows(csv)
-    sessions.each do |session|
-      session.csv_rows(csv)
+  def csv_rows
+    key = "csv_rows/#{cache_key}"
+    Rails.cache.fetch(key) do
+      Cashier.store_fragment(key, cache_key)
+      sessions.map { |session| session.csv_rows }.flatten(1)
     end
   end    
 

@@ -28,7 +28,9 @@ class SessionInfoObserver < ActiveRecord::Observer
       Cashier.expire record.session.topic.department.cache_key
       Cashier.expire *record.session.occurrences.map(&:cache_key)
     end
-        
+     
+  rescue Exception => e
+    Rails.logger.error "Failed to expire tags: #{e}"   
   end
 
 end

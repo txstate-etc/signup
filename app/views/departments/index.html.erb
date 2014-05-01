@@ -1,4 +1,4 @@
-<% cache({ :action => :index }, :tag => 'department-list')  do %>
+<% cache("departments/index", :tag => 'department-list')  do %>
   <ul id="department-list">
     <% Department.active.each do |department| %>
       <li>

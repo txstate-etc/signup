@@ -24,11 +24,15 @@ class TagsController < ApplicationController
       format.html
       format.atom
       if authorized? @tag
-        data = cache ['tags/csv', @tag], :tag => 'session-info' do 
-          topics = Topic.tagged_with(@tag).active
-          Topic.to_csv(topics)
+        format.csv do
+          key = fragment_cache_key(['tags/csv', @tag])
+          data = Rails.cache.fetch(key) do 
+            Cashier.store_fragment(key, 'session-info')
+            topics = Topic.tagged_with(@tag).active
+            Topic.to_csv(topics)
+          end
+          send_csv data, @tag.name 
         end
-        format.csv { send_csv data, @tag.name }
       end
     end
   end
