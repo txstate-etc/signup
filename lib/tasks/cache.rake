@@ -19,6 +19,12 @@ namespace :cache do
       puts get(action).status
     end
 
+    # get the ics file for all upcoming sessions
+    @controller = SessionsController.new
+    print "Warming cache for sessions/download: "
+    puts get(:download).status
+    
+
     # do a year's worth of grids
     date = 6.months.ago.beginning_of_month.to_date
     12.times do 
@@ -37,6 +43,8 @@ namespace :cache do
       puts get(:show, :id => t.id, :format => 'csv').status      
       print "Warming cache for topics/#{t.to_param}.atom: "
       puts get(:show, :id => t.id, :format => 'atom').status      
+      print "Warming cache for topics/#{t.to_param}.ics: "
+      puts get(:download, :id => t.id).status      
     end
 
     # get the departments
@@ -64,7 +72,6 @@ namespace :cache do
       puts get(:show, :id => t.name, :format => 'atom').status      
     end
 
-    # FIXME: ics 
     # FIXME: would be nice to cache the manage* pages with an unauthorized user
 
   end

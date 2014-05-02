@@ -86,13 +86,17 @@ class SessionsController < ApplicationController
   end
   
   def download
-    calendar = RiCal.Calendar
-    calendar.add_x_property 'X-WR-CALNAME', 'All Training Sessions'
-    #FIXME: cache. should we only return upcoming sessions?
-    Session.find_all_by_cancelled( false ).each do |session|
-      session.to_event.each { |event| calendar.add_subcomponent( event ) }
+    key = fragment_cache_key("#{date_slug}/sessions/download")
+    data = Rails.cache.fetch(key) do 
+      Cashier.store_fragment(key, 'session-info')
+      calendar = RiCal.Calendar
+      calendar.add_x_property 'X-WR-CALNAME', 'All Upcoming Sessions'
+      Session.upcoming.each do |session|
+        session.to_event.each { |event| calendar.add_subcomponent( event ) }
+      end
+      calendar.export
     end
-    send_data(calendar.export, :type => 'text/calendar')
+    send_data(data, :type => 'text/calendar')
   end
 
   def attendance

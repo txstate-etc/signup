@@ -72,6 +72,10 @@ class Session < ActiveRecord::Base
     !in_past?
   end
 
+  def self.upcoming 
+    @upcoming ||= Session.find( :all, :conditions => ['occurrences.time >= ? AND cancelled = 0', DateTime.now ], :order => "occurrences.time", :include => :occurrences )
+  end
+
   ##
   # Used by many-to-many associations to properly load the correct 
   # sessions in the correct order
@@ -276,27 +280,30 @@ class Session < ActiveRecord::Base
   
   def to_cal
     calendar = RiCal.Calendar
-    events = self.to_event
-    events.each { |event| calendar.add_subcomponent( event ) }
+    self.to_event.each { |event| calendar.add_subcomponent( event ) }
     return calendar.export
   end
   
   def to_event
-    description = topic.description + "\n\nInstructor(s): " << instructors.collect{|i| i.name}.join(", ")
-    if topic.tag_list.present?
-      description << "\n\nTags: " << topic.sorted_tag_list.join(", ")
+    key = "to_event/#{cache_key}"
+    Rails.cache.fetch(key) do
+      Cashier.store_fragment(key, cache_key)
+      description = topic.description + "\n\nInstructor(s): " << instructors.collect{|i| i.name}.join(", ")
+      if topic.tag_list.present?
+        description << "\n\nTags: " << topic.sorted_tag_list.join(", ")
+      end
+
+      occurrences.map do |o|
+        event = RiCal.Event 
+        event.summary = topic.name
+        event.description = description
+        event.dtstart = o.time
+        event.dtend = o.time + topic.minutes * 60
+        event.url = topic.url
+        event.location = loc_with_site
+        event
+      end
     end
-    events = occurrences.map do |o|
-      event = RiCal.Event 
-      event.summary = topic.name
-      event.description = description
-      event.dtstart = o.time
-      event.dtend = o.time + topic.minutes * 60
-      event.url = topic.url
-      event.location = loc_with_site
-      event
-    end
-    return events
   end
  
   def to_csv

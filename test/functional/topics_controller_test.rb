@@ -353,7 +353,7 @@ class TopicsControllerTest < ActionController::TestCase
   test "Grid view shows the correct month" do
     get :grid
     assert_response :success
-    assert_equal Date.today, assigns(:cur_month)
+    assert_equal Date.today.beginning_of_month, assigns(:cur_month)
     
     get :grid, :month => '03', :year => '2010'
     assert_response :success

@@ -218,13 +218,17 @@ class TopicsController < ApplicationController
     
   def download
     topic = Topic.find( params[ :id ] )
-    calendar = RiCal.Calendar
-    calendar.add_x_property 'X-WR-CALNAME', topic.name
-    #FIXME: cache. 
-    topic.sessions.each do |session|
-      session.to_event.each { |event| calendar.add_subcomponent( event ) } if !session.cancelled
+    key = fragment_cache_key(["#{date_slug}/topics/download", topic])
+    data = Rails.cache.fetch(key) do 
+      Cashier.store_fragment(key, topic.cache_key)
+      calendar = RiCal.Calendar
+      calendar.add_x_property 'X-WR-CALNAME', topic.name
+      topic.upcoming_sessions.each do |session|
+        session.to_event.each { |event| calendar.add_subcomponent( event ) }
+      end
+      calendar.export
     end
-    send_data(calendar.export, :type => 'text/calendar')
+    send_data(data, :type => 'text/calendar')
   end
 
   def survey_results
