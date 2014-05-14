@@ -1,6 +1,8 @@
 # Filters added to this controller apply to all controllers in the application.
 # Likewise, all the methods added will be available for all controllers.
 require 'cashier'
+require 'net/http'
+require 'uuidtools'
 
 class ApplicationController < ActionController::Base
   include Cashier::ControllerHelper
@@ -8,6 +10,8 @@ class ApplicationController < ActionController::Base
   before_filter :cas_setup
   helper :all # include all helpers, all the time
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
+  
+  GOOGLE_ANALYTICS_URL = URI('http://www.google-analytics.com/collect')
 
   def info_for_paper_trail
     { :ip => request.remote_ip, :user_agent => request.user_agent }
@@ -57,6 +61,28 @@ class ApplicationController < ActionController::Base
     send_data csv,
           :type => 'text/csv; charset=iso-8859-1; header=present',
           :disposition => "attachment; filename=#{filename.to_param}.csv"
+  end
+
+  def send_analytics(opts = {})
+    if defined?(GOOGLE_ANALYTICS_ACCOUNT)
+      # random, anonymous client id; lifetime for the current session
+      @client_id ||= (session[:ga_client_id] ||= UUIDTools::UUID.random_create.to_s)
+
+      # Default to 'pageview' track type. See the docs for other types/params:
+      # https://developers.google.com/analytics/devguides/collection/protocol/v1/reference
+      params = {
+        'v' => 1, # protocol version
+        'tid' => GOOGLE_ANALYTICS_ACCOUNT, # tracking/web_property id
+        'cid' => @client_id, # unique client id
+        't' => 'pageview',
+        'dh' => request.headers['HTTP_HOST'],
+        'dp' => request.headers['REQUEST_URI'],
+        'dt' => @page_title,
+        'ua' => request.headers['HTTP_USER_AGENT']
+      }
+
+      Net::HTTP.post_form(GOOGLE_ANALYTICS_URL, params.merge(opts))
+    end
   end
 
   helper_method :current_user

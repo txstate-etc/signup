@@ -64,6 +64,7 @@ GEM
     searchlogic (2.4.27)
       activerecord (>= 2.0.0)
     ttfunk (1.0.3)
+    uuidtools (2.1.4)
     whenever (0.7.3)
       activesupport (>= 2.3.4)
       chronic (~> 0.6.3)
@@ -91,4 +92,5 @@ DEPENDENCIES
   repeated_auto_complete
   ri_cal!
   searchlogic (= 2.4.27)
+  uuidtools (~> 2.1.4)
   whenever
