@@ -1,9 +1,0 @@
-<div class="department-details" class="content-section">
-	<% form_for( @department ) do |f| %>
-		<%= render :partial => "form_fields", :locals => { :f => f }%>	
-		<br/><%= submit_tag "Create Department" %>
-		<%= link_to "Cancel", manage_departments_path %>
-	<% end %>
-</div>
-
-<%= render :partial => "users/new_instructor_dialog", :locals => { :item => @department }%>
