@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: 
+  session_id: 
+  cancelled: false
+  attended: 1
+  special_accommodations: MyText
+
+two:
+  user_id: 
+  session_id: 
+  cancelled: false
+  attended: 1
+  special_accommodations: MyText

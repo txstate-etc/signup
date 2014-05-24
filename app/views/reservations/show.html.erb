@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>User:</strong>
+  <%= @reservation.user %>
+</p>
+
+<p>
+  <strong>Session:</strong>
+  <%= @reservation.session %>
+</p>
+
+<p>
+  <strong>Cancelled:</strong>
+  <%= @reservation.cancelled %>
+</p>
+
+<p>
+  <strong>Attended:</strong>
+  <%= @reservation.attended %>
+</p>
+
+<p>
+  <strong>Special accommodations:</strong>
+  <%= @reservation.special_accommodations %>
+</p>
+
+<%= link_to 'Edit', edit_reservation_path(@reservation) %> |
+<%= link_to 'Back', reservations_path %>

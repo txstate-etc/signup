@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  reservation_id: 
+  class_rating: 1
+  instructor_rating: 1
+  applicability: 
+  most_useful: MyText
+  comments: MyText
+
+two:
+  reservation_id: 
+  class_rating: 1
+  instructor_rating: 1
+  applicability: 
+  most_useful: MyText
+  comments: MyText

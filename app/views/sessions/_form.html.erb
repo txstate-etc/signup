@@ -1,0 +1,19 @@
+<%= simple_form_for(@session) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.association :topic %>
+    <%= f.input :cancelled %>
+    <%= f.input :location %>
+    <%= f.input :location_url %>
+    <%= f.association :site %>
+    <%= f.input :seats %>
+    <%= f.input :reg_start %>
+    <%= f.input :reg_end %>
+    <%= f.input :survey_sent %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

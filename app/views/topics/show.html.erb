@@ -1,0 +1,44 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @topic.name %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @topic.description %>
+</p>
+
+<p>
+  <strong>Url:</strong>
+  <%= @topic.url %>
+</p>
+
+<p>
+  <strong>Minutes:</strong>
+  <%= @topic.minutes %>
+</p>
+
+<p>
+  <strong>Inactive:</strong>
+  <%= @topic.inactive %>
+</p>
+
+<p>
+  <strong>Certificate:</strong>
+  <%= @topic.certificate %>
+</p>
+
+<p>
+  <strong>Survey type:</strong>
+  <%= @topic.survey_type %>
+</p>
+
+<p>
+  <strong>Survey url:</strong>
+  <%= @topic.survey_url %>
+</p>
+
+<%= link_to 'Edit', edit_topic_path(@topic) %> |
+<%= link_to 'Back', topics_path %>

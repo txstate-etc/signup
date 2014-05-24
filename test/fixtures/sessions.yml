@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  topic_id: 
+  cancelled: 
+  location: MyString
+  location_url: MyString
+  site_id: 
+  seats: 1
+  reg_start: 2014-05-24 14:52:34
+  reg_end: 2014-05-24 14:52:34
+  survey_sent: false
+
+two:
+  topic_id: 
+  cancelled: 
+  location: MyString
+  location_url: MyString
+  site_id: 
+  seats: 1
+  reg_start: 2014-05-24 14:52:34
+  reg_end: 2014-05-24 14:52:34
+  survey_sent: false

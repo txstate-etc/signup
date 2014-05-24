@@ -14,7 +14,7 @@ development:
   reconnect: false
   database: signup_development
   pool: 5
-  username: signup
+  username: root
   password: 
   host: localhost
 
@@ -27,7 +27,7 @@ test:
   reconnect: false
   database: signup_test
   pool: 5
-  username: signup
+  username: root
   password: 
   host: localhost
 

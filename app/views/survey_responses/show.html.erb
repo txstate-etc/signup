@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Reservation:</strong>
+  <%= @survey_response.reservation %>
+</p>
+
+<p>
+  <strong>Class rating:</strong>
+  <%= @survey_response.class_rating %>
+</p>
+
+<p>
+  <strong>Instructor rating:</strong>
+  <%= @survey_response.instructor_rating %>
+</p>
+
+<p>
+  <strong>Applicability:</strong>
+  <%= @survey_response.applicability %>
+</p>
+
+<p>
+  <strong>Most useful:</strong>
+  <%= @survey_response.most_useful %>
+</p>
+
+<p>
+  <strong>Comments:</strong>
+  <%= @survey_response.comments %>
+</p>
+
+<%= link_to 'Edit', edit_survey_response_path(@survey_response) %> |
+<%= link_to 'Back', survey_responses_path %>
