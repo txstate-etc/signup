@@ -16,14 +16,14 @@ cache(["#{date_slug}/tags/show/upcoming/atom", @tag], :tag => 'session-info') do
             summary = []
             
             topic.upcoming_sessions.first(2).each do |session|
-              summary << link_to_session(session)
+              summary << link_to(session_info(session), session_url(session, :only_path => false))
             
               # FIXME: add topic description, instructor, location, etc
               #entry.content(session_info(session))
             end
             
             more = topic.upcoming_sessions.size - 2
-            summary << link_to("#{more} more upcoming sessions", topic) if more > 0
+            summary << link_to("#{more} more upcoming sessions", topic_url(topic, :only_path => false)) if more > 0
             
             entry.summary(summary.join("<br/>\n"))
 
