@@ -68,8 +68,9 @@
   		
   		<% if @reservation %>
   		  <% if @reservation.attended == Reservation::ATTENDANCE_ATTENDED %>
-  		    <p>You attended this session. <%= survey_link(@reservation) %></p>
-          <p><%= certificate_link(@reservation) %></p>
+  		    <p>You attended this session.</p>
+          <%= certificate_link(@reservation) %>
+          <%= survey_link(@reservation) %>
   		  <% elsif @reservation.attended == Reservation::ATTENDANCE_MISSED %>
           <p>You registered for this session, but were marked absent. </p>
 				<% else %>

@@ -83,12 +83,8 @@
             <%= link_to formatted_time_range(reservation.session.time, reservation.session.topic.minutes), reservation.session, :class => 'date' %>
           </div>
 					<div class="reservation-actions">
-  					<div class="survey-link">
-  						<%= survey_link(reservation) %>
-  					</div>
-            <div class="certificate-link">
-              <%= certificate_link(reservation) %>
-            </div>
+            <%= certificate_link(reservation) %>
+  					<%= survey_link(reservation) %>
           </div>
         </div>
       </li>

@@ -944,7 +944,6 @@ ul.reservation-list li {
   border-bottom-width: 1px;
   border-bottom-style: dotted;
   border-bottom-color: #695627;
-  padding-bottom: .5em;
   margin-top: .75em;
   margin-bottom: 1em;
 }
@@ -964,15 +963,12 @@ div.reservation-group a.date {
   margin-bottom: 1em;
 }
 
-div.reservation-group a.survey-link {
-  color: #501214;
-  font-size: .9em;
-  margin-top: 1em;
+div.reservation-group .reservation-actions {
+  margin-bottom: 1em;
 }
 
-div.reservation-group .reservation-actions {
-  margin-top: -.5em;
-  font-size: .95em;
+div.reservation-group .reservation-actions a {
+  font-size: .75em;
 }
 
 .download-link, .edit-reservation-link, .delete-link, div.certificate-link, div.survey-link {
@@ -983,7 +979,6 @@ div.reservation-group .reservation-actions {
 .download-link a, .edit-reservation-link a, .delete-link a, .certificate-link a, .survey-link a {
   font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', serif;
   padding-left: 25px;
-  font-size: .85em;
 }
 
 .edit-reservation-link {
@@ -999,11 +994,11 @@ div.reservation-group .reservation-actions {
 }
 
 div.certificate-link {
-  background-image:  url(/images/rosette.png);
+  background-image:  url(/images/certificate_16x16.png);
 }
 
 div.survey-link {
-  background-image:  url(/images/comment.png);
+  background-image:  url(/images/survey_15x16.png);
 }
 
 div.admin-options {

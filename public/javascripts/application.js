@@ -107,6 +107,10 @@ Event.observe(document, 'dom:loaded', function () {
   }  
 });
 
+
+// FIXME: this doesn't work because the page changes before the request can complete.
+// FIXME: also, what if things are downloaded outside of the browser, like an email or calendar app?
+
 // Generate Google Analytics events for link clicks
 Event.observe(document, 'dom:loaded', function() {
   $$('a').each( function(item) {

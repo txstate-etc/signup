@@ -63,7 +63,7 @@ module ApplicationHelper
     link_to_function(name, h("add_fields(this, \"#{association}\", \"#{escape_javascript(fields)}\", \"set_initial_#{association.to_s.singularize}_value\")"))
   end
   
-  def survey_link(reservation)
+  def survey_link(reservation, opts = {})
     return '' if reservation.cancelled? ||
       reservation.session.not_finished? || 
       reservation.attended == Reservation::ATTENDANCE_MISSED || 
@@ -77,10 +77,16 @@ module ApplicationHelper
     elsif reservation.session.topic.survey_type == 2
       url = reservation.session.topic.survey_url
     end
-    link_to 'Take the survey!', url, :class => 'survey-link'
+
+    content_tag(
+      opts[:tag] || :div, 
+      link_to('Take the survey!', url, :class => 'survey-link'),
+      :class => 'survey-link'
+    )
+
   end
   
-  def certificate_link(reservation)
+  def certificate_link(reservation, opts = {})
     return '' if reservation.cancelled? ||
       reservation.session.not_finished? || 
       reservation.attended != Reservation::ATTENDANCE_ATTENDED || 
@@ -88,7 +94,11 @@ module ApplicationHelper
       current_user.nil? ||
       (!current_user.admin? && current_user != reservation.user)
  
-    link_to 'Download Certificate', certificate_url(reservation, :format => :pdf), :class => 'certificate-link'
+    content_tag(
+      opts[:tag] || :div,
+      link_to('Download Certificate', certificate_url(reservation, :format => :pdf), :class => 'certificate-link'),
+      :class => 'certificate-link'
+    )
  end
 
   def expandible_list(items, visible=5)
