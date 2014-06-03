@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140524203522) do
+ActiveRecord::Schema.define(version: 20140531230212) do
 
   create_table "departments", force: true do |t|
     t.string   "name",                       null: false
@@ -20,12 +20,27 @@ ActiveRecord::Schema.define(version: 20140524203522) do
     t.datetime "updated_at"
   end
 
+  create_table "documents", force: true do |t|
+    t.integer  "topic_id"
+    t.string   "item_file_name"
+    t.string   "item_content_type"
+    t.integer  "item_file_size"
+    t.datetime "item_updated_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "documents", ["topic_id"], name: "index_documents_on_topic_id", using: :btree
+
   create_table "occurrences", force: true do |t|
     t.integer  "session_id", null: false
     t.datetime "time",       null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "occurrences", ["session_id", "time"], name: "unique_occurrence_times_in_session", unique: true, using: :btree
+  add_index "occurrences", ["session_id"], name: "index_occurrences_on_session_id", using: :btree
 
   create_table "reservations", force: true do |t|
     t.integer  "user_id",                                null: false
@@ -41,17 +56,18 @@ ActiveRecord::Schema.define(version: 20140524203522) do
   add_index "reservations", ["user_id"], name: "index_reservations_on_user_id", using: :btree
 
   create_table "sessions", force: true do |t|
-    t.integer  "topic_id",                     null: false
-    t.boolean  "cancelled",    default: false, null: false
-    t.string   "location",                     null: false
+    t.integer  "topic_id",                           null: false
+    t.boolean  "cancelled",          default: false, null: false
+    t.string   "location",                           null: false
     t.string   "location_url"
     t.integer  "site_id"
     t.integer  "seats"
     t.datetime "reg_start"
     t.datetime "reg_end"
-    t.boolean  "survey_sent",  default: false
+    t.boolean  "survey_sent",        default: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "reservations_count", default: 0,     null: false
   end
 
   add_index "sessions", ["site_id"], name: "index_sessions_on_site_id", using: :btree
@@ -83,6 +99,25 @@ ActiveRecord::Schema.define(version: 20140524203522) do
   end
 
   add_index "survey_responses", ["reservation_id"], name: "index_survey_responses_on_reservation_id", using: :btree
+
+  create_table "taggings", force: true do |t|
+    t.integer  "tag_id"
+    t.integer  "taggable_id"
+    t.string   "taggable_type"
+    t.integer  "tagger_id"
+    t.string   "tagger_type"
+    t.string   "context",       limit: 128
+    t.datetime "created_at"
+  end
+
+  add_index "taggings", ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true, using: :btree
+
+  create_table "tags", force: true do |t|
+    t.string  "name"
+    t.integer "taggings_count", default: 0
+  end
+
+  add_index "tags", ["name"], name: "index_tags_on_name", unique: true, using: :btree
 
   create_table "topics", force: true do |t|
     t.string   "name",                          null: false

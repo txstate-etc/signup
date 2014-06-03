@@ -21,3 +21,21 @@
 
 en:
   hello: "Hello world"
+  site_title: " : Signup"
+  site_name: "Signup Reservation System"
+  footer_text_html: "The Signup Reservation System is a tool developed by the Texas State Education Technology Center.</br> Details regarding the system are available at the <a href='http://www.its.txstate.edu/departments/etc/signup.html'>Signup website</a>."
+  file_icon:
+    type: "%{type} file"
+  topics:
+    title: "Available Topics"
+    index:
+      title: "Available Topics"
+      by_site: "group by site"
+    edit:
+      title: "Update Topic Details"
+    new:
+      title: "Create New Topic"
+  helpers:
+    submit:
+      create: "Create %{model}"
+      update: "Make Changes"

@@ -1,2 +1,111 @@
 module TopicsHelper
+  def session_info(session, opts={})
+    print_date = !(opts[:print_date] == false) #default to true unless explicitly set to false    
+    session_info = ""
+    session_info << "#{session.topic.name} " if opts[:print_name] == true
+    session_info << "#{formatted_time_range(session.time, session.topic.minutes, print_date)} ("
+    session_info << " #{session.confirmed_count}"
+    if session.seats
+      session_info << " / #{session.seats}"
+    end 
+      session_info << " registered"
+    if session.waiting_list_count > 0 
+      session_info << ", #{session.waiting_list_count} waiting"
+    end
+    session_info << " )"
+  end
+
+  def link_to_session(session, opts={})
+    link_to session_info(session, opts), session
+  end
+  
+  def session_site(session)
+    if session.site 
+      s = '<span class="site">'
+      s << session.site.name 
+      s << '</span>'
+      raw s
+    end
+  end
+
+  def session_list(sessions)
+    list = sessions.map do |session| 
+      "#{link_to_session(session)} #{session_site(session)}"
+    end
+    
+    expandible_list list, 12
+  end
+
+  def link_to_document(d, opts = {})
+    url = opts.delete(:url) || d.item.url
+    url_proc = opts.delete(:url_proc)
+    url = url_proc.call(url) unless url_proc.nil?
+
+    text = file_icon_image_tag(d.item.original_filename, :url_proc => url_proc)
+    text << ' ' << d.friendly_name
+    link_to(text, url, opts)
+  end
+
+  def file_icon_image_tag(filename, opts={})
+    file_icon = FileIcon.new(filename)
+
+    url = opts.delete(:url) || file_icon.icon_path
+    url_proc = opts.delete(:url_proc)
+    url = url_proc.call(url) unless url_proc.nil? 
+
+    opts = { :alt => t(:'file_icon.type', :type => (file_icon.type || filename)) }.merge opts
+    image_tag(url, opts)
+  end
+
+  def grouped_by_date(topics)
+    sessions = Hash.new { |h,k| h[k] = Array.new }
+    topics.each do |topic|
+      topic.upcoming_sessions.each do |session| 
+        sessions[session.time.to_date] << session 
+      end
+    end
+    
+    sessions.keys.sort.each do |date| 
+      yield date, sessions[date].sort_by(&:time)
+    end if block_given?
+
+    sessions
+  end
+
+  def grouped_by_department(topics)
+    groups = Hash.new { |h,k| h[k] = Array.new }
+    topics.each do |topic|
+      groups[topic.department] << topic 
+    end
+    
+    groups.keys.sort.each do |department| 
+      yield department, groups[department].sort_by {|a| a.name.downcase }
+    end if block_given?
+
+    groups
+  end
+
+  def grouped_by_site(topics)
+    sessions = Hash.new { |h,k| h[k] = Hash.new }
+    topics.each do |topic|
+      topic.upcoming_sessions.each do |session| 
+        sessions[session.site][topic] = session if session.site && sessions[session.site][topic] == nil
+      end
+    end
+
+    sessions.keys.sort.each do |site|
+      yield site, sessions[site]
+    end if block_given?
+
+    sessions
+  end
+
+  def in_month(month)
+    occurrences = Hash.new { |h,k| h[k] = Array.new }
+    Occurrence.in_month(month).each do |occurrence|
+      occurrences[occurrence.time.to_date] << occurrence
+    end
+
+    occurrences
+  end
 end

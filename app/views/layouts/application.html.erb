@@ -1,14 +1,73 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Signup</title>
-  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <title>
+    <%= page_title %>
+    <%=t :site_title, default: '' %>
+  </title>
+  <link href="<%= asset_path 'favicon.ico' %>" type="image/x-icon" rel="shortcut icon">
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= yield(:head) %>
   <%= csrf_meta_tags %>
+  <meta name="viewport" content="width=device-width,user-scalable=yes">
+  <%#FIXME= render :partial => 'shared/analytics' %>
 </head>
 <body>
+  <div class="topbanner">
+    <div class="topbanner-shadow"></div>
+    <div class="topbanner-content">
+      <a class="topbanner-sitename" href="/"><%=t :site_name %></a>
+    </div>
+  </div>
 
-<%= yield %>
+  <div id="container">
+    <div class="left-column">
+      <div class="navigation">
+        <p>
+          <% if current_user -%>
+            <%=h current_user.name %> <span class="logout-link">(<%= link_to("log out", '/logout') %>)</span>
+          <% elsif false %>
+          <%# elsif cas_user -%>
+            <%#=h cas_user %> <span class="logout-link">(<%= link_to("log out", '/logout') %>)</span>
+          <% end -%>
+        </p>
+        <p><%= link_to "Your Reservations", reservations_path %></p>
+        <p><%= link_to "Available Topics", topics_path, :id => 'topic-list-link' %></p>
+        <p><%= link_to "Department List", departments_path %></p>
+      </div>
+      <div class="sidebar">
+        <%= yield :sidebar %>
+      </div>
+      <% if authorized? %>
+        <div class="admin-tools">
+          <h1>ADMIN TOOLS</h1>
+          <%= yield :admin_tools %>
+          <p><%= link_to "Manage Topics", manage_topics_path %></p>
+          <% if current_user.admin? %>
+            <p><%= link_to "Manage Departments", manage_departments_path %></p>
+            <p><%= link_to "Manage Users", users_path %></p>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+    <div id="right-column">
+      <% unless flash[ :notice ].blank? %>
+        <div id="notification"><%=h flash[ :notice ] %></div>
+      <% end %>
+      <% unless flash[ :error ].blank? %>
+        <div id="error"><%=h flash[ :error ] %></div>
+      <% end %>
+      <div id="contents">
+        <h1><%= image_tag(@title_image, :class=>"title-image") if @title_image %>
+        <%= page_title %></h1>
+        <%= content_for?(:content) ? yield(:content) : yield %>
+      </div>
+    </div>
+      <div id="footer">
+        <%=t(:'footer_text_html') %>
+      </div>
+  </div>
 
 </body>
 </html>

@@ -1,39 +1,27 @@
-<h1>Listing topics</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Description</th>
-      <th>Url</th>
-      <th>Minutes</th>
-      <th>Inactive</th>
-      <th>Certificate</th>
-      <th>Survey type</th>
-      <th>Survey url</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @topics.each do |topic| %>
-      <tr>
-        <td><%= topic.name %></td>
-        <td><%= topic.description %></td>
-        <td><%= topic.url %></td>
-        <td><%= topic.minutes %></td>
-        <td><%= topic.inactive %></td>
-        <td><%= topic.certificate %></td>
-        <td><%= topic.survey_type %></td>
-        <td><%= topic.survey_url %></td>
-        <td><%= link_to 'Show', topic %></td>
-        <td><%= link_to 'Edit', edit_topic_path(topic) %></td>
-        <td><%= link_to 'Destroy', topic, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
+<% cache("#{date_slug}/topics/by-date", :tag => 'session-info')  do %>
+  <% @topics = Topic.upcoming %>
+  <% if @topics.count == 0 %>
+    <div class="empty-list">
+      <p>Sorry, there are no upcoming sessions at this time. Please check again later!</p>
+    </div>
+  <% else %>
+    <% grouped_by_date(@topics) do |date, sessions| %>
+      <div class="content-section">
+        <h2><%= date.strftime('%A, %B %e, %Y') %></h2>
+        <ul class="topic-list">
+          <% sessions.each do |session| %>
+            <% cache(["topics/by-date", session], :tag => session.cache_key) do %>
+              <li>
+                <%= link_to session.topic.name, session.topic %>
+                <div class="session-info">
+                  <span class="session-link"><%= link_to_session session, :print_date => false %></span>
+                  <%= session_site(session) %>
+                </div>
+              </li>
+            <% end %>
+          <% end %>
+        </ul>
+      </div>
     <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Topic', new_topic_path %>
+  <% end %>
+<% end %>

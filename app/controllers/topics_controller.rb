@@ -1,24 +1,30 @@
 class TopicsController < ApplicationController
-  before_action :set_topic, only: [:show, :edit, :update, :destroy]
+  before_action :set_topic, only: [:show, :edit, :delete, :update, :destroy]
+  layout 'topic_collection', only: [:index, :by_department, :by_site, :alpha, :grid]
 
-  # GET /topics
-  # GET /topics.json
-  def index
-    @topics = Topic.all
+  def grid
+    @cur_month = begin 
+      Date.new(params[:year].to_i, params[:month].to_i) 
+    rescue 
+      Date.today.beginning_of_month 
+    end
   end
 
   # GET /topics/1
   # GET /topics/1.json
   def show
+    @page_title = @topic.name
+  end
+
+  # This doesn't actually do the delete action (destroy does that)
+  # It just display a confirmation/warning page here with a link to the destroy action
+  def delete
+    @page_title = @topic.name
   end
 
   # GET /topics/new
   def new
     @topic = Topic.new
-  end
-
-  # GET /topics/1/edit
-  def edit
   end
 
   # POST /topics
@@ -54,7 +60,7 @@ class TopicsController < ApplicationController
   # DELETE /topics/1
   # DELETE /topics/1.json
   def destroy
-    @topic.destroy
+    @topic.deactivate!
     respond_to do |format|
       format.html { redirect_to topics_url, notice: 'Topic was successfully destroyed.' }
       format.json { head :no_content }
@@ -64,11 +70,23 @@ class TopicsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_topic
+      #FIXME: make sure to create a 404 page
       @topic = Topic.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def topic_params
-      params.require(:topic).permit(:name, :description, :url, :minutes, :inactive, :certificate, :survey_type, :survey_url)
+      params.require(:topic).permit(
+        :name, 
+        :description,
+        :tag_list,
+        :department_id,
+        :minutes, 
+        :url, 
+        :survey_type, 
+        :survey_url,
+        :certificate,
+        documents_attributes: [:id, :item, :_destroy]
+      )
     end
 end

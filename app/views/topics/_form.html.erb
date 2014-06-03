@@ -2,17 +2,36 @@
   <%= f.error_notification %>
 
   <div class="form-inputs">
-    <%= f.input :name %>
-    <%= f.input :description %>
-    <%= f.input :url %>
-    <%= f.input :minutes %>
-    <%= f.input :inactive %>
-    <%= f.input :certificate %>
-    <%= f.input :survey_type %>
-    <%= f.input :survey_url %>
+    <%= f.input :name, label: 'Topic Name:' %>
+    <%= f.input :description, label: 'Description of Topic:' %>
+    <%= f.input :tag_list, label: 'Tags:' %>
+    <%= f.association :department, label: 'Department:' %>
+    <%# FIXME: filter department per user %>
+    <%= f.input :minutes, label: 'Class time in Minutes:' %>
+    <%= f.input :url, label: 'URL with More Information on Class:' %>
+    <%= f.input :survey_type, label: 'Post-Class Survey:',
+      as: :radio_buttons, 
+      collection: [
+        ['None', Topic::SURVEY_NONE], 
+        ['Automatic', Topic::SURVEY_INTERNAL], 
+        ['External', Topic::SURVEY_EXTERNAL]
+      ] %>
+    <%= f.input :survey_url, label: 'External Survey URL:' %>
+    <%= f.input :certificate, label: 'Certificate of Completion:',
+      as: :radio_buttons %>
+    <div class="documents">
+      <%= f.label 'Workshop Materials:' %>
+      <%= f.simple_fields_for :documents do |document| %>
+        <%= render 'document_fields', :f => document %>
+      <% end %>
+      <div class='add-fields'>
+        <%= link_to_add_association 'upload new material', f, :documents %>
+      </div>
+    </div>
   </div>
 
   <div class="form-actions">
     <%= f.button :submit %>
+    <%= link_to 'Cancel', (@topic.new_record? ? topics_path : @topic) %>
   </div>
 <% end %>

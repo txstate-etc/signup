@@ -1,0 +1,60 @@
+@import 'variables.scss';
+
+.topbanner {
+  position: relative;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 82px;
+  background: image-url('banner.jpg') repeat-x;
+  z-index: 92;
+}
+
+.topbanner-shadow {
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
+  height: 16px;
+  width: 100%;
+  overflow: hidden;
+  background: image-url('banner-shadow.png') repeat-x;
+}
+
+.topbanner-content {
+  position: relative;
+  margin: 0px 60px;
+  width: 962px;
+  padding-left: 3px;
+  font-family: $sans-serif;
+}
+
+.topbanner-content a {
+  color: $primary-color;
+  text-decoration: none;
+  text-shadow: 1px 1px 1px #ddd;
+}
+
+.topbanner-homelink {
+  display: block;
+  width: 166px;
+  height: 66px;
+}
+
+.topbanner-sitename {
+  display: block;
+  position: absolute;
+  left: 210px;
+  top: 25px;
+  font-weight: bold;
+  font-size: 1.7em;
+  padding-bottom: 0.25em;
+}
+
+.topbanner-deptlink {
+  display: block;
+  position: absolute;
+  left: 700px;
+  top: 28px;
+  font-weight: bold;
+  font-size: 0.875em;
+}

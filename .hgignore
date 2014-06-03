@@ -6,6 +6,6 @@ log/
 tmproj
 password
 tmp/
-public/system/items
+public/system/documents/items
 config/initializers/auth\.rb
 config/secrets\.yml

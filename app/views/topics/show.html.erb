@@ -1,44 +1,52 @@
-<p id="notice"><%= notice %></p>
+<% content_for :head do %>
+  <% if @topic.inactive? %>
+    <meta name="robots" content="noindex">
+  <% end %>
+<% end %>
 
-<p>
-  <strong>Name:</strong>
-  <%= @topic.name %>
-</p>
+<div id="session-details" class="session-list content-section">
+  <h2>Upcoming Sessions
+    <%= link_to( 
+        "Subscribe to the XML feed for this topic",
+         topic_path(@topic, :format => :atom),
+         :class => 'feed-link') %>
+  </h2>
+  <% if @topic.upcoming_sessions.present? %>
+    <%= session_list(@topic.upcoming_sessions) %>
+  <% else %>
+    There are no sessions scheduled at this time.
+  <% end %>
+</div>
 
-<p>
-  <strong>Description:</strong>
-  <%= @topic.description %>
-</p>
+<div id="topic-details" class="content-section">
+  <h2>Topic Details</h2>
+  <dl>
+    <dt>Description:</dt>
+    <dd class="topic-description"><%= auto_link( simple_format( h( @topic.description ) ) ) %></dd>
+    <% if !@topic.tags.blank? %>
+      <dt>Tags:</dt>
+      <dd><%= @topic.sorted_tags.map { |t| link_to t, tag_path(t) }.join(', ').html_safe %></dd>
+    <% end %>
+    <dt>Duration:</dt>
+    <dd><%=h @topic.minutes %> minutes</dd>
+    <dt>Department:</dt>
+    <dd><%=link_to @topic.department.name, @topic.department if !@topic.department.blank? %></dd>
+    <% if !@topic.url.blank? %>
+      <dt>Additional Info:</dt>
+      <dd><%= link_to @topic.url, @topic.url %></dd>
+    <% end %>
+    <% if !@topic.documents.blank? %>
+      <dt>Workshop Materials:</dt>
+      <% @topic.documents.each do |document| %>
+        <dd><%= link_to_document(document) %></dd>
+      <% end %>
+    <% end %>
+  </dl>
+</div>
 
-<p>
-  <strong>Url:</strong>
-  <%= @topic.url %>
-</p>
-
-<p>
-  <strong>Minutes:</strong>
-  <%= @topic.minutes %>
-</p>
-
-<p>
-  <strong>Inactive:</strong>
-  <%= @topic.inactive %>
-</p>
-
-<p>
-  <strong>Certificate:</strong>
-  <%= @topic.certificate %>
-</p>
-
-<p>
-  <strong>Survey type:</strong>
-  <%= @topic.survey_type %>
-</p>
-
-<p>
-  <strong>Survey url:</strong>
-  <%= @topic.survey_url %>
-</p>
-
-<%= link_to 'Edit', edit_topic_path(@topic) %> |
-<%= link_to 'Back', topics_path %>
+<div id="past-session-details" class="session-list content-section">
+<% if authorized?(@topic) && @topic.past_sessions.present? %>
+  <h2>Past Sessions</h2>
+  <%= session_list(@topic.past_sessions.reverse) %>
+<% end %>
+</div>

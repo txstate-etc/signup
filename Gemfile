@@ -12,12 +12,34 @@ gem 'spring',        group: :development
 gem 'devise'
 gem 'mysql2'
 gem 'simple_form'
+
+# Make $(document).ready work with turbolinks
+gem 'jquery-turbolinks'
+
+# add cache of association counts
+# more flexibly than the builtin version
+gem 'counter_culture', '~> 0.1.18'
+
+# convert urls in descriptions into links
+# Won't need this after implementing wysiwyg editor.
+gem 'rails_autolink'
+
+# Tags!
+gem 'acts-as-taggable-on'
+
+# Attachments/Documents
+gem 'paperclip', '~> 4.1'
+
+# Nested form helpers (for attachments, instructors, etc)
+gem 'cocoon'
+
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller', :platforms=>[:mri_21]
   gem 'quiet_assets'
   gem 'rails_layout'
 end
+
 group :development, :test do
   gem 'thin'
 end

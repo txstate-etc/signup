@@ -1,0 +1,19 @@
+<% content_for :sidebar do %>
+  <div class="download-link download-calendar">
+    <%= link_to "[add all topics to calendar]", :protocol => "webcal", :controller => 'sessions', :host => request.host, :port => request.port, :action => 'download' %>
+  </div>
+<% end %>
+   
+<% content_for :content do %>
+  <div id="topic-list-nav">
+    <%= link_to 'group by date', '/topics' %>
+    <%= link_to 'group by department', '/topics/by-department' %>
+    <%= link_to t(:'topics.index.by_site'), '/topics/by-site' %>
+    <%= link_to 'alphabetical list', '/topics/alpha' %>
+    <%= link_to 'month at a glance', '/topics/grid' %>
+  </div>
+
+  <%= yield %>
+<% end %>
+
+<%= render :template => 'layouts/application' %>

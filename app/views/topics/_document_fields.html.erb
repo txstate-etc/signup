@@ -1,0 +1,8 @@
+<div class='nested-fields'>
+  <% if !f.object.new_record? %>
+    <%= link_to_document f.object, :class => 'document' %>
+  <% else %>
+    <%= f.file_field :item %>
+  <% end %>
+  <%= link_to_remove_association "remove", f %>
+</div>
