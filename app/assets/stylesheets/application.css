@@ -11,6 +11,10 @@
  * file per style scope.
  *
  *= require normalize-css/normalize.css
+ *= require jquery-ui/themes/base/jquery.ui.core.css
+ *= require jquery-ui/themes/base/jquery.ui.datepicker.css
+ *= require signup-theme/jquery-ui-1.10.4.custom.css
+ *= require download-links
  *= require_tree .
  *= require_self
  */

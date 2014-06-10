@@ -85,7 +85,7 @@ table#topic-grid {
   }
 
   td.today {
-    background-color: #F6F6F6;
+    background-color: $gray-bg;
     .day {
       color: $primary-color;
     }

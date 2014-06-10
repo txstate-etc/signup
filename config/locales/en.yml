@@ -35,6 +35,9 @@ en:
       title: "Update Topic Details"
     new:
       title: "Create New Topic"
+  sessions:
+    edit:
+      site_label: 'Site:'
   helpers:
     submit:
       create: "Create %{model}"

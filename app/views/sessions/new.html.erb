@@ -1,5 +1,4 @@
-<h1>New session</h1>
-
-<%= render 'form' %>
-
-<%= link_to 'Back', sessions_path %>
+<div id="session-details" class="content-section">
+  <h2>Create New Session</h2>
+  <%= render partial: 'form', locals: { form_object: [@session.topic, @session] } %>
+</div>

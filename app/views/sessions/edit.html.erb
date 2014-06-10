@@ -1,6 +1,4 @@
-<h1>Editing session</h1>
-
-<%= render 'form' %>
-
-<%= link_to 'Show', @session %> |
-<%= link_to 'Back', sessions_path %>
+<div id="session-details" class="content-section">
+  <h2>Update Session Details</h2>
+  <%= render partial: 'form', locals: { form_object: @session } %>
+</div>

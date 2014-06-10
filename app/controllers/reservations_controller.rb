@@ -4,7 +4,20 @@ class ReservationsController < ApplicationController
   # GET /reservations
   # GET /reservations.json
   def index
-    @reservations = Reservation.all
+    admin_is_viewing_someone_else = params[ :user_login ] && current_user.admin?
+    if admin_is_viewing_someone_else
+      @user = User.find_by_login( params[ :user_login ] )
+      @page_title = "Reservations for #{@user.name}"
+    else
+      @user = current_user
+      @page_title = "Your Reservations"
+    end
+
+    reservations = @user.reservations
+    current_reservations = reservations.find_all{ |reservation| !reservation.session.in_past? }.sort {|a,b| a.session.next_time <=> b.session.next_time}
+    @past_reservations = reservations.find_all{ |reservation| reservation.session.in_past? && reservation.attended != Reservation::ATTENDANCE_MISSED }
+    @confirmed_reservations, @waiting_list_signups = current_reservations.partition { |r| r.confirmed? }
+
   end
 
   # GET /reservations/1

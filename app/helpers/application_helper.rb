@@ -39,6 +39,34 @@ module ApplicationHelper
     (date.today? ? 'today ' : '') << ((date.month == cur.month && date.year == cur.year) ? 'cur-month' : '')
   end
 
+  def survey_link(reservation)
+    return '' if reservation.cancelled? ||
+      reservation.session.not_finished? || 
+      reservation.attended == Reservation::ATTENDANCE_MISSED || 
+      reservation.survey_response.present? || 
+      reservation.session.topic.survey_type == 0 ||
+      current_user.nil? ||
+      current_user != reservation.user
+    
+    if reservation.session.topic.survey_type == Topic::SURVEY_INTERNAL
+      url = new_survey_response_url + "?reservation_id=#{reservation.id}"
+    elsif reservation.session.topic.survey_type == Topic::SURVEY_EXTERNAL
+      url = reservation.session.topic.survey_url
+    end
+    link_to 'Take the survey!', url, :class => 'survey-link'
+  end
+  
+  def certificate_link(reservation)
+    return '' if reservation.cancelled? ||
+      reservation.session.not_finished? || 
+      reservation.attended != Reservation::ATTENDANCE_ATTENDED || 
+      !reservation.session.topic.certificate ||
+      current_user.nil? ||
+      (!current_user.admin? && current_user != reservation.user)
+ 
+    link_to 'Download Certificate', certificate_reservation_url(reservation, :format => :pdf), :class => 'certificate-link'
+  end
+
   def expandible_list(items, visible=5)
     ret = '<div class="expandible-container"><ul>'
     items[0..(visible-1)].each do |item| 

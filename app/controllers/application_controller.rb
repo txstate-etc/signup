@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   protected
   def authorized?(item=nil)
     #FIXME
-    sign_in(:user, User.find(1)) unless current_user
+    sign_in(:user, User.find_by_login('cj32')) unless current_user
     true
   end
 

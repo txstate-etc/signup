@@ -1,0 +1,30 @@
+@import 'variables.scss';
+
+/* Make sure the datepicker is not behind the banner */ 
+.datetimepicker {
+  position: relative; 
+  z-index:100;
+}
+
+.ui-timepicker-div {
+  text-align: center;
+
+  .ui_tpicker_minute_label {
+    @include sr-only;
+  }
+
+  dt, dd {
+    display: inline;
+    margin: 0 0.25em;
+
+    div {
+      display: inline;
+    }
+  }
+
+  dd {
+    &.ui_tpicker_second, &.ui_tpicker_millisec, &.ui_tpicker_microsec {
+      display: none;
+    }
+  }
+}

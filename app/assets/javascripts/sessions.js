@@ -1,2 +1,63 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
+
+function revealRegPeriodArea() {
+  $('#registration-period-field').slideDown();
+  var start = $('#session_reg_start');
+  start.val(start.attr('data-default'));
+  var end = $('#session_reg_end');
+  end.val(end.attr('data-default'));
+}
+
+function hideRegPeriodArea() {
+  $('#registration-period-field').slideUp();
+  $('#registration-period-field .datetimepicker').val('');
+}
+
+function addDatePicker(input, setTime) {
+  $(input).datetimepicker({
+    dateFormat: "MM dd, yy",
+    timeFormat: 'h:mm TT',
+    hourText: 'Time: ',
+    showTime: false,
+    stepMinute: 5
+  });
+
+  if(setTime && !input.value) {
+    $(input).datetimepicker('setDate', getNextDateTime('#occurrences'));
+  }
+} 
+
+function getNextDateTime(root) {
+  // Set the initial value of a new occurrence field to the same
+  // time as the previous (non-deleted) field, but on the next day.
+  var value;
+  var fields = $(root + ' .datetimepicker:visible');
+
+  for (i = fields.length - 1; i >= 0; i--) {
+    var text = fields[i].value;
+    if (text) {
+      var timestamp = Date.parse(text);
+      if (isNaN(timestamp) == false && timestamp > 0) {
+        value = timestamp;
+        break;
+      }
+    }
+  }
+  
+  if (!value) {
+    value = new Date();
+    value.setHours(12, 0, 0, 0);
+    value = value.getTime();
+  }
+
+  return new Date(value + 86400000);
+}
+
+$(function() {
+  addDatePicker($('.datetimepicker'));
+  $('#occurrences').on('cocoon:after-insert', function(e, insertedItem) {
+    var input = insertedItem.find('.datetimepicker');
+    addDatePicker(input, true);
+  });
+});

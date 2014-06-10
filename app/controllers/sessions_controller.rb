@@ -1,5 +1,12 @@
 class SessionsController < ApplicationController
-  before_action :set_session, only: [:show, :edit, :update, :destroy]
+  before_action :set_session, only: [
+    :show, 
+    :edit, 
+    :update, 
+    :destroy, 
+    :reservations,
+    :survey_results
+  ]
 
   # GET /sessions
   # GET /sessions.json
@@ -7,18 +14,18 @@ class SessionsController < ApplicationController
     @sessions = Session.all
   end
 
-  # GET /sessions/1
-  # GET /sessions/1.json
-  def show
-  end
-
   # GET /sessions/new
   def new
-    @session = Session.new
-  end
-
-  # GET /sessions/1/edit
-  def edit
+    topic = Topic.find( params[ :topic_id ] )
+    if authorized? topic
+      @session = Session.new
+      @session.topic = topic
+      @session.occurrences.build
+      @session.instructors.build
+      @page_title = @session.topic.name
+    else
+      redirect_to topic
+    end  
   end
 
   # POST /sessions
@@ -65,10 +72,23 @@ class SessionsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_session
       @session = Session.find(params[:id])
+      @page_title = @session.topic.name
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def session_params
-      params.require(:session).permit(:topic_id, :cancelled, :location, :location_url, :site_id, :seats, :reg_start, :reg_end, :survey_sent)
+      params.require(:session).permit(
+        :topic_id, 
+        :cancelled, 
+        :location, 
+        :location_url, 
+        :site_id, 
+        :seats,
+        :reg_start, 
+        :reg_end, 
+        :survey_sent,
+        occurrences_attributes: [:id, :time, :_destroy],
+        reservations_attributes: [:id, :attended]
+        )
     end
 end

@@ -6,4 +6,10 @@ class Reservation < ActiveRecord::Base
       :column_names => {
           ["reservations.cancelled = ?", 'false'] => 'reservations_count'
       }
+  has_one :survey_response
+
+  ATTENDANCE_UNKNOWN = 0
+  ATTENDANCE_MISSED = 1
+  ATTENDANCE_ATTENDED = 2
+
 end

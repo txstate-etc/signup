@@ -1,0 +1,26 @@
+<% content_for :admin_tools do %>
+  <% if @session && authorized?(@session) && !@session.new_record? %>
+    <p><%= link_to "View Session Details", @session %>
+    <p><%= link_to "View Reservations", sessions_reservations_path( @session ) %>
+    <%- if @session.in_past? -%>
+      <p><%= link_to "View Survey Results", survey_results_session_path( @session ) %>
+    <%- end -%>
+    <% if @session.in_future? && !@session.cancelled %>
+      <p><%= link_to "Update Session Details", edit_session_path %>
+      <p><%= link_to "Cancel Session", '#', :id => 'cancel-session-link' %>
+    <% end %>
+  <% end %>
+  <% if @session && authorized?(@session.topic) %>
+    <p><%= link_to "Create New Session", new_topic_session_path( @session.topic ) %></p>
+  <% end %>
+<% end %>
+
+<% content_for :content do %>
+
+  <%= yield %>
+
+  <%#= FIXME: render :partial => "cancel", :locals => { :session => @session }%>
+
+<% end %>
+
+<%= render :file => 'layouts/application' %>

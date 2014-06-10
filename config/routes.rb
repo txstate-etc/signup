@@ -8,13 +8,21 @@ Rails.application.routes.draw do
   resources :reservations, only: :index
 
   get '/sessions/download', to: 'sessions#download', as: :sessions_download
+  get '/sessions/:id/reservations', to: 'sessions#reservations', as: :sessions_reservations
 
   resources :tags, :only => :show
 
   get '/topics/grid(/:year(/:month))', to: 'topics#grid', as: :grid
   resources :topics, shallow: true do
     resources :sessions, except: :index do
-      resources :reservations, except: [:index, :new, :show]
+      resources :reservations, except: [:index, :new, :show] do
+        member do
+          get 'certificate'
+        end
+      end
+      member do
+        get 'survey_results'
+      end
     end
     member do
       get 'manage'
