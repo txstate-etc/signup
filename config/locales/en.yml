@@ -38,6 +38,8 @@ en:
       title: "Update Topic Details"
     new:
       title: "Create New Topic"
+    manage:
+      title: "Manage Topics"
   sessions:
     edit:
       site_label: 'Site:'

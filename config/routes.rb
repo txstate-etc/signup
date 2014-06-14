@@ -25,7 +25,7 @@ Rails.application.routes.draw do
       end
     end
     member do
-      get 'manage'
+      get 'history'
       get 'survey_results'
       get 'download'
       get 'delete'

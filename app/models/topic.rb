@@ -4,6 +4,7 @@ class Topic < ActiveRecord::Base
   has_many :documents, :dependent => :destroy
   accepts_nested_attributes_for :documents, :allow_destroy => true, :reject_if => :all_blank
   acts_as_taggable
+  scope :active, -> { where inactive: false }
 
   SURVEY_NONE = 0
   SURVEY_INTERNAL = 1

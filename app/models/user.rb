@@ -4,8 +4,11 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
+  # has_many :permissions
+  # has_many :departments, :through => :permissions
   has_many :reservations, -> { where(cancelled: false).includes(:session) }
-  has_and_belongs_to_many :sessions, -> { where cancelled: false }
+  has_and_belongs_to_many :sessions, -> { where(cancelled: false).includes(:topic) }
+  has_many :topics, through: :sessions
 
   def name
     "#{first_name} #{last_name}" 
@@ -22,6 +25,10 @@ class User < ActiveRecord::Base
     "#{title}, #{department}"
   end
 
+  def upcoming_topics
+    @upcoming_topics ||= upcoming_sessions.map { |s| s.topic }.uniq
+  end
+
   def upcoming_sessions
     #FIXME: lazy load
     @upcoming_sessions ||= sessions - past_sessions
@@ -32,6 +39,25 @@ class User < ActiveRecord::Base
     @past_sessions ||= sessions.select { |s| s.started? }
   end
   
+  def departments
+    []
+  end
+  
+  # return true if the user has permissions on one or more departments (and item==nil)
+  # if a Department is provided, return true if he is an editor for that topic
+  # if a Topic is provided, return true if he is an editor for that topic's department
+  # if a Session is provided, return true if he is an editor for that session's topic's department
+  def editor?(item=nil)
+    #FIXME: implement permissions
+    # defined?(@_is_editor) or @_is_editor = self.departments.present?
+    # return @_is_editor unless item
+    # return departments.include?(item) if item.is_a? Department
+    # return departments.include?(item.department) if item.is_a?(Topic) && !item.new_record?
+    # return departments.include?(item.topic.department) if item.is_a?(Session) && !item.new_record?
+    # false
+    true
+  end
+
   # return true if the user is an instructor for any session (even in the past) [and item==nil]
   # if a Topic is provided, return true if he is an instructor for any session for that topic
   # if a Session is provided, return true if he is an instructor for that session

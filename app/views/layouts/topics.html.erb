@@ -1,6 +1,6 @@
 <% content_for :admin_tools do %>
   <% if @topic && !@topic.new_record? %>
-    <p><%= link_to "View Topic History", manage_topic_path( @topic ) %>
+    <p><%= link_to "View Topic History", history_topic_path( @topic ) %>
     <p><%= link_to "View Topic Details", @topic %>
     <% if authorized? @topic %>
       <p><%= link_to "View Survey Results", survey_results_topic_path( @topic ) %>

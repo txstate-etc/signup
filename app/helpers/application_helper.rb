@@ -7,6 +7,11 @@ module ApplicationHelper
     t(:title, opts.merge( scope: [controller_name] ))
   end
 
+  # Like ActionView::Helpers::TextHelper::pluralize, but without the number
+  def pluralize_word(count, singular, plural = nil)
+    ((count == 1 || count == '1') ? singular : (plural || singular.pluralize))
+  end
+
   def friendly_time(time)
     if (time.hour == 12 && time.min == 0) 
       "Noon"

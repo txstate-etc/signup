@@ -28,6 +28,19 @@ module TopicsHelper
     end
   end
 
+  def session_time_short(session)
+    # strftime doesn't have the formats we want on OSX. We'll
+    # have to do this the hard way
+    time = session.time
+    "#{time.month}/#{time.day}/#{time.strftime('%Y&nbsp;%l:%M%p')}".html_safe
+  end
+
+  def session_reservations_short(session)
+    s = "#{session.confirmed_count}"
+    s << " / #{session.seats}" if session.seats
+    s
+  end
+  
   def session_list(sessions)
     list = sessions.map do |session| 
       "#{link_to_session(session)} #{session_site(session)}"

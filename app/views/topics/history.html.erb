@@ -1,0 +1,65 @@
+<div id="manage-topics">
+  
+  <% if @topic.sessions.blank? %>
+    <div class="content-section">
+      <h2>No sessions found</h2>
+      <div class="empty-list">
+        <p>There are no sessions to display.</p>
+      </div>
+    </div>
+  <% else %>
+  
+  <div class="content-section">
+    <h2><%= @topic.name %>
+        <%= link_to("Subscribe to the XML feed for this topic",
+          topic_path(@topic, :format => :atom), :class => 'feed-link') %>
+    </h2>
+    <div class="action-list">
+      <% if authorized? @topic %>
+        <p class="download-link download-csv">
+          <%= link_to "Download Attendance History", topic_path(@topic, :format => :csv ) %>
+        </p>
+      <% end %>
+    </div>
+    <table class="topic-list">
+      <thead>
+        <tr>
+          <th scope="col" class="topic-name">Session</th>
+          <th scope="col" class="topic-site"><%=t :'activerecord.attributes.session.site' %></th> 
+          <th scope="col" class="topic-instructors">Instructor(s)</th> 
+          <th scope="col" class="topic-count">Reservations</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @topic.sessions.each do |session| %>
+          <% authorized = authorized? session %>
+          <% cache(["topics/history", session, "#{authorized ? '' : 'not-'}authorized"], :tag => session.cache_key) do %>
+            <tr class="<%= cycle("even", "odd") %>">
+            <td class="topic-name">
+              <%= link_to formatted_time_range(session.time, @topic.minutes), session, :class => 'date' %>
+            </td>
+            <td class="topic-site">
+              <%= session.site.name %>
+            </td>
+            <td class="topic-instructors">
+              <%= session.instructors.map do |user|
+                    link_to user.name, user_path(user)
+                  end.join(', ').html_safe 
+              %>
+            </td>
+            <td class="topic-count">
+              <% if authorized %>
+                <%= link_to session_reservations_short(session), 
+                  session_reservations_path( session ) %>
+              <% else %>
+                <%= session_reservations_short(session) %>
+              <% end %>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <% end %>
+</div>

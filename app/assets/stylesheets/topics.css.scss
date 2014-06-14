@@ -154,3 +154,88 @@ div.documents {
     margin-right: 15px;
   }
 }
+
+div#manage-topics {
+  ul.actions {
+    background-color: $gray-bg;
+    border: 1px solid $border-color;
+    padding: 6px;
+    font-family: $sans-serif;
+    font-size: 0.9em;
+    list-style: disc inside;
+  }
+
+  h2 {
+    margin: 0;
+  }
+
+  table {
+    width: 100%;
+    font-family: $sans-serif;
+    font-size: 0.9em;
+    border-top: 1px solid $border-color;
+  }
+
+  thead {
+    tr {
+      font-size: .9em;
+      font-weight: bold;
+    }
+    .topic-date {
+      text-align: center;
+    }
+  }
+  
+  tr {
+    padding: 10px 6px;
+    border-bottom: 1px solid $border-color;
+  }
+
+  tr.even {
+    background-color: $gray-bg;
+  }
+
+  .topic-name {
+    text-align: left;
+    padding: 1px 5px;
+  }
+
+  .topic-instructors, .topic-site, .topic-date {
+    border-left: 1px $border-color solid;
+    padding-left: 8px;
+  }
+
+  .topic-date {
+    width: 138px;
+    text-align: right;
+    padding-right: 8px;
+    .empty {
+      text-align: center;
+    }
+  }
+
+  .topic-count {
+    width: 100px;
+    text-align: center;
+    border-left: 1px $border-color solid;
+  }
+
+  div.empty-list {
+    font-family: $sans-serif;
+    font-size: .9em;
+    padding: 0 .5em;
+    border-top: 1px $border-color solid;
+  }
+
+  div.action-list {
+    font-family: $sans-serif;
+    font-size: .9em;
+    padding: 0 .5em 0.25em;
+    background-color: $gray-bg;
+    border-bottom: 1px solid $primary-color;
+    
+    p {
+      margin: 0;
+    }
+  }
+}
