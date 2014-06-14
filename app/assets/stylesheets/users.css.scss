@@ -1,0 +1,18 @@
+@import 'variables.scss';
+
+ul.instructor-details {
+  padding: 0;
+  margin-top: 0.5em;
+  margin-bottom: 3em;
+  font-family: $sans-serif;
+  font-size: 0.85em;
+  line-height: 1.61803399;
+}
+
+.instructor-session-list {
+  margin-bottom: 1em;
+  
+  h3 {
+    margin: 0;
+  }
+}

@@ -27,6 +27,10 @@ class Topic < ActiveRecord::Base
     self.save!
   end
 
+  def <=>(other)
+    self.name.downcase <=> other.name.downcase
+  end
+
   def to_param
     "#{id}-#{name.parameterize}"
   end

@@ -32,4 +32,14 @@ class User < ActiveRecord::Base
     @past_sessions ||= sessions.select { |s| s.started? }
   end
   
+  # return true if the user is an instructor for any session (even in the past) [and item==nil]
+  # if a Topic is provided, return true if he is an instructor for any session for that topic
+  # if a Session is provided, return true if he is an instructor for that session
+  def instructor?(item=nil)
+    defined?(@_is_instructor) or @_is_instructor = self.sessions.present?
+    return @_is_instructor unless item
+    return sessions.any? { |s| s.topic_id == item.id } if item.is_a? Topic
+    return sessions.include?(item) if item.is_a? Session
+    false
+  end
 end

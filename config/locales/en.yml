@@ -26,6 +26,9 @@ en:
   footer_text_html: "The Signup Reservation System is a tool developed by the Texas State Education Technology Center.</br> Details regarding the system are available at the <a href='http://www.its.txstate.edu/departments/etc/signup.html'>Signup website</a>."
   file_icon:
     type: "%{type} file"
+  departments:
+    index:
+      title: "Departments Offering Training"
   topics:
     title: "Available Topics"
     index:

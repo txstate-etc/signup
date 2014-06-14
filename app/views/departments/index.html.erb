@@ -1,27 +1,9 @@
-<h1>Listing departments</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Inactive</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @departments.each do |department| %>
-      <tr>
-        <td><%= department.name %></td>
-        <td><%= department.inactive %></td>
-        <td><%= link_to 'Show', department %></td>
-        <td><%= link_to 'Edit', edit_department_path(department) %></td>
-        <td><%= link_to 'Destroy', department, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
+<% cache("departments/index", :tag => 'department-list')  do %>
+  <ul id="department-list">
+    <% Department.active.by_name.each do |department| %>
+      <li>
+        <%= link_to department.name, department %>
+      </li>
     <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Department', new_department_path %>
+  </ul>
+<% end %>
