@@ -9,6 +9,7 @@ class DepartmentsController < ApplicationController
   # GET /departments/new
   def new
     @department = Department.new
+    @department.permissions.build
   end
 
   # GET /departments/1/edit
@@ -55,6 +56,11 @@ class DepartmentsController < ApplicationController
     end
   end
 
+  def manage
+    @departments = Department.active.by_name    
+    redirect_to departments_path unless authorized? @departments
+  end
+  
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_department

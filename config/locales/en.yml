@@ -29,6 +29,12 @@ en:
   departments:
     index:
       title: "Departments Offering Training"
+    edit:
+      title: "Update Department Details"
+    new:
+      title: "Create New Department"
+    manage:
+      title: "Manage Departments"
   topics:
     title: "Available Topics"
     index:
@@ -40,9 +46,15 @@ en:
       title: "Create New Topic"
     manage:
       title: "Manage Topics"
+  reservations:
+    edit:
+      title: "Update Reservation Details"
   sessions:
     edit:
       site_label: 'Site:'
+  users:
+    index:
+      title: "Manage Users"
   helpers:
     submit:
       create: "Create %{model}"

@@ -121,4 +121,19 @@ module TopicsHelper
 
     occurrences
   end
+
+  def department_select(f)
+    # for existing topics, only admins can modify dept
+    # for new topics, limit selection to user's departments (for editors. Admins can select any dept).
+    disabled = !(current_user.admin? || f.object.new_record?)
+    departments = current_user.admin? ? Department.active.by_name : current_user.departments.by_name
+    include_blank = f.object.new_record? && departments.size > 1
+    f.association :department,
+      label: 'Department:', 
+      collection: departments, 
+      value_method: :id, 
+      label_method: :name, 
+      :include_blank => include_blank, 
+      :disabled => disabled
+  end
 end

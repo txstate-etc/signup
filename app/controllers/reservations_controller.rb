@@ -1,5 +1,5 @@
 class ReservationsController < ApplicationController
-  before_action :set_reservation, only: [:show, :edit, :update, :destroy]
+  before_action :set_reservation, only: [:edit, :update, :destroy]
 
   # GET /reservations
   # GET /reservations.json
@@ -20,16 +20,6 @@ class ReservationsController < ApplicationController
 
   end
 
-  # GET /reservations/1
-  # GET /reservations/1.json
-  def show
-  end
-
-  # GET /reservations/new
-  def new
-    @reservation = Reservation.new
-  end
-
   # GET /reservations/1/edit
   def edit
   end
@@ -37,16 +27,77 @@ class ReservationsController < ApplicationController
   # POST /reservations
   # POST /reservations.json
   def create
-    @reservation = Reservation.new(reservation_params)
+    unless current_user
+      redirect_to root_url
+      return
+    end
 
-    respond_to do |format|
-      if @reservation.save
-        format.html { redirect_to @reservation, notice: 'Reservation was successfully created.' }
-        format.json { render :show, status: :created, location: @reservation }
-      else
-        format.html { render :new }
-        format.json { render json: @reservation.errors, status: :unprocessable_entity }
+    user = if params[ :user_login ]
+      User.find_by_login( params[ :user_login ] )
+    else
+      current_user
+    end
+
+    @reservation = Reservation.find_by_user_id_and_session_id(user.id, params[ :session_id ])
+    unless @reservation
+      @reservation = Reservation.new
+      @reservation.session = Session.find( params[ :session_id ] )
+      @reservation.user = user
+    end
+
+    admin_is_enrolling_someone_else = params[ :user_login ] && authorized?(@reservation)
+    if admin_is_enrolling_someone_else
+      if @reservation.user.nil?
+        flash[ :error ] = "Could not find user with Login ID #{params[ :user_login ]}"
+        redirect_to sessions_reservations_path(@reservation.session)
+        return
       end
+    elsif !@reservation.session.in_registration_period?
+      flash[ :error ] = "Registration is closed for this session."
+      redirect_to @reservation.session 
+      return
+    end
+    
+    success = if @reservation.cancelled? && !@reservation.new_record?
+      @reservation.uncancel! 
+    else
+      @reservation.save
+    end
+    
+    # if success && @reservation.confirmed?
+    #   ReservationMailer.delay.deliver_confirm( @reservation ) 
+ 
+    #   if @reservation.session.next_time.today?
+    #     @reservation.session.instructors.each do |instructor|
+    #       ReservationMailer.delay.deliver_confirm_instructor( @reservation, instructor )
+    #     end
+    #   end
+    # end
+
+    if admin_is_enrolling_someone_else
+      if success
+        if @reservation.confirmed?
+          flash[ :notice ] = "The reservation for #{@reservation.user.name} has been confirmed."
+        else
+          flash[ :notice ] = "#{@reservation.user.name} has been added to the waiting list."
+        end
+      else
+        errors = @reservation.errors.full_messages.join(" ")
+        flash[ :error ] = "Unable to make reservation for " + params[ :user_login ] + ". " + errors
+      end
+      redirect_to sessions_reservations_path(@reservation.session) 
+    else
+      if success
+        if @reservation.confirmed?
+          flash[ :notice ] = "Your reservation has been confirmed."
+        else
+          flash[ :notice ] = "You have been added to the waiting list."
+        end
+      else
+        errors = @reservation.errors.full_messages.join(" ")
+        flash[ :error ] = "Unable to make reservation. " + errors
+      end
+      redirect_to @reservation.session 
     end
   end
 
@@ -67,10 +118,27 @@ class ReservationsController < ApplicationController
   # DELETE /reservations/1
   # DELETE /reservations/1.json
   def destroy
-    @reservation.destroy
-    respond_to do |format|
-      format.html { redirect_to reservations_url, notice: 'Reservation was successfully destroyed.' }
-      format.json { head :no_content }
+    superuser =  authorized? @reservation
+    
+    if @reservation.user != current_user && !superuser
+      flash[ :error ] = "Reservations can only be cancelled by their owner, an admin, or an instructor."
+    elsif @reservation.session.started? && !superuser
+      flash[ :error ] = "Reservations cannot be cancelled once the session has begun."      
+    else
+      @reservation.cancel!
+      if @reservation.user == current_user
+        flash[ :notice ] = "Your reservation has been cancelled."
+      else
+        flash[ :notice ] = "The reservation for #{@reservation.user.name} has been cancelled."
+      end
+    end
+    
+    if request.referrer.present?
+      redirect_to request.referrer
+    elsif superuser
+      redirect_to survey_results_session_path( @reservation.session )
+    else
+      redirect_to reservations_path
     end
   end
 
@@ -82,6 +150,6 @@ class ReservationsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def reservation_params
-      params.require(:reservation).permit(:user_id, :session_id, :cancelled, :attended, :special_accommodations)
+      params.require(:reservation).permit(:special_accommodations)
     end
 end

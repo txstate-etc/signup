@@ -5,8 +5,7 @@
     <%= f.input :name, label: 'Topic Name:' %>
     <%= f.input :description, label: 'Description of Topic:' %>
     <%= f.input :tag_list, label: 'Tags:' %>
-    <%= f.association :department, label: 'Department:' %>
-    <%# FIXME: filter department per user %>
+    <%= department_select(f) %>
     <%= f.input :minutes, label: 'Class time in Minutes:' %>
     <%= f.input :url, label: 'URL with More Information on Class:' %>
     <%= f.input :survey_type, label: 'Post-Class Survey:',

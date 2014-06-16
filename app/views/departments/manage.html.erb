@@ -1,0 +1,20 @@
+<% content_for :admin_tools do %>
+  <% if current_user.admin? %>
+    <p>
+      <%= link_to "Create New Department", new_department_path %>
+    </p>
+  <% end %>
+<% end %>
+
+<div id="manage-departments">
+  <div class="content-section">
+    <h2>Department List</h2>
+    <ul id="department-list">
+      <% @departments.each do |department| %>
+        <li class="<%= cycle("even", "odd") %>">
+          <%= link_to department.name, edit_department_path(department) %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</div>

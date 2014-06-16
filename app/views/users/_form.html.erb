@@ -1,0 +1,17 @@
+<%= simple_form_for(@user) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.input :name_prefix, label: 'Title (e.g., Dr):' %>
+    <%= f.input :first_name, label: 'First Name:' %>
+    <%= f.input :last_name, label: 'Last Name:' %>
+    <%= f.input :email, label: 'Email Address:' %>
+    <%= f.input :department, label: 'Organization:' %>
+    <%= f.input :title, label: 'Job title:' %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+    <%= link_to 'Cancel', users_path %>
+  </div>
+<% end %>

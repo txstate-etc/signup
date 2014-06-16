@@ -12,6 +12,7 @@ sites
 sessions
 sessions_users
 occurrences
+permissions
 reservations
 survey_responses
 users

@@ -324,7 +324,7 @@ div.input {
     font-family: $sans-serif;
     font-size: small;
   }
-  &.string, &.url, &.text, &.select {
+  &.string, &.url, &.email, &.text, &.select {
     input {
       width: 30em;
     }

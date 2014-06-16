@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140610194011) do
+ActiveRecord::Schema.define(version: 20140615163905) do
 
   create_table "departments", force: true do |t|
     t.string   "name",                       null: false
@@ -41,6 +41,16 @@ ActiveRecord::Schema.define(version: 20140610194011) do
 
   add_index "occurrences", ["session_id", "time"], name: "unique_occurrence_times_in_session", unique: true, using: :btree
   add_index "occurrences", ["session_id"], name: "index_occurrences_on_session_id", using: :btree
+
+  create_table "permissions", force: true do |t|
+    t.integer  "department_id"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "permissions", ["department_id"], name: "index_permissions_on_department_id", using: :btree
+  add_index "permissions", ["user_id"], name: "index_permissions_on_user_id", using: :btree
 
   create_table "reservations", force: true do |t|
     t.integer  "user_id",                                null: false

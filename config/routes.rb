@@ -38,7 +38,8 @@ Rails.application.routes.draw do
     end
   end
 
-  root :to => "topics#index"
   devise_for :users
   resources :users
+
+  root :to => "topics#index"
 end

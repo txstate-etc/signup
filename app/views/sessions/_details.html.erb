@@ -60,6 +60,7 @@
         (<%=h session.waiting_list_count %> waiting)
       <% end %>
       
+      <% @reservation = Reservation.active.find_by_user_id_and_session_id( current_user.id, @session.id ) if current_user %>
       <% if @reservation %>
         <% if @reservation.attended == Reservation::ATTENDANCE_ATTENDED %>
           <p>You attended this session. <%= survey_link(@reservation) %></p>
@@ -74,7 +75,7 @@
             <p>You <%= are_were %> on the waiting list for this session.</p>
           <% end %>
           <div class="download-link download-calendar">
-            <%= link_to "Add reservation to calendar", { :controller => :reservations, :action => :download, :id => @reservation.id } %>
+            <%#FIXME= link_to "Add reservation to calendar", { :controller => :reservations, :action => :download, :id => @reservation.id } %>
           </div>
           <%- if @reservation.session.in_future? -%>
             <%= link_to_edit_reservation(@reservation) %>
@@ -88,7 +89,7 @@
         <%  if current_user %>
           <% if session.space_is_available? %>
             <div class="register-button">
-              <% form_tag(session_reservations_path( session )) do %>
+              <%= form_tag(session_reservations_path( session )) do %>
                 <%= submit_tag "Register Now", :class => 'register-button' %>
               <% end %>
             </div>
@@ -99,7 +100,7 @@
               registered and notified by email.
             </div>
             <div class="register-button">
-              <% form_tag(session_reservations_path( session )) do %>
+              <%= form_tag(session_reservations_path( session )) do %>
                 <%= submit_tag "Add to Waiting List", :class => 'register-button' %>
               <% end %>
             </div>

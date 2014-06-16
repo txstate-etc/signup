@@ -28,3 +28,25 @@
     }
   }
 }
+
+.disclaimer {
+  background-color: $gray-bg;
+  border: 1px solid $border-color;
+  padding: 6px;
+  font-family: $sans-serif;
+  font-size: 0.9em;
+  
+  p {
+    margin: 0;
+  }
+}
+
+span.site {
+  margin-left: 0.5em;
+  font-family: $sans-serif;
+  color: #335B67;
+}
+
+dd span.site {
+  font-size: 0.95em;
+}

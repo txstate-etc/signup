@@ -11,6 +11,13 @@
   font-size: .85em;
 }
 
+.delete-link {
+  background-image: image-url('delete.png');
+  a {
+    color: $primary-color;
+  }
+}
+
 .edit-reservation-link {
   background-image: image-url('email_go.png');
 }

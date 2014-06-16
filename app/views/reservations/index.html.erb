@@ -22,7 +22,7 @@
               </div>
               <div class="reservation-actions">
                 <div class="download-link download-calendar">
-                  <%= link_to "Add reservation to calendar", :controller => :reservations, :action => :download, :id => reservation.id %>
+                  <%#FIXME= link_to "Add reservation to calendar", :controller => :reservations, :action => :download, :id => reservation.id %>
                 </div>
                 <%= link_to_edit_reservation(reservation) %>
                 <div class="delete-link">
