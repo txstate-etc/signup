@@ -35,6 +35,9 @@ gem 'cocoon'
 # CAS authentication - need github branch for single signout support
 gem 'omniauth-cas', :git => 'https://github.com/dlindahl/omniauth-cas.git'
 
+# LDAP user lookups
+gem 'net-ldap'
+
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller', :platforms=>[:mri_21]

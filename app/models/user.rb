@@ -1,3 +1,5 @@
+require 'ldap'
+
 class User < ActiveRecord::Base
   has_many :permissions
   has_many :departments, :through => :permissions
@@ -11,16 +13,14 @@ class User < ActiveRecord::Base
     return nil unless login.present?
     
     user = User.find_by_login(login)
-    #FIXME
-    # if user.blank?
-    #   # try to find in ldap
-    #   begin
-    #     import_users(login)
-    #   rescue Net::LDAP::LdapError => e
-    #     logger.error("There was a problem importing the data from LDAP. " + e)
-    #   end
-    #   user = User.find_by_login(login)
-    # end
+    if user.blank?
+      # try to find in ldap
+      begin
+        user = Ldap.import_user(login)
+      rescue Net::LDAP::LdapError => e
+        logger.error("There was a problem importing the data from LDAP. " + e)
+      end
+    end
     
     user
   end
