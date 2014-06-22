@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140615163905) do
+ActiveRecord::Schema.define(version: 20140618013421) do
 
   create_table "departments", force: true do |t|
     t.string   "name",                       null: false
@@ -146,31 +146,27 @@ ActiveRecord::Schema.define(version: 20140615163905) do
   add_index "topics", ["department_id"], name: "index_topics_on_department_id", using: :btree
 
   create_table "users", force: true do |t|
-    t.string   "email",                  default: "",    null: false
-    t.string   "encrypted_password",     default: "",    null: false
-    t.string   "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,     null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
-    t.string   "current_sign_in_ip"
-    t.string   "last_sign_in_ip"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "name"
-    t.string   "login",                                  null: false
+    t.string   "login",                       null: false
+    t.string   "email",                       null: false
     t.string   "first_name"
-    t.string   "last_name",                              null: false
+    t.string   "last_name",                   null: false
     t.string   "name_prefix"
     t.string   "title"
     t.string   "department"
-    t.boolean  "admin",                  default: false, null: false
-    t.boolean  "manual",                 default: false, null: false
-    t.boolean  "inactive",               default: false, null: false
+    t.boolean  "admin",       default: false, null: false
+    t.boolean  "boolean",     default: false, null: false
+    t.boolean  "manual",      default: false, null: false
+    t.boolean  "inactive",    default: false, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "credentials"
   end
 
+  add_index "users", ["credentials"], name: "index_users_on_credentials", unique: true, using: :btree
   add_index "users", ["email"], name: "index_users_on_email", using: :btree
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+  add_index "users", ["first_name"], name: "index_users_on_first_name", using: :btree
+  add_index "users", ["id", "credentials"], name: "index_users_on_id_and_credentials", unique: true, using: :btree
+  add_index "users", ["last_name"], name: "index_users_on_last_name", using: :btree
+  add_index "users", ["login"], name: "index_users_on_login", unique: true, using: :btree
 
 end

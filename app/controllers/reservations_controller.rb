@@ -1,4 +1,5 @@
 class ReservationsController < ApplicationController
+  before_filter :authenticate #, :except => :download
   before_action :set_reservation, only: [:edit, :update, :destroy]
 
   # GET /reservations

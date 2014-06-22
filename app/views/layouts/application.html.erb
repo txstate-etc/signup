@@ -26,10 +26,10 @@
       <div class="navigation">
         <p>
           <% if current_user -%>
-            <%=h current_user.name %> <span class="logout-link">(<%= link_to("log out", '/logout') %>)</span>
+            <%=h current_user.name %> <span class="logout-link" data-no-turbolink>(<%= link_to("log out", '/logout') %>)</span>
           <% elsif false %>
-          <%# elsif cas_user -%>
-            <%#=h cas_user %> <span class="logout-link">(<%= link_to("log out", '/logout') %>)</span>
+          <% elsif auth_user -%>
+            <%=h auth_user %> <span class="logout-link" data-no-turbolink>(<%= link_to("log out", '/logout') %>)</span>
           <% end -%>
         </p>
         <p><%= link_to "Your Reservations", reservations_path %></p>

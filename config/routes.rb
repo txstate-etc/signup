@@ -38,8 +38,10 @@ Rails.application.routes.draw do
     end
   end
 
-  devise_for :users
   resources :users
 
-  root :to => "topics#index"
+  get '/auth/:provider/callback', to: 'authentication#create'
+  get '/logout', to: 'authentication#destroy', as: 'logout'
+
+  root :to => 'topics#index'
 end

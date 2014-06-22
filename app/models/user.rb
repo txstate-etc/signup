@@ -1,9 +1,4 @@
 class User < ActiveRecord::Base
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
-
   has_many :permissions
   has_many :departments, :through => :permissions
   has_many :reservations, -> { where(cancelled: false).includes(:session) }
@@ -11,6 +6,24 @@ class User < ActiveRecord::Base
   has_many :topics, through: :sessions
   scope :active, -> { where inactive: false }
   scope :manual, -> { where manual: true }
+
+  def self.find_or_lookup_by_login(login)
+    return nil unless login.present?
+    
+    user = User.find_by_login(login)
+    #FIXME
+    # if user.blank?
+    #   # try to find in ldap
+    #   begin
+    #     import_users(login)
+    #   rescue Net::LDAP::LdapError => e
+    #     logger.error("There was a problem importing the data from LDAP. " + e)
+    #   end
+    #   user = User.find_by_login(login)
+    # end
+    
+    user
+  end
 
   def name
     "#{first_name} #{last_name}" 

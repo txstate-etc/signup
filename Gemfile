@@ -9,7 +9,6 @@ gem 'turbolinks'
 gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0',          group: :doc
 gem 'spring',        group: :development
-gem 'devise'
 gem 'mysql2'
 gem 'simple_form'
 
@@ -32,6 +31,9 @@ gem 'paperclip', '~> 4.1'
 
 # Nested form helpers (for attachments, instructors, etc)
 gem 'cocoon'
+
+# CAS authentication - need github branch for single signout support
+gem 'omniauth-cas', :git => 'https://github.com/dlindahl/omniauth-cas.git'
 
 group :development do
   gem 'better_errors'
