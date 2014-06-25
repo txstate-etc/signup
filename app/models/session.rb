@@ -9,6 +9,18 @@ class Session < ActiveRecord::Base
   accepts_nested_attributes_for :instructors, :reject_if => lambda { |a| true }, :allow_destroy => false
   has_many :survey_responses, through: :reservations
 
+  def initialize(attributes = nil)    
+    # use our local method to add/remove instructors
+    attributes.merge!(build_instructors_attributes(false, attributes.delete(:instructors_attributes))) unless attributes.nil?
+    super(attributes)
+  end
+  
+  def update(attributes)
+    # use our local method to add/remove instructors
+    attributes.merge!(build_instructors_attributes(true, attributes.delete(:instructors_attributes))) unless attributes.nil?
+    super(attributes)
+  end
+
   def to_param
     "#{id}-#{topic.name.parameterize}"
   end
@@ -126,4 +138,38 @@ class Session < ActiveRecord::Base
     ratings = survey_responses.reject { |rating| rating.applicability.nil? }
     ratings.inject(0.0) { |sum, rating| sum + rating.applicability } / ratings.size
   end
+
+  private
+  def build_instructors_attributes(update, attributes)
+    return {} if attributes.blank?
+    
+    # Example input:
+    # {
+    #   "1305227580344" => {"name_and_login"=>"Charles B Jones (cj32)", "_destroy"=>""},
+    #               "0" => {"name_and_login"=>"Emin Saglamer (es26)",   "id"=>"30798", "_destroy"=>""},
+    #               "1 "=> {"name_and_login"=>"Patrick A Smith (ps35)", "id"=>"31919", "_destroy"=>""},
+    #               "2" => {"name_and_login"=>"Rori Sheffield (rp41)",  "id"=>"32014", "_destroy"=>"1"}
+    # }
+ 
+    #logger.info("in build_instructors_attributes, instructors = #{instructors.nil? ? "nil" : instructors}")
+    
+    ids = []
+    attributes.keys.sort { |a,b| a.to_i <=> b.to_i }.each do |key|
+      attr = attributes[key]
+      next if attr["_destroy"] == "1"      
+      if(update && attr.include?("id") && instructors.find(attr["id"]).name_and_login == attr["name_and_login"])
+        ids << attr["id"]        
+      elsif attr["name_and_login"].present?
+        user = User.find_by_name_and_login(attr["name_and_login"])
+        if user.nil? 
+          @invalid_instructor = true
+        else
+          ids << user.id
+        end        
+      end
+    end
+    
+    return { "instructor_ids" => ids }
+  end
+
 end

@@ -48,11 +48,15 @@
     %>
   </div>
 
-  <%= f.label :instructor_id, "Instructor(s):", :class => 'field-label' %>
-  <% f.fields_for :instructors do |builder| %>
-    <%#= render "instructor_fields", :f => builder %>
-  <% end %>
-  <p><%#= link_to_add_fields "add another instructor", f, :instructors %></p>
+  <div id="instructors">
+    <%= f.label :instructors, "Instructor(s):", class: 'field-label' %>
+    <%= f.simple_fields_for :instructors do |instructor| %>
+      <%= render "instructor_fields", :f => instructor %>
+    <% end %>
+    <div class='add-fields'>
+      <%= link_to_add_association 'add another instructor', f, :instructors %>
+    </div>
+  </div>
 
   <%= f.input :seats, label: 'Seats Available (blank for no limit):' %>
 

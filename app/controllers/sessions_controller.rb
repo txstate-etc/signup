@@ -77,6 +77,7 @@ class SessionsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def session_params
+      fix_occurrences(params)
       params.require(:session).permit(
         :topic_id, 
         :cancelled, 
@@ -88,7 +89,19 @@ class SessionsController < ApplicationController
         :reg_end, 
         :survey_sent,
         occurrences_attributes: [:id, :time, :_destroy],
-        reservations_attributes: [:id, :attended]
+        reservations_attributes: [:id, :attended],
+        instructors_attributes: [:id, :name_and_login, :_destroy]
         )
+    end
+
+    # Some ActiveRecord bug is making times look like they have changed 
+    # when they really haven't, causing unnecessary db writes.
+    # Parsing the time before passing it to update() seems to fix it.
+    def fix_occurrences(params)
+      params.tap do |p|
+        p['session']['occurrences_attributes'].each do |_,o|
+          o['time'] = Time.parse(o['time']) rescue ''
+        end
+      end
     end
 end

@@ -9,6 +9,10 @@ class User < ActiveRecord::Base
   scope :active, -> { where inactive: false }
   scope :manual, -> { where manual: true }
 
+  def self.find_by_name_and_login( name )
+    User.find_by_login(name.split(/[(|)]/)) rescue nil
+  end
+
   def self.find_or_lookup_by_login(login)
     return nil unless login.present?
     
