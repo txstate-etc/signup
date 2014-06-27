@@ -1,12 +1,10 @@
 <div class="nested-fields">
-  <div class="input string">
-    <%= f.input :name_and_login, #FIXME: autocomplete
+  <div class="input string foo">
+    <%= f.input :name_and_login, 
+      url: autocomplete_search_users_path, 
+      as: :autocomplete,
       label: false, 
-      as: :string, 
-      wrapper: false,
-      input_html: { 
-        value: f.object.name_and_login
-      } 
+      wrapper: false
     %>
     <%= link_to_remove_association "remove", f %>
   </div>

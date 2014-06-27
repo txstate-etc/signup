@@ -38,7 +38,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :users
+  resources :users do
+    collection do
+      get 'autocomplete_search'
+    end
+  end
 
   get '/auth/:provider/callback', to: 'authentication#create'
   get '/logout', to: 'authentication#destroy', as: 'logout'

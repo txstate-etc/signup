@@ -1,6 +1,16 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update]
-  before_filter :authenticate_user!
+
+  def autocomplete_search
+    users = User.active.limit(10).search(params[:term])
+    render json: users.map { |u| 
+      { 
+        :id => u.id, 
+        :label => u.name_and_login, 
+        :value => u.name_and_login
+      } 
+    }
+  end
 
   def index
     @users = User.manual.active

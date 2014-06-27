@@ -14,8 +14,13 @@
 //= require jquery.turbolinks
 //= require jquery_ujs
 //= require jquery-ui/ui/jquery.ui.core.js
+//= require jquery-ui/ui/jquery.ui.widget.js
+//= require jquery-ui/ui/jquery.ui.position.js
+//= require jquery-ui/ui/jquery.ui.menu.js
 //= require jquery-ui/ui/jquery.ui.datepicker.js
 //= require jqueryui-timepicker-addon/dist/jquery-ui-timepicker-addon.js
+//= require jquery-ui/ui/jquery.ui.autocomplete.js
+//= require autocomplete-rails
 //= require turbolinks
 //= require cocoon
 //= require_tree .

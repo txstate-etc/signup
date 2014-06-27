@@ -9,7 +9,24 @@ class User < ActiveRecord::Base
   scope :active, -> { where inactive: false }
   scope :manual, -> { where manual: true }
 
-  def self.find_by_name_and_login( name )
+  def self.search(query)
+    logger.debug { "in search: query = #{query}" }
+    return none unless query.present?
+
+    conditions = []
+    values = []
+    query.split(/\s+/).each do |word|
+      conditions << "(first_name LIKE ? OR last_name LIKE ? OR login LIKE ?)"
+      3.times { values << "#{word}%" }
+    end
+    
+    logger.debug { "in search: conditions = #{conditions}" }
+
+    User.select("id, name_prefix, first_name, last_name, login").
+      where(conditions.join(" AND "), *values)
+  end
+
+  def self.find_by_name_and_login(name)
     User.find_by_login(name.split(/[(|)]/)) rescue nil
   end
 

@@ -38,6 +38,10 @@ gem 'omniauth-cas', :git => 'https://github.com/dlindahl/omniauth-cas.git'
 # LDAP user lookups
 gem 'net-ldap'
 
+# Autocomplete for instructors, etc.
+# despite the name, should work on rails 4
+gem 'rails3-jquery-autocomplete'
+
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller', :platforms=>[:mri_21]
