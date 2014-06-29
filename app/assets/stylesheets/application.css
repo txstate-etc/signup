@@ -12,7 +12,9 @@
  *
  *= require normalize-css/normalize.css
  *= require jquery-ui/themes/base/jquery.ui.core.css
+ *= require jquery-ui/themes/base/jquery.ui.menu.css
  *= require jquery-ui/themes/base/jquery.ui.datepicker.css
+ *= require jquery-ui/themes/base/jquery.ui.autocomplete.css
  *= require signup-theme/jquery-ui-1.10.4.custom.css
  *= require common
  *= require layout

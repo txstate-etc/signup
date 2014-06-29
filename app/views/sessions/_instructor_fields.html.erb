@@ -1,8 +1,9 @@
 <div class="nested-fields">
   <div class="input string">
     <%= f.input :name_and_login, 
+      url: autocomplete_search_users_path, 
+      as: :autocomplete,
       label: false, 
-      as: :string, 
       wrapper: false
     %>
     <%= link_to_remove_association "remove", f %>

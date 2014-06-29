@@ -6,6 +6,19 @@
   z-index:100;
 }
 
+.ui-datepicker {
+  background: $gray-bg;
+
+  .ui-datepicker-header.ui-widget-header {
+    border: none;
+    background: $gray-bg;
+  }
+  
+  table {
+    background: $gray-bg;
+  }
+}
+
 .ui-timepicker-div {
   text-align: center;
 
@@ -26,6 +39,15 @@
     &.ui_tpicker_second, &.ui_tpicker_millisec, &.ui_tpicker_microsec {
       display: none;
     }
+  }
+}
+
+.ui-autocomplete.ui-menu {
+  padding: 2px 0;
+
+  .ui-menu-item a {
+    border: none;
+    margin: 0;
   }
 }
 
