@@ -21,14 +21,34 @@ EOF
 
 rake db:reset
 
-mysql -u root $to_db -e"ALTER TABLE users ADD active tinyint"
+echo 'Updating active user count...'
+mysql -u root $from_db -e'update users set active=0;'
+mysql -u root $from_db <<END
+  update users
+    join (select user_id from reservations union 
+           select user_id from permissions union 
+           select user_id from sessions_users union 
+           select id as user_id from users where admin=1
+         ) list on
+   users.id = list.user_id
+  set
+    active = 1
+END
+
+mysql -u root $to_db -e'ALTER TABLE users ADD active tinyint'
 
 for table in $tables; do
   echo "Importing $table ......"
-  mysqldump -u root $dump_opts $from_db ${table} > ${table}.sql
+
+  if [ "$table" == 'users' ]; then
+    where='--where active=1'
+  else
+    where=''
+  fi
+  mysqldump -u root $dump_opts $where $from_db ${table} > ${table}.sql
   mysql -u root --default-character-set=utf8 $to_db < ${table}.sql
 done
 
-mysql -u root $to_db -e"ALTER TABLE users DROP active"
+mysql -u root $to_db -e'ALTER TABLE users DROP active'
 
 rails r 'Reservation.counter_culture_fix_counts'
