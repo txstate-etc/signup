@@ -21,3 +21,8 @@
     <%= link_to 'Cancel', manage_departments_path %>
   </div>
 <% end %>
+
+<div id="user-modal" class="content-section" style="display:none;">
+  <h2>Add New User</h2>
+  <%= render partial: 'users/form', locals: { user: User.new } %>
+</div>

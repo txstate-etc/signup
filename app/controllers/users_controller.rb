@@ -46,7 +46,6 @@ class UsersController < ApplicationController
   # POST /users
   # POST /users.json
   def create
-    sleep 5
     @user = User.new(user_params)
     
     # use email for login if they didn't supply one 
