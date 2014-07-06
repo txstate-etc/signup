@@ -29,6 +29,7 @@ class DepartmentsController < ApplicationController
 
   # GET /departments/1/edit
   def edit
+    @department.permissions.build unless @department.permissions.present?
   end
 
   # POST /departments
@@ -38,7 +39,7 @@ class DepartmentsController < ApplicationController
 
     respond_to do |format|
       if @department.save
-        format.html { redirect_to edit_department_path, notice: 'Department was successfully created.' }
+        format.html { redirect_to manage_departments_path, notice: 'Department was successfully created.' }
         format.json { render :show, status: :created, location: @department }
       else
         format.html { render :new }
@@ -52,7 +53,7 @@ class DepartmentsController < ApplicationController
   def update
     respond_to do |format|
       if @department.update(department_params)
-        format.html { redirect_to edit_department_path, notice: 'Department was successfully updated.' }
+        format.html { redirect_to manage_departments_path, notice: 'Department was successfully updated.' }
         format.json { render :show, status: :ok, location: @department }
       else
         format.html { render :edit }
@@ -64,9 +65,9 @@ class DepartmentsController < ApplicationController
   # DELETE /departments/1
   # DELETE /departments/1.json
   def destroy
-    @department.destroy
+    @department.deactivate!
     respond_to do |format|
-      format.html { redirect_to departments_url, notice: 'Department was successfully destroyed.' }
+      format.html { redirect_to manage_departments_path, notice: "The department \"#{@department.name}\" has been deleted." }
       format.json { head :no_content }
     end
   end

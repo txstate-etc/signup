@@ -14,4 +14,13 @@ class Department < ActiveRecord::Base
     topics.upcoming
   end
 
+  def deactivate!
+    # if this is a brand new department (no topics, active or inactive), just go ahead and delete it
+    if topics.unscope(where: :inactive).count == 0
+      return self.destroy
+    end
+    
+    self.inactive = true
+    self.save
+  end
 end
