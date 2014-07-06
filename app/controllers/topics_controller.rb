@@ -1,5 +1,6 @@
 class TopicsController < ApplicationController
-  before_action :set_topic, only: [:show, :edit, :delete, :update, :destroy, :history]
+  before_action :set_topic, only: [:show, :edit, :delete, :update, :destroy, :history, :survey_results]
+  before_action :set_title, only: [:show, :delete, :survey_results]
   layout 'topic_collection', only: [:index, :by_department, :by_site, :alpha, :grid]
 
   def grid
@@ -8,18 +9,6 @@ class TopicsController < ApplicationController
     rescue 
       Date.today.beginning_of_month 
     end
-  end
-
-  # GET /topics/1
-  # GET /topics/1.json
-  def show
-    @page_title = @topic.name
-  end
-
-  # This doesn't actually do the delete action (destroy does that)
-  # It just display a confirmation/warning page here with a link to the destroy action
-  def delete
-    @page_title = @topic.name
   end
 
   # GET /topics/new
@@ -123,6 +112,10 @@ class TopicsController < ApplicationController
     def set_topic
       #FIXME: make sure to create a 404 page
       @topic = Topic.find(params[:id])
+    end
+
+    def set_title
+      @page_title = @topic.try(:name) || 'Topic Not Found'
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

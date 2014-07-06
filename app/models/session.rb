@@ -7,7 +7,8 @@ class Session < ActiveRecord::Base
   accepts_nested_attributes_for :occurrences, :reject_if => :all_blank, :allow_destroy => true
   has_and_belongs_to_many :instructors, :class_name => "User", :uniq => true
   accepts_nested_attributes_for :instructors, :reject_if => lambda { |a| true }, :allow_destroy => false
-  has_many :survey_responses, through: :reservations
+  has_many :survey_responses, -> { order 'created_at DESC'}, through: :reservations
+  include SurveyAggregates
 
   def initialize(attributes = nil)    
     # use our local method to add/remove instructors
@@ -125,19 +126,6 @@ class Session < ActiveRecord::Base
     reg_start_time = self.reg_start.blank? ? self.created_at : self.reg_start
     reg_end_time = self.reg_end.blank? ? self.time : self.reg_end
     return reg_start_time <= Time.now && reg_end_time >= Time.now
-  end
-
-  def average_instructor_rating
-    survey_responses.inject(0.0) { |sum, rating| sum + rating.instructor_rating } / survey_responses.size
-  end
-  
-  def average_rating
-    survey_responses.inject(0.0) { |sum, rating| sum + rating.class_rating } / survey_responses.size
-  end
-
-  def average_applicability_rating
-    ratings = survey_responses.reject { |rating| rating.applicability.nil? }
-    ratings.inject(0.0) { |sum, rating| sum + rating.applicability } / ratings.size
   end
 
   private

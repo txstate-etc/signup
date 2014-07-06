@@ -1,6 +1,8 @@
 class Topic < ActiveRecord::Base
   belongs_to :department
   has_many :sessions, -> { where cancelled: false }, :dependent => :destroy
+  has_many :survey_responses, through: :sessions
+  include SurveyAggregates
   has_many :documents, :dependent => :destroy
   accepts_nested_attributes_for :documents, :allow_destroy => true, :reject_if => :all_blank
   acts_as_taggable
