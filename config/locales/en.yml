@@ -55,6 +55,10 @@ en:
   users:
     index:
       title: "Manage Users"
+    new:
+        title: "Create New User"
+    edit:
+        title: "Update User Details"
   helpers:
     submit:
       create: "Create %{model}"

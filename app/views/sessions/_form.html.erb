@@ -75,5 +75,5 @@
 
 <div id="user-modal" class="content-section" style="display:none;">
   <h2>Add New Instructor</h2>
-  <%= render partial: 'users/form', locals: { user: User.new } %>
+  <%= render 'users/form', user: User.new, modal: true %>
 </div>

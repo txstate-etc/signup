@@ -46,8 +46,8 @@
               <%= user.department %>
             </td>
             <td class="user-actions">
-              <%= link_to 'edit', edit_user_path(user), :title => 'Edit User', :class => "edit-link" %>
-              <%= link_to 'delete', user, :title => 'Delete User', :class => "delete-link", :method => :delete, :confirm => "Are you sure you want to delete this user?" %>
+              <%= link_to 'edit', edit_user_path(user), title: 'Edit User', class: 'edit-link' %>
+              <%= link_to 'delete', user, title: 'Delete User', class: 'delete-link', method: :delete, data: { confirm: 'Are you sure you want to delete this user?' } %>
             </td>
           </tr>
         <% end %>

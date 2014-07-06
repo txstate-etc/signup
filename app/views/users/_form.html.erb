@@ -1,4 +1,6 @@
-<%= simple_form_for(user, remote: true, format: :json) do |f| %>
+<% opts = (modal ||= false) ? { remote: true, format: :json } : {} %>
+
+<%= simple_form_for(user, opts) do |f| %>
   <%= f.error_notification %>
 
   <div class="form-inputs">
