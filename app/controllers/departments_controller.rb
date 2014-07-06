@@ -4,6 +4,21 @@ class DepartmentsController < ApplicationController
   # GET /departments/1
   # GET /departments/1.json
   def show
+    @page_title = @department.name
+    respond_to do |format|
+      format.html
+      format.atom
+      if authorized?(@department) || (current_user && current_user.editor?(@department))
+        format.csv do
+          key = fragment_cache_key(['departments/csv', @department])
+          data = Rails.cache.fetch(key) do 
+            Cashier.store_fragment(key, @department.cache_key)
+            @department.to_csv
+          end
+          send_csv data, @department 
+        end
+      end
+    end
   end
 
   # GET /departments/new

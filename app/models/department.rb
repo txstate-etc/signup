@@ -5,4 +5,13 @@ class Department < ActiveRecord::Base
   accepts_nested_attributes_for :permissions, :reject_if => lambda { |p| p['name_and_login'].blank? }, :allow_destroy => true
   scope :active, -> { where inactive: false }
   scope :by_name, -> { order :name }
+
+  def to_param
+    "#{id}-#{name.parameterize}"
+  end
+
+  def upcoming
+    topics.upcoming
+  end
+
 end
