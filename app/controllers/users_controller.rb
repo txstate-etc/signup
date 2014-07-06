@@ -9,6 +9,11 @@ class UsersController < ApplicationController
         :label => u.name_and_login, 
         :value => u.name_and_login
       } 
+    }.tap { |json|
+      json << {
+        :id => 'add-new', 
+        :label => 'Add new...'
+      }
     }
   end
 
@@ -41,6 +46,7 @@ class UsersController < ApplicationController
   # POST /users
   # POST /users.json
   def create
+    sleep 5
     @user = User.new(user_params)
     
     # use email for login if they didn't supply one 

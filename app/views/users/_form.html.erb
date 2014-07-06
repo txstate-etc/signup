@@ -1,4 +1,4 @@
-<%= simple_form_for(@user) do |f| %>
+<%= simple_form_for(user, remote: true, format: :json) do |f| %>
   <%= f.error_notification %>
 
   <div class="form-inputs">
@@ -11,7 +11,7 @@
   </div>
 
   <div class="form-actions">
-    <%= f.button :submit %>
-    <%= link_to 'Cancel', users_path %>
+    <%= f.button :submit, data: { disable_with: "Submitting..."} %>
+    <%= link_to 'Cancel', users_path, id: 'cancel-link' %>
   </div>
 <% end %>

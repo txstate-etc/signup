@@ -60,4 +60,13 @@ $(function() {
     var input = insertedItem.find('.datetimepicker');
     addDatePicker(input, true);
   });
+
+  $('#instructors, #permissions').on('railsAutocomplete.select', 'input.autocomplete', function(event, data) {
+    if (data.item.id == 'add-new') {
+      // display modal
+      new NewUserDialog($('#user-modal'), event.target).show();
+    }
+    
+  });
+
 });

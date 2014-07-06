@@ -297,6 +297,21 @@ a.feed-link {
   }
 }
 
+.ui-dialog {
+  padding-left: 2em;
+  padding-right: 2em;
+  
+  .content-section {
+    h2 {
+      font-family: $serif;
+      font-size: 1.2em;
+    }
+    label {
+      margin-top: 0.5em;
+    }
+  }
+}
+
 .list-expand {
   margin-left: 1.75em;
   font-family: $sans-serif;

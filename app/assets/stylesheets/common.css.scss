@@ -72,3 +72,22 @@ span.site {
 dd span.site {
   font-size: 0.95em;
 }
+
+.flash {
+  animation: flash 1s ease-out;
+  animation-iteration-count: 1;
+  -webkit-animation: flash 1s ease-out;
+  -webkit-animation-iteration-count: 1;
+}
+
+@-webkit-keyframes flash {
+    0% { background-color:none;}
+    50% { background-color:#fbf8b2;}        
+    100% {background-color:none;}
+}
+
+@keyframes flash {
+    0% { background-color:none;}
+    50% { background-color:#fbf8b2;}        
+    100% {background-color:none;}
+}

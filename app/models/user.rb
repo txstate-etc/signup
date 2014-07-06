@@ -26,6 +26,11 @@ class User < ActiveRecord::Base
       where(conditions.join(" AND "), *values)
   end
 
+  def self.directory_search
+    LDAP.search(query)
+    #FIXME: we need to add the user if selected
+  end
+
   def self.find_by_name_and_login(name)
     User.find_by_login(name.split(/[(|)]/)) rescue nil
   end

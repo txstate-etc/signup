@@ -7,3 +7,13 @@ $(function() {
     $(this).toggleClass('collapsed');
   });
 });
+
+// Highlight element in given color for given duration.
+jQuery.fn.flash = function() {
+  var el = this;
+  el.addClass("flash");
+  setTimeout( function(){
+      el.removeClass("flash");
+    }, 1000); // Timeout must be the same length as the 
+              // CSS3 transition or longer (or you'll mess up the transition)
+}

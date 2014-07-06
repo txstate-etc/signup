@@ -16,7 +16,9 @@
 //= require jquery-ui/ui/jquery.ui.core.js
 //= require jquery-ui/ui/jquery.ui.widget.js
 //= require jquery-ui/ui/jquery.ui.position.js
+//= require jquery-ui/ui/jquery.ui.button.js
 //= require jquery-ui/ui/jquery.ui.menu.js
+//= require jquery-ui/ui/jquery.ui.dialog.js
 //= require jquery-ui/ui/jquery.ui.autocomplete.js
 //= require jquery-ui/ui/jquery.ui.datepicker.js
 //= require jqueryui-timepicker-addon/dist/jquery-ui-timepicker-addon.js

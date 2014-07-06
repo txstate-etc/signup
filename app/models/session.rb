@@ -16,6 +16,7 @@ class Session < ActiveRecord::Base
   end
   
   def update(attributes)
+    #FIXME: should fail on invalid user
     # use our local method to add/remove instructors
     attributes.merge!(build_instructors_attributes(true, attributes.delete(:instructors_attributes))) unless attributes.nil?
     super(attributes)

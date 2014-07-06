@@ -71,6 +71,9 @@
     <%= link_to 'Cancel', (@session.new_record? ? @session.topic : @session) %>
   </div>
 
-<%#= FIXME render :partial => "users/new_instructor_dialog", :locals => { :item => @session }%>
-
 <% end %>
+
+<div id="user-modal" class="content-section" style="display:none;">
+  <h2>Add New Instructor</h2>
+  <%= render partial: 'users/form', locals: { user: User.new } %>
+</div>
