@@ -9,6 +9,10 @@ class User < ActiveRecord::Base
   scope :active, -> { where inactive: false }
   scope :manual, -> { where manual: true }
 
+
+  # SELECT id, name_prefix, first_name, last_name, login FROM `users`  
+  # WHERE ((first_name LIKE 'a%' OR last_name LIKE 'a%' OR login LIKE 'a%')
+  # AND (first_name LIKE 'b%' OR last_name LIKE 'b%' OR login LIKE 'b%'))
   def self.search(query)
     logger.debug { "in search: query = #{query}" }
     return none unless query.present?
@@ -26,13 +30,23 @@ class User < ActiveRecord::Base
       where(conditions.join(" AND "), *values)
   end
 
-  def self.directory_search
-    LDAP.search(query)
-    #FIXME: we need to add the user if selected
+  def self.directory_search(query)
+    logger.debug { "in directory_search: query = #{query}" }
+    return [] unless query.present?
+
+    Ldap.search(query)
+  end
+
+  def self.extract_login(name_and_login)
+    name_and_login.split(/[(|)]/).last rescue nil
   end
 
   def self.find_by_name_and_login(name)
-    User.find_by_login(name.split(/[(|)]/)) rescue nil
+    User.find_by_login(User.extract_login(name)) rescue nil
+  end
+
+  def self.find_or_lookup_by_name_and_login(name)
+    User.find_or_lookup_by_login(User.extract_login(name))
   end
 
   def self.find_or_lookup_by_login(login)
@@ -44,11 +58,16 @@ class User < ActiveRecord::Base
       begin
         user = Ldap.import_user(login)
       rescue Net::LDAP::LdapError => e
-        logger.error("There was a problem importing the data from LDAP. " + e)
+        logger.error("There was a problem importing the data from LDAP. " + e.to_s)
       end
     end
     
     user
+  end
+
+  def self.name_and_login(user)
+    return user.name_and_login if user.respond_to? :name_and_login
+    "#{user[:firstname]} #{user[:lastname]} (#{user[:login]})" if user.is_a? Hash
   end
 
   def name

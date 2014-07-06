@@ -10,10 +10,25 @@ class Ldap
     Ldap.new.import_user(login)
   end
 
+  def self.search(query)
+    Ldap.new.search(query)
+  end
+
   def initialize
     @logger = Rails.logger
     @ldap = Net::LDAP.new
     connect
+  end
+
+  def search(query)
+    query = build_search_query(query)
+    results = []
+    @ldap.search(:base => USER_BASE, :filter => query, :size => 10, :return_result => false ) do |entry|
+      if fields = parse_person_entry(entry)
+        results << fields
+      end
+    end
+    results
   end
 
   def import_user(login)
@@ -65,6 +80,28 @@ class Ldap
     raise error unless connected
 
     @logger.debug("connected to #{@ldap.host}.")
+  end
+
+  # SELECT name_prefix, first_name, last_name, login FROM `users`  
+  # WHERE ((first_name LIKE 'a%' OR last_name LIKE 'a%' OR login LIKE 'a%')
+  # AND (first_name LIKE 'b%' OR last_name LIKE 'b%' OR login LIKE 'b%'))
+  def build_search_query(terms)
+    # givenName, sn, or sAMAccountName start with each term
+    query = '(&'
+    query << '(objectCategory=CN=Person,CN=Schema,CN=Configuration,DC=matrix,DC=txstate,DC=edu)'
+    
+    terms.split.each do |term|
+      query << '(|'
+      query << "(sAMAccountName=#{term}*)"
+      query << "(givenName=#{term}*)"
+      query << "(sn=#{term}*)"
+      query << ')'
+    end
+
+    query << ')'
+    @logger.debug("LDAP query = #{query}")
+
+    query
   end
 
   #########################################

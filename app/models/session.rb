@@ -149,7 +149,7 @@ class Session < ActiveRecord::Base
       if(update && attr.include?("id") && instructors.find(attr["id"]).name_and_login == attr["name_and_login"])
         ids << attr["id"]        
       elsif attr["name_and_login"].present?
-        user = User.find_by_name_and_login(attr["name_and_login"])
+        user = User.find_or_lookup_by_name_and_login(attr["name_and_login"])
         if user.nil? 
           @invalid_instructor = true
         else

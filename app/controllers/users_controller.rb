@@ -2,12 +2,14 @@ class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy]
 
   def autocomplete_search
-    users = User.active.limit(10).search(params[:term])
+    #users = User.active.limit(10).search(params[:term])
+    users = User.directory_search(params[:term])
     render json: users.map { |u| 
+      name_and_login = User.name_and_login(u)
       { 
-        :id => u.id, 
-        :label => u.name_and_login, 
-        :value => u.name_and_login
+        :id => u[:login], 
+        :label => name_and_login, 
+        :value => name_and_login
       } 
     }.tap { |json|
       json << {
