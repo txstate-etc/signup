@@ -3,7 +3,8 @@ cache(["#{date_slug}/departments/show/upcoming/atom", @department], :tag => 'ses
     feed.title(t(:'.atom_title_prefix') + @page_title)
     @topics = @department.upcoming
     updated = @topics.max { |a, b| a.upcoming_sessions[0].updated_at <=> b.upcoming_sessions[0].updated_at } rescue nil
-    feed.updated(updated ? updated.upcoming_sessions[0].updated_at : Time.now)
+    time = updated.upcoming_sessions.first.updated_at rescue nil
+    feed.updated(time ? time : Time.now)
 
     if @topics.size > 0
       @topics.each do |topic|
