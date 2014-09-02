@@ -1,0 +1,22 @@
+Hi there Plain User1,
+
+Zombies ate the instructor's brain, and we cannot find a
+replacement at this short notice.
+
+If you'd like to sign up to take the class at a different
+time, you can see a list of times it is offered here
+(http://localhost:3000/topics/419328395).
+
+-------------------------
+The Cancelled Reservation
+-------------------------
+
+What:
+- Introduction to Gato
+When:
+- Saturday, June 2, 2035, 7:00AM - 8:00AM
+Who:
+- Plain User1
+
+Our sincere apologies for the inconvenience.
+

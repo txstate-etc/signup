@@ -1,0 +1,35 @@
+Hi there Instructor1,
+
+Now that the "Introduction to Gato" class you taught has
+ended it is a good time to record attendance, if you have not
+already done so. You may view or update the attendance record
+here
+(http://localhost:3000/sessions/419328395-introduction-to-gato/reservations).
+
+A link to the class survey has been sent to all
+attendees. When completed, you will be able to view the
+results here
+(http://localhost:3000/sessions/419328395-introduction-to-gato/survey_results).
+
+---------------
+Session Details
+---------------
+
+What:
+- Introduction to Gato
+When:
+- Saturday, June 2, 2035, 7:00AM - 8:00AM
+Where:
+- Alkek 155 (San Marcos)
+Description:
+- All about our Content Management System.
+
+Tags:
+- gato (http://localhost:3000/tags/gato), its
+(http://localhost:3000/tags/its)
+Download Class Materials:
+- txt file Gato Document 1
+(http://localhost:3000/system/documents/items/777/370/824/original/gato_document_1.txt)
+- txt file Gato Document 2
+(http://localhost:3000/system/documents/items/928/836/992/original/gato_document_2.txt)
+

@@ -1,0 +1,24 @@
+<html>
+<head>
+  <title>Reservation Confirmation</title>
+  <%= render :partial => "style" %>
+</head>
+<body>
+
+<p>Hi there <%= user.name %>,</p>
+
+<p>A late reservation for <%= reservation.session.topic.name %> has just been made. Because this session
+  is happening today, we wanted to give you a heads up in case you need to print extra course materials
+  or make any other preparations. The reservation details are below. As always, you can view the current list of
+  confirmed reservations <%= link_to "here", sessions_reservations_url(reservation.session) %>.</p>
+
+<%= render :partial => "reservation", :locals => {
+  :session => reservation.session,
+  :user => reservation.user
+  } -%>
+
+<p>You can use the attached ICS file to add the session to your calendar software.</p>
+
+</body>
+</html>
+

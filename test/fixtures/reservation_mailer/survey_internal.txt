@@ -1,0 +1,17 @@
+Hi there Plain User1,
+
+Our records show that you were registered for the
+recent class "Introduction to Gato". Now that the class has
+concluded, we'd love to get your feedback!
+
+We've prepared a very quick, 5 question survey that won't
+take more than 3 minutes of your time -- we promise!
+Please click here
+(http://localhost:3000/survey_responses/new?reservation_id=360065586)
+to take the survey, and accept our thanks.
+
+Thanks in advance for your feedback! We really
+hope you enjoyed the class. To find more classes offered by
+ITS or other departments, check out the list of upcoming
+sessions here (http://localhost:3000/).
+

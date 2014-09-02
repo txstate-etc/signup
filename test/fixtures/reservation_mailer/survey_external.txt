@@ -1,0 +1,16 @@
+Hi there Plain User1,
+
+Our records show that you were registered for the
+recent class "Teaching with TRACS". Now that the class has
+concluded, we'd love to get your feedback!
+
+The instructor for this course has set up a survey to
+collect feedback on this course. Please click here
+(http://localhost/tracssurvey) to complete the survey if
+you haven't already done so. Thank you!
+
+Thanks in advance for your feedback! We really
+hope you enjoyed the class. To find more classes offered by
+ITS or other departments, check out the list of upcoming
+sessions here (http://localhost:3000/).
+

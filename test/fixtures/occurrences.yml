@@ -1,9 +1,90 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  session: 
-  time: 2014-05-24 15:24:43
 
-two:
-  session: 
-  time: 2014-05-24 15:24:43
+gato_past:
+  session: gato_past
+  time: 2010-06-02 12:00:00
+
+tracs_past:
+  session: tracs_past
+  time: 2010-06-05 12:00:00
+
+no_survey_topic_past:
+  session: no_survey_topic_past
+  time: 2010-06-06 12:00:00
+
+gato_past_surveys_sent:
+  session: gato_past_surveys_sent
+  time: 2010-06-01 12:00:00
+
+gato:
+  session: gato
+  time: 2035-06-02 12:00:00
+
+gato_cancelled:
+  session: gato_cancelled
+  time: 2035-08-02 15:00:00
+
+gato_2:
+  session: gato_2
+  time: 2035-09-02 15:00:00
+
+tracs:
+  session: tracs
+  time: 2035-06-02 9:00:00
+
+tracs_tiny:
+  session: tracs_tiny
+  time: 2035-06-02 9:00:00
+  
+tracs_tiny_full:
+  session: tracs_tiny_full
+  time: 2035-06-15 9:00:00
+  
+gato_huge:
+  session: gato_huge
+  time: 2035-06-02 15:00:00
+
+gato_overbooked:
+  session: gato_overbooked
+  time: 2035-07-01 17:00:00
+
+tracs_multiple_instructors:
+  session: tracs_multiple_instructors
+  time: 2037-07-01 17:00:00
+
+multi_time_topic1:
+  session: multi_time_topic
+  time: 2045-05-07 13:00:00
+  
+multi_time_topic2:
+  session: multi_time_topic
+  time: 2045-05-09 13:00:00
+  
+multi_time_topic_started1:
+  session: multi_time_topic_started
+  time: 2010-05-07 13:00:00
+  
+multi_time_topic_started2:
+  session: multi_time_topic_started
+  time: 2045-05-09 13:00:00
+  
+multi_time_topic_completed1:
+  session: multi_time_topic_completed
+  time: 2010-05-07 13:00:00
+  
+multi_time_topic_completed2:
+  session: multi_time_topic_completed
+  time: 2010-05-09 13:00:00
+
+topic_with_attached_documents:
+  session: topic_with_attached_documents
+  time: 2010-05-09 13:00:00
+
+inactive_topic:
+  session: inactive_topic
+  time: 2010-05-23 11:00:00
+
+topic_to_make_inactive:
+  session: topic_to_make_inactive
+  time: 2010-05-24 11:00:00

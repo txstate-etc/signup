@@ -1,0 +1,25 @@
+Hi there Instructor1,
+
+Now that the "Teaching with TRACS" class you taught has
+ended it is a good time to record attendance, if you have not
+already done so. You may view or update the attendance record
+here
+(http://localhost:3000/sessions/214236813-teaching-with-tracs/reservations).
+
+A link to the class survey has been sent to all
+attendees. That survey can be found at
+http://localhost/tracssurvey (http://localhost/tracssurvey).
+
+---------------
+Session Details
+---------------
+
+What:
+- Teaching with TRACS
+When:
+- Wednesday, July 1, 2037, Noon - 2:00PM
+Where:
+- JCK 1100 (San Marcos)
+Description:
+- An introduction to our LMS for faculty.
+

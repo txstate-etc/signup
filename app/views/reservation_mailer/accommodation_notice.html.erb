@@ -1,0 +1,32 @@
+<html>
+<head>
+  <title>Reservation Confirmation</title>
+  <%= render :partial => "style" %>
+</head>
+<body>
+
+<p>Hi there <%= reservation.session.topic.name %> instructors,</p>
+
+<%- if reservation.special_accommodations.present? -%>
+  <%- message = "has requested special accommodations for his/her needs:" -%>
+  <%- addendum = "If you have any questions about this request" -%>
+<%- else -%>
+  <%- message = "has removed his previous request for special accommodations." -%>
+  <%- addendum = "If you have any questions" -%>
+<%- end -%>
+
+<p>
+  <%= reservation.user.name %>, one of the students in your upcoming "<%= reservation.session.topic.name %>" 
+  class on <%= formatted_time_range(reservation.session.time, reservation.session.topic.minutes) %>, 
+  <%= message %>
+</p>
+
+<p><%= reservation.special_accommodations %></p>
+
+<p><%= addendum %>, you can reach 
+  <%= reservation.user.name %> at 
+  <a href="mailto:<%= reservation.user.email %>"><%= reservation.user.email %></a>.
+</p>
+
+</body>
+</html>

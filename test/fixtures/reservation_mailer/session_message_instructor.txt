@@ -1,0 +1,23 @@
+Hi there Instructor1,
+
+The following message was sent to all registered attendees of
+the session of "Teaching with TRACS" that you are teaching:
+
+Don't forget to bring a towel!
+
+---------------
+Session Details
+---------------
+
+What:
+- Teaching with TRACS
+When:
+- Wednesday, July 1, 2037, Noon - 2:00PM
+Where:
+- JCK 1100 (San Marcos)
+Description:
+- An introduction to our LMS for faculty.
+
+You may view or update the details of this session here
+(http://localhost:3000/sessions/214236813-teaching-with-tracs).
+

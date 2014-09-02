@@ -1,0 +1,22 @@
+<html>
+<head>
+  <title>Reservation Confirmation</title>
+  <%= render :partial => "style" %>
+</head>
+<body>
+
+<p>Hi there <%= reservation.user.name %>,</p>
+
+<p>Your reservation for <%= reservation.session.topic.name %> has been confirmed. If you need
+to cancel your reservation for any reason, you can do so <%= link_to "here", reservations_url %>.</p>
+
+<%= render :partial => "reservation", :locals => {
+  :session => reservation.session,
+  :user => reservation.user
+  } -%>
+
+<p>You can use the attached ICS file to add the session to your calendar software.</p>
+
+</body>
+</html>
+

@@ -1,11 +1,79 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-# This model initially had no columns defined.  If you add columns to the
-# model remove the '{}' from the fixture names and add the columns immediately
-# below each fixture, per the syntax in the comments below
-#
-one: {}
-# column: value
-#
-two: {}
-#  column: value
+plainuser1:
+    login: pu12345
+    email: pu12345@dev.nul
+    first_name: Plain
+    last_name: User1
+    admin: false
+
+plainuser2:
+    login: pu23456
+    email: pu23456@dev.nul
+    first_name: Plain
+    last_name: User2
+    admin: false
+
+plainuser3:
+    login: pu34567
+    email: pu34567@dev.nul
+    first_name: Plain
+    last_name: User3
+    admin: false
+
+plainuser4:
+    login: pu45678
+    email: pu45678@dev.nul
+    first_name: Plain
+    last_name: User4
+    admin: false
+
+admin1:
+    login: a12345
+    email: a12345@dev.nul
+    last_name: Admin1
+    admin: true
+
+admin2:
+    login: a23456
+    email: a23456@dev.nul
+    last_name: Admin2
+    admin: true
+
+editor1:
+    login: e12345
+    email: e12345@dev.nul
+    last_name: Editor1
+    admin: false
+
+editor2:
+    login: e22345
+    email: e22345@dev.nul
+    last_name: Editor2
+    admin: false
+
+instructor1:
+    login: i12345
+    email: i12345@dev.nul
+    last_name: Instructor1
+    admin: false
+
+instructor2:
+    login: i23456
+    email: i23456@dev.nul
+    last_name: Instructor2
+    admin: false
+
+manual1:
+    login: m12345
+    email: m12345@dev.nul
+    last_name: Manual2
+    admin: false
+    manual: true
+
+manual2:
+    login: m23456
+    email: m23456@dev.nul
+    last_name: Manual2
+    admin: false
+    manual: true

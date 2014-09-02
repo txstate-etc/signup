@@ -71,12 +71,16 @@ class User < ActiveRecord::Base
   end
 
   def name
-    "#{first_name} #{last_name}" 
+    "#{first_name} #{last_name}".strip 
   end
 
   def directory_url
     #FIXME: what if the people search has no results?
     DIRECTORY_URL_BASE.gsub(/##LOGIN##/, login) unless manual?
+  end
+
+  def email_header
+    "\"#{name}\" <#{email}>"
   end
 
   def name_and_login

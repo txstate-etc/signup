@@ -1,0 +1,29 @@
+<html>
+<head>
+  <title>Session Cancelled</title>
+  <%= render :partial => "style" %>
+</head>
+<body>
+
+<p>Hi there <%= user.name %>,</p>
+
+<p>This notice is to confirm that the session on 
+  "<%= session.topic.name %>", which you
+  were assigned to teach, has been cancelled.</p>
+
+<% if custom_message.present? %>
+  <p>The following message was sent to all attendees:</p>
+  <div class="custom-message">
+    <%= auto_link(simple_format(custom_message)) %>
+  </div>
+<%end%>
+  
+<%= render :partial => "reservation", :locals => {
+  :session => session,
+  :user => user,
+  :title => "The Cancelled Session",
+  :except => [:who, :where, :description, :documents]
+  } -%>
+
+</body>
+</html>

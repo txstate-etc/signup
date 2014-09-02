@@ -94,4 +94,8 @@ module ApplicationHelper
     raw ret
   end
 
+  def default_cancellation_message(session)
+    "Sad news: the session on \"#{session.topic.name}\" for which you had signed up has been cancelled."
+  end
+
 end

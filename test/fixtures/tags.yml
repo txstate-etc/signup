@@ -1,0 +1,7 @@
+gato:
+  id: <%= ActiveRecord::FixtureSet.identify :gato %>
+  name: gato
+
+its:
+  id: <%= ActiveRecord::FixtureSet.identify :its %>
+  name: its

@@ -1,0 +1,25 @@
+<html>
+<head>
+  <title>Reservation Confirmation</title>
+  <%= render :partial => "style" %>
+</head>
+<body>
+
+<p>Good news, <%= reservation.user.name %>!</p>
+
+<p> You were on the waiting list for "<%= reservation.session.topic.name %>",
+  and space has become available! You have automatically been enrolled in the
+  class, and need take no additional action to attend.</p>
+  
+<p> If you won't be able to make it to this session after all, you can cancel
+  your reservation <%= link_to "here", :controller => "reservations", :only_path => false %>.</p>
+
+<%= render :partial => "reservation", :locals => {
+  :session => reservation.session,
+  :user => reservation.user
+  } -%>
+
+<p>You can use the attached ICS file to add the session to your calendar software.</p>
+
+</body>
+</html>

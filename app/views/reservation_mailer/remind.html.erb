@@ -1,0 +1,23 @@
+<html>
+<head>
+  <title>Reservation Reminder</title>
+  <%= render :partial => "style" %>
+</head>
+<body>
+
+<p>Hi there <%= user.name %>,</p>
+
+<p>Just a friendly reminder: the "<%= session.topic.name %>" class you signed up
+for is coming up! If your plans have changed and you can no longer make it to the class,
+or you need to cancel your reservation for any other reason, 
+please do so <%= link_to "here", :controller => "reservations", :only_path => false %>.</p>
+
+<%= render :partial => "reservation", :locals => {
+  :session => session,
+  :user => user
+  } -%>
+
+<p>You can use the attached ICS file to add the session to your calendar software.</p>
+
+</body>
+</html>

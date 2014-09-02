@@ -27,6 +27,15 @@ class Session < ActiveRecord::Base
     "#{id}-#{topic.name.parameterize}"
   end
 
+  def loc_with_site
+    site.present? ? "#{location} (#{site.name})" : location
+  end
+
+  def loc_with_site_and_url
+    s = site.present? ? "#{location} (#{site.name})" : location
+    location_url.present? ? "#{s}. #{location_url}" : s
+  end
+
   def time
     occurrences.first.time if occurrences.present?
   end
@@ -126,6 +135,34 @@ class Session < ActiveRecord::Base
     reg_start_time = self.reg_start.blank? ? self.created_at : self.reg_start
     reg_end_time = self.reg_end.blank? ? self.time : self.reg_end
     return reg_start_time <= Time.now && reg_end_time >= Time.now
+  end
+
+  def to_cal
+    calendar = RiCal.Calendar
+    self.to_event.each { |event| calendar.add_subcomponent( event ) }
+    return calendar.export
+  end
+  
+  def to_event
+    key = "to_event/#{cache_key}"
+    Rails.cache.fetch(key) do
+      Cashier.store_fragment(key, cache_key)
+      description = "#{topic.description}\n\nInstructor(s): #{instructors.map(&:name).join(", ")}"
+      if topic.tag_list.present?
+        description << "\n\nTags: #{topic.sorted_tag_list.join(", ")}"
+      end
+
+      occurrences.map do |o|
+        event = RiCal.Event 
+        event.summary = topic.name
+        event.description = description
+        event.dtstart = o.time
+        event.dtend = o.time + topic.minutes * 60
+        event.url = topic.url
+        event.location = loc_with_site_and_url
+        event
+      end
+    end
   end
 
   private

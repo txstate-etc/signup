@@ -1,0 +1,13 @@
+gato_gato:
+  id: <%= ActiveRecord::FixtureSet.identify :gato_gato %>
+  tag_id: <%= ActiveRecord::FixtureSet.identify :gato %>
+  taggable_id: <%= ActiveRecord::FixtureSet.identify :gato %>
+  taggable_type: Topic
+  context: tags
+
+gato_its:
+  id: <%= ActiveRecord::FixtureSet.identify :gato_its %>
+  tag_id: <%= ActiveRecord::FixtureSet.identify :its %>
+  taggable_id: <%= ActiveRecord::FixtureSet.identify :gato %>
+  taggable_type: Topic
+  context: tags

@@ -29,6 +29,10 @@ class Reservation < ActiveRecord::Base
     attended == Reservation::ATTENDANCE_MISSED
   end
 
+  def need_survey?
+    !missed? && session.topic.survey_type != Topic::SURVEY_NONE && survey_response.nil?
+  end
+
   def cancel!
     was_confirmed = confirmed?
 

@@ -27,5 +27,7 @@ module Signup
 
     # Make bower components part of our assets
     config.assets.paths << Rails.root.join('vendor', 'assets', 'components')
+ 
+    config.autoload_paths += Dir["#{config.root}/lib/**/"]
   end
 end

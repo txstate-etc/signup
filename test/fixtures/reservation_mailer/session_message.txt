@@ -1,0 +1,27 @@
+Hi there Plain User1,
+
+Don't forget to bring a towel!
+
+----------------
+Your Reservation
+----------------
+
+What:
+- Teaching with TRACS
+When:
+- Wednesday, July 1, 2037, Noon - 2:00PM
+Where:
+- JCK 1100 (San Marcos)
+Who:
+- Plain User1
+Description:
+- An introduction to our LMS for faculty.
+
+If you're unable to attend the class for any reason, please
+cancel your reservation here
+(http://localhost:3000/reservations). If you'd like to sign up
+to take the class at a different time, you can see a list of
+times it is offered here
+(http://localhost:3000/topics/93282547). (Be sure to cancel your
+existing reservation first!)
+

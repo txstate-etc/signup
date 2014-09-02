@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 ruby '2.1.2'
-gem 'rails', '4.1.1'
+gem 'rails', '~> 4.1.4'
 gem 'sass-rails', '~> 4.0.3'
 gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.0.0'
@@ -41,6 +41,15 @@ gem 'net-ldap'
 # Autocomplete for instructors, etc.
 # despite the name, should work on rails 4
 gem 'rails3-jquery-autocomplete'
+
+# used by HtmlToPlainText
+gem 'htmlentities'
+
+# rical library for generating ics files
+gem "ri_cal", :git => "git://github.com/chuckbjones/ri_cal.git"
+
+# Use tags instead of keys to expire large swaths of cached pages/fragments at once
+gem "cashier"
 
 group :development do
   gem 'better_errors'
