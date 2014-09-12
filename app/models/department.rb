@@ -6,6 +6,14 @@ class Department < ActiveRecord::Base
   scope :active, -> { where inactive: false }
   scope :by_name, -> { order :name }
 
+  validates :name, presence: true
+  validate :inactive_with_no_active_topics
+  after_validation Proc.new { |d| d.name = d.name_was if d.name.blank? }, on: :update
+  
+  def inactive_with_no_active_topics
+    errors[:base] << 'You cannot delete a department with active topics. Delete the topics first.' if inactive? && topics.present?
+  end
+
   def to_param
     "#{id}-#{name.parameterize}"
   end
@@ -23,4 +31,20 @@ class Department < ActiveRecord::Base
     self.inactive = true
     self.save
   end
+
+  def to_csv
+    CSV.generate do |csv|
+      csv << Session::CSV_HEADER
+      csv_rows.each { |row| csv << row }
+    end
+  end
+
+  def csv_rows
+    key = "csv_rows/#{cache_key}"
+    Rails.cache.fetch(key) do
+      Cashier.store_fragment(key, cache_key)
+      topics.map { |topic| topic.csv_rows }.flatten(1)
+    end
+  end
+
 end

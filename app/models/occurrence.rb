@@ -3,6 +3,8 @@ class Occurrence < ActiveRecord::Base
   default_scope { order :time }
   scope :upcoming, -> { where('time > ?', Time.now) }
 
+  validates :time, presence: true, uniqueness: { scope: :session_id }
+  
   def self.in_range(first, last)
     Occurrence.joins(:session).where(time: first.to_time..last.to_time)
   end

@@ -46,10 +46,13 @@ gem 'rails3-jquery-autocomplete'
 gem 'htmlentities'
 
 # rical library for generating ics files
-gem "ri_cal", :git => "git://github.com/chuckbjones/ri_cal.git"
+gem 'ri_cal', :git => 'git://github.com/chuckbjones/ri_cal.git'
 
 # Use tags instead of keys to expire large swaths of cached pages/fragments at once
-gem "cashier"
+gem 'cashier'
+
+# render pdf documents from ruby code
+gem 'prawn'
 
 group :development do
   gem 'better_errors'

@@ -1,72 +1,47 @@
 class SurveyResponsesController < ApplicationController
-  before_action :set_survey_response, only: [:show, :edit, :update, :destroy]
+  before_filter :authenticate
 
-  # GET /survey_responses
-  # GET /survey_responses.json
-  def index
-    @survey_responses = SurveyResponse.all
-  end
-
-  # GET /survey_responses/1
-  # GET /survey_responses/1.json
-  def show
-  end
-
-  # GET /survey_responses/new
   def new
+    reservation = Reservation.find( params[ :reservation_id ] )
     @survey_response = SurveyResponse.new
+    @survey_response.reservation = reservation
+    if authorized? @survey_response
+      @page_title = reservation.session.topic.name
+    else
+      redirect_to topics_path
+    end
   end
 
-  # GET /survey_responses/1/edit
-  def edit
-  end
-
-  # POST /survey_responses
-  # POST /survey_responses.json
   def create
-    @survey_response = SurveyResponse.new(survey_response_params)
-
-    respond_to do |format|
+    @survey_response = SurveyResponse.new( survey_response_params )
+    if authorized? @survey_response
       if @survey_response.save
-        format.html { redirect_to @survey_response, notice: 'Survey response was successfully created.' }
-        format.json { render :show, status: :created, location: @survey_response }
+        flash[ :notice ] = "Your survey results have been recorded. Thank you for your input!"
+        redirect_to reservations_path
       else
-        format.html { render :new }
-        format.json { render json: @survey_response.errors, status: :unprocessable_entity }
+        @page_title = @survey_response.reservation.session.topic.name
+        render :action => 'new'
       end
+    else
+      redirect_to topics_path
     end
   end
-
-  # PATCH/PUT /survey_responses/1
-  # PATCH/PUT /survey_responses/1.json
-  def update
-    respond_to do |format|
-      if @survey_response.update(survey_response_params)
-        format.html { redirect_to @survey_response, notice: 'Survey response was successfully updated.' }
-        format.json { render :show, status: :ok, location: @survey_response }
-      else
-        format.html { render :edit }
-        format.json { render json: @survey_response.errors, status: :unprocessable_entity }
-      end
+  
+  protected
+  def authorized?(item=nil)
+    # All users can create survey responses only for sessions they attended
+    # Admins/Instructors cannot create survey responses if they themselves were not students in the session
+    # No one can edit or destroy survey responses.
+    if item.is_a? SurveyResponse
+      return false unless item.new_record?
+      reservation = item.reservation
+      return reservation && current_user && reservation.user == current_user && reservation.confirmed?
     end
-  end
 
-  # DELETE /survey_responses/1
-  # DELETE /survey_responses/1.json
-  def destroy
-    @survey_response.destroy
-    respond_to do |format|
-      format.html { redirect_to survey_responses_url, notice: 'Survey response was successfully destroyed.' }
-      format.json { head :no_content }
-    end
+    super
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_survey_response
-      @survey_response = SurveyResponse.find(params[:id])
-    end
-
     # Never trust parameters from the scary internet, only allow the white list through.
     def survey_response_params
       params.require(:survey_response).permit(:reservation_id, :class_rating, :instructor_rating, :applicability, :most_useful, :comments)

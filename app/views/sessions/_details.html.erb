@@ -75,7 +75,8 @@
             <p>You <%= are_were %> on the waiting list for this session.</p>
           <% end %>
           <div class="download-link download-calendar">
-            <%#FIXME= link_to "Add reservation to calendar", { :controller => :reservations, :action => :download, :id => @reservation.id } %>
+            <%= link_to "Add reservation to calendar",
+              reservation_path(@reservation, format: :ics) %>
           </div>
           <%- if @reservation.session.in_future? -%>
             <%= link_to_edit_reservation(@reservation) %>

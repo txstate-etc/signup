@@ -9,9 +9,22 @@ class Reservation < ActiveRecord::Base
   has_one :survey_response
   scope :active, -> { where cancelled: false }
 
+  validates :user_id, presence: { message: 'not recognized.' }, 
+    uniqueness: { scope: :session_id, message: 'has already registered for this session.' }
+  validates :session_id, presence: true
+  validate :session_not_cancelled, on: :create
+  
+  def session_not_cancelled
+    errors[:base] << 'You cannot register for this session, as it has been cancelled.' if session.cancelled
+  end
+
   ATTENDANCE_UNKNOWN = 0
   ATTENDANCE_MISSED = 1
   ATTENDANCE_ATTENDED = 2
+
+  def to_param
+    "#{id}-#{session.topic.name.parameterize}"
+  end
 
   def confirmed?
     session.confirmed?(self)

@@ -1,8 +1,13 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy]
+  before_filter :authenticate
+  before_action :set_user, only: [:new, :create, :show, :edit, :update, :destroy]
+  before_filter :ensure_authorized, except: [:autocomplete_search, :show]
 
   def autocomplete_search
     #users = User.active.limit(10).search(params[:term])
+    #FIXME: this only searches LDAP, meaning we won't have
+    # local users. We should merge DB and LDAP results?
+    # Only pull manual users from DB
     users = User.directory_search(params[:term])
     render json: users.map { |u| 
       name_and_login = User.name_and_login(u)
@@ -38,11 +43,6 @@ class UsersController < ApplicationController
     @user.sessions.each do |session|
       @topics[session.topic] << session
     end
-  end
-
-  # GET /users/new
-  def new
-    @user = User.new
   end
 
   # POST /users
@@ -94,7 +94,11 @@ class UsersController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_user
       #FIXME: make sure to create a 404 page
-      @user = User.find(params[:id])
+      if action_name == 'new' || action_name == 'create'
+        @user = User.new
+      else
+        @user = User.find(params[:id])
+      end
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
@@ -107,5 +111,9 @@ class UsersController < ApplicationController
         :department, 
         :title
       )
+    end
+
+    def ensure_authorized
+      redirect_to root_path unless authorized? @user
     end
 end

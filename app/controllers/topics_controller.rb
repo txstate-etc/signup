@@ -1,6 +1,9 @@
 class TopicsController < ApplicationController
-  before_action :set_topic, only: [:show, :edit, :delete, :update, :destroy, :history, :survey_results]
-  before_action :set_title, only: [:show, :delete, :survey_results]
+  NO_AUTH_ACTIONS = [ :show, :index, :alpha, :by_department, :by_site, :upcoming, :grid ]
+  before_filter :authenticate, :except => NO_AUTH_ACTIONS
+  before_action :set_topic, only: [:show, :edit, :update, :delete, :destroy, :history, :survey_results]
+  before_action :set_title, only: [:show, :survey_results]
+  before_filter :ensure_authorized, except: NO_AUTH_ACTIONS + [:manage, :history]
   layout 'topic_collection', only: [:index, :by_department, :by_site, :alpha, :grid]
 
   def grid
@@ -11,10 +14,39 @@ class TopicsController < ApplicationController
     end
   end
 
-  # GET /topics/new
-  def new
-    @topic = Topic.new
+  def show
+    respond_to do |format|
+      format.html
+      format.atom
+      format.ics do
+        download
+      end
+      if authorized? @topic
+        format.csv do
+          send_csv @topic.to_csv, @topic.to_param 
+        end
+      end
+    end
   end
+
+  def download
+    key = fragment_cache_key(["#{date_slug}/topics/download", @topic])
+    data = Rails.cache.fetch(key) do 
+      Cashier.store_fragment(key, @topic.cache_key)
+      calendar = RiCal.Calendar
+      calendar.add_x_property 'X-WR-CALNAME', @topic.name
+      @topic.upcoming_sessions.each do |session|
+        session.to_event.each { |event| calendar.add_subcomponent( event ) }
+      end
+      calendar.export
+    end
+    send_data(data, :type => 'text/calendar')
+  end
+  
+  # # GET /topics/new
+  # def new
+  #   @topic = Topic.new
+  # end
 
   # POST /topics
   # POST /topics.json
@@ -40,6 +72,7 @@ class TopicsController < ApplicationController
         format.html { redirect_to @topic, notice: 'Topic was successfully updated.' }
         format.json { render :show, status: :ok, location: @topic }
       else
+        flash.now[ :alert ] = "There were problems updating this topic."
         format.html { render :edit }
         format.json { render json: @topic.errors, status: :unprocessable_entity }
       end
@@ -51,7 +84,7 @@ class TopicsController < ApplicationController
   def destroy
     @topic.deactivate!
     respond_to do |format|
-      format.html { redirect_to topics_url, notice: 'Topic was successfully destroyed.' }
+      format.html { redirect_to manage_topics_url, notice: "The topic \"#{@topic.name}\" has been deleted." }
       format.json { head :no_content }
     end
   end
@@ -103,7 +136,7 @@ class TopicsController < ApplicationController
     if authorized?(@topic) || current_user.instructor?(@topic)
       @page_title = "Topic History: " + @topic.name
     else
-      redirect_to topics_path
+      redirect_to root_path
     end
   end
 
@@ -111,7 +144,11 @@ class TopicsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_topic
       #FIXME: make sure to create a 404 page
-      @topic = Topic.find(params[:id])
+      if action_name == 'new' || action_name == 'create'
+        @topic = Topic.new
+      else
+        @topic = Topic.find(params[:id])
+      end
     end
 
     def set_title
@@ -132,5 +169,9 @@ class TopicsController < ApplicationController
         :certificate,
         documents_attributes: [:id, :item, :_destroy]
       )
+    end
+
+    def ensure_authorized
+      redirect_to root_path unless authorized? @topic
     end
 end

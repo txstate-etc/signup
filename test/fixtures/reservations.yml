@@ -4,6 +4,14 @@ plainuser1:
   user: plainuser1
   session: gato
 
+plainuser2_gato:
+  user: plainuser2
+  session: gato
+
+plainuser3_gato:
+  user: plainuser3
+  session: gato
+
 plainuser2:
   user: plainuser2
   session: tracs

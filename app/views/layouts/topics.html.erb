@@ -5,9 +5,9 @@
     <% if authorized? @topic %>
       <p><%= link_to "View Survey Results", survey_results_topic_path( @topic ) %>
       <% unless @topic.inactive? %>
-        <p><%= link_to "Update Topic Details", edit_topic_path %></p>
+        <p><%= link_to "Update Topic Details", edit_topic_path( @topic ) %></p>
         <% if @topic.upcoming_sessions.blank? %>
-          <p><%= link_to "Delete Topic", delete_topic_path %></p>
+          <p><%= link_to "Delete Topic", delete_topic_path( @topic ) %></p>
         <% end %>
           <p><%= link_to "Create New Session", new_topic_session_path( @topic ) %></p>
       <% end %>
@@ -18,7 +18,7 @@
 <% content_for :sidebar do %>
   <% if @topic && !@topic.new_record? %>
     <div class="download-link download-calendar">
-      <%= link_to "[add all sessions to calendar]", :protocol => "webcal", :host => request.host, :port => request.port, :action => 'download' %>
+      <%= link_to "[add all sessions to calendar]", download_topic_url(@topic, :protocol => "webcal") %>
     </div>
   <% end %>
 <% end %>

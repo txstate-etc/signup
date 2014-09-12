@@ -1,9 +1,18 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  department_id: 
-  user_id: 
+admin1_its:
+  department: its
+  user: admin1
 
-two:
-  department_id: 
-  user_id: 
+editor1_its:
+  department: its
+  user: editor1
+
+editor2_its:
+  department: its
+  user: editor2
+
+editor2_tr:
+  department: tr
+  user: editor2
+

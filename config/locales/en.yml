@@ -31,6 +31,8 @@ en:
       title: "Departments Offering Training"
     edit:
       title: "Update Department Details"
+    update:
+      title: "Update Department Details"
     new:
       title: "Create New Department"
     manage:
@@ -42,12 +44,16 @@ en:
       by_site: "group by site"
     edit:
       title: "Update Topic Details"
+    update:
+      title: "Update Topic Details"
     new:
       title: "Create New Topic"
     manage:
       title: "Manage Topics"
   reservations:
     edit:
+      title: "Update Reservation Details"
+    update:
       title: "Update Reservation Details"
   sessions:
     edit:
@@ -58,6 +64,8 @@ en:
     new:
         title: "Create New User"
     edit:
+        title: "Update User Details"
+    update:
         title: "Update User Details"
   helpers:
     submit:

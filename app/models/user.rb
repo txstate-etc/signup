@@ -3,12 +3,14 @@ require 'ldap'
 class User < ActiveRecord::Base
   has_many :permissions
   has_many :departments, :through => :permissions
-  has_many :reservations, -> { where(cancelled: false).includes(:session) }
-  has_and_belongs_to_many :sessions, -> { where(cancelled: false).includes(:topic) }
-  has_many :topics, through: :sessions
+  has_many :reservations, -> { joins(:session).where(cancelled: false, sessions: { cancelled: false }) }
+  has_and_belongs_to_many :sessions, -> { where(cancelled: false).includes([:topic, :occurrences]).order('occurrences.time') }
+  has_many :topics, through: :departments
   scope :active, -> { where inactive: false }
   scope :manual, -> { where manual: true }
 
+  validates :last_name, :email, presence: true
+  validates :login, presence: true, uniqueness: true
 
   # SELECT id, name_prefix, first_name, last_name, login FROM `users`  
   # WHERE ((first_name LIKE 'a%' OR last_name LIKE 'a%' OR login LIKE 'a%')
@@ -57,7 +59,7 @@ class User < ActiveRecord::Base
       # try to find in ldap
       begin
         user = Ldap.import_user(login)
-      rescue Net::LDAP::LdapError => e
+      rescue Ldap::ConnectError, Net::LDAP::LdapError => e
         logger.error("There was a problem importing the data from LDAP. " + e.to_s)
       end
     end
@@ -105,7 +107,7 @@ class User < ActiveRecord::Base
 
   def past_sessions
     #FIXME: lazy load
-    @past_sessions ||= sessions.select { |s| s.started? }
+    @past_sessions ||= sessions.select { |s| s.started? }.reverse
   end
 
   # return true if the user has permissions on one or more departments (and item==nil)
@@ -130,5 +132,58 @@ class User < ActiveRecord::Base
     return sessions.any? { |s| s.topic_id == item.id } if item.is_a? Topic
     return sessions.include?(item) if item.is_a? Session
     false
+  end
+
+
+  def authorized?(item=nil)
+    
+    # Admins can do anything
+    return true if self.admin?
+    
+    # Editors can only edit things in their own departments.
+    # Instructors can edit sessions they are the instructor of.
+    # Regular users (i.e., students) can't do anything.
+    return false if !self.editor? && !self.instructor?
+    
+    # Return true if we are just being asked about general editing permissions.
+    return true if item.nil?
+
+    # Only admins can edit departments.
+    return false if item.is_a? Department
+    
+    # Editors can create and edit topics in their department.
+    # Instructors cannot edit topics.
+    if item.is_a? Topic 
+      return self.editor? if item.new_record? && item.department.blank?
+      return self.departments.include?(item.department)
+    end
+    
+    # Editors can create and edit sessions for topics in their department.
+    # Instructors can edit sessions they are the instructor of.
+    if item.is_a? Session 
+      return self.editor? if item.new_record? && item.topic.blank?
+      return self.departments.include?(item.topic.department) || (!item.new_record? && item.instructor?( self ))
+    end
+    
+    # Editors can create and edit reservations for topics in their department.
+    # Instructors can create and edit reservations for sessions they are the instructor of.
+    if item.is_a? Reservation 
+      return self.departments.include?(item.session.topic.department) || item.session.instructor?( self )
+    end
+    
+    # Editors and Instructors can create new users (e.g., for Instructors who are not in the system).
+    # Only admins can edit them.
+    if item.is_a? User
+      return item.new_record?
+    end
+    
+    # If item is an array of items, recursively call ourself on each one.
+    # Only return true if they are all authorized.
+    if item.is_a?(Array) && item.size > 0
+      return item.all? { |i| authorized? i }
+    end
+
+    # Default deny.
+    return false
   end
 end

@@ -1,17 +1,33 @@
 class SessionsController < ApplicationController
+  before_filter :authenticate, :except => [ :download, :show ]
   before_action :set_session, only: [
     :show, 
     :edit, 
     :update, 
     :destroy, 
     :reservations,
-    :survey_results
+    :survey_results,
+    :email
   ]
+  before_filter :ensure_authorized, except: [:download, :new, :create, :show]
 
-  # GET /sessions
-  # GET /sessions.json
-  def index
-    @sessions = Session.all
+  def show
+    respond_to do |format|
+      format.html
+      format.csv
+      if authorized?(@session) || (current_user && current_user.editor?(@session))
+        format.csv do
+          key = fragment_cache_key(['sessions/csv', @session])
+          data = Rails.cache.fetch(key) do 
+            Cashier.store_fragment(key, @session.cache_key)
+            @session.to_csv
+          end
+          send_csv data, @session 
+        end
+
+        #FIXME: ics
+      end
+    end
   end
 
   # GET /sessions/new
@@ -32,15 +48,18 @@ class SessionsController < ApplicationController
   # POST /sessions.json
   def create
     @session = Session.new(session_params)
-
-    respond_to do |format|
-      if @session.save
-        format.html { redirect_to @session, notice: 'Session was successfully created.' }
-        format.json { render :show, status: :created, location: @session }
-      else
-        format.html { render :new }
-        format.json { render json: @session.errors, status: :unprocessable_entity }
+    if authorized? @session.topic
+      respond_to do |format|
+        if @session.save
+          format.html { redirect_to @session, notice: 'Session was successfully created.' }
+          format.json { render :show, status: :created, location: @session }
+        else
+          format.html { render :new }
+          format.json { render json: @session.errors, status: :unprocessable_entity }
+        end
       end
+    else
+      redirect_to root_path
     end
   end
 
@@ -61,18 +80,50 @@ class SessionsController < ApplicationController
   # DELETE /sessions/1
   # DELETE /sessions/1.json
   def destroy
-    @session.destroy
+    @session.cancel!( params[:custom_message] )
     respond_to do |format|
-      format.html { redirect_to sessions_url, notice: 'Session was successfully destroyed.' }
+      format.html { redirect_to @session.topic, notice: 'Session was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
 
+  def download
+    key = fragment_cache_key("#{date_slug}/sessions/download")
+    data = Rails.cache.fetch(key) do 
+      Cashier.store_fragment(key, 'session-info')
+      calendar = RiCal.Calendar
+      calendar.add_x_property 'X-WR-CALNAME', 'All Upcoming Sessions'
+      Session.upcoming.each do |session|
+        session.to_event.each { |event| calendar.add_subcomponent( event ) }
+      end
+      calendar.export
+    end
+    send_data(data, :type => 'text/calendar')
+  end
+
+  def reservations
+    respond_to do |format|
+      format.html
+      format.csv { send_csv @session.to_csv, @session.to_param }
+      format.pdf { send_data AttendanceReport.new.to_pdf(@session), :disposition => 'inline', :type => 'application/pdf' }
+    end
+  end
+
+  def email
+    @session.email_all(params[:message_text])
+    flash[ :notice ] = "Your email has been sent."
+    redirect_to sessions_reservations_path(@session)
+  end
+  
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_session
       @session = Session.find(params[:id])
       @page_title = @session.topic.name
+    end
+
+    def ensure_authorized
+      redirect_to root_path unless authorized? @session
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
@@ -101,7 +152,7 @@ class SessionsController < ApplicationController
       params.tap do |p|
         p['session']['occurrences_attributes'].each do |_,o|
           o['time'] = Time.parse(o['time']) rescue ''
-        end
+        end if p['session'] && p['session']['occurrences_attributes']
       end
     end
 end

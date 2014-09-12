@@ -55,8 +55,8 @@
       <% unless flash[ :notice ].blank? %>
         <div id="notification"><%=h flash[ :notice ] %></div>
       <% end %>
-      <% unless flash[ :error ].blank? %>
-        <div id="error"><%=h flash[ :error ] %></div>
+      <% unless flash[ :alert ].blank? %>
+        <div id="error"><%=h flash[ :alert ] %></div>
       <% end %>
       <div id="contents">
         <h1><%= image_tag(@title_image, :class=>"title-image") if @title_image %>

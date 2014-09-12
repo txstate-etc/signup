@@ -1,7 +1,7 @@
 class Session < ActiveRecord::Base
   belongs_to :topic
   belongs_to :site
-  has_many :reservations, -> { where cancelled: false }, :dependent => :destroy
+  has_many :reservations, -> { order(:created_at).where(cancelled: false) }, :dependent => :destroy
   accepts_nested_attributes_for :reservations
   has_many :occurrences, :dependent => :destroy
   accepts_nested_attributes_for :occurrences, :reject_if => :all_blank, :allow_destroy => true
@@ -9,6 +9,54 @@ class Session < ActiveRecord::Base
   accepts_nested_attributes_for :instructors, :reject_if => lambda { |a| true }, :allow_destroy => false
   has_many :survey_responses, -> { order 'created_at DESC'}, through: :reservations
   include SurveyAggregates
+  scope :active, -> { where cancelled: false }
+
+  validates :topic, :location, :site, :occurrences, presence: true
+  validates :instructors, presence: true, unless: :invalid_instructor
+  validates :seats, numericality: { only_integer: true, allow_nil: true }
+  validate :enough_seats
+  validate :valid_registration_period
+  after_validation :reload_if_invalid
+
+  def invalid_instructor
+    if @invalid_instructor
+      errors[:instructor_id] << 'must be a valid user'
+      true
+    end  
+  end
+
+  def enough_seats
+    old_seats = seats_was || 0
+    if seats && seats < old_seats && seats < reservations.count
+      errors[:seats] << 'can\'t be fewer than the number of current reservations'
+    end
+  end
+
+  def valid_registration_period
+    return unless registration_period_defined?
+
+    reg_start_time = (self.reg_start.blank? ? self.created_at : self.reg_start) || Time.now
+    reg_end_time = self.reg_end.blank? ? self.time : self.reg_end
+    
+    if reg_start_time > reg_end_time
+      errors[:reg_start] << 'must be earlier than end time.'
+    end
+    
+    if reg_end_time > self.time
+      errors[:reg_end] << 'must be earlier than the session time.'
+    end
+  end
+
+  def reload_if_invalid
+    #bring back any instructors that were deleted
+    self.reload unless (self.new_record? || self.errors.empty?)
+  end
+
+  CSV_HEADER = [ "Topic", "Session ID", "Session Date", "Session Time", "Session Cancelled", "Attendee Name", "Attendee Login", "Attendee Email", "Attendee Title", "Attendee Department", "Reservation Confirmed?", "Attended?" ]  
+
+  def self.upcoming
+    Session.active.joins(:occurrences).merge(Occurrence.upcoming.order(:time))
+  end
 
   def initialize(attributes = nil)    
     # use our local method to add/remove instructors
@@ -21,6 +69,19 @@ class Session < ActiveRecord::Base
     # use our local method to add/remove instructors
     attributes.merge!(build_instructors_attributes(true, attributes.delete(:instructors_attributes))) unless attributes.nil?
     super(attributes)
+  end
+
+  def cancel!(custom_message = '')
+    self.cancelled = true
+    self.save
+    if !in_past?
+      instructors.each do |instructor|
+        # ReservationMailer.delay.deliver_cancellation_notice_instructor( self, instructor, custom_message )
+      end
+      confirmed_reservations.each do |reservation|
+        # ReservationMailer.delay.deliver_cancellation_notice( self, reservation.user, custom_message )
+      end
+    end
   end
 
   def to_param
@@ -137,6 +198,10 @@ class Session < ActiveRecord::Base
     return reg_start_time <= Time.now && reg_end_time >= Time.now
   end
 
+  def instructor?(user)
+    instructors.include? user
+  end
+
   def to_cal
     calendar = RiCal.Calendar
     self.to_event.each { |event| calendar.add_subcomponent( event ) }
@@ -165,6 +230,38 @@ class Session < ActiveRecord::Base
     end
   end
 
+  def to_csv
+    CSV.generate do |csv|
+      csv << CSV_HEADER
+      csv_rows.each { |row| csv << row }
+    end
+  end
+
+  def csv_rows
+    key = "csv_rows/#{cache_key}"
+    Rails.cache.fetch(key) do
+      Cashier.store_fragment(key, cache_key)
+      reservations_by_last_name.map do |reservation|
+        attended = ""
+        if reservation.attended == Reservation::ATTENDANCE_MISSED
+          attended = "MISSED"
+        elsif reservation.attended == Reservation::ATTENDANCE_ATTENDED
+          attended = "ATTENDED"
+        end
+        [ self.topic.name, self.id, self.time.strftime('%m/%d/%Y'), self.time.strftime('%I:%M %p'), self.cancelled, reservation.user.name, reservation.user.login, reservation.user.email, reservation.user.title, reservation.user.department, reservation.confirmed?, attended ]
+      end
+    end
+  end
+
+  def email_all(message)
+    instructors.each do |instructor|
+      # ReservationMailer.delay.deliver_session_message_instructor( self, instructor, message )
+    end
+    confirmed_reservations.each do |reservation|
+      # ReservationMailer.delay.deliver_session_message( self, reservation.user, message )
+    end
+  end
+  
   private
   def build_instructors_attributes(update, attributes)
     return {} if attributes.blank?

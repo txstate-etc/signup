@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   helper_method :current_user
   helper_method :auth_user
   helper_method :authorized?
+  helper_method :login_path
   helper_method :date_slug
 
   # this is responible for putting the login ID of the current
@@ -13,20 +14,30 @@ class ApplicationController < ActionController::Base
   # which should be configured in config/initializers/omniauth.rb
   protected 
   def authenticate
+    #FIXME: tying db credentials to cookie credentials means users can't log in with multiple browsers simultaneously
     return true if current_user && current_user.credentials == session[:credentials]
 
     # redirect to omniauth provider
-    redirect_to '/auth/cas' 
+    redirect_to login_path
     return false    
   end
 
   def authorized?(item=nil)
-    #FIXME
-    current_user.present?
+    current_user && current_user.authorized?(item)
   end
 
-  def date_slug(date=nil)
+  def login_path
+    '/auth/cas'
+  end
+
+ def date_slug(date=nil)
     (date || Date.today).strftime('%Y-%m-%d')
+  end
+
+  def send_csv(csv, filename)
+    send_data csv,
+          type: 'text/csv; charset=iso-8859-1; header=present',
+          filename: "#{filename.to_param}.csv"
   end
 
   private

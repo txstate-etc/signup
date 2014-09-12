@@ -6,6 +6,9 @@ class Ldap
   BIND_PASS = Rails.application.secrets.ldap_password
   USER_BASE = "ou=TxState Users,#{TXST_BASE}"
 
+  class ConnectError < IOError
+  end
+
   def self.import_user(login)
     Ldap.new.import_user(login)
   end
@@ -68,16 +71,16 @@ class Ldap
         connected = @ldap.bind
         @logger.debug("bind result: #{@ldap.get_operation_result}")
         break if connected
-        error = "Failed to connect to LDAP server #{ldap_server}. Error: #{@ldap.get_operation_result.message} (#{@ldap.get_operation_result.code})"
+        raise "Failed to connect to LDAP server #{ldap_server}. Error: #{@ldap.get_operation_result.message} (#{@ldap.get_operation_result.code})"
       rescue => e
         connected = false
         error = "Failed to connect to LDAP server #{ldap_server}. Error: #{e.message}\n#{e.backtrace}"
       end
-      @logger.warn(error) 
+      @logger.warn(error)
     end
 
     # raise exception if not connected
-    raise error unless connected
+    raise ConnectError, error unless connected
 
     @logger.debug("connected to #{@ldap.host}.")
   end

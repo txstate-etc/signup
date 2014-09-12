@@ -6,7 +6,7 @@ class AuthenticationController < ApplicationController
     user = User.find_or_lookup_by_login(auth_user)
 
     if user.blank?
-      flash[:error] = "Oops! We could not log you in. If you just received your login ID, you may need to wait 24 hours before it's available."
+      flash[:alert] = "Oops! We could not log you in. If you just received your login ID, you may need to wait 24 hours before it's available."
       redirect_to root_url and return
     end
     
