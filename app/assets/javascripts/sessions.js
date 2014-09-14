@@ -69,4 +69,8 @@ $(function() {
     
   });
 
+  $('#cancel-session-link').on('click', function cancelClick(event, data) {
+    new CancelDialog($('#cancel-session-dialog')).show();
+  });
+
 });

@@ -82,7 +82,7 @@ class SessionsController < ApplicationController
   def destroy
     @session.cancel!( params[:custom_message] )
     respond_to do |format|
-      format.html { redirect_to @session.topic, notice: 'Session was successfully destroyed.' }
+      format.html { redirect_to @session.topic, notice: 'The session has been cancelled and the attendees notified.' }
       format.json { head :no_content }
     end
   end

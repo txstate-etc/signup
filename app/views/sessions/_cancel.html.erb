@@ -1,0 +1,21 @@
+<% if authorized?(session) && !session.new_record? && session.in_future? && !session.cancelled %>
+  <div id="cancel-session-dialog" class="content-section" style="display:none">
+    <h2>Cancel Session</h2>
+    <p class="cancel-session-confirm">
+     Are you sure you want to cancel this class? All registered attendees will be notified that the session has been cancelled.
+    </p>
+
+    <h3>Message to Attendees</h3>
+    <p class="cancel-session-instructions">
+     The following message will be sent to all registered attendees. You may edit it to add the reason for cancellation
+     or any other important information: 
+    </p>
+    <%= simple_form_for session, method: :delete do |f| %>
+      <%= label_tag :custom_message, "Cancellation Message:" %>
+      <%= text_area_tag :custom_message, default_cancellation_message(session) %><br/>
+      <p class="cancel-session-instructions">The full session details will be included in the email, so you do not need to provide them here. Additionally, a link will be included so that attendees can register for another session.</p>
+      <%= f.button :submit, "Cancel Session" %>
+      <a href="#" class="hide-dialog-link">Don't cancel</a>
+    <% end %>
+  </div>
+<% end %>

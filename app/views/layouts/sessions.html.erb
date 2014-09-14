@@ -19,7 +19,9 @@
 
   <%= yield %>
 
-  <%#= FIXME: render :partial => "cancel", :locals => { :session => @session }%>
+  <% if @session.in_future? && !@session.cancelled %>
+    <%= render :partial => "cancel", :locals => { :session => @session }%>
+  <% end %>
 
 <% end %>
 
