@@ -37,6 +37,8 @@ en:
       title: "Create New Department"
     manage:
       title: "Manage Departments"
+    show:
+      atom_title_prefix: "Upcoming Sessions for "
   topics:
     title: "Available Topics"
     index:
@@ -50,6 +52,8 @@ en:
       title: "Create New Topic"
     manage:
       title: "Manage Topics"
+    show:
+      atom_title_prefix: "Upcoming Sessions for "
   reservations:
     edit:
       title: "Update Reservation Details"
@@ -71,3 +75,6 @@ en:
     submit:
       create: "Create %{model}"
       update: "Make Changes"
+  tags:
+    show:
+      atom_title_prefix: "Upcoming Sessions for "
