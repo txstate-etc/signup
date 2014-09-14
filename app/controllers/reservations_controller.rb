@@ -1,6 +1,6 @@
 class ReservationsController < ApplicationController
   before_filter :authenticate, :except => :show
-  before_action :set_reservation, only: [:show, :edit, :update, :destroy]
+  before_action :set_reservation, only: [:show, :edit, :update, :destroy, :certificate]
 
   # GET /reservations
   # GET /reservations.json
@@ -155,7 +155,25 @@ class ReservationsController < ApplicationController
     end
   end
 
-  #FIXME: need certificate downloads
+  def certificate
+    superuser =  authorized? @reservation
+
+    if @reservation.user != current_user && !superuser
+      flash[ :error ] = "Certificates can only be downloaded by their owner, an admin, or an instructor."
+      if request.referrer.present?
+        redirect_to request.referrer
+      else
+        redirect_to root_url
+      end
+    end
+
+    respond_to do |format|
+      format.pdf { send_data CompletionCertificate.new.to_pdf(@reservation), :disposition => 'inline', :type => 'application/pdf' }
+    end
+
+    #FIXME: analytics
+    #send_analytics('dt' => "Download Certificate - #{@reservation.session.topic.name}")
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.

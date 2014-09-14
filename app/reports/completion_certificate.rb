@@ -8,10 +8,10 @@ class CompletionCertificate < Prawn::Document
   def to_pdf(reservation)
 
     # top border
-    image "#{Rails.root}/public/images/certificate/topbar.jpg", :width => 749, :height => 20, :position => :center, :vposition => -15
+    image "#{Rails.root}/app/assets/images/certificate/topbar.jpg", :width => 749, :height => 20, :position => :center, :vposition => -15
 
     # header
-    image "#{Rails.root}/public/images/certificate/certificate.jpg", :width => 688, :height => 46, :position => :center, :vposition => 28
+    image "#{Rails.root}/app/assets/images/certificate/certificate.jpg", :width => 688, :height => 46, :position => :center, :vposition => 28
 
     # main body text
     line reservation.user.name, :ypos => 425, :height => 48, :size => 48, :style => :italic, :font => 'Times-Roman'
@@ -23,11 +23,11 @@ class CompletionCertificate < Prawn::Document
           
     # organization logo
     if (File.exists?("#{Rails.root}/public/images/certificate/logo.jpg"))
-      image "#{Rails.root}/public/images/certificate/logo.jpg", :width => 139, :height => 36, :position => :center, :vposition => 485
+      image "#{Rails.root}/app/assets/images/certificate/logo.jpg", :width => 139, :height => 36, :position => :center, :vposition => 485
     end
 
     # bottom border
-    image "#{Rails.root}/public/images/certificate/bottombar.jpg", :width => 749, :height => 20, :position => :center, :vposition => 535
+    image "#{Rails.root}/app/assets/images/certificate/bottombar.jpg", :width => 749, :height => 20, :position => :center, :vposition => 535
 
     render
   end
