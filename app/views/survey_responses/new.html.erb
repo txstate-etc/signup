@@ -1,5 +1,40 @@
-<h1>New survey_response</h1>
+<%= simple_form_for(@survey_response) do |f| %>
+  <%= f.error_notification %>
 
-<%= render 'form' %>
+  <div class="content-section">
+    <h2>Course Evaluation Survey</h2>
 
-<%= link_to 'Back', survey_responses_path %>
+    <div class="form-inputs">
+      <%= f.hidden_field :reservation_id %>
+      
+      <div class="survey-question">
+        <%= f.input :instructor_rating, 
+          rating_radios('Please rate your instructor. If multiple instructors, provide an overall rating.') %>
+      </div>
+      
+      <div class="survey-question">
+        <%= f.input :applicability, 
+          rating_radios('Rate the applicability of workshop content to your needs.') %>
+      </div>
+      
+      <div class="survey-question">
+        <%= f.input :class_rating, 
+          rating_radios('What is your overall impression of this workshop?') %>
+      </div>
+      
+      <div class="survey-question">
+        <%= f.input :most_useful, label: 'What did you find most useful about this workshop?' %>
+      </div>
+      
+      <div class="survey-question">
+        <%= f.input :comments, label: 'Add your comments regarding the instructor(s), the pace of the workshop, the time allowed, and any other feedback.' %>
+      </div>
+    
+    </div>
+
+    <div class="form-actions">
+      <%= f.button :submit, 'Submit survey response' %>
+      <%= link_to 'Cancel', reservations_path %>
+    </div>
+  </div>
+<% end %>

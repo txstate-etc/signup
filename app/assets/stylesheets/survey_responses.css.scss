@@ -34,4 +34,21 @@ div.survey-comments {
     margin-left: .25em;
     margin-top: 1em;
   }
+
+}
+
+.survey-question {
+  label.radio {
+    padding-right: 2em;
+  }
+}
+
+textarea#survey_response_most_useful {
+  width: 40em;
+  height: 6em;
+}
+
+textarea#survey_response_comments {
+  width: 40em;
+  height: 12em;
 }

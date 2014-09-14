@@ -35,4 +35,17 @@ def usefulness_comments(model_object)
       ''
     end
   end
+
+  def rating_radios(label)
+    {
+      label: label,
+      as: :radio_buttons, 
+      collection: [
+        ['4 - Excellent', 4], 
+        ['3 - Good',      3], 
+        ['2 - Fair',      2],
+        ['1 - Poor',      1]
+      ]
+    }
+  end
 end
