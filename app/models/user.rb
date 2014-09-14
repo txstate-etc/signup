@@ -36,7 +36,12 @@ class User < ActiveRecord::Base
     logger.debug { "in directory_search: query = #{query}" }
     return [] unless query.present?
 
-    Ldap.search(query)
+    begin
+      Ldap.search(query)
+    rescue Ldap::ConnectError, Net::LDAP::LdapError => e
+      logger.error("There was a problem importing the data from LDAP. " + e.to_s)
+      return []
+    end
   end
 
   def self.extract_login(name_and_login)

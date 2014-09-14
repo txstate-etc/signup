@@ -45,9 +45,6 @@ class TopicTest < ActiveSupport::TestCase
     assert_equal 5, csv.split(/\n/).size, "CSV for TRACS should have 5 lines"
     
     csv = topics( :gato ).to_csv
-    File.open('csv_new.txt', 'w') do |f|
-      f.write(csv) 
-    end
     assert_equal 13, csv.split(/\n/).size, "CSV for Gato should have 11 lines"
   end
   

@@ -10,10 +10,10 @@ class UsersControllerTest < ActionController::TestCase
     assert_match %r{application/json}, @response.content_type
     json = JSON.parse @response.body
     assert_equal 11, json.size
-    assert_equal 'add-new', json[10]['id']
-    assert_equal 'Add new...', json[10]['label']
-    assert_match /^John/i, json[0]['label']
-    assert_match /^John/i, json[0]['value']
+    assert_equal 'add-new', json.last['id']
+    assert_equal 'Add new...', json.last['label']
+    assert_match /^John/i, json.first['label']
+    assert_match /^John/i, json.first['value']
 
     get :autocomplete_search, :term => 'cj32'
     assert_response :success
@@ -47,7 +47,7 @@ class UsersControllerTest < ActionController::TestCase
     get :index
     assert_response :success
   
-    get :autocomplete_search, :search => 'plain user'
+    get :autocomplete_search, :term => 'plain user'
     assert_response :success
   
     get :new
@@ -88,7 +88,7 @@ class UsersControllerTest < ActionController::TestCase
     assert_response :redirect
     assert_redirected_to root_url
   
-    get :autocomplete_search, :search => 'plain user'
+    get :autocomplete_search, :term => 'plain user'
     assert_response :success
   
     get :new
@@ -130,7 +130,7 @@ class UsersControllerTest < ActionController::TestCase
     assert_response :redirect
     assert_redirected_to root_url
   
-    get :autocomplete_search, :search => 'plain user'
+    get :autocomplete_search, :term => 'plain user'
     assert_response :success
   
     get :new
@@ -172,7 +172,7 @@ class UsersControllerTest < ActionController::TestCase
     assert_response :redirect
     assert_redirected_to root_url
   
-    get :autocomplete_search, :search => 'plain user'
+    get :autocomplete_search, :term => 'plain user'
     assert_response :success
   
     get :new

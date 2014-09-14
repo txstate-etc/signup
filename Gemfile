@@ -1,12 +1,12 @@
 source 'https://rubygems.org'
 ruby '2.1.2'
-gem 'rails', '~> 4.1.4'
+gem 'rails', '~> 4.1.6'
 gem 'sass-rails', '~> 4.0.3'
-gem 'uglifier', '>= 1.3.0'
-gem 'coffee-rails', '~> 4.0.0'
+gem 'uglifier', '>= 2.5.3'
+gem 'coffee-rails', '~> 4.0.1'
 gem 'jquery-rails'
 gem 'turbolinks'
-gem 'jbuilder', '~> 2.0'
+gem 'jbuilder', '~> 2.1.3'
 gem 'sdoc', '~> 0.4.0',          group: :doc
 gem 'spring',        group: :development
 gem 'mysql2'
@@ -17,7 +17,7 @@ gem 'jquery-turbolinks'
 
 # add cache of association counts
 # more flexibly than the builtin version
-gem 'counter_culture', '~> 0.1.18'
+gem 'counter_culture', '~> 0.1.25'
 
 # convert urls in descriptions into links
 # Won't need this after implementing wysiwyg editor.
@@ -27,7 +27,7 @@ gem 'rails_autolink'
 gem 'acts-as-taggable-on'
 
 # Attachments/Documents
-gem 'paperclip', '~> 4.1'
+gem 'paperclip', '~> 4.2.0'
 
 # Nested form helpers (for attachments, instructors, etc)
 gem 'cocoon'
@@ -46,7 +46,7 @@ gem 'rails3-jquery-autocomplete'
 gem 'htmlentities'
 
 # rical library for generating ics files
-gem 'ri_cal', :git => 'git://github.com/chuckbjones/ri_cal.git'
+gem 'ri_cal', :github => 'chuckbjones/ri_cal', :branch => 'master'
 
 # Use tags instead of keys to expire large swaths of cached pages/fragments at once
 gem 'cashier'

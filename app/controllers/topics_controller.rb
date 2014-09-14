@@ -1,7 +1,7 @@
 class TopicsController < ApplicationController
-  NO_AUTH_ACTIONS = [ :show, :index, :alpha, :by_department, :by_site, :upcoming, :grid ]
+  NO_AUTH_ACTIONS = [ :show, :download, :index, :alpha, :by_department, :by_site, :upcoming, :grid ]
   before_filter :authenticate, :except => NO_AUTH_ACTIONS
-  before_action :set_topic, only: [:show, :edit, :update, :delete, :destroy, :history, :survey_results]
+  before_action :set_topic, only: [:show, :edit, :download, :update, :delete, :destroy, :history, :survey_results]
   before_action :set_title, only: [:show, :survey_results]
   before_filter :ensure_authorized, except: NO_AUTH_ACTIONS + [:manage, :history]
   layout 'topic_collection', only: [:index, :by_department, :by_site, :alpha, :grid]
@@ -30,16 +30,16 @@ class TopicsController < ApplicationController
   end
 
   def download
-    key = fragment_cache_key(["#{date_slug}/topics/download", @topic])
-    data = Rails.cache.fetch(key) do 
-      Cashier.store_fragment(key, @topic.cache_key)
+    # key = fragment_cache_key(["#{date_slug}/topics/download", @topic])
+    # data = Rails.cache.fetch(key) do 
+    #   Cashier.store_fragment(key, @topic.cache_key)
       calendar = RiCal.Calendar
       calendar.add_x_property 'X-WR-CALNAME', @topic.name
       @topic.upcoming_sessions.each do |session|
         session.to_event.each { |event| calendar.add_subcomponent( event ) }
       end
-      calendar.export
-    end
+      data = calendar.export
+    # end
     send_data(data, :type => 'text/calendar')
   end
   

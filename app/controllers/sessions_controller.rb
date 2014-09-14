@@ -88,16 +88,17 @@ class SessionsController < ApplicationController
   end
 
   def download
-    key = fragment_cache_key("#{date_slug}/sessions/download")
-    data = Rails.cache.fetch(key) do 
-      Cashier.store_fragment(key, 'session-info')
+    # FIXME is caching different for rails 4?
+    # key = fragment_cache_key("#{date_slug}/sessions/download")
+    # data = Rails.cache.fetch(key) do 
+      # Cashier.store_fragment(key, 'session-info')
       calendar = RiCal.Calendar
       calendar.add_x_property 'X-WR-CALNAME', 'All Upcoming Sessions'
       Session.upcoming.each do |session|
         session.to_event.each { |event| calendar.add_subcomponent( event ) }
       end
-      calendar.export
-    end
+    data = calendar.export
+    # end
     send_data(data, :type => 'text/calendar')
   end
 
