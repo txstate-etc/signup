@@ -8,7 +8,6 @@
 .download-link a, .edit-reservation-link a, .delete-link a, .certificate-link a, .survey-link a {
   font-family: $sans-serif;
   padding-left: 25px;
-  font-size: .85em;
 }
 
 .delete-link {
@@ -31,9 +30,9 @@
 }
 
 div.certificate-link {
-  background-image: image-url('rosette.png');
+  background-image: image-url('certificate.png');
 }
 
 div.survey-link {
-  background-image: image-url('comment.png');
+  background-image: image-url('survey.png');
 }

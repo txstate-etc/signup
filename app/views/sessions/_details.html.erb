@@ -63,8 +63,9 @@
       <% @reservation = Reservation.active.find_by_user_id_and_session_id( current_user.id, @session.id ) if current_user %>
       <% if @reservation %>
         <% if @reservation.attended == Reservation::ATTENDANCE_ATTENDED %>
-          <p>You attended this session. <%= survey_link(@reservation) %></p>
-          <p><%= certificate_link(@reservation) %></p>
+          <p>You attended this session.</p>
+          <%= certificate_link(@reservation) %>
+          <%= survey_link(@reservation) %>
         <% elsif @reservation.attended == Reservation::ATTENDANCE_MISSED %>
           <p>You registered for this session, but were marked absent. </p>
         <% else %>

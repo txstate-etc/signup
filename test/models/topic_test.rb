@@ -81,8 +81,6 @@ class TopicTest < ActiveSupport::TestCase
     assert_equal 2, topic.documents.size
   end
 
-  #FIXME: add tests for validations
-  
   test "Topic with no name is not valid" do
     topic = Topic.new
     #topic.name = "some name"
