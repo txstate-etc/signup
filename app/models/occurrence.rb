@@ -2,6 +2,7 @@ class Occurrence < ActiveRecord::Base
   belongs_to :session, -> { where cancelled: false }
   default_scope { order :time }
   scope :upcoming, -> { where('time > ?', Time.now) }
+  scope :in_past, -> { where('time < ?', Time.now) }
 
   validates :time, presence: true, uniqueness: { scope: :session_id }
   

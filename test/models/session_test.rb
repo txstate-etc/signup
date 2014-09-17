@@ -85,30 +85,26 @@ class SessionTest < ActiveSupport::TestCase
   end
 
   test "Users should be updated when location or time of a class changes" do
-    # assert_difference 'ActionMailer::Base.deliveries.size', +3 do
-    #   sessions( :gato_overbooked ).location = "The Third Circle of Hell"
-    #   sessions( :gato_overbooked ).save!
-    #   # Delayed::Worker.new(:quiet => true).work_off
-    # end
+    assert_difference 'ActionMailer::Base.deliveries.size', +3 do
+      sessions( :gato_overbooked ).location = "The Third Circle of Hell"
+      sessions( :gato_overbooked ).save!
+    end
 
-    # assert_difference 'ActionMailer::Base.deliveries.size', +3 do
-    #   sessions( :gato_overbooked ).occurrences[0].time = Time.now + 1.day
-    #   sessions( :gato_overbooked ).save!
-    #   # Delayed::Worker.new(:quiet => true).work_off
-    # end
+    assert_difference 'ActionMailer::Base.deliveries.size', +3 do
+      sessions( :gato_overbooked ).occurrences[0].time = Time.now + 1.day
+      sessions( :gato_overbooked ).save!
+    end
 
-    # # Should not send for sessions in the past
-    # assert_difference 'ActionMailer::Base.deliveries.size', +0 do
-    #   sessions( :gato_overbooked ).occurrences[0].time = Time.now - 1.day
-    #   sessions( :gato_overbooked ).save!
-    #   # Delayed::Worker.new(:quiet => true).work_off
-    # end
+    # Should not send for sessions in the past
+    assert_difference 'ActionMailer::Base.deliveries.size', +0 do
+      sessions( :gato_overbooked ).occurrences[0].time = Time.now - 1.day
+      sessions( :gato_overbooked ).save!
+    end
     
-    # assert_difference 'ActionMailer::Base.deliveries.size', +0 do
-    #   sessions( :gato_overbooked ).instructors << users( :instructor1 )
-    #   sessions( :gato_overbooked ).save!
-    #   # Delayed::Worker.new(:quiet => true).work_off
-    # end
+    assert_difference 'ActionMailer::Base.deliveries.size', +0 do
+      sessions( :gato_overbooked ).instructors << users( :instructor1 )
+      sessions( :gato_overbooked ).save!
+    end
     
   end
   
@@ -116,43 +112,40 @@ class SessionTest < ActiveSupport::TestCase
     start_date = DateTime.parse( '1 January 2035' )
     end_date = DateTime.parse( '31 December 2035' )
     
-    # assert_difference 'ActionMailer::Base.deliveries.size', +13 do
-    #   Session.send_reminders( start_date, end_date )
-    #   # Delayed::Worker.new(:quiet => true).work_off
-    # end
+    assert_difference 'ActionMailer::Base.deliveries.size', +15 do
+      Session.send_reminders( start_date, end_date )
+    end
   end
 
   test "Verify that correct person gets emailed" do
     start_date = DateTime.parse( '15 June 2035 00:00' )
     end_date = DateTime.parse( '15 June 2035 23:59' )
-    # assert_difference 'ActionMailer::Base.deliveries.size', +2 do
-    #   Session.send_reminders( start_date, end_date )
-    #   # Delayed::Worker.new(:quiet => true).work_off
-    # end
+    assert_difference 'ActionMailer::Base.deliveries.size', +2 do
+      Session.send_reminders( start_date, end_date )
+    end
     
-    # reminder_email = ActionMailer::Base.deliveries.last
-    # assert_equal reminder_email.subject, "Reminder: " + topics( :tracs ).name
-    # assert_equal reminder_email.to[0], users( :instructor2 ).email
+    reminder_email = ActionMailer::Base.deliveries.last
+    assert_equal reminder_email.subject, "Reminder: " + topics( :tracs ).name
+    assert_equal reminder_email.to[0], users( :instructor2 ).email
 
-    # reminder_email = ActionMailer::Base.deliveries[-2]
-    # assert_equal reminder_email.subject, "Reminder: " + topics( :tracs ).name
-    # assert_equal reminder_email.to[0], users( :plainuser3 ).email
+    reminder_email = ActionMailer::Base.deliveries[-2]
+    assert_equal reminder_email.subject, "Reminder: " + topics( :tracs ).name
+    assert_equal reminder_email.to[0], users( :plainuser3 ).email
   end
   
   test "Sessions with automatic or external surveys should get emails, but only for folks not marked as absent" do
-    # assert_difference 'ActionMailer::Base.deliveries.size', +8 do
-    #   assert_difference 'Session.all(:conditions => ["survey_sent = ?", false]).size', -6 do
-    #     Session.send_followups
-    #     # Delayed::Worker.new(:quiet => true).work_off
-    #   end
-    # end
+    assert_difference 'ActionMailer::Base.deliveries.size', +8 do
+      assert_difference 'Session.where(survey_sent: false).count', -6 do
+        Session.send_followups
+      end
+    end
 
-    # ActionMailer::Base.deliveries.last(8).each do |survey_email|
-    #   assert_match 'localhost', survey_email.body, "URLs not being constructed properly"
-    #   if survey_email.to =~ users(:plainuser1).email || survey_email.to =~ users(:plainuser2).email
-    #     assert_match /\/survey_responses\/new\?reservation_id=#{reservations(:multi_time_topic_completed_plainuser2).id}|http:\/\/localhost\/tracssurvey/, survey_email.body, "URLs not being constructed properly"
-    #   end
-    # end
+    ActionMailer::Base.deliveries.last(8).each do |survey_email|
+      assert_match 'localhost', survey_email.text_part.body.to_s, "URLs not being constructed properly"
+      if (survey_email.to & [:plainuser1, :plainuser2, :plainuser3].map { |u| users(u).email }).any?
+        assert_match /\/survey_responses\/new\?reservation_id=#{reservations(:multi_time_topic_completed_plainuser2).id}|http:\/\/localhost\/tracssurvey/, survey_email.text_part.body.to_s, "URLs not being constructed properly"
+      end
+    end
   end
   
   test "Should compute seats remaining correctly" do
@@ -379,34 +372,30 @@ class SessionTest < ActiveSupport::TestCase
     # it should send one reminder (for recipient and instructor) for the first occurrence
     start_date = DateTime.parse( '7 May 2045' ).at_beginning_of_day
     end_date = DateTime.parse( '7 May 2045' ).end_of_day    
-    # assert_difference 'ActionMailer::Base.deliveries.size', +2 do
-    #   Session.send_reminders( start_date, end_date )
-    #   # Delayed::Worker.new(:quiet => true).work_off
-    # end
+    assert_difference 'ActionMailer::Base.deliveries.size', +2 do
+      Session.send_reminders( start_date, end_date )
+    end
 
     # it should send no reminders if there are no occurrences for the day
     start_date = DateTime.parse( '8 May 2045' ).at_beginning_of_day
     end_date = DateTime.parse( '8 May 2045' ).end_of_day    
-    # assert_difference 'ActionMailer::Base.deliveries.size', 0 do
-    #   Session.send_reminders( start_date, end_date )
-    #   # Delayed::Worker.new(:quiet => true).work_off
-    # end
+    assert_difference 'ActionMailer::Base.deliveries.size', 0 do
+      Session.send_reminders( start_date, end_date )
+    end
 
     # it should still send reminders for the second occurrence
     start_date = DateTime.parse( '9 May 2045' ).at_beginning_of_day
     end_date = DateTime.parse( '9 May 2045' ).end_of_day    
-    # assert_difference 'ActionMailer::Base.deliveries.size', +4 do
-    #   Session.send_reminders( start_date, end_date )
-    #   # Delayed::Worker.new(:quiet => true).work_off
-    # end
+    assert_difference 'ActionMailer::Base.deliveries.size', +4 do
+      Session.send_reminders( start_date, end_date )
+    end
     
     # it should NOT send reminders for the second occurrence if only_first_occurrence is true (3rd param to send_reminders)
     start_date = DateTime.parse( '9 May 2045' ).at_beginning_of_day
     end_date = DateTime.parse( '9 May 2045' ).end_of_day    
-    # assert_difference 'ActionMailer::Base.deliveries.size', 0 do
-    #   Session.send_reminders( start_date, end_date, true )
-    #   # Delayed::Worker.new(:quiet => true).work_off
-    # end
+    assert_difference 'ActionMailer::Base.deliveries.size', 0 do
+      Session.send_reminders( start_date, end_date, true )
+    end
   end
   
   test "ics for multi time sessions has multiple events" do
@@ -414,39 +403,36 @@ class SessionTest < ActiveSupport::TestCase
   end
   
   test "emails sent to reservations after cancellation" do
-    # assert_difference 'ActionMailer::Base.deliveries.size', +3 do
-    #   sessions( :gato_overbooked ).cancel!
-    #   # Delayed::Worker.new(:quiet => true).work_off
-    # end
+    assert_difference 'ActionMailer::Base.deliveries.size', +3 do
+      sessions( :gato_overbooked ).cancel!
+    end
 
-    # cancellation_emails = ActionMailer::Base.deliveries.last(3)
-    # cancellation_emails.each do |email|
-    #   assert_equal "Class Cancelled: " + topics( :gato ).name, email.subject
-    # end    
-    # assert_equal users( :instructor1 ).email, cancellation_emails[0].to[0]
-    # assert_equal users( :plainuser2 ).email, cancellation_emails[1].to[0]
-    # assert_equal users( :plainuser1 ).email, cancellation_emails[2].to[0]
+    cancellation_emails = ActionMailer::Base.deliveries.last(3)
+    cancellation_emails.each do |email|
+      assert_equal "Class Cancelled: " + topics( :gato ).name, email.subject
+    end    
+    assert_equal users( :instructor1 ).email, cancellation_emails[0].to[0]
+    assert_equal users( :plainuser2 ).email, cancellation_emails[1].to[0]
+    assert_equal users( :plainuser1 ).email, cancellation_emails[2].to[0]
   
-    # # no emails for sessions in the past
-    # assert_difference 'ActionMailer::Base.deliveries.size', +0 do
-    #   sessions( :gato_past ).cancel!
-    #   # Delayed::Worker.new(:quiet => true).work_off
-    # end
-end
+    # no emails for sessions in the past
+    assert_difference 'ActionMailer::Base.deliveries.size', +0 do
+      sessions( :gato_past ).cancel!
+    end
+  end
 
   test "emails sent to instructors after cancellation" do
-    # assert_difference 'ActionMailer::Base.deliveries.size', +3 do
-    #   sessions( :tracs_multiple_instructors ).cancel!
-    #   # Delayed::Worker.new(:quiet => true).work_off
-    # end
+    assert_difference 'ActionMailer::Base.deliveries.size', +3 do
+      sessions( :tracs_multiple_instructors ).cancel!
+    end
 
-    # cancellation_emails = ActionMailer::Base.deliveries.last(3)
-    # cancellation_emails.each do |email|
-    #   assert_equal "Class Cancelled: " + topics( :tracs ).name, email.subject
-    # end    
-    # assert_equal users( :instructor1 ).email, cancellation_emails[0].to[0]
-    # assert_equal users( :instructor2 ).email, cancellation_emails[1].to[0]
-    # assert_equal users( :plainuser1 ).email, cancellation_emails[2].to[0]
+    cancellation_emails = ActionMailer::Base.deliveries.last(3)
+    cancellation_emails.each do |email|
+      assert_equal "Class Cancelled: " + topics( :tracs ).name, email.subject
+    end    
+    assert_equal users( :instructor1 ).email, cancellation_emails[0].to[0]
+    assert_equal users( :instructor2 ).email, cancellation_emails[1].to[0]
+    assert_equal users( :plainuser1 ).email, cancellation_emails[2].to[0]
   end
   
   

@@ -27,7 +27,7 @@ class ReservationsControllerTest < ActionController::TestCase
     assert_response :redirect
   end
   
-  #FIXME: we need an authentuication_controller_test
+  #FIXME: we need an authentication_controller_test
   # test "Failed login causes redirect and error message" do
   #   @request.session[ :auth_user ] = 'fake_user'
   #   get :edit, :id => reservations( :plainuser1 )
@@ -76,14 +76,14 @@ class ReservationsControllerTest < ActionController::TestCase
   
   test "Verify that confirmation emails are sent when a reservation is made" do
     login_as( users( :plainuser3 ) )
-    # assert_difference 'ActionMailer::Base.deliveries.size', +1 do
+    assert_difference 'ActionMailer::Base.deliveries.size', +1 do
       get :create, :session_id => sessions( :gato ), :session => { :session_id => sessions( :gato ) }
-      # Delayed::Worker.new(:quiet => true).work_off
-    # end
+      Delayed::Worker.new(:quiet => true).work_off
+    end
     
-    # confirmation_email = ActionMailer::Base.deliveries.last
-    # assert_equal confirmation_email.subject, "Reservation Confirmation For: Plain User3"
-    # assert_equal confirmation_email.to[0], "pu34567@dev.nul"
+    confirmation_email = ActionMailer::Base.deliveries.last
+    assert_equal confirmation_email.subject, "Reservation Confirmation For: Plain User3"
+    assert_equal confirmation_email.to[0], "pu34567@dev.nul"
   end
   
   test "Users should only be able to delete their own reservations" do
@@ -174,6 +174,7 @@ class ReservationsControllerTest < ActionController::TestCase
     login_as( users( :plainuser1 ) )
     assert_difference 'ActionMailer::Base.deliveries.size', +0 do
       delete :destroy, :id => reservations( :plainuser1 )
+      Delayed::Worker.new(:quiet => true).work_off
     end
   end
   
@@ -188,12 +189,12 @@ class ReservationsControllerTest < ActionController::TestCase
     assert_equal users( :plainuser1 ).name, sessions( :gato_overbooked ).confirmed_reservations.last.user.name
     assert_equal users( :plainuser3 ).name, sessions( :gato_overbooked ).waiting_list.first.user.name
 
-    # assert_difference 'ActionMailer::Base.deliveries.size', +1 do
+    assert_difference 'ActionMailer::Base.deliveries.size', +1 do
       delete :destroy, :id => reservations( :overbooked_plainuser1 )
       assert_redirected_to reservations_path
       assert_match "has been cancelled", flash[:notice]
-      # Delayed::Worker.new(:quiet => true).work_off
-    # end
+      Delayed::Worker.new(:quiet => true).work_off
+    end
 
     Reservation.counter_culture_fix_counts
     sessions( :gato_overbooked ).reload
@@ -204,9 +205,9 @@ class ReservationsControllerTest < ActionController::TestCase
     assert_equal users( :plainuser2 ).name, sessions( :gato_overbooked ).confirmed_reservations.first.user.name
     assert_equal users( :plainuser3 ).name, sessions( :gato_overbooked ).confirmed_reservations.last.user.name
     
-    # promotion_email = ActionMailer::Base.deliveries.last
-    # assert_equal "Now Enrolled: " + topics( :gato ).name, promotion_email.subject
-    # assert_equal users( :plainuser3 ).email, promotion_email.to[0]
+    promotion_email = ActionMailer::Base.deliveries.last
+    assert_equal "Now Enrolled: " + topics( :gato ).name, promotion_email.subject
+    assert_equal users( :plainuser3 ).email, promotion_email.to[0]
     
   end
 
@@ -221,12 +222,12 @@ class ReservationsControllerTest < ActionController::TestCase
     assert_equal users( :plainuser1 ).name, sessions( :gato_overbooked ).confirmed_reservations.last.user.name
     assert_equal users( :plainuser3 ).name, sessions( :gato_overbooked ).waiting_list.first.user.name
 
-    # assert_difference 'ActionMailer::Base.deliveries.size', 0 do
+    assert_difference 'ActionMailer::Base.deliveries.size', 0 do
       delete :destroy, :id => reservations( :overbooked_plainuser3 )
       assert_redirected_to reservations_path
       assert_match "has been cancelled", flash[:notice]
-    # Delayed::Worker.new(:quiet => true).work_off
-    # end
+      Delayed::Worker.new(:quiet => true).work_off
+    end
 
     Reservation.counter_culture_fix_counts
     sessions( :gato_overbooked ).reload

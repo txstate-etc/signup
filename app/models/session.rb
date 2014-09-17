@@ -3,7 +3,7 @@ class Session < ActiveRecord::Base
   belongs_to :site
   has_many :reservations, -> { order(:created_at).where(cancelled: false) }, :dependent => :destroy
   accepts_nested_attributes_for :reservations
-  has_many :occurrences, :dependent => :destroy
+  has_many :occurrences, :dependent => :destroy, after_add: :mark_dirty, after_remove: :mark_dirty
   accepts_nested_attributes_for :occurrences, :reject_if => :all_blank, :allow_destroy => true
   has_and_belongs_to_many :instructors, :class_name => "User", :uniq => true
   accepts_nested_attributes_for :instructors, :reject_if => lambda { |a| true }, :allow_destroy => false
@@ -17,6 +17,8 @@ class Session < ActiveRecord::Base
   validate :enough_seats
   validate :valid_registration_period
   after_validation :reload_if_invalid
+
+  around_update :send_update_notifications
 
   def invalid_instructor
     if @invalid_instructor
@@ -65,10 +67,39 @@ class Session < ActiveRecord::Base
   end
   
   def update(attributes)
-    #FIXME: should fail on invalid user
     # use our local method to add/remove instructors
     attributes.merge!(build_instructors_attributes(true, attributes.delete(:instructors_attributes))) unless attributes.nil?
     super(attributes)
+  end
+  
+  def mark_dirty(not_used)
+    @need_update = true
+  end
+
+  # around_update callback. The actual update is done in the `yield`
+  def send_update_notifications
+    logger.info("in send_update_notifications, @need_update = #{@need_update}")
+    
+    send_update = !in_past? && (
+      @need_update || 
+      location_changed? || 
+      site_id_changed? || 
+      occurrences.any? { |o| o.changed? }
+    )
+    
+    yield
+
+    if send_update
+      instructors.each do |instructor|
+        ReservationMailer.delay.update_notice_instructor( self, instructor )
+      end
+      confirmed_reservations.each do |reservation|
+        ReservationMailer.delay.update_notice( self, reservation.user )
+      end
+    end
+
+    @need_update = false
+
   end
 
   def cancel!(custom_message = '')
@@ -76,10 +107,10 @@ class Session < ActiveRecord::Base
     self.save
     if !in_past?
       instructors.each do |instructor|
-        # ReservationMailer.delay.deliver_cancellation_notice_instructor( self, instructor, custom_message )
+        ReservationMailer.delay.cancellation_notice_instructor( self, instructor, custom_message )
       end
       confirmed_reservations.each do |reservation|
-        # ReservationMailer.delay.deliver_cancellation_notice( self, reservation.user, custom_message )
+        ReservationMailer.delay.cancellation_notice( self, reservation.user, custom_message )
       end
     end
   end
@@ -255,13 +286,66 @@ class Session < ActiveRecord::Base
 
   def email_all(message)
     instructors.each do |instructor|
-      # ReservationMailer.delay.deliver_session_message_instructor( self, instructor, message )
+      ReservationMailer.delay.session_message_instructor( self, instructor, message )
     end
     confirmed_reservations.each do |reservation|
-      # ReservationMailer.delay.deliver_session_message( self, reservation.user, message )
+      ReservationMailer.delay.session_message( self, reservation.user, message )
+    end
+  end
+
+  def self.send_reminders( start_time, end_time, only_first_occurrence = false )
+    logger.info "#{DateTime.now.strftime("%F %T")}: Sending session reminders for #{start_time.strftime("%F %T")}..."
+    
+    session_list = 
+      Session.active.joins(:occurrences).merge(
+        Occurrence.in_range(start_time, end_time).order(:time)
+      )
+
+    session_list.each do |session|
+      session.reload #Force it to load in all occurrences
+      # Skip sessions that have already had their first occurrence if specified
+      next if only_first_occurrence && (session.time < start_time || session.time > end_time)
+
+      # send a reminder to each student
+      session.confirmed_reservations.each do |reservation|
+        ReservationMailer.delay.remind( session, reservation.user )
+      end
+      # now send one to each instructor
+      session.instructors.each do |instructor|
+        ReservationMailer.delay.remind_instructor( session, instructor )
+      end
     end
   end
   
+  def self.send_followups
+    logger.info "#{DateTime.now.strftime("%F %T")}: Sending followups..."
+    
+    session_list = 
+      Session.active
+        .where(survey_sent: false)
+        .joins(:occurrences)
+        .merge(Occurrence.in_past.order(:time))
+        .group(:id)
+        .readonly(false)
+
+    session_list.each do |session|
+      session.reload #Force it to load in all occurrences
+      next if session.not_finished? #wait until the last occurrance
+      session.instructors.each do |instructor|
+        ReservationMailer.delay.followup_instructor( session, instructor )
+      end
+      if session.topic.certificate? || session.topic.survey_type != Topic::SURVEY_NONE
+        session.confirmed_reservations.each do |reservation|
+          if (reservation.attended? && session.topic.certificate?) || reservation.need_survey?
+            ReservationMailer.delay.followup( reservation ) 
+          end
+        end
+      end
+      session.survey_sent = true
+      session.save
+    end
+  end
+    
   private
   def build_instructors_attributes(update, attributes)
     return {} if attributes.blank?

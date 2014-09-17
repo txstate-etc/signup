@@ -49,6 +49,14 @@ gem 'cashier'
 # render pdf documents from ruby code
 gem 'prawn'
 
+# sends emails in a background process and retries when they fail
+gem 'daemons'
+gem 'delayed_job'
+gem 'delayed_job_active_record'
+
+# run cron jobs
+gem 'whenever'
+
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller', :platforms=>[:mri_21]

@@ -78,11 +78,11 @@ class ReservationsController < ApplicationController
     
     @reservation.reload
     if success && @reservation.confirmed?
-    #   ReservationMailer.delay.deliver_confirm( @reservation ) 
+      ReservationMailer.delay.confirm( @reservation ) 
  
       if @reservation.session.next_time.today?
         @reservation.session.instructors.each do |instructor|
-    #       ReservationMailer.delay.deliver_confirm_instructor( @reservation, instructor )
+          ReservationMailer.delay.confirm_instructor( @reservation, instructor )
         end
       end
     end

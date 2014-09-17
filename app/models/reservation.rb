@@ -14,8 +14,18 @@ class Reservation < ActiveRecord::Base
   validates :session_id, presence: true
   validate :session_not_cancelled, on: :create
   
+  after_save :send_accommodation_notice
+
   def session_not_cancelled
     errors[:base] << 'You cannot register for this session, as it has been cancelled.' if session.cancelled
+  end
+
+  def send_accommodation_notice
+    return if session.in_past?
+
+    if (new_record? && special_accommodations.blank?) || special_accommodations_changed?
+      ReservationMailer.delay.accommodation_notice( self )
+    end
   end
 
   ATTENDANCE_UNKNOWN = 0
@@ -52,19 +62,19 @@ class Reservation < ActiveRecord::Base
     self.cancelled = true
     success = self.save
 
-    # if success
-    #   # Send promotion notice only if THIS reservation (the one we just cancelled) was confirmed
-    #   session.reload
-    #   if was_confirmed && !session.space_is_available? && !session.in_past?
-    #     new_confirmed_reservation = session.confirmed_reservations.last
-    #     ReservationMailer.delay.deliver_promotion_notice( new_confirmed_reservation )
-    #     if session.next_time.today?
-    #       session.instructors.each do |instructor|
-    #         ReservationMailer.delay.deliver_promotion_notice_instructor( new_confirmed_reservation, instructor )
-    #       end
-    #     end
-    #   end
-    # end
+    if success
+      # Send promotion notice only if THIS reservation (the one we just cancelled) was confirmed
+      session.reload
+      if was_confirmed && !session.space_is_available? && !session.in_past?
+        new_confirmed_reservation = session.confirmed_reservations.last
+        ReservationMailer.delay.promotion_notice( new_confirmed_reservation )
+        if session.next_time.today?
+          session.instructors.each do |instructor|
+            ReservationMailer.delay.promotion_notice_instructor( new_confirmed_reservation, instructor )
+          end
+        end
+      end
+    end
     
     success
   end

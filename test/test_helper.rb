@@ -10,7 +10,11 @@ class ActiveSupport::TestCase
   fixtures :all
 
   # Add more helper methods to be used by all tests here...
+  setup :global_setup
 
+  def global_setup
+    Delayed::Worker.delay_jobs = false
+  end
 end
 
 
