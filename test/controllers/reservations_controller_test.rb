@@ -78,7 +78,6 @@ class ReservationsControllerTest < ActionController::TestCase
     login_as( users( :plainuser3 ) )
     assert_difference 'ActionMailer::Base.deliveries.size', +1 do
       get :create, :session_id => sessions( :gato ), :session => { :session_id => sessions( :gato ) }
-      Delayed::Worker.new(:quiet => true).work_off
     end
     
     confirmation_email = ActionMailer::Base.deliveries.last
@@ -174,7 +173,6 @@ class ReservationsControllerTest < ActionController::TestCase
     login_as( users( :plainuser1 ) )
     assert_difference 'ActionMailer::Base.deliveries.size', +0 do
       delete :destroy, :id => reservations( :plainuser1 )
-      Delayed::Worker.new(:quiet => true).work_off
     end
   end
   
@@ -193,7 +191,6 @@ class ReservationsControllerTest < ActionController::TestCase
       delete :destroy, :id => reservations( :overbooked_plainuser1 )
       assert_redirected_to reservations_path
       assert_match "has been cancelled", flash[:notice]
-      Delayed::Worker.new(:quiet => true).work_off
     end
 
     Reservation.counter_culture_fix_counts
@@ -226,7 +223,6 @@ class ReservationsControllerTest < ActionController::TestCase
       delete :destroy, :id => reservations( :overbooked_plainuser3 )
       assert_redirected_to reservations_path
       assert_match "has been cancelled", flash[:notice]
-      Delayed::Worker.new(:quiet => true).work_off
     end
 
     Reservation.counter_culture_fix_counts

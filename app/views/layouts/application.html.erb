@@ -11,7 +11,7 @@
   <%= yield(:head) %>
   <%= csrf_meta_tags %>
   <meta name="viewport" content="width=device-width,user-scalable=yes">
-  <%#FIXME= render :partial => 'shared/analytics' %>
+  <%= render 'layouts/analytics' %>
 </head>
 <body>
   <div class="topbanner">

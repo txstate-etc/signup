@@ -1,7 +1,6 @@
 class SurveyResponsesController < ApplicationController
   before_filter :authenticate
 
-#FIXME: implement survey responses
   def new
     reservation = Reservation.find( params[ :reservation_id ] )
     @survey_response = SurveyResponse.new

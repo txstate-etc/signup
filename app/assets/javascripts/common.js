@@ -17,3 +17,25 @@ jQuery.fn.flash = function() {
     }, 1000); // Timeout must be the same length as the 
               // CSS3 transition or longer (or you'll mess up the transition)
 }
+
+// FIXME: this doesn't work because the page changes before the request can complete.
+// FIXME: also, what if things are downloaded outside of the browser, like an email or calendar app?
+
+// Generate Google Analytics events for link clicks
+$(function() {
+  $('a').click(function() {
+    if (ga) {
+      var linkAddress = $(this).href;
+      var linkName = $(this).text;
+      var thisPageAddress = window.location;
+      var thisPageTitle = document.title;
+
+      ga('send', { 
+        'hitType': 'event', 
+        'eventCategory': 'Links', 
+        'eventAction': thisPageTitle + " <" + thisPageAddress + ">",
+        'eventLabel': linkName + " <" + linkAddress + ">" 
+      });
+    }
+  });
+});

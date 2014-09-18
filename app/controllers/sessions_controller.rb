@@ -24,8 +24,6 @@ class SessionsController < ApplicationController
           end
           send_csv data, @session 
         end
-
-        #FIXME: ics
       end
     end
   end

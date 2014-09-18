@@ -3,6 +3,8 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
+  GOOGLE_ANALYTICS_URL = URI('http://www.google-analytics.com/collect')
+
   helper_method :current_user
   helper_method :auth_user
   helper_method :authorized?
@@ -38,6 +40,29 @@ class ApplicationController < ActionController::Base
     send_data csv,
           type: 'text/csv; charset=iso-8859-1; header=present',
           filename: "#{filename.to_param}.csv"
+  end
+
+  def send_analytics(opts = {})
+    tracking_id = Rails.application.secrets.google_analytics_tracking_id
+    if tracking_id.present?
+      # random, anonymous client id; lifetime for the current session
+      @client_id ||= (session[:ga_client_id] ||= SecureRandom.uuid)
+
+      # Default to 'pageview' track type. See the docs for other types/params:
+      # https://developers.google.com/analytics/devguides/collection/protocol/v1/reference
+      params = {
+        'v' => 1, # protocol version
+        'tid' => tracking_id, # tracking/web_property id
+        'cid' => @client_id, # unique client id
+        't' => 'pageview',
+        'dh' => request.headers['HTTP_HOST'],
+        'dp' => request.headers['REQUEST_URI'],
+        'dt' => @page_title,
+        'ua' => request.headers['HTTP_USER_AGENT']
+      }
+
+      Net::HTTP.post_form(GOOGLE_ANALYTICS_URL, params.merge(opts))
+    end
   end
 
   private

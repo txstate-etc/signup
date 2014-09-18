@@ -171,8 +171,7 @@ class ReservationsController < ApplicationController
       format.pdf { send_data CompletionCertificate.new.to_pdf(@reservation), :disposition => 'inline', :type => 'application/pdf' }
     end
 
-    #FIXME: analytics
-    #send_analytics('dt' => "Download Certificate - #{@reservation.session.topic.name}")
+    send_analytics('dt' => "Download Certificate - #{@reservation.session.topic.name}")
   end
 
   private
