@@ -3,7 +3,14 @@ namespace :cache do
   desc "Preload the most used and heaviest cache pages"
   task :warm => :environment do 
     include ActionController::TestProcess
+
+    host = ActionMailer::Base.default_url_options[:host] || 'localhost'
+    port = ActionMailer::Base.default_url_options[:port] || nil
+
     @request = ActionController::TestRequest.new
+    @request.host = host
+    @request.port = port if port
+
     @response = ActionController::TestResponse.new
 
     # first, set current_user to an admin
@@ -42,6 +49,7 @@ namespace :cache do
       print "Warming cache for topics/#{t.to_param}.csv: "
       puts get(:show, :id => t.id, :format => 'csv').status      
       print "Warming cache for topics/#{t.to_param}.atom: "
+      @request.env['REQUEST_URI'] = nil
       puts get(:show, :id => t.id, :format => 'atom').status      
       print "Warming cache for topics/#{t.to_param}.ics: "
       puts get(:download, :id => t.id).status      
@@ -58,6 +66,7 @@ namespace :cache do
       print "Warming cache for departments/#{d.to_param}.csv: "
       puts get(:show, :id => d.id, :format => 'csv').status      
       print "Warming cache for departments/#{d.to_param}.atom: "
+      @request.env['REQUEST_URI'] = nil
       puts get(:show, :id => d.id, :format => 'atom').status      
     end
 
@@ -69,6 +78,7 @@ namespace :cache do
       print "Warming cache for tags/#{t.name}.csv: "
       puts get(:show, :id => t.name, :format => 'csv').status      
       print "Warming cache for tags/#{t.name}.atom: "
+      @request.env['REQUEST_URI'] = nil
       puts get(:show, :id => t.name, :format => 'atom').status      
     end
 
