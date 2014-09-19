@@ -25,7 +25,7 @@ cache(["#{date_slug}/tags/show/upcoming/atom", @tag], :tag => 'session-info') do
             more = topic.upcoming_sessions.size - 2
             summary << link_to("#{more} more upcoming sessions", topic_url(topic, :only_path => false)) if more > 0
             
-            entry.summary(summary.join("<br/>\n"))
+            entry.summary(summary.join("<br/>\n"), type: 'html')
 
           end
         end
