@@ -15,7 +15,12 @@
 # server list. The second argument is a, or duck-types, Hash and is
 # used to set extended properties on the server.
 
-server 'signup.staging.its.txstate.edu', roles: %w{web app db}
+server 'signup.training.its.txstate.edu', roles: %w{web app db}
+
+# Use the staging environment on training.
+# This ensures that any production config options, like mail servers,
+# are not used.
+set :rails_env, "staging"
 
 
 # Custom SSH Options
