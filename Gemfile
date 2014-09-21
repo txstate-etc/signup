@@ -10,6 +10,9 @@ gem 'spring',        group: :development
 gem 'mysql2'
 gem 'simple_form'
 
+# Needed to precompile assets
+gem "therubyracer"
+
 # add cache of association counts
 # more flexibly than the builtin version
 gem 'counter_culture', '~> 0.1.25'
