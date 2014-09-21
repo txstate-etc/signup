@@ -1,3 +1,13 @@
+# Monkey patch DSL to set default roles on servers
+module Capistrano
+  module DSL
+    def server(name, properties={})
+      properties[:roles] = %w{web app db} unless properties.key? :roles
+      super(name, properties)
+    end
+  end
+end
+
 # Load DSL and Setup Up Stages
 require 'capistrano/setup'
 

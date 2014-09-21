@@ -15,7 +15,7 @@
 # server list. The second argument is a, or duck-types, Hash and is
 # used to set extended properties on the server.
 
-server 'signup.training.its.txstate.edu', roles: %w{web app db}
+server 'signup.training.its.txstate.edu'
 
 # Use the staging environment on training.
 # This ensures that any production config options, like mail servers,

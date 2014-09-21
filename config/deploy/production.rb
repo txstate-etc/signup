@@ -15,7 +15,7 @@
 # server list. The second argument is a, or duck-types, Hash and is
 # used to set extended properties on the server.
 
-server 'signup.txstate.edu', roles: %w{web app db}
+server 'signup.txstate.edu'
 
 
 # Custom SSH Options
