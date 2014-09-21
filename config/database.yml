@@ -29,6 +29,10 @@ test:
   <<: *defaults
   database: signup_test
 
+staging:
+  <<: *defaults
+  database: signup_staging
+
 production:
   <<: *defaults
   database: signup_production
