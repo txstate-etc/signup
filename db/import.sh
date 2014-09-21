@@ -1,20 +1,27 @@
 #!/bin/bash
 set +e
 
+# FIXME: using root user with no password does not work on production/staging
+# need to parse the db user and password from secrets.yml
+# Also need to set RAILS_ENV and use bundle exec
+
 from_db='registerme_development'
 to_db='signup_development'
 dump_opts='--default-character-set=utf8 --skip-set-charset --no-create-info --complete-insert'
 
 tables=$( cat <<EOF
-topics
 departments
-sites
-sessions
-sessions_users
+documents
 occurrences
 permissions
 reservations
+sessions
+sessions_users
+sites
 survey_responses
+taggings
+tags
+topics
 users
 EOF
 )

@@ -14,7 +14,7 @@ defaults: &defaults
   reconnect: false
   pool: 5
   host: localhost
-  username: <%= Rails.application.secrets.db_name %>
+  username: <%= Rails.application.secrets.db_user %>
   password: <%= Rails.application.secrets.db_pass %>
 
 
