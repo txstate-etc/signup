@@ -8,4 +8,4 @@ password
 tmp/
 public/system/documents/items
 config/initializers/auth\.rb
-config/secrets\.yml
+config/secrets\.yml$

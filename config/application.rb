@@ -32,5 +32,10 @@ module Signup
     config.assets.paths << Rails.root.join('vendor', 'assets', 'components')
  
     config.autoload_paths += Dir["#{config.root}/lib/**/"]
+
+    config.action_mailer.smtp_settings = {
+      address: Rails.application.secrets.smtp_host,
+      domain: Rails.application.secrets.domain_name
+    }
   end
 end
