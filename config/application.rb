@@ -30,6 +30,24 @@ module Signup
 
     # Make bower components part of our assets
     config.assets.paths << Rails.root.join('vendor', 'assets', 'components')
+
+    # Asset precompile defaults to EVERYTHING. Since 3rd party libraries
+    # often contain superfluous files, we want to whitelist
+    # those extensions that we care about.
+    # See: https://github.com/sstephenson/sprockets/issues/347
+    initializer 'setup_asset_pipeline', :group => :all  do |app|
+      # We don't want the default of everything that isn't js or css, because it pulls too many things in
+      app.config.assets.precompile.shift
+
+      # Explicitly register the extensions we are interested in compiling
+      app.config.assets.precompile.push(Proc.new do |path|
+        File.extname(path).in? [
+          '.html', '.erb', '.haml',                 # Templates
+          '.png',  '.gif', '.jpg', '.jpeg',         # Images
+          '.eot',  '.otf', '.svc', '.woff', '.ttf', # Fonts
+        ]
+      end)
+    end
  
     config.autoload_paths += Dir["#{config.root}/lib/**/"]
 
