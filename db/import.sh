@@ -59,3 +59,5 @@ done
 mysql -u root $to_db -e'ALTER TABLE users DROP active'
 
 rails r 'Reservation.counter_culture_fix_counts'
+
+rake db:import_attachments
