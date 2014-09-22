@@ -35,7 +35,7 @@ set :scm, :hg
 set :linked_files, %w{config/secrets.yml}
 
 # Default value for linked_dirs is []
-set :linked_dirs, %w{backups log tmp/pids}
+set :linked_dirs, %w{backups log tmp/pids public/system}
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
