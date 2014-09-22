@@ -43,4 +43,9 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+  
+  # load testing controller
+  config.routes_configuration_file = "#{RAILS_ROOT}/test/manual/config/routes.rb"
+  ActiveSupport::Dependencies.autoload_paths << "#{RAILS_ROOT}/test/manual/controllers"
+
 end

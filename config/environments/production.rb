@@ -86,4 +86,10 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  # Settings for the exception_notification plugin
+  # FIXME: pull recipients out of secrets.yml
+  ExceptionNotification::Notifier.exception_recipients = %w(cj32@txstate.edu)
+  ExceptionNotification::Notifier.sender_address = %("Signup Error" <nobody@txstate.edu>)
+  ExceptionNotification::Notifier.email_prefix = "[signup] "
 end
