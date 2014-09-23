@@ -43,7 +43,7 @@ module Signup
       app.config.assets.precompile.push(Proc.new do |path|
         File.extname(path).in? [
           '.html', '.erb', '.haml',                 # Templates
-          '.png',  '.gif', '.jpg', '.jpeg',         # Images
+          '.png',  '.gif', '.jpg', '.jpeg', '.ico', # Images
           '.eot',  '.otf', '.svc', '.woff', '.ttf', # Fonts
         ]
       end)

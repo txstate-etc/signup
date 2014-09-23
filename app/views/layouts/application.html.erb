@@ -7,8 +7,6 @@
   </title>
   <link href="<%= asset_path 'favicon.ico' %>" type="image/x-icon" rel="shortcut icon">
   <%= stylesheet_link_tag 'application', media: 'all' %>
-  <%= stylesheet_link_tag('skin', media: 'all') if 
-    Rails.root.join('app/assets/stylesheets/skin.css').exist? %>
   <%= javascript_include_tag 'application' %>
   <%= yield(:head) %>
   <%= csrf_meta_tags %>
