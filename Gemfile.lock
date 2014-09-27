@@ -6,8 +6,9 @@ GIT
     ri_cal (0.8.8)
 
 GIT
-  remote: https://github.com/dlindahl/omniauth-cas.git
+  remote: git://github.com/dlindahl/omniauth-cas.git
   revision: 19766032f1e4962429c7ed4ff725f6d90c7e8d0c
+  ref: 19766032f1e
   specs:
     omniauth-cas (1.0.4)
       addressable (~> 2.3)
