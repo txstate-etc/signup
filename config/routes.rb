@@ -51,4 +51,9 @@ Rails.application.routes.draw do
   get '/logout', to: 'authentication#destroy', as: 'logout'
 
   root :to => 'topics#index'
+
+  unless Rails.env.production?
+    get '/test', to: 'test#index'
+  end
+
 end

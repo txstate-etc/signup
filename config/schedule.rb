@@ -21,16 +21,51 @@
 
 set :output, "log/cron_log.log"
 
-if @environment == 'production'
-
-  # start the delayed_job daemon when the system reboots
-  every :reboot do
-    script "delayed_job start"
-  end
-
-  # restart the delayed_job daemon if it looks like it is not responding
-  every 4.minutes do
-    runner "require 'delayed_job_util'; DelayedJobUtil.health_check"
-  end
-
+# start the delayed_job daemon when the system reboots
+every :reboot do
+  script "delayed_job start"
 end
+
+# restart the delayed_job daemon if it looks like it is not responding
+every 4.minutes do
+  runner "require 'delayed_job_util'; DelayedJobUtil.health_check"
+end
+
+# send out email reminders for classes that are 3 days
+# out every night at 10:02pm.
+every :day, at: '10:02 pm' do
+  rake "mailer:send_reminders[3]"
+end
+
+# send out email reminders for classes that are today
+# every morning at 12:02am.
+every :day, at: '12:02 am' do
+  rake "mailer:send_reminders[0]"
+end
+
+# send out followup emails
+# every morning at 12:10am.
+every :day, at: '12:10 am' do
+  rake "mailer:send_followups"
+end
+
+# backup database nightly at 2:30am
+every :day, at: '2:30 am' do
+  rake "db:backup MAX=30"
+end
+
+# clean up old http_sessions nightly at 2:40am
+# every :day, at: '2:40 am' do
+#   rake "db:session_clean DAYS=30"
+# end
+
+# Cleanup and Prewarm the File-based cache store nightly at 1am.
+# Deletes any datestamped directories older than today.
+# Deletes all other items that haven't been accessed in 30 days.
+# Warms the cache for today's entries.
+# every :day, :at => '1:05 am' do
+#   rake "cache:prune_dates"
+#   rake "cache:cleanup[30]"
+#   rake "cache:warm"
+# end
+
