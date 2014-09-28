@@ -78,6 +78,14 @@ Rails.application.configure do
   config.action_mailer.perform_deliveries = false #FIXME: true
   config.action_mailer.raise_delivery_errors = false
 
+  # ExceptionNotification Config
+  Rails.application.config.middleware.use ExceptionNotification::Rack,
+  :email => {
+    :email_prefix => "[Signup] ",
+    :sender_address => %{"Signup Error" <nobody@#{Rails.application.secrets.domain_name}>},
+    :exception_recipients => Rails.application.secrets.exception_recipients
+  }
+
   # Disable automatic flushing of the log to improve performance.
   # config.autoflush_log = false
 

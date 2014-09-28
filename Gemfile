@@ -60,6 +60,9 @@ gem 'delayed_job_active_record'
 # run cron jobs
 gem 'whenever'
 
+# email errors to us.
+gem 'exception_notification'
+
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller', :platforms=>[:mri_21]
