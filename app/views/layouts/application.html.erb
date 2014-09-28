@@ -6,8 +6,8 @@
     <%=t :site_title, default: '' %>
   </title>
   <link href="<%= asset_path 'favicon.ico' %>" type="image/x-icon" rel="shortcut icon">
-  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= stylesheet_link_tag 'application', media: 'all' %>
+  <%= javascript_include_tag 'application' %>
   <%= yield(:head) %>
   <%= csrf_meta_tags %>
   <meta name="viewport" content="width=device-width,user-scalable=yes">
@@ -17,7 +17,7 @@
   <div class="topbanner">
     <div class="topbanner-shadow"></div>
     <div class="topbanner-content">
-      <a class="topbanner-sitename" href="/"><%=t :site_name %></a>
+      <%= render 'layouts/topbanner' %>
     </div>
   </div>
 
