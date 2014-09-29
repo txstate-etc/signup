@@ -90,4 +90,9 @@ class Reservation < ActiveRecord::Base
     self.created_at = Time.now
     self.save
   end
+
+  def send_reminder
+    ReservationMailer.delay.remind( session, user )
+  end
+
 end

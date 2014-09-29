@@ -74,8 +74,8 @@ Rails.application.configure do
   
   # ActionMailer Config
   config.action_mailer.default_url_options = { :host => Rails.application.secrets.host_name }
-  config.action_mailer.delivery_method = :test #FIXME: :smtp
-  config.action_mailer.perform_deliveries = false #FIXME: true
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = false
 
   # ExceptionNotification Config

@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   end
 
   #FIXME need reservation/download as alias to show.ics for backwards compatability
+  #FIXME: why is this not included below. It doesn't look like the paths are nested
   resources :reservations, only: [:index, :show]
 
   get '/sessions/download', to: 'sessions#download', as: :sessions_download
@@ -21,6 +22,7 @@ Rails.application.routes.draw do
       resources :reservations, except: [:index, :new, :show] do
         member do
           get 'certificate'
+          get 'send_reminder'
         end
       end
       member do

@@ -1,6 +1,6 @@
 class ReservationsController < ApplicationController
   before_filter :authenticate, :except => :show
-  before_action :set_reservation, only: [:show, :edit, :update, :destroy, :certificate]
+  before_action :set_reservation, only: [:show, :edit, :update, :destroy, :certificate, :send_reminder]
 
   # GET /reservations
   # GET /reservations.json
@@ -172,6 +172,26 @@ class ReservationsController < ApplicationController
     end
 
     send_analytics('dt' => "Download Certificate - #{@reservation.session.topic.name}")
+  end
+
+  # send an email reminder to the student
+  def send_reminder
+    superuser =  authorized? @reservation
+    
+    if @reservation.user != current_user && !superuser
+      flash[ :error ] = "Reminders can only be sent by their owner, an admin, or an instructor."
+    elsif @reservation.session.in_past? && !superuser
+      flash[ :error ] = "Reminders cannot be sent once the session has ended."      
+    else
+      @reservation.send_reminder
+      flash[ :notice ] = "A reminder has been sent to #{@reservation.user.name}."
+    end
+    
+    if @reservation.user == current_user
+      redirect_to reservations_path
+    else
+      redirect_to attendance_path( @reservation.session )
+    end
   end
 
   private
