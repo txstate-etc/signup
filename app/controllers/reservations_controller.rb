@@ -190,7 +190,7 @@ class ReservationsController < ApplicationController
     if @reservation.user == current_user
       redirect_to reservations_path
     else
-      redirect_to attendance_path( @reservation.session )
+      redirect_to sessions_reservations_path( @reservation.session )
     end
   end
 
