@@ -45,59 +45,57 @@
           </tr>
         </thead>
         <tbody>
-          <%# @session.confirmed_reservations_by_last_name.each do |reservation| %>
-            <%= f.simple_fields_for :reservations, 
-              @session.confirmed_reservations_by_last_name do |rf| %>
-            <% reservation = rf.object %>
-            <tr class="<%= cycle("even", "odd") %>">
-              <td class="attendance-user">  
-                <%= link_to_user_directory(reservation.user) %>
-                <span class="user-info">
-                  <%= reservation.user.title_and_department %>
-                </span>
-                <% if !reservation.special_accommodations.blank? %>
-                  <p class="special-accommodations collapsed" 
-                    title="<%= reservation.special_accommodations %>">
-                    <%= reservation.special_accommodations %>
-                  </p>
-                <% end %>
-              </td>
-              <td class="attendance-actions">
-                <% if @session.in_future? %>
-                  <%= link_to 'cancel', reservation, 
-                    :title => 'Cancel reservation', 
-                    :class => "cancel-link", 
-                    :method => :delete, 
-                    :confirm => "Are you sure you want to cancel this reservation?" 
-                  %>
-                <% end %>
-                <% if @session.not_finished? %>
-                  <%= link_to 'remind', send_reminder_reservation_path(reservation), {
-                    :title => 'Send reminder', 
-                    :class => "remind-link", 
-                    :confirm => "Are you sure you want to send an email reminder to #{reservation.user.name}?"
-                  } %>
-                <% end %>
-                <%= link_to 'email', "mailto:#{reservation.user.email}", 
-                  :title => 'Send email', 
-                  :class => "email-link" 
+          <%= f.simple_fields_for :reservations, 
+            @session.confirmed_reservations_by_last_name do |rf| %>
+          <% reservation = rf.object %>
+          <tr class="<%= cycle("even", "odd") %>">
+            <td class="attendance-user">  
+              <%= link_to_user_directory(reservation.user) %>
+              <span class="user-info">
+                <%= reservation.user.title_and_department %>
+              </span>
+              <% if !reservation.special_accommodations.blank? %>
+                <p class="special-accommodations collapsed" 
+                  title="<%= reservation.special_accommodations %>">
+                  <%= reservation.special_accommodations %>
+                </p>
+              <% end %>
+            </td>
+            <td class="attendance-actions">
+              <% if @session.in_future? %>
+                <%= link_to 'cancel', reservation, 
+                  :title => 'Cancel reservation', 
+                  :class => "cancel-link", 
+                  :method => :delete, 
+                  :confirm => "Are you sure you want to cancel this reservation?" 
                 %>
-              </td>
-              <td class="attendance-radios">
-                <span class="radio-span">
-                  <%= rf.input :attended, 
-                    label: false,
-                    as: :radio_buttons, 
-                    collection: [
-                      ['?', Reservation::ATTENDANCE_UNKNOWN], 
-                      ['Attended', Reservation::ATTENDANCE_ATTENDED], 
-                      ['Missed', Reservation::ATTENDANCE_MISSED]
-                  ] %>
-                </span>
-              </td>
-            </tr>
-            <% end %>
-          <%# end%>
+              <% end %>
+              <% if @session.not_finished? %>
+                <%= link_to 'remind', send_reminder_reservation_path(reservation), {
+                  :title => 'Send reminder', 
+                  :class => "remind-link", 
+                  :confirm => "Are you sure you want to send an email reminder to #{reservation.user.name}?"
+                } %>
+              <% end %>
+              <%= link_to 'email', "mailto:#{reservation.user.email}", 
+                :title => 'Send email', 
+                :class => "email-link" 
+              %>
+            </td>
+            <td class="attendance-radios">
+              <span class="radio-span">
+                <%= rf.input :attended, 
+                  label: false,
+                  as: :radio_buttons, 
+                  collection: [
+                    ['?', Reservation::ATTENDANCE_UNKNOWN], 
+                    ['Attended', Reservation::ATTENDANCE_ATTENDED], 
+                    ['Missed', Reservation::ATTENDANCE_MISSED]
+                ] %>
+              </span>
+            </td>
+          </tr>
+          <% end %>
         </tbody>
       </table>
       <%= submit_tag "Record Attendance", :class => "attendance-submit" %>
@@ -147,4 +145,4 @@
   </form>
 </div>
 
-<%#= render :partial => "email_dialog", :locals => { :session => @session }%>
+<%= render :partial => "email_dialog", :locals => { :session => @session }%>

@@ -73,4 +73,8 @@ $(function() {
     new CancelDialog($('#cancel-session-dialog')).show();
   });
 
+  $('#email-dialog-link').on('click', function emailAllClick(event, data) {
+    new EmailAllDialog($('#email-dialog')).show();
+  });
+
 });

@@ -11,7 +11,7 @@ Rails.application.routes.draw do
 
   get '/sessions/download', to: 'sessions#download', as: :sessions_download
   get '/sessions/:id/reservations', to: 'sessions#reservations', as: :sessions_reservations
-  get '/sessions/:id/email', to: 'sessions#email', as: :sessions_email
+  post '/sessions/:id/email', to: 'sessions#email', as: :sessions_email
 
   resources :tags, :only => :show
 

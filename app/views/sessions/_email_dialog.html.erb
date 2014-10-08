@@ -1,0 +1,11 @@
+<% if authorized?(session) && !session.new_record? && !session.cancelled %>
+  <div id="email-dialog" class="content-section">
+    <h2>Email All Participants</h2>
+    <%= form_tag(action: 'email') do %>
+      <%= label_tag :message_text, 'Message Text:', class: 'field-label' %>
+      <%= text_area_tag :message_text, nil, size: '60x10' %><br/>
+      <%= submit_tag 'Send' %>
+      <a href="#" class="hide-dialog-link">Cancel</a>
+    <% end %>
+  </div>
+<% end %>
