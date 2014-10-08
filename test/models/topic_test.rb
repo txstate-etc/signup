@@ -153,6 +153,19 @@ class TopicTest < ActiveSupport::TestCase
  
     topic.survey_url = "http://example.com/survey"
     assert topic.valid?
-
   end
+
+  test 'Tag parsing works' do
+    topic = topics( :gato )
+    assert_equal 2, topic.tags.size
+    assert_equal "gato", topic.sorted_tags.first.name
+    assert_equal "its", topic.sorted_tags.last.name
+    assert topic.update( { :tag_list => "foo, Two Words; $pEc|al çh4rs*  , "})
+    topic.reload
+    assert_equal 3, topic.tags.size
+    assert_equal "foo", topic.sorted_tags.first.name
+    assert_equal "p-ec-al-ch4rs", topic.sorted_tags.second.name
+    assert_equal "two-words", topic.sorted_tags.last.name
+  end
+
 end

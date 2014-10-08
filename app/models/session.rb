@@ -245,7 +245,7 @@ class Session < ActiveRecord::Base
       Cashier.store_fragment(key, cache_key)
       description = "#{topic.description}\n\nInstructor(s): #{instructors.map(&:name).join(", ")}"
       if topic.tag_list.present?
-        description << "\n\nTags: #{topic.sorted_tag_list.join(", ")}"
+        description << "\n\nTags: #{topic.sorted_tags.join(", ")}"
       end
 
       occurrences.map do |o|

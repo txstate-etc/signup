@@ -36,11 +36,6 @@ class Topic < ActiveRecord::Base
     true
   end
 
-  def before_save
-    Logger.debug "FIXME: Is Topic.before_save called?"
-    normalize_tag_names
-  end
-
   def deactivate!
     # if this is a brand new topic (no non-cancelled sessions), just go ahead and delete it
     if sessions.blank?
@@ -75,11 +70,8 @@ class Topic < ActiveRecord::Base
   end
 
   def sorted_tags
+    #FIXME: can we have a default sort order?
     tags.sort { |a,b| a.name <=> b.name }
-  end
-
-  def sorted_tag_list
-    tag_list.sort
   end
 
   def self.to_csv(topics)
