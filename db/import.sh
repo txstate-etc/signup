@@ -61,3 +61,6 @@ mysql -u root $to_db -e'ALTER TABLE users DROP active'
 rails r 'Reservation.counter_culture_fix_counts'
 
 rake db:import_attachments
+
+# Copy the old documents so old links still work.
+cp -rf /home/rubyapps/registerme/shared/system/items /home/rubyapps/signup/shared/system/

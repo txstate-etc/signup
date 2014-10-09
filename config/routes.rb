@@ -11,12 +11,14 @@ Rails.application.routes.draw do
 
   get '/sessions/download', to: 'sessions#download', as: :sessions_download
   get '/sessions/:id/reservations', to: 'sessions#reservations', as: :sessions_reservations
+  get '/sessions/attendance/:id', to: redirect('/sessions/%{id}/reservations')
   post '/sessions/:id/email', to: 'sessions#email', as: :sessions_email
 
   resources :tags, :only => :show
 
   get '/topics/grid(/:year(/:month))', to: 'topics#grid', as: :grid
   get '/topics/upcoming', to: redirect('/'), as: :upcoming
+  get '/topics/download/:id', to: 'topics#download', as: :download
   resources :topics, shallow: true do
     resources :sessions, except: :index do
       resources :reservations, except: [:index, :new, :show] do
@@ -32,7 +34,6 @@ Rails.application.routes.draw do
     member do
       get 'history'
       get 'survey_results'
-      get 'download'
       get 'delete'
     end
     collection do
