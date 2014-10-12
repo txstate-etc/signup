@@ -93,3 +93,20 @@ en:
   tags:
     show:
       atom_title_prefix: "Upcoming Sessions for "
+  static:
+    error_404:
+      title: "The page you were looking for doesn't exist (404)"
+      header: "The page you were looking for doesn't exist."
+      message: "You may have mistyped the address or the page may have moved."
+    error_413:
+      title: "The change you wanted was rejected (413)"
+      header: "The change you wanted was rejected."
+      message: "You attempted to upload a file that was too large."
+    error_422:
+      title: "The change you wanted was rejected (422)"
+      header: "The change you wanted was rejected."
+      message: "Maybe you tried to change something you didn't have access to."
+    error_500:
+      title: "We're sorry, but something went wrong (500)"
+      header: "We're sorry, but something went wrong."
+      message: "We've been notified about this issue and we'll take a look at it shortly."

@@ -3,10 +3,9 @@
 
 
 /* TEAM */
-  <your title>: <your name>
-  Site:
-  Twitter:
-  Location:
+  Developed by: The Educational Technology Center at Texas State University
+  Site: http://www.its.txstate.edu/departments/etc/signup.html
+  Location: San Marcos, TX
 
 /* THANKS */
   Daniel Kehoe (@rails_apps) for the RailsApps project

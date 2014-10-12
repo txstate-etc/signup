@@ -45,6 +45,8 @@ set :linked_dirs, %w{backups log tmp/pids public/system}
 
 after 'deploy:publishing', 'delayed_job:restart'
 
+after 'deploy:finished', 'static:generate'
+
 # Deploy to training after successfully deploying to production
 if fetch(:stage) == :production
   after 'deploy:finished' do

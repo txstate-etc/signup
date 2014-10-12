@@ -7,5 +7,6 @@ tmproj
 password
 tmp/
 public/system/documents/items
+public/[0-9]+\.html
 config/initializers/auth\.rb
 config/secrets\.yml$
