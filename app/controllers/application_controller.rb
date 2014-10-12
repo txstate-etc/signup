@@ -5,6 +5,10 @@ class ApplicationController < ActionController::Base
 
   GOOGLE_ANALYTICS_URL = URI('http://www.google-analytics.com/collect')
 
+  def info_for_paper_trail
+    { :ip => request.remote_ip, :user_agent => request.user_agent }
+  end
+
   helper_method :current_user
   helper_method :auth_user
   helper_method :authorized?

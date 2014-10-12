@@ -6,6 +6,8 @@ class User < ActiveRecord::Base
   has_many :reservations, -> { joins(:session).where(cancelled: false, sessions: { cancelled: false }) }
   has_and_belongs_to_many :sessions, -> { where(cancelled: false).includes([:topic, :occurrences]).order('occurrences.time') }
   has_many :topics, through: :departments
+  has_paper_trail
+
   scope :active, -> { where inactive: false }
   scope :manual, -> { where manual: true }
 

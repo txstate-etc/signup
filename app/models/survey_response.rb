@@ -1,5 +1,6 @@
 class SurveyResponse < ActiveRecord::Base
   belongs_to :reservation
+  has_paper_trail
 
   validates :class_rating, :instructor_rating, :applicability, presence: true
   validates :reservation, uniqueness: { message: 'A survey has already been submitted for this reservation.' }

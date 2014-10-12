@@ -66,6 +66,9 @@ gem 'exception_notification'
 # generate static pages
 gem 'high_voltage', '~> 2.2.1'
 
+# audit model changes
+gem 'paper_trail', '~> 3.0.6'
+
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller', :platforms=>[:mri_21]

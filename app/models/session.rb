@@ -8,6 +8,8 @@ class Session < ActiveRecord::Base
   has_and_belongs_to_many :instructors, :class_name => "User", :uniq => true
   accepts_nested_attributes_for :instructors, :reject_if => lambda { |a| true }, :allow_destroy => false
   has_many :survey_responses, -> { order 'created_at DESC'}, through: :reservations
+  has_paper_trail
+
   include SurveyAggregates
   scope :active, -> { where cancelled: false }
 

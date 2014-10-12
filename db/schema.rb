@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140915015309) do
+ActiveRecord::Schema.define(version: 20141012175858) do
 
   create_table "delayed_jobs", force: true do |t|
     t.integer  "priority",   default: 0, null: false
@@ -184,5 +184,16 @@ ActiveRecord::Schema.define(version: 20140915015309) do
   add_index "users", ["id", "credentials"], name: "index_users_on_id_and_credentials", unique: true, using: :btree
   add_index "users", ["last_name"], name: "index_users_on_last_name", using: :btree
   add_index "users", ["login"], name: "index_users_on_login", unique: true, using: :btree
+
+  create_table "versions", force: true do |t|
+    t.string   "item_type",  null: false
+    t.integer  "item_id",    null: false
+    t.string   "event",      null: false
+    t.string   "whodunnit"
+    t.text     "object"
+    t.datetime "created_at"
+  end
+
+  add_index "versions", ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
 
 end

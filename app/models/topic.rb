@@ -5,7 +5,9 @@ class Topic < ActiveRecord::Base
   include SurveyAggregates
   has_many :documents, :dependent => :destroy
   accepts_nested_attributes_for :documents, :allow_destroy => true, :reject_if => :all_blank
+  has_paper_trail
   acts_as_taggable
+
   scope :active, -> { where inactive: false }
 
   validates :name, :description, :department, presence: true

@@ -7,6 +7,8 @@ class Reservation < ActiveRecord::Base
           ["reservations.cancelled = ?", 'false'] => 'reservations_count'
       }
   has_one :survey_response
+  has_paper_trail
+
   scope :active, -> { where cancelled: false }
 
   validates :user_id, presence: { message: 'not recognized.' }, 

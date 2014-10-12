@@ -1,6 +1,7 @@
 class Permission < ActiveRecord::Base
   belongs_to :department
   belongs_to :user
+  has_paper_trail
 
   validate :valid_user
   
