@@ -1,7 +1,9 @@
 <% opts = (modal ||= false) ? { remote: true, format: :json } : {} %>
 
 <%= simple_form_for(user, opts) do |f| %>
-  <%= f.error_notification %>
+  <div id="error-wrap">
+    <%= model_error_messages(user) %>
+  </div>
 
   <div class="form-inputs">
     <%= f.input :name_prefix, label: 'Title (e.g., Dr):' %>

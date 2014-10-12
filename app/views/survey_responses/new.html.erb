@@ -1,5 +1,5 @@
 <%= simple_form_for(@survey_response) do |f| %>
-  <%= f.error_notification %>
+  <%= model_error_messages(@survey_response) %>
 
   <div class="content-section">
     <h2>Course Evaluation Survey</h2>

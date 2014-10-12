@@ -11,11 +11,12 @@ class Session < ActiveRecord::Base
   include SurveyAggregates
   scope :active, -> { where cancelled: false }
 
-  validates :topic, :location, :site, :occurrences, presence: true
+  validates :topic, :occurrences, presence: true
+  validate :valid_registration_period
   validates :instructors, presence: true, unless: :invalid_instructor
   validates :seats, numericality: { only_integer: true, allow_nil: true }
   validate :enough_seats
-  validate :valid_registration_period
+  validates :location, :site, presence: true
   after_validation :reload_if_invalid
 
   around_update :send_update_notifications

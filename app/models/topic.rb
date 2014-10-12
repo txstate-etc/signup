@@ -9,7 +9,7 @@ class Topic < ActiveRecord::Base
   scope :active, -> { where inactive: false }
 
   validates :name, :description, :department, presence: true
-  validates :minutes, numericality: { only_integer: true }
+  validates :minutes, presence: true, numericality: { only_integer: true }
   validates_associated :department
   validates :survey_url, presence: { message: "must be specified to use an external survey." }, if: Proc.new{ |topic| topic.survey_type == SURVEY_EXTERNAL }
   validate :inactive_with_no_upcoming_sessions

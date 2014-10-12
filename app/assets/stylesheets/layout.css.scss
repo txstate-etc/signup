@@ -113,6 +113,39 @@ div#right-column {
   padding-left: 1.75em;
 }
 
+#error_explanation {
+  border: 2px solid #b00;
+  margin-top: 0.5em;
+  font-family: $sans-serif;
+  padding-top: 0.25em;
+  padding-right: 0.5em;
+  padding-bottom: 0.25em;
+  padding-left: 0.5em;
+
+  h2 {
+    color: #b00;
+    font-family: $sans-serif;
+    font-size: 1em;
+    font-weight: normal;
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  ul {
+    list-style: disc inside;
+    margin: 0;
+  }
+}
+
+.field_with_errors label {
+  color: #b00;
+}
+
 div.navigation {
   -moz-border-radius-bottomright: 15px;
   -webkit-border-bottom-right-radius: 15px;

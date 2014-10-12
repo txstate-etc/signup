@@ -1,8 +1,8 @@
 <%= simple_form_for(form_object) do |f| %>
-  <%= f.error_notification %>
+  <%= model_error_messages(@session) %>
   <%= f.hidden_field :topic_id %>
 
-  <div id="occurrences">
+  <div id="occurrences"  <%= 'class=field_with_errors' if @session.errors['occurrences'].any? %> >
     <%= f.label :occurrences, "Session Time(s):", class: 'field-label' %>
     <%= f.simple_fields_for :occurrences do |occurrence| %>
       <%= render "occurrence_fields", :f => occurrence %>
@@ -48,7 +48,7 @@
     %>
   </div>
 
-  <div id="instructors">
+  <div id="instructors" <%= 'class=field_with_errors' if @session.errors['instructors'].any? %> >
     <%= f.label :instructors, "Instructor(s):", class: 'field-label' %>
     <%= f.simple_fields_for :instructors do |instructor| %>
       <%= render "instructor_fields", :f => instructor %>

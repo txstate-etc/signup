@@ -52,6 +52,9 @@ class SessionsController < ApplicationController
           format.html { redirect_to @session, notice: 'Session was successfully created.' }
           format.json { render :show, status: :created, location: @session }
         else
+          @session.occurrences.build unless @session.occurrences.present?
+          @session.instructors.build unless @session.instructors.present?
+          @page_title = @session.topic.name
           format.html { render :new }
           format.json { render json: @session.errors, status: :unprocessable_entity }
         end

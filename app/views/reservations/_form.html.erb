@@ -1,5 +1,5 @@
 <%= simple_form_for(@reservation) do |f| %>
-  <%= f.error_notification %>
+  <%= model_error_messages(@reservation) %>
 
   <div class="form-inputs content-section">
       <dl>

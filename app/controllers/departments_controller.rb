@@ -1,6 +1,6 @@
 class DepartmentsController < ApplicationController
   before_filter :authenticate, :except => [ :show, :index ]
-  before_action :set_department, only: [:new, :show, :edit, :update, :destroy]
+  before_action :set_department, only: [:new, :show, :create, :edit, :update, :destroy]
   before_filter :ensure_authorized, except: [:index, :show, :manage]
 
   # GET /departments/1
@@ -26,7 +26,6 @@ class DepartmentsController < ApplicationController
   # POST /departments
   # POST /departments.json
   def create
-    @department = Department.new(department_params)
     respond_to do |format|
       if @department.save
         format.html { redirect_to manage_departments_path, notice: 'Department was successfully created.' }
@@ -71,8 +70,10 @@ class DepartmentsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_department
-      if action_name == 'new' || action_name == 'create'
+      if action_name == 'new'
         @department = Department.new
+      elsif action_name == 'create'
+        @department = Department.new(department_params)
       else
         @department = Department.find(params[:id])
       end

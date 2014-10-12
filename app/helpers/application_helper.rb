@@ -107,4 +107,25 @@ end
     "Sad news: the session on \"#{session.topic.name}\" for which you had signed up has been cancelled."
   end
 
+  def model_error_messages(record, name=nil)
+    return unless record.errors.any?
+    name ||= record.class.model_name.human.downcase
+    
+    errors = record.errors.keys.map do |attr|
+      "#{record.class.human_attribute_name(attr).capitalize} #{record.errors[attr].first}."
+    end
+
+    ret = '<div id="error_explanation">'
+    ret << "<h2>#{pluralize(errors.count, "error")} prohibited this #{name} from being saved</h2>"
+    ret << '<p>There were problems with the following fields:</p>'
+    ret << '<ul>'
+    errors.each do |msg| 
+      ret << "<li>#{msg}</li>"
+    end
+    ret << '</ul>'
+    ret << '</div>'
+    raw ret
+
+  end
+
 end

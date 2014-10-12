@@ -24,6 +24,15 @@ en:
   site_title: " : Signup Reservation System"
   site_name: "Signup Reservation System"
   footer_text_html: "The Signup Reservation System is a tool developed by the Texas State Educational Technology Center.</br> Details regarding the system are available at the <a href='http://www.its.txstate.edu/departments/etc/signup.html'>Signup website</a>."
+  activerecord:
+    attributes:
+      session:
+        occurrences: "Session Time"
+        site: "Site"
+        reg_start: "Registration start time"
+        reg_end: "Registration end time"
+      document:
+        item_file_size: "Document size"
   file_icon:
     type: "%{type} file"
   departments:
@@ -34,6 +43,8 @@ en:
     update:
       title: "Update Department Details"
     new:
+      title: "Create New Department"
+    create:
       title: "Create New Department"
     manage:
       title: "Manage Departments"
@@ -49,6 +60,8 @@ en:
     update:
       title: "Update Topic Details"
     new:
+      title: "Create New Topic"
+    create:
       title: "Create New Topic"
     manage:
       title: "Manage Topics"
@@ -66,6 +79,8 @@ en:
     index:
       title: "Manage Users"
     new:
+        title: "Create New User"
+    create:
         title: "Create New User"
     edit:
         title: "Update User Details"
