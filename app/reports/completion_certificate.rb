@@ -22,7 +22,7 @@ class CompletionCertificate < Prawn::Document
     line reservation.session.topic.department.name, :ypos => 100, :color => '75746D'
           
     # organization logo
-    if (File.exists?("#{Rails.root}/public/images/certificate/logo.jpg"))
+    if (File.exists?("#{Rails.root}/app/assets/images/certificate/logo.jpg"))
       image "#{Rails.root}/app/assets/images/certificate/logo.jpg", :width => 139, :height => 36, :position => :center, :vposition => 485
     end
 
