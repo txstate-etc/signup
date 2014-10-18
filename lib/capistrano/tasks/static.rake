@@ -1,26 +1,12 @@
 namespace :static do
 
-  def urls_and_paths
-    Dir.glob("#{Rails.root}/app/views/static/*.html.erb").map do |file|
-      file = File.basename(file, '.html.erb')
-      ["/static/#{file}", "#{file}.html"]
-    end
-  end
-
   desc "Generate static html files and put them in /public/" 
   task :generate do
-    require "rails/console/app"
-    require "rails/console/helpers"
-    extend Rails::ConsoleMethods
-
-    urls_and_paths.each do |url, path|
-      r = app.get(url)
-      if 200 == r
-        File.open(Rails.public_path + path, "w") do |f|
-          f.write(app.response.body)
+    on roles :web do
+      within release_path do
+        with rails_env: fetch(:rails_env) do
+          execute :rake, "static:generate"
         end
-      else
-        $stderr.puts "Error generating static file #{path} #{r.inspect}"
       end
     end
   end
