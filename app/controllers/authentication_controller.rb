@@ -11,8 +11,7 @@ class AuthenticationController < ApplicationController
     end
     
     session[:user] = user.id
-    user.credentials = session[:credentials]
-    user.save!
+    AuthSession.create! credentials: session[:credentials], user_id: session[:user]
 
     redirect_to (origin_url || request.referrer || root_url)
   end
@@ -21,25 +20,22 @@ class AuthenticationController < ApplicationController
   # http://www.davidlowry.co.uk/562/creating-download-click-tracker-rails-4-also-run-ins-turbolinks/
   # https://github.com/rails/turbolinks/pull/260
   def destroy
-    clear_credentials(current_user)
+    clear_credentials(session[:credentials])
     reset_session
     redirect_to "#{CAS_LOGOUT_URL}?url=#{CGI.escape(root_url)}"
   end
 
   # FIXME: make sure to test this on staging
   def single_sign_out
-    clear_credentials(User.find_by_credentials(params[:session_index]))
+    clear_credentials(params[:session_index])
     render nothing: true
   end
 
   protected
 
-  def clear_credentials(user)
+  def clear_credentials(credentials)
     # destroy ticket<->session mapping
-    if user
-      user.credentials = nil
-      user.save!
-    end
+    AuthSession.find_by_credentials(credentials).try(:'destroy!')
   end
 
   def auth_credentials

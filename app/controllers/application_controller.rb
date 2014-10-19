@@ -20,8 +20,7 @@ class ApplicationController < ActionController::Base
   # which should be configured in config/initializers/omniauth.rb
   protected 
   def authenticate
-    #FIXME: tying db credentials to cookie credentials means users can't log in with multiple browsers simultaneously
-    return true if current_user && current_user.credentials == session[:credentials]
+    return true if current_user.is_a? User
 
     # redirect to omniauth provider
     redirect_to "#{login_path}?url=#{request.url}"
@@ -71,11 +70,7 @@ class ApplicationController < ActionController::Base
 
   private
   def current_user
-    @_current_user ||= begin
-      session[:user].present? && 
-      session[:credentials].present? && 
-      User.find_by_id_and_credentials(session[ :user ], session[:credentials])
-    end
+    @_current_user ||= AuthSession.authenticated_user(session[:user], session[:credentials])
   end
 
   def auth_user
