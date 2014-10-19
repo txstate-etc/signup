@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/chuckbjones/omniauth-cas.git
-  revision: 43ee3f25ac9f919746ffcf143ed67ea8f40ec5c2
+  revision: c2c538c37155624b39c564ea59a2ba1ccb647cdb
   branch: master
   specs:
     omniauth-cas (1.1.0)
