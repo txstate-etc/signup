@@ -51,7 +51,7 @@ class AuthenticationController < ApplicationController
   end
 
   def origin_url
-    request.env['omniauth.origin']
+    request.params['url'] || request.env['omniauth.origin']
   end
 
   def auth_hash

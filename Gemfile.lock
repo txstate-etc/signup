@@ -7,13 +7,13 @@ GIT
 
 GIT
   remote: git://github.com/dlindahl/omniauth-cas.git
-  revision: 19766032f1e4962429c7ed4ff725f6d90c7e8d0c
-  ref: 19766032f1e
+  revision: 43ee3f25ac9f919746ffcf143ed67ea8f40ec5c2
+  ref: 43ee3f25
   specs:
-    omniauth-cas (1.0.4)
+    omniauth-cas (1.1.0)
       addressable (~> 2.3)
       nokogiri (~> 1.5)
-      omniauth (~> 1.1.0)
+      omniauth (~> 1.2.0)
 
 GEM
   remote: https://rubygems.org/
@@ -96,7 +96,7 @@ GEM
       actionmailer (>= 3.0.4)
       activesupport (>= 3.0.4)
     execjs (2.2.1)
-    hashie (2.1.2)
+    hashie (3.3.1)
     high_voltage (2.2.1)
     hike (1.2.3)
     htmlentities (4.3.2)
@@ -122,9 +122,9 @@ GEM
     net-ssh (2.9.1)
     nokogiri (1.6.3.1)
       mini_portile (= 0.6.0)
-    omniauth (1.1.4)
-      hashie (>= 1.2, < 3)
-      rack
+    omniauth (1.2.2)
+      hashie (>= 1.2, < 4)
+      rack (~> 1.0)
     paper_trail (3.0.6)
       activerecord (>= 3.0, < 5.0)
       activesupport (>= 3.0, < 5.0)

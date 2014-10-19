@@ -24,7 +24,7 @@ class ApplicationController < ActionController::Base
     return true if current_user && current_user.credentials == session[:credentials]
 
     # redirect to omniauth provider
-    redirect_to login_path
+    redirect_to "#{login_path}?url=#{request.url}"
     return false    
   end
 
