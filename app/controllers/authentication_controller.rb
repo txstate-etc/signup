@@ -1,5 +1,6 @@
 class AuthenticationController < ApplicationController
-
+  skip_before_action :verify_authenticity_token, only: :single_sign_out
+  
   def create
     session[:auth_user] = auth_user
     session[:credentials] = auth_credentials[:ticket]
@@ -25,7 +26,6 @@ class AuthenticationController < ApplicationController
     redirect_to "#{CAS_LOGOUT_URL}?url=#{CGI.escape(root_url)}"
   end
 
-  # FIXME: make sure to test this on staging
   def single_sign_out
     clear_credentials(params[:session_index])
     render nothing: true
