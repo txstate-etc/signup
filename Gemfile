@@ -31,7 +31,8 @@ gem 'paperclip', '~> 4.2.0'
 gem 'cocoon'
 
 # CAS authentication - need github branch for single signout support
-gem 'omniauth-cas', :github => 'dlindahl/omniauth-cas', :ref => '43ee3f25'
+#gem 'omniauth-cas', :github => 'dlindahl/omniauth-cas', :ref => '43ee3f25'
+gem 'omniauth-cas', :github => 'chuckbjones/omniauth-cas', :branch => 'master'
 
 # LDAP user lookups
 gem 'net-ldap'

@@ -1,19 +1,19 @@
 GIT
-  remote: git://github.com/chuckbjones/ri_cal.git
-  revision: 5891733ef14bb282db2e49bab121b2de81d3b26b
-  branch: master
-  specs:
-    ri_cal (0.8.8)
-
-GIT
-  remote: git://github.com/dlindahl/omniauth-cas.git
+  remote: git://github.com/chuckbjones/omniauth-cas.git
   revision: 43ee3f25ac9f919746ffcf143ed67ea8f40ec5c2
-  ref: 43ee3f25
+  branch: master
   specs:
     omniauth-cas (1.1.0)
       addressable (~> 2.3)
       nokogiri (~> 1.5)
       omniauth (~> 1.2.0)
+
+GIT
+  remote: git://github.com/chuckbjones/ri_cal.git
+  revision: 5891733ef14bb282db2e49bab121b2de81d3b26b
+  branch: master
+  specs:
+    ri_cal (0.8.8)
 
 GEM
   remote: https://rubygems.org/
