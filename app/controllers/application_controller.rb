@@ -70,7 +70,10 @@ class ApplicationController < ActionController::Base
 
   private
   def current_user
-    @_current_user ||= AuthSession.authenticated_user(session[:user], session[:credentials])
+    unless defined? @_current_user
+      @_current_user = AuthSession.authenticated_user(session[:user], session[:credentials])
+    end
+    @_current_user
   end
 
   def auth_user
