@@ -4,11 +4,8 @@ class UsersController < ApplicationController
   before_filter :ensure_authorized, except: [:autocomplete_search, :show]
 
   def autocomplete_search
-    #users = User.active.limit(10).search(params[:term])
-    #FIXME: this only searches LDAP, meaning we won't have
-    # local users. We should merge DB and LDAP results?
-    # Only pull manual users from DB
     users = User.directory_search(params[:term])
+    users += User.active.manual.limit(10).search(params[:term])
     render json: users.map { |u| 
       name_and_login = User.name_and_login(u)
       { 
