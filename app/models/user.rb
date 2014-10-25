@@ -50,8 +50,8 @@ class User < ActiveRecord::Base
     name_and_login.split(/[(|)]/).last rescue nil
   end
 
-  def self.find_by_name_and_login(name)
-    User.find_by_login(User.extract_login(name)) rescue nil
+  def self.find_or_lookup_by_id(id)
+    User.lookup(User.find(id))
   end
 
   def self.find_or_lookup_by_name_and_login(name)
@@ -60,12 +60,16 @@ class User < ActiveRecord::Base
 
   def self.find_or_lookup_by_login(login)
     return nil unless login.present?
-    
-    user = User.find_by_login(login)
-    if user.blank?
+    User.lookup(login.is_a?(User) ? login : (User.find_by_login(login) || login))
+  end
+  
+  def self.lookup(user)
+    if !user.is_a?(User) || user.need_update?
       # try to find in ldap
       begin
-        user = Ldap.import_user(login)
+        login = user.is_a?(User) ? user.login : user
+        ldap_user = Ldap.import_user(login)
+        user = ldap_user if ldap_user
       rescue Ldap::ConnectError, Net::LDAP::LdapError => e
         logger.error("There was a problem importing the data from LDAP. " + e.to_s)
       end
@@ -115,6 +119,10 @@ class User < ActiveRecord::Base
   def past_sessions
     #FIXME: lazy load
     @past_sessions ||= sessions.select { |s| s.started? }.reverse
+  end
+
+  def need_update? 
+    !self.manual? && self.updated_at < 5.minutes.ago
   end
 
   # return true if the user has permissions on one or more departments (and item==nil)

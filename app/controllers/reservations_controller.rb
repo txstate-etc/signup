@@ -6,11 +6,17 @@ class ReservationsController < ApplicationController
   # GET /reservations.json
   def index
     admin_is_viewing_someone_else = params[ :user_login ] && current_user.admin?
+    login = admin_is_viewing_someone_else ? params[ :user_login ] : current_user
+    @user = User.find_or_lookup_by_login( login )
+    if @user.nil?
+      flash[:alert] = "Could not find user with Login ID #{params[ :user_login ]}" if admin_is_viewing_someone_else
+      redirect_to request.referrer || root_url
+      return
+    end
+
     if admin_is_viewing_someone_else
-      @user = User.find_by_login( params[ :user_login ] )
       @page_title = "Reservations for #{@user.name}"
     else
-      @user = current_user
       @page_title = "Your Reservations"
     end
 
@@ -39,25 +45,23 @@ class ReservationsController < ApplicationController
   # POST /reservations
   # POST /reservations.json
   def create
-    unless current_user
-      redirect_to root_url
+    session = Session.find( params[ :session_id ] )
+    admin_is_enrolling_someone_else = params[ :user_login ] && session && authorized?(session)
+    login = admin_is_enrolling_someone_else ? params[ :user_login ] : current_user
+    user = User.find_or_lookup_by_login( login )
+    if user.nil?
+      flash[:alert] = "Could not find user with Login ID #{params[ :user_login ]}" if admin_is_enrolling_someone_else
+      redirect_to request.referrer || root_url
       return
-    end
-
-    user = if params[ :user_login ]
-      User.find_by_login( params[ :user_login ] )
-    else
-      current_user
     end
 
     @reservation = Reservation.find_by_user_id_and_session_id(user.id, params[ :session_id ])
     unless @reservation
       @reservation = Reservation.new(reservation_params)
-      @reservation.session = Session.find( params[ :session_id ] )
+      @reservation.session = session
       @reservation.user = user
     end
 
-    admin_is_enrolling_someone_else = params[ :user_login ] && authorized?(@reservation)
     if admin_is_enrolling_someone_else
       if @reservation.user.nil?
         flash[:alert] = "Could not find user with Login ID #{params[ :user_login ]}"

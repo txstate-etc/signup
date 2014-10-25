@@ -35,6 +35,7 @@ class Ldap
   end
 
   def import_user(login)
+    return nil unless login.present?
     @logger.info("Starting user import from LDAP: #{Time.now}" )
 
     query = build_user_import_query(login)
@@ -183,6 +184,9 @@ class Ldap
       user.save!
       @logger.info( "Updated: #{fields[:full_name]} (#{fields[:login]})" )
       #FIXME: log what fields changed
+    else
+      # just touch the updated_at field
+      user.touch
     end
 
     user
