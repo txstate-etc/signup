@@ -69,7 +69,7 @@ class SessionsController < ApplicationController
   def update
     respond_to do |format|
       if @session.update(session_params)
-        format.html { redirect_to @session, notice: 'Session was successfully updated.' }
+        format.html { redirect_to(request.referrer || @session, notice: 'Session was successfully updated.') }
         format.json { render :show, status: :ok, location: @session }
       else
         format.html { render :edit }
