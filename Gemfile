@@ -70,6 +70,13 @@ gem 'high_voltage', '~> 2.2.1'
 # audit model changes
 gem 'paper_trail', '~> 3.0.6'
 
+# performance profiler
+gem 'rack-mini-profiler'
+
+# Shows stacktraces with amount of time spent in each function
+# add ?pp=flamegraph to display
+gem 'flamegraph'
+
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller', :platforms=>[:mri_21]

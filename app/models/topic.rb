@@ -1,4 +1,5 @@
 class Topic < ActiveRecord::Base
+  include SessionInfoObserver
   belongs_to :department
   has_many :sessions, -> { where(cancelled: false).includes([:topic, :occurrences]).order('occurrences.time') }, :dependent => :destroy
   has_many :survey_responses, through: :sessions
@@ -87,8 +88,8 @@ class Topic < ActiveRecord::Base
 
   def to_csv
     key = "to_csv/#{cache_key}"
-    Rails.cache.fetch(key) do
-      Cashier.store_fragment(key, cache_key)
+    Rails.cache.fetch(key, tag: cache_key) do
+      logger.debug { "in to_csv for #{name}" }
       CSV.generate do |csv|
         csv << Session::CSV_HEADER
         csv_rows.each { |row| csv << row }
@@ -98,8 +99,7 @@ class Topic < ActiveRecord::Base
   
   def csv_rows
     key = "csv_rows/#{cache_key}"
-    Rails.cache.fetch(key) do
-      Cashier.store_fragment(key, cache_key)
+    Rails.cache.fetch(key, tag: cache_key) do
       sessions.unscope(where: :cancelled).map { |session| session.csv_rows }.flatten(1)
     end
   end    

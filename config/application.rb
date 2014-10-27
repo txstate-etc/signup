@@ -55,5 +55,9 @@ module Signup
       address: Rails.application.secrets.smtp_host,
       domain: Rails.application.secrets.domain_name
     }
+
+    config.cache_store = :file_store, "#{config.root}/tmp/cache", { expires_in: 30.days, race_condition_ttl: 30.seconds }
+    config.cashier.adapter = :cache_store
+
   end
 end

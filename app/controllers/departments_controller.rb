@@ -12,9 +12,8 @@ class DepartmentsController < ApplicationController
       format.atom
       if authorized?(@department) || (current_user && current_user.editor?(@department))
         format.csv do
-          key = fragment_cache_key(['departments/csv', @department])
-          data = Rails.cache.fetch(key) do 
-            Cashier.store_fragment(key, @department.cache_key)
+          data = cache(['departments/csv', @department], tag: @department.cache_key) do
+            logger.debug { "Generating csv for department #{@department.name}" }
             @department.to_csv
           end
           send_csv data, @department 

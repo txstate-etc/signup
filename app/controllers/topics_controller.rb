@@ -23,23 +23,25 @@ class TopicsController < ApplicationController
       end
       if authorized? @topic
         format.csv do
-          send_csv @topic.to_csv, @topic.to_param 
+          data = cache(["#{date_slug}/topics/csv", @topic], tag: @topic.cache_key) do 
+            logger.debug { "generating csv for #{@topic.name}" }
+            @topic.to_csv
+          end
+          send_csv data, @topic.to_param 
         end
       end
     end
   end
 
   def download
-    # key = fragment_cache_key(["#{date_slug}/topics/download", @topic])
-    # data = Rails.cache.fetch(key) do 
-    #   Cashier.store_fragment(key, @topic.cache_key)
+    data = cache(["#{date_slug}/topics/download", @topic], tag: @topic.cache_key) do 
       calendar = RiCal.Calendar
       calendar.add_x_property 'X-WR-CALNAME', @topic.name
       @topic.upcoming_sessions.each do |session|
         session.to_event.each { |event| calendar.add_subcomponent( event ) }
       end
-      data = calendar.export
-    # end
+      calendar.export
+    end
     send_data(data, :type => 'text/calendar')
   end
   

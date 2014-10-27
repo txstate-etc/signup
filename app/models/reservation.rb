@@ -1,4 +1,5 @@
 class Reservation < ActiveRecord::Base
+  include SessionInfoObserver
   belongs_to :user
   belongs_to :session
   counter_culture :session, 

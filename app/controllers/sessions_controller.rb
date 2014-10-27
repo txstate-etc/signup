@@ -17,9 +17,7 @@ class SessionsController < ApplicationController
       format.csv
       if authorized?(@session) || (current_user && current_user.editor?(@session))
         format.csv do
-          key = fragment_cache_key(['sessions/csv', @session])
-          data = Rails.cache.fetch(key) do 
-            Cashier.store_fragment(key, @session.cache_key)
+          data = cache(['sessions/csv', @session], tag: @session.cache_key) do 
             @session.to_csv
           end
           send_csv data, @session 
@@ -89,17 +87,14 @@ class SessionsController < ApplicationController
   end
 
   def download
-    # FIXME is caching different for rails 4?
-    # key = fragment_cache_key("#{date_slug}/sessions/download")
-    # data = Rails.cache.fetch(key) do 
-      # Cashier.store_fragment(key, 'session-info')
+    data = cache("#{date_slug}/sessions/download", tag: 'session-info') do 
       calendar = RiCal.Calendar
       calendar.add_x_property 'X-WR-CALNAME', 'All Upcoming Sessions'
       Session.upcoming.each do |session|
         session.to_event.each { |event| calendar.add_subcomponent( event ) }
       end
-    data = calendar.export
-    # end
+      calendar.export
+    end
     send_data(data, :type => 'text/calendar')
   end
 

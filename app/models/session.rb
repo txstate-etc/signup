@@ -1,4 +1,5 @@
 class Session < ActiveRecord::Base
+  include SessionInfoObserver
   belongs_to :topic
   belongs_to :site
   has_many :reservations, -> { order(:created_at).where(cancelled: false) }, :dependent => :destroy
@@ -244,8 +245,7 @@ class Session < ActiveRecord::Base
   
   def to_event
     key = "to_event/#{cache_key}"
-    Rails.cache.fetch(key) do
-      Cashier.store_fragment(key, cache_key)
+    Rails.cache.fetch(key, tag: cache_key) do
       description = "#{topic.description}\n\nInstructor(s): #{instructors.map(&:name).join(", ")}"
       if topic.tag_list.present?
         description << "\n\nTags: #{topic.sorted_tags.join(", ")}"
@@ -273,8 +273,7 @@ class Session < ActiveRecord::Base
 
   def csv_rows
     key = "csv_rows/#{cache_key}"
-    Rails.cache.fetch(key) do
-      Cashier.store_fragment(key, cache_key)
+    Rails.cache.fetch(key, tag: cache_key) do
       reservations_by_last_name.map do |reservation|
         attended = ""
         if reservation.attended == Reservation::ATTENDANCE_MISSED
