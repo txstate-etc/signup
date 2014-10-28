@@ -76,7 +76,7 @@ class User < ActiveRecord::Base
       end
     end
     
-    user
+    user.is_a?(User) ? user : nil
   end
 
   def self.name_and_login(user)
