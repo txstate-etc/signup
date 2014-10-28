@@ -54,7 +54,7 @@ every :day, at: '2:30 am' do
   rake "db:backup MAX=30"
 end
 
-clean up old http_sessions nightly at 2:40am
+# clean up old http_sessions nightly at 2:40am
 every :day, at: '2:40 am' do
   rake "db:session_clean DAYS=30"
 end
