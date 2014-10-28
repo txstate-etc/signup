@@ -4,7 +4,7 @@
     <dt>Time:</dt>
     <% if session.multiple_occurrences? %>
       <% meets_met = session.in_past? ? "met" : "meets" %>          
-      <dd>This session <%= meets_met %> <%= session.occurrences.count %> times:</dd>
+      <dd>This session <%= meets_met %> <%= session.occurrences.length %> times:</dd>
     <% end %>
     <% session.occurrences.each do |o| %>
       <dd><%=h formatted_time_range(o.time, session.topic.minutes) %></dd>
@@ -14,7 +14,7 @@
     <% elsif session.started? %>
       <dd class="in-past">This session has already commenced.</dd>
     <% end %>
-    <% if session.topic.upcoming_sessions.size > 1 %>
+    <% if session.topic.upcoming_count > 1 %>
       <dd><%= link_to 'Need to look for another session?', session.topic %></dd>
     <% end %>
     <% if session.registration_period_defined? %>
@@ -34,7 +34,7 @@
         <%=h session.site.name if session.site %>
       </span>
     </dd>
-    <% if session.instructors.size > 1 %>
+    <% if session.instructors.length > 1 %>
       <dt>Instructors:</dt>
     <% else %>
       <dt>Instructor:</dt>

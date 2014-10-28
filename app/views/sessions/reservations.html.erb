@@ -1,6 +1,6 @@
 <%= render partial: "details", locals: {session: @session} %>
 
-<% if @session.confirmed_reservations.size > 0 %>
+<% if @session.confirmed_reservations.present? %>
   <div class='attendance-links'>
     <%= link_to 'Print Attendance Sheet', 
       sessions_reservations_path(format: :pdf) %>
@@ -15,9 +15,7 @@
     <%= link_to '(use outlook)', mailto_all(@session, true), 
        class: 'mailto-link' %>
   </div>
-<% end %>
 
-<% if @session.confirmed_reservations.size > 0 %>
   <div class="content-section attendance-list">
     <h2>Confirmed Reservations</h2>
     <div class="radio-all-wrap">

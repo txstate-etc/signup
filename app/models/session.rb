@@ -2,7 +2,7 @@ class Session < ActiveRecord::Base
   include SessionInfoObserver
   belongs_to :topic
   belongs_to :site
-  has_many :reservations, -> { order(:created_at).where(cancelled: false) }, :dependent => :destroy
+  has_many :reservations, -> { order(:created_at).where(cancelled: false).includes(:user) }, :dependent => :destroy
   accepts_nested_attributes_for :reservations
   has_many :occurrences, :dependent => :destroy, after_add: :mark_dirty, after_remove: :mark_dirty
   accepts_nested_attributes_for :occurrences, :reject_if => :all_blank, :allow_destroy => true
@@ -220,7 +220,7 @@ class Session < ActiveRecord::Base
   end
   
   def multiple_occurrences?
-    occurrences.count > 1
+    occurrences.length > 1
   end
 
   def registration_period_defined?

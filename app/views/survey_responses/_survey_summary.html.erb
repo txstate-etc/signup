@@ -1,4 +1,4 @@
-<% if model_object.survey_responses.size > 0 %>
+<% if model_object.survey_responses.present? %>
   <div id="survey-responses" class="content-section">
     <h2>Survey Results</h2>
     <div class="survey-result">Average Instructor Rating: <%= "%.2f" % model_object.average_instructor_rating %></div>

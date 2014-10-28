@@ -105,31 +105,24 @@ class TopicsController < ApplicationController
     end if params.key?('departments')
 
     @upcoming = session[:topics] != 'all'
-    @all_depts = current_user.admin? && session[:departments] == 'all'
+    @all_depts = current_user.admin? && (session[:departments] == 'all' || !current_user.editor?)
 
     # Editors: show topics for their departments only. 
     # Admins: show topics for their departments by default. Show all depts based on filter
-    # Instructors: show departments for topics that they are instructors of plus any in
-    @topics = Hash.new { |h,k| h[k] = SortedSet.new }
-    if current_user.admin? && (@all_depts || !current_user.editor?)
-      _topics = @upcoming ? Topic.upcoming : Topic.active
-      _topics.each { |t| @topics[t.department] << t }
-      Department.active.each { |d| @topics[d] ||= [] }
-    else
-      if current_user.editor?
-        _topics = @upcoming ? current_user.upcoming_topics : current_user.topics
-        _topics.each { |t| @topics[t.department] << t }
-        current_user.departments.each { |d| @topics[d] ||= [] }
-      end
+    # Instructors: show departments for topics that they are instructors of
+    @departments = Department.active.by_name
+    list = @upcoming ? Topic.upcoming : Topic.active
+    if !@all_depts
+      @departments = @departments.where id: (
+        current_user.department_ids + 
+        current_user.sessions.map { |s| s.topic.department_id }
+      ).uniq
       
-      if current_user.instructor?
-        # Add topics for which the current user is the instructor
-        current_user.sessions.each do |session|
-          @topics[session.topic.department] ||= []
-          @topics[session.topic.department] << session.topic if !@upcoming || session.in_future?
-        end
-      end
+      list = list.where(department: @departments)
     end
+
+    @topics = Hash.new { |h,k| h[k] = SortedSet.new }
+    list.each { |t| @topics[t.department_id] << t }
 
     render layout: 'application'
   end

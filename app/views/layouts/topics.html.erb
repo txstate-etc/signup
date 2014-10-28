@@ -6,7 +6,7 @@
       <p><%= link_to "View Survey Results", survey_results_topic_path( @topic ) %>
       <% unless @topic.inactive? %>
         <p><%= link_to "Update Topic Details", edit_topic_path( @topic ) %></p>
-        <% if @topic.upcoming_sessions.blank? %>
+        <% if @topic.upcoming_count.zero? %>
           <p><%= link_to "Delete Topic", delete_topic_path( @topic ) %></p>
         <% end %>
           <p><%= link_to "Create New Session", new_topic_session_path( @topic ) %></p>

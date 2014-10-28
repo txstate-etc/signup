@@ -1,6 +1,6 @@
 class Occurrence < ActiveRecord::Base
   include SessionInfoObserver
-  belongs_to :session, -> { where cancelled: false }
+  belongs_to :session, -> { where(cancelled: false) }
   has_paper_trail
 
   default_scope { order :time }

@@ -20,7 +20,7 @@ class ReservationsController < ApplicationController
       @page_title = "Your Reservations"
     end
 
-    reservations = @user.reservations
+    reservations = @user.reservations.includes(:survey_response, :user, session: [:occurrences, :topic])
     current_reservations = reservations.find_all{ |reservation| !reservation.session.in_past? }.sort {|a,b| a.session.next_time <=> b.session.next_time}
     @past_reservations = reservations.find_all{ |reservation| reservation.session.in_past? && reservation.attended != Reservation::ATTENDANCE_MISSED }
     @confirmed_reservations, @waiting_list_signups = current_reservations.partition { |r| r.confirmed? }

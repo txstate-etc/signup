@@ -62,13 +62,18 @@ class Topic < ActiveRecord::Base
     super.reorder(nil).order('created_at DESC')
   end
 
+  # Use this when you just care if there are any upcoming sessions, but don't need the details
+  # If you do need the details at some point in the current request, use upcoming_sessions.length
+  # or upcoming_sessions.present? if you don't need the exact count
+  def upcoming_count
+    @upcoming_count ||= @upcoming_sessions.try(:length) || Session.upcoming.where(topic: self).count
+  end
+
   def upcoming_sessions
-    #FIXME: lazy load
     @upcoming_sessions ||= sessions - past_sessions
   end
 
   def past_sessions
-    #FIXME: lazy load
     @past_sessions ||= sessions.select { |s| s.started? }
   end
 

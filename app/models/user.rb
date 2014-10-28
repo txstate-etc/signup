@@ -108,17 +108,11 @@ class User < ActiveRecord::Base
     "#{title}, #{department}"
   end
 
-  def upcoming_topics
-    @upcoming_topics ||= upcoming_sessions.map { |s| s.topic }.uniq
-  end
-
   def upcoming_sessions
-    #FIXME: lazy load
     @upcoming_sessions ||= sessions - past_sessions
   end
 
   def past_sessions
-    #FIXME: lazy load
     @past_sessions ||= sessions.select { |s| s.started? }.reverse
   end
 
