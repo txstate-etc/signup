@@ -1,7 +1,7 @@
 class Topic < ActiveRecord::Base
   include SessionInfoObserver
   belongs_to :department
-  has_many :sessions, -> { where(cancelled: false).includes([:topic, :occurrences]).order('occurrences.time') }, :dependent => :destroy
+  has_many :sessions, -> { where(cancelled: false).includes([:topic, :occurrences, :site]).order('occurrences.time') }, :dependent => :destroy
   has_many :survey_responses, through: :sessions
   include SurveyAggregates
   has_many :documents, :dependent => :destroy

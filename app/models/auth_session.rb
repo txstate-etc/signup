@@ -3,6 +3,6 @@ class AuthSession < ActiveRecord::Base
 
   def self.authenticated_user(user_id, credentials)
     return nil unless user_id.present? && credentials.present?
-    AuthSession.find_by_credentials_and_user_id(credentials, user_id).try(:user)
+    User.where(id: user_id, :'auth_sessions.credentials' => credentials).joins(:auth_sessions).limit(1).first
   end
 end

@@ -1,6 +1,7 @@
 require 'ldap'
 
 class User < ActiveRecord::Base
+  has_many :auth_sessions
   has_many :permissions
   has_many :departments, :through => :permissions
   has_many :reservations, -> { joins(:session).where(cancelled: false, sessions: { cancelled: false }) }

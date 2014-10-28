@@ -5,10 +5,6 @@ class ApplicationController < ActionController::Base
 
   GOOGLE_ANALYTICS_URL = URI('http://www.google-analytics.com/collect')
 
-  def info_for_paper_trail
-    { :ip => request.remote_ip, :user_agent => request.user_agent }
-  end
-
   helper_method :current_user
   helper_method :auth_user
   helper_method :authorized?
@@ -19,6 +15,10 @@ class ApplicationController < ActionController::Base
   # user into session[ :user ]. It's set up to work with OmniAuth, 
   # which should be configured in config/initializers/omniauth.rb
   protected 
+  def info_for_paper_trail
+    { :ip => request.remote_ip, :user_agent => request.user_agent }
+  end
+
   def authenticate
     return true if current_user.is_a? User
 

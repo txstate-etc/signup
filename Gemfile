@@ -87,6 +87,8 @@ group :development do
   gem 'capistrano-rails', '~> 1.1', require: false
   gem 'capistrano-bundler', '~> 1.1', require: false
   gem 'capistrano-passenger', '~> 0.0.1', require: false
+  gem 'traceroute'
+  gem "bullet"
 end
 
 group :development, :test do
