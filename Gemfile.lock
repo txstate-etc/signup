@@ -72,9 +72,6 @@ GEM
     capistrano-rails (1.1.2)
       capistrano (~> 3.1)
       capistrano-bundler (~> 1.1)
-    capistrano-rvm (0.1.1)
-      capistrano (~> 3.0)
-      sshkit (~> 1.2)
     cashier (0.4.1)
     chronic (0.10.2)
     climate_control (0.0.3)
@@ -178,6 +175,9 @@ GEM
     rdoc (4.1.2)
       json (~> 1.4)
     ref (1.0.5)
+    rvm1-capistrano3 (1.3.2.2)
+      capistrano (~> 3.0)
+      sshkit (>= 1.2)
     sass (3.2.19)
     sass-rails (4.0.3)
       railties (>= 4.0.0, < 5.0)
@@ -239,7 +239,6 @@ DEPENDENCIES
   capistrano-bundler (~> 1.1)
   capistrano-passenger (~> 0.0.1)
   capistrano-rails (~> 1.1)
-  capistrano-rvm (~> 0.1)
   cashier
   cocoon
   counter_culture (~> 0.1.25)
@@ -265,6 +264,7 @@ DEPENDENCIES
   rails_autolink
   rails_layout
   ri_cal!
+  rvm1-capistrano3
   sass-rails (~> 4.0.3)
   sdoc (~> 0.4.0)
   simple_form

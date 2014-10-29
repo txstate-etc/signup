@@ -43,6 +43,9 @@ set :linked_dirs, %w{backups log tmp/pids public/system}
 # Default value for keep_releases is 5
 # set :keep_releases, 5
 
+before 'deploy', 'rvm1:install:rvm'
+before 'deploy', 'rvm1:install:ruby'
+
 after 'deploy:publishing', 'delayed_job:restart'
 
 after 'deploy:finished', 'static:generate'
