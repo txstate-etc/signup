@@ -29,7 +29,7 @@ class UsersControllerTest < ActionController::TestCase
     %w(autocomplete_search index new create).each do |action|
       get action
       assert_response :redirect
-      assert_redirected_to '/auth/cas'
+      assert_redirected_to "/auth/cas?url=#{@request.url}"
     end
 
     # reset the response object or it will give a redirect loop error after five redirects
@@ -38,7 +38,7 @@ class UsersControllerTest < ActionController::TestCase
     %w(show edit update destroy).each do |action|
       get action, :id => users( :plainuser1 )
       assert_response :redirect
-      assert_redirected_to '/auth/cas'
+      assert_redirected_to "/auth/cas?url=#{@request.url}"
     end
   end
 

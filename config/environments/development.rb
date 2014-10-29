@@ -46,10 +46,10 @@ Rails.application.configure do
   
   config.after_initialize do
     Bullet.enable = false
-    Bullet.alert = true
-    Bullet.bullet_logger = true
-    Bullet.add_whitelist :type => :unused_eager_loading, :class_name => "Session", :association => :occurrences
-    Bullet.add_whitelist :type => :unused_eager_loading, :class_name => "Session", :association => :topic
+    # Bullet.alert = true
+    # Bullet.bullet_logger = true
+    # Bullet.add_whitelist :type => :unused_eager_loading, :class_name => "Session", :association => :occurrences
+    # Bullet.add_whitelist :type => :unused_eager_loading, :class_name => "Session", :association => :topic
     # Bullet.add_whitelist :type => :n_plus_one_query, :class_name => "Topic", :association => :sessions
     # Bullet.add_whitelist :type => :n_plus_one_query, :class_name => "Occurrence", :association => :session
     # Bullet.add_whitelist :type => :n_plus_one_query, :class_name => "Reservation", :association => :session

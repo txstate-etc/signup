@@ -29,30 +29,30 @@ class TopicsControllerTest < ActionController::TestCase
     
     get :manage
     assert_response :redirect
-    assert_redirected_to '/auth/cas'
+    assert_redirected_to "/auth/cas?url=#{@request.url}"
   
     get :history, :id => topics( :gato )
     assert_response :redirect
-    assert_redirected_to '/auth/cas'
+    assert_redirected_to "/auth/cas?url=#{@request.url}"
 
     get :new
     assert_response :redirect
-    assert_redirected_to '/auth/cas'
+    assert_redirected_to "/auth/cas?url=#{@request.url}"
     
     get :create
     assert_response :redirect
-    assert_redirected_to '/auth/cas'
+    assert_redirected_to "/auth/cas?url=#{@request.url}"
     
     put :update, :id => topics( :gato )
     assert_response :redirect
-    assert_redirected_to '/auth/cas'
+    assert_redirected_to "/auth/cas?url=#{@request.url}"
 
     # reset the response object or it will give a redirect loop error after five redirects
     setup_controller_request_and_response
 
     put :destroy, :id => topics( :gato )
     assert_response :redirect
-    assert_redirected_to '/auth/cas'
+    assert_redirected_to "/auth/cas?url=#{@request.url}"
   end
 
   test "Admins should be able to do anything." do
@@ -297,8 +297,9 @@ class TopicsControllerTest < ActionController::TestCase
     @request.session[ :departments ] = 'all'
     get :manage
     assert_response :success
+    assert_equal 2, assigns( :departments ).size # editor of ITS and instructor in TR
     assert_equal 2, assigns( :topics ).keys.size
-    assert_equal 4, assigns( :topics ).values.reduce(0){ |s,a| s+a.size }
+    assert_equal 7, assigns( :topics ).values.reduce(0){ |s,a| s+a.size }
 
     get :history, :id => topics( :gato )
     assert_response :success, "Should be able to manage topic in his department"
@@ -313,6 +314,7 @@ class TopicsControllerTest < ActionController::TestCase
     login_as( users( :editor2 ) )
     get :manage
     assert_response :success
+    assert_equal 2, assigns( :departments ).size # editor of both ITS and TR
     assert_equal 2, assigns( :topics ).keys.size
     assert_equal 7, assigns( :topics ).values.reduce(0){ |s,a| s+a.size }
   end
@@ -323,8 +325,10 @@ class TopicsControllerTest < ActionController::TestCase
     @request.session[ :departments ] = 'all'
     get :manage
     assert_response :success
+    assert_equal 3, assigns( :departments ).size # instructor in ITS, TR, and department_to_make_inactive
+    # FIXME: this should be 2, because the inactive topic shouldn't show up!
     assert_equal 3, assigns( :topics ).keys.size
-    assert_equal 6, assigns( :topics ).values.reduce(0){ |s,a| s+a.size }
+    assert_equal 7, assigns( :topics ).values.reduce(0){ |s,a| s+a.size }
 
     get :history, :id => topics( :gato )
     assert_response :success, "Should be able to manage topic he is an instructor for"
@@ -336,8 +340,9 @@ class TopicsControllerTest < ActionController::TestCase
     login_as( users( :instructor2 ) )
     get :manage
     assert_response :success
+    assert_equal 1, assigns( :departments ).size # instructor in ITS only
     assert_equal 1, assigns( :topics ).keys.size
-    assert_equal 1, assigns( :topics ).values.reduce(0){ |s,a| s+a.size }
+    assert_equal 3, assigns( :topics ).values.reduce(0){ |s,a| s+a.size }
   end
   
   test "Normal users cannot manage topics" do

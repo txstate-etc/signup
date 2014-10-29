@@ -12,24 +12,24 @@ class SessionsControllerTest < ActionController::TestCase
     
     get :new, :topic_id => sessions( :tracs ).topic_id
     assert_response :redirect
-    assert_redirected_to '/auth/cas'
+    assert_redirected_to "/auth/cas?url=#{@request.url}"
     
     get :create, :topic_id => sessions( :tracs ).topic_id
     assert_response :redirect
-    assert_redirected_to '/auth/cas'
+    assert_redirected_to "/auth/cas?url=#{@request.url}"
 
     get :edit, :id => sessions( :tracs )
     assert_response :redirect
-    assert_redirected_to '/auth/cas'
+    assert_redirected_to "/auth/cas?url=#{@request.url}"
 
     delete :destroy, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
     assert_response :redirect    
-    assert_redirected_to '/auth/cas'
+    assert_redirected_to "/auth/cas?url=#{@request.url}"
     assert !sessions( :tracs ).cancelled
     
     post :update, :topic_id => sessions( :tracs ).topic_id, :id => sessions( :tracs ).id
     assert_response :redirect    
-    assert_redirected_to '/auth/cas'
+    assert_redirected_to "/auth/cas?url=#{@request.url}"
     assert_not_equal "The Session's data has been updated.", flash[:notice]
 
     # reset the response object or it will give a redirect loop error after five redirects
@@ -37,15 +37,15 @@ class SessionsControllerTest < ActionController::TestCase
 
     get :reservations, :id => sessions( :tracs )
     assert_response :redirect
-    assert_redirected_to '/auth/cas'
+    assert_redirected_to "/auth/cas?url=#{@request.url}"
 
     get :survey_results, :id => sessions( :tracs )
     assert_response :redirect
-    assert_redirected_to '/auth/cas'
+    assert_redirected_to "/auth/cas?url=#{@request.url}"
 
     get :email, :id => sessions( :tracs )
     assert_response :redirect
-    assert_redirected_to '/auth/cas'
+    assert_redirected_to "/auth/cas?url=#{@request.url}"
   end
   
   test "Admins can do anything" do

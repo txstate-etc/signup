@@ -13,23 +13,23 @@ class DepartmentsControllerTest < ActionController::TestCase
 
     get :manage
     assert_response :redirect
-    assert_redirected_to '/auth/cas'
+    assert_redirected_to "/auth/cas?url=#{@request.url}"
   
     get :new
     assert_response :redirect
-    assert_redirected_to '/auth/cas'
+    assert_redirected_to "/auth/cas?url=#{@request.url}"
     
     post :create, department: { name: 'New Name' }
     assert_response :redirect
-    assert_redirected_to '/auth/cas'
+    assert_redirected_to "/auth/cas?url=#{@request.url}"
     
     put :update, :id => departments( :its )
     assert_response :redirect
-    assert_redirected_to '/auth/cas'
+    assert_redirected_to "/auth/cas?url=#{@request.url}"
 
     put :destroy, :id => departments( :its )
     assert_response :redirect
-    assert_redirected_to '/auth/cas'
+    assert_redirected_to "/auth/cas?url=#{@request.url}"
   end
 
   test "Admins should be able to do anything." do
