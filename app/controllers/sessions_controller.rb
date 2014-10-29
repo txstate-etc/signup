@@ -87,7 +87,7 @@ class SessionsController < ApplicationController
   end
 
   def download
-    data = cache("#{date_slug}/sessions/download", tag: 'session-info') do 
+    data = cache("#{date_slug}/sessions/download", tag: 'session-info', expires_in: 1.day) do 
       calendar = RiCal.Calendar
       calendar.add_x_property 'X-WR-CALNAME', 'All Upcoming Sessions'
       Session.upcoming.each do |session|

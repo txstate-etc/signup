@@ -81,17 +81,4 @@ namespace :cache do
 
   end
 
-  desc "Delete datestamped cache directories older than today"
-  task prune_dates: :environment do
-    today = Date.today
-    base = "#{Rails.cache.cache_path}/views"
-    return if !File.exist?(base)
-    Dir.foreach(base) do |d|
-      next unless d =~ /^\d{4}-\d{2}-\d{2}$/
-      next unless Date.parse(d) < today
-      name = File.join(base, d)
-      FileUtils.remove_entry_secure(name)
-    end
-  end
-
 end

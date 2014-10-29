@@ -60,11 +60,9 @@ every :day, at: '2:40 am' do
 end
 
 # Cleanup and Prewarm the File-based cache store nightly at 1am.
-# Deletes any datestamped directories older than today.
-# Deletes all other items that have expired (30 days old).
+# Deletes all items that have expired (30 days old).
 # Warms the cache for today's entries.
 every :day, :at => '1:05 am' do
-  rake "cache:prune_dates"
   runner "Rails.cache.cleanup"
   rake "cache:warm"
 end

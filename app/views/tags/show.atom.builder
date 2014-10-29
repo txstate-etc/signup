@@ -1,4 +1,4 @@
-cache(["#{date_slug}/tags/show/upcoming/atom", @tag], :tag => 'session-info') do
+cache(["#{date_slug}/tags/show/upcoming/atom", @tag], :tag => 'session-info', expires_in: 1.day) do
   atom_feed(:root_url => tag_url(@tag)) do |feed|
     feed.title(t(:'.atom_title_prefix') + @page_title)
     updated = @topics.max { |a, b| a.upcoming_sessions[0].updated_at <=> b.upcoming_sessions[0].updated_at } rescue nil
@@ -7,7 +7,7 @@ cache(["#{date_slug}/tags/show/upcoming/atom", @tag], :tag => 'session-info') do
     @topics = Topic.upcoming.tagged_with(@tag)
     if @topics.present?
       @topics.each do |topic|
-        cache(["#{date_slug}/tags/show/upcoming/atom", topic], :tag => topic.cache_key) do
+        cache(["#{date_slug}/tags/show/upcoming/atom", topic], :tag => topic.cache_key, expires_in: 1.day) do
           next unless topic.upcoming_sessions.present?
           published = topic.upcoming_sessions.max { |a, b| a.updated_at <=> b.updated_at } rescue nil
           feed.entry(topic, :published => published.updated_at) do |entry|

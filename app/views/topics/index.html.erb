@@ -1,4 +1,4 @@
-<% cache("#{date_slug}/topics/by-date", :tag => 'session-info')  do %>
+<% cache("#{date_slug}/topics/by-date", :tag => 'session-info', expires_in: 1.day)  do %>
   <% @topics = Topic.upcoming %>
   <% if @topics.blank? %>
     <div class="empty-list">
