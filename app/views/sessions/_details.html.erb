@@ -9,7 +9,9 @@
     <% session.occurrences.each do |o| %>
       <dd><%=h formatted_time_range(o.time, session.topic.minutes) %></dd>
     <% end %>
-    <% if session.in_past? %>
+    <% if session.cancelled? %>
+      <dd class="in-past">This session was cancelled.</dd>
+    <% elsif session.in_past? %>
       <dd class="in-past">This session has already taken place.</dd>
     <% elsif session.started? %>
       <dd class="in-past">This session has already commenced.</dd>

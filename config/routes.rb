@@ -5,9 +5,11 @@ Rails.application.routes.draw do
     get 'manage', on: :collection
   end
 
-  #FIXME need reservation/download as alias to show.ics for backwards compatability
-  #FIXME: why is this not included below. It doesn't look like the paths are nested
-  resources :reservations, only: [:index, :show]
+  # Need reservation/download as alias to show.ics for backwards compatability
+  get '/reservations/download/:id', to: 'reservations#show', defaults: { format: 'ics' }
+
+  # This not included below. because the index route shouldn't be nested
+  resources :reservations, only: :index
 
   get '/sessions/download', to: 'sessions#download', as: :sessions_download
   get '/sessions/:id/reservations', to: 'sessions#reservations', as: :sessions_reservations
@@ -21,7 +23,7 @@ Rails.application.routes.draw do
   get '/topics/download/:id', to: 'topics#download', as: :download
   resources :topics, shallow: true do
     resources :sessions, except: :index do
-      resources :reservations, except: [:index, :new, :show] do
+      resources :reservations, except: [:index, :new] do
         member do
           get 'certificate'
           get 'send_reminder'

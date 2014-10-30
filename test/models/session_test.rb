@@ -349,12 +349,11 @@ class SessionTest < ActiveSupport::TestCase
 
   end
 
-#FIXME: do we need to implement Session.instructor?
-  # test "We should be able to determine who is an instructor" do
-  #   test_session = sessions( :gato )
-  #   assert test_session.instructor?( users( :instructor1 ) )
-  #   assert !test_session.instructor?( users( :instructor2 ) )
-  # end
+  test "We should be able to determine who is an instructor" do
+    test_session = sessions( :gato )
+    assert test_session.instructor?( users( :instructor1 ) )
+    assert !test_session.instructor?( users( :instructor2 ) )
+  end
   
   test "Confirmed Reservations should be alphabetized by last name" do
     test_session = sessions( :gato_overbooked )

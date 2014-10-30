@@ -16,11 +16,6 @@ class TopicsControllerTest < ActionController::TestCase
     get :by_site
     assert_response :success
 
-    # FIXME: how to test redirects? Do we need to?
-    # get :upcoming
-    # assert_response :redirect
-    # assert_redirected_to root_path
-
     get :by_department
     assert_response :success
 
@@ -69,11 +64,6 @@ class TopicsControllerTest < ActionController::TestCase
     get :by_site
     assert_response :success
 
-    # FIXME: how to test redirects? Do we need to?
-    # get :upcoming
-    # assert_response :redirect
-    # assert_redirected_to root_path
-
     get :by_department
     assert_response :success
 
@@ -113,11 +103,6 @@ class TopicsControllerTest < ActionController::TestCase
 
     get :by_site
     assert_response :success
-
-    # FIXME: how to test redirects? Do we need to?
-    # get :upcoming
-    # assert_response :redirect
-    # assert_redirected_to root_path
 
     get :by_department
     assert_response :success
@@ -187,11 +172,6 @@ class TopicsControllerTest < ActionController::TestCase
     get :by_site
     assert_response :success
 
-    # FIXME: how to test redirects? Do we need to?
-    # get :upcoming
-    # assert_response :redirect
-    # assert_redirected_to root_path
-
     get :by_department
     assert_response :success
 
@@ -250,19 +230,6 @@ class TopicsControllerTest < ActionController::TestCase
     assert_response :success
     assert_equal @response.content_type, 'text/calendar'
   end
-  
-  # FIXME: not sure how to test alpha now that nothing happens in the controller
-  # test "Normal users should only see topics with scheduled sessions" do
-  #   login_as( users( :plainuser1 ) )
-  #   get :alpha
-  #   assert_equal assigns( :topics ).count, 3
-  # end
-  
-  # test "Admins should only see topics with scheduled sessions" do
-  #   login_as( users( :admin1 ) )
-  #   get :alpha
-  #   assert_equal assigns( :topics ).count, 3
-  # end
   
   test "Verify updates working correctly" do
     login_as( users( :admin1 ) )

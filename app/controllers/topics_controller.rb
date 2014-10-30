@@ -138,7 +138,6 @@ class TopicsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_topic
-      #FIXME: make sure to create a 404 page
       if action_name == 'new' || action_name == 'create'
         @topic = Topic.new
       else

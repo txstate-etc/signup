@@ -168,7 +168,6 @@ class Ldap
     user = User.find_or_initialize_by(login: fields[:login])
 
     # populate firstname, lastname, email, department, title in user
-    #FIXME: can we just call update attributes here?
     user.email = fields[:email]
     user.first_name = fields[:firstname]
     user.last_name = fields[:lastname]
@@ -183,7 +182,6 @@ class Ldap
     elsif user.changed?
       user.save!
       @logger.info( "Updated: #{fields[:full_name]} (#{fields[:login]})" )
-      #FIXME: log what fields changed
     else
       # just touch the updated_at field
       user.touch

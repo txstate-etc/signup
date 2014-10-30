@@ -10,7 +10,7 @@ function NewUserDialog(content, input) {
       if (!success) {
         input.value = input.defaultValue;
       }
-      //FIXME: hide errors 
+      $('#error-wrap').html('');
     },
     open: function() {
       jQuery('.ui-widget-overlay').on('click', function(){

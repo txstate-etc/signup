@@ -7,6 +7,14 @@ class TopicTest < ActiveSupport::TestCase
     Reservation.counter_culture_fix_counts
   end
 
+  test "Topic.Upcoming only shows topics with upcoming sessions" do
+    upcoming = Topic.upcoming
+    assert_equal 3, upcoming.length
+    assert_equal topics(:tracs), upcoming.first
+    assert_equal topics(:gato), upcoming.second
+    assert_equal topics(:multi_time_topic), upcoming.third
+  end
+
   test "Verify that active sessions are computed correctly" do
     active_tracs = topics( :tracs ).sessions
     assert_equal 5, active_tracs.length 
