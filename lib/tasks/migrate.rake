@@ -6,7 +6,9 @@ namespace :migrate do
   desc "Migrate attachments from old PaperClip format to new."
   task :documents => [:environment] do
     path_to_old_items = "#{old_documents_root}/items"
-    # path_to_old_items="/home/rubyapps/registerme/shared/system/items"
+
+    puts "Migrating document from #{path_to_old_items} to #{path_to_documents}"
+
     Document.all.each do |d|
       new_file = Pathname.new d.item.path
       old_file = Pathname.new "#{path_to_old_items}/#{d.id}/original/#{d.item_file_name}"
@@ -59,6 +61,10 @@ namespace :migrate do
 
   end
 
+  task update_active_user_count: [:environment] do
+    init_db_params
+    update_active_user_count
+  end
 
   private
 
@@ -82,7 +88,7 @@ namespace :migrate do
         active = 1
     END
 
-    `mysql -u #{@from_db_user} --password=#{@from_db_pass} #{@from_db} '#{command.gsub(/\s+/, ' ')}'`
+    `mysql -u #{@from_db_user} --password=#{@from_db_pass} #{@from_db} -e'#{command.gsub(/\s+/, ' ')}'`
   end
 
   def init_db_params
@@ -98,14 +104,16 @@ namespace :migrate do
     # User and pass are probably not the same as in new app
     # Need to find and parse auth.rb from old app
     auth_file = "#{old_rails_root}/config/initializers/auth.rb"
-    require auth_file if File.exist? auth_file
+    found = require auth_file if File.exist? auth_file
+    puts "File not found: #{auth_file}" unless found      
     if defined? MYSQL_USER
       @from_db_user = MYSQL_USER
+      puts "Using from_db_user=#{@from_db_user} from #{auth_file}"
     end
-    if defined? MYSQL_USER
-      @from_db_pass = MYSQL_PASS
+    if defined? MYSQL_PASSWORD
+      @from_db_pass = MYSQL_PASSWORD
+      puts "Using from_db_pass from #{auth_file}"
     end
-
   end
 
   def import_table(table, where='')
@@ -121,17 +129,21 @@ namespace :migrate do
 
   def old_rails_root
     if Rails.env.development?
-      ENV['OLD_RAILS_ROOT'] || abort('OLD_RAILS_ROOT not defined')
+      if ENV['OLD_RAILS_ROOT']
+        Pathname.new ENV['OLD_RAILS_ROOT']
+      else
+        abort('OLD_RAILS_ROOT not defined')
+      end
     else
-      Rails.root.to_s.gsub(/signup/, 'registerme')
+      Rails.root.join('../../current').sub('signup','registerme')
     end
   end
 
   def old_documents_root
     if Rails.env.development?
-      Pathname.new(old_rails_root) + 'public/system'
+      old_rails_root + 'public/system'
     else
-      Pathname.new(old_rails_root) + '../../shared/system'
+      old_rails_root + '../shared/system'
     end
   end
 
