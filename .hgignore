@@ -6,6 +6,7 @@ log/
 tmproj
 password
 tmp/
+public/system/items
 public/system/documents/items
 public/[0-9]+\.html
 config/initializers/auth\.rb
