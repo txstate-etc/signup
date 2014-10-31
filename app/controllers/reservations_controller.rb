@@ -163,7 +163,7 @@ class ReservationsController < ApplicationController
     superuser =  authorized? @reservation
 
     if @reservation.user != current_user && !superuser
-      flash[ :error ] = "Certificates can only be downloaded by their owner, an admin, or an instructor."
+      flash[ :alert ] = "Certificates can only be downloaded by their owner, an admin, or an instructor."
       if request.referrer.present?
         redirect_to request.referrer
       else
@@ -183,9 +183,9 @@ class ReservationsController < ApplicationController
     superuser =  authorized? @reservation
     
     if @reservation.user != current_user && !superuser
-      flash[ :error ] = "Reminders can only be sent by their owner, an admin, or an instructor."
+      flash[ :alert ] = "Reminders can only be sent by their owner, an admin, or an instructor."
     elsif @reservation.session.in_past? && !superuser
-      flash[ :error ] = "Reminders cannot be sent once the session has ended."      
+      flash[ :alert ] = "Reminders cannot be sent once the session has ended."      
     else
       @reservation.send_reminder
       flash[ :notice ] = "A reminder has been sent to #{@reservation.user.name}."
@@ -193,8 +193,10 @@ class ReservationsController < ApplicationController
     
     if @reservation.user == current_user
       redirect_to reservations_path
-    else
+    elsif superuser
       redirect_to sessions_reservations_path( @reservation.session )
+    else
+      redirect_to root_url
     end
   end
 

@@ -25,6 +25,9 @@ class ReservationsControllerTest < ActionController::TestCase
     
     delete :destroy, :id => reservations( :plainuser1 )
     assert_response :redirect
+
+    get :send_reminder, :id => reservations( :plainuser1 )
+    assert_response :redirect
   end
   
   #FIXME: we need an authentication_controller_test
@@ -146,6 +149,50 @@ class ReservationsControllerTest < ActionController::TestCase
     assert_response :redirect
   end
   
+  test "Only admins, editors, and instructors should be able to send reminders" do
+    reservation = reservations( :plainuser1 )
+    login_as( users( :plainuser2 ) )
+    get :send_reminder, :id => reservation
+    assert_response :redirect
+    assert_redirected_to root_url
+    assert_match /Reminders can only be sent by their owner, an admin, or an instructor/, flash[:alert]
+  
+    login_as( users( :plainuser1 ) )
+    get :send_reminder, :id => reservation
+    assert_response :redirect
+    assert_redirected_to reservations_path
+    assert_match /A reminder has been sent to/, flash[:notice]
+    get :send_reminder, :id => reservations(:gato_past_plainuser1)
+    assert_response :redirect
+    assert_redirected_to reservations_path
+    assert_match /Reminders cannot be sent once the session has ended./, flash[:alert]
+
+    login_as( users( :admin1 ) )
+    get :send_reminder, :id => reservation
+    assert_response :redirect
+    assert_redirected_to sessions_reservations_path( reservation.session )
+    assert_match /A reminder has been sent to/, flash[:notice]
+
+    login_as( users( :editor1 ) )
+    get :send_reminder, :id => reservation
+    assert_response :redirect
+    assert_redirected_to sessions_reservations_path( reservation.session )
+    assert_match /A reminder has been sent to/, flash[:notice]
+
+    login_as( users( :instructor1 ) )
+    get :send_reminder, :id => reservation
+    assert_response :redirect
+    assert_redirected_to sessions_reservations_path( reservation.session )
+    assert_match /A reminder has been sent to/, flash[:notice]
+
+    login_as( users( :instructor2 ) )
+    get :send_reminder, :id => reservation
+    assert_response :redirect
+    assert_redirected_to root_url
+    assert_match /Reminders can only be sent by their owner, an admin, or an instructor/, flash[:alert]
+
+  end
+
   test "Deleting a reservation just marks it as cancelled" do
     reservation = reservations( :plainuser1 )
     login_as( users( :plainuser1 ) )
@@ -268,6 +315,9 @@ class ReservationsControllerTest < ActionController::TestCase
   
   test "Try downloading a reservation as ICS" do
     login_as( users( :plainuser1 ) )
+    get :show, :id => reservations( :plainuser1 )
+    assert_response :redirect
+    assert_redirected_to reservations_path
     get :show, :id => reservations( :plainuser1 ), :format => :ics
     assert_response :success
     assert_equal @response.content_type, 'text/calendar'
