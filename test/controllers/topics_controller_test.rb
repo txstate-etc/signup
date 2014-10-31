@@ -289,12 +289,14 @@ class TopicsControllerTest < ActionController::TestCase
   test "Instructors can manage topics they are instructors for" do
     login_as( users( :instructor1 ) )
     @request.session[ :topics ] = 'all'
-    @request.session[ :departments ] = 'all'
+    # @request.session[ :departments ] = 'all'
     get :manage
     assert_response :success
     assert_equal 3, assigns( :departments ).size # instructor in ITS, TR, and department_to_make_inactive
-    # FIXME: this should be 2, because the inactive topic shouldn't show up!
     assert_equal 3, assigns( :topics ).keys.size
+    assert_equal 3, assigns( :topics )[departments(:its).id].length
+    assert_equal 4, assigns( :topics )[departments(:tr).id].length
+    assert_equal 0, assigns( :topics )[departments(:department_to_make_inactive).id].length
     assert_equal 7, assigns( :topics ).values.reduce(0){ |s,a| s+a.size }
 
     get :history, :id => topics( :gato )
