@@ -7,16 +7,11 @@ class TagsController < ApplicationController
   end
 
   def show
-    begin
-      tag_param = params[:id]
-      if tag_param =~ /^\d+/
-        @tag = ActsAsTaggableOn::Tag.find( tag_param )
-      else
-        @tag = ActsAsTaggableOn::Tag.find_by_name!( tag_param )
-      end
-    rescue ActiveRecord::RecordNotFound
-      render(:file => 'shared/404.erb', :status => 404, :layout => true) unless @tag
-      return
+    tag_param = params[:id]
+    if tag_param =~ /^\d+/
+      @tag = ActsAsTaggableOn::Tag.find( tag_param )
+    else
+      @tag = ActsAsTaggableOn::Tag.find_by_name!( tag_param )
     end
 
     @page_title = "Topics Tagged With '" + @tag.name + "'"
