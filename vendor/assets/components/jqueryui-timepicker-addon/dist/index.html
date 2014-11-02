@@ -38,7 +38,7 @@
 			.ebook .buyp a iframe{ margin-bottom: -5px; }
 		</style> 
 		
-		<link rel="stylesheet" media="all" type="text/css" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
+		<link rel="stylesheet" media="all" type="text/css" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css" />
 		<link rel="stylesheet" media="all" type="text/css" href="jquery-ui-timepicker-addon.css" />
 		
 	</head> 
@@ -112,6 +112,8 @@
 .ui-timepicker-rtl dl dt{ float: right; clear: right; }
 .ui-timepicker-rtl dl dd { margin: 0 45% 10px 10px; }
 </pre>
+	
+	<p>If you prefer a hosted CDN there are a couple available: <a href="http://cdnjs.com/libraries/jquery-ui-timepicker-addon" title="Timepicker on CDNJS">CDNJS</a>, <a href="http://www.jsdelivr.com/#!jquery.ui.timepicker.addon" title="Timepicker on jsDelivr">jsDelivr</a>.</p>
 	<br />
 
 	<h3>Requirements</h3>
@@ -124,9 +126,9 @@
 
 	<br />
 	<h3>Version</h3>
-	<p>Version 1.4.5</p>
+	<p>Version 1.5.0</p>
 
-	<p>Last updated on 2014-05-26</p>
+	<p>Last updated on 2014-09-01</p>
 	<p>jQuery Timepicker Addon is currently available for use in all personal or commercial projects under the MIT license.</p>
 	<p><a href="http://trentrichardson.com/Impromptu/MIT-LICENSE.txt" title="MIT License">MIT License</a></p>
 
@@ -459,7 +461,8 @@
 	closeText: 'Закрыть'
 });
 </pre>
-	<p>However, if you plan to use timepicker extensively you will need to include (build your own) localization.  It is simply assigning those same variables to an object.  As you see in the example below we maintain a separate object for timepicker.  This way we aren't bound to any changes within datepicker.</p>
+	<p>However, if you plan to use timepicker extensively you will need to include (build your own) localization.  It is simply assigning those same variables to an object.</p>
+	<p>As you see in the example below we maintain a separate object for timepicker.  This way we aren't bound to any future changes within datepicker.</p>
 
 <pre>$.datepicker.regional['ru'] = {
 	closeText: 'Закрыть',
@@ -500,8 +503,14 @@ $.timepicker.regional['ru'] = {
 };
 $.timepicker.setDefaults($.timepicker.regional['ru']);
 </pre>
+
 	<p>Now all you have to do is call timepicker and the Russian localization is used.  Generally you only need to include the localization file, it will setDefaults() for you.</p>
-	<p>You can also visit <a href="http://docs.jquery.com/UI/Datepicker/Localization" title="localization for datepicker" target="_BLANK">localization for datepicker</a> for more information about datepicker localizations.</p>
+	<p>As of version 1.4.5 a combined file of all localizations available is included.  This file DOES NOT call setDefaults(), so you will need to pass, or merge with your options.</p>
+
+<pre>$('#example123').timepicker($.timepicker.regional['ru']);
+</pre>
+
+	<p>Localization files for datepicker are typically available in your jQueryUI downloads.</p>
 </div>
 
 <!-- ############################################################################# -->
@@ -516,6 +525,7 @@ $.timepicker.setDefaults($.timepicker.regional['ru']);
 		<li><a href="#slider_examples" title="Slider Modifications">Slider Modifications</a></li>
 		<li><a href="#alt_examples" title="Alternate Field">Alternate Fields</a></li>
 		<li><a href="#rest_examples" title="Time Restraints">Time Restraints</a></li>
+		<li><a href="#range_examples" title="Time Ranges">Time Ranges</a></li>
 		<li><a href="#utility_examples" title="Utilities">Utilities</a></li>
 	</ul>
 
@@ -554,6 +564,20 @@ $('#basic_example_2').timepicker();
 $('#basic_example_3').datetimepicker({
 	timeFormat: "hh:mm tt"
 });
+</pre>
+	</div>
+
+
+	<!-- ============= example -->
+	<div class="example-container">
+		<p>Timepicker comes with a collection of localization files and one combined file with all available localizations.  $.timepicker.regional["your localization code here"] is a simple object with preset options:</p>
+		<div>
+	 		<input type="text" name="basic_example_4" id="basic_example_4" value="" />
+		</div>					
+<pre>
+$('#basic_example_4').timepicker(
+	$.timepicker.regional['es']
+);
 </pre>
 	</div>
 
@@ -825,17 +849,20 @@ $('#rest_example_3').datetimepicker({
 </pre>
 	</div>
 
+
+	<h3 id="range_examples">Time Ranges</h3>
+
 	<!-- ============= example -->
 	<div class="example-container">
 		<p>Restrict a start and end date by using onSelect and onClose events for more control over functionality:</p>
 		<p>For more examples and advanced usage grab the <a href="http://trentrichardson.com/ebooks/handling-time/" title="Handling Time eBook">Handling Time eBook</a>.</p>
 		<div>
-	 		<input type="text" name="rest_example_4_start" id="rest_example_4_start" value="" /> 
-	 		<input type="text" name="rest_example_4_end" id="rest_example_4_end" value="" />
+	 		<input type="text" name="range_example_1_start" id="range_example_1_start" value="08/20/2014 09:22 -0400" /> 
+	 		<input type="text" name="range_example_1_end" id="range_example_1_end" value="08/21/2014 08:00 -0400" />
 		</div>					
 <pre>
-var startDateTextBox = $('#rest_example_4_start');
-var endDateTextBox = $('#rest_example_4_end');
+var startDateTextBox = $('#range_example_1_start');
+var endDateTextBox = $('#range_example_1_end');
 
 startDateTextBox.datetimepicker({ 
 	timeFormat: 'HH:mm z',
@@ -871,6 +898,79 @@ endDateTextBox.datetimepicker({
 		startDateTextBox.datetimepicker('option', 'maxDate', endDateTextBox.datetimepicker('getDate') );
 	}
 });
+</pre>
+	</div>
+
+		<!-- ============= example -->
+	<div class="example-container">
+		<p>Timepicker also includes some shortcut methods for ranges:</p>
+		<div>
+	 		<input type="text" name="range_example_2_start" id="range_example_2_start" value="21 Aug 2014 09:16" /> 
+	 		<input type="text" name="range_example_2_end" id="range_example_2_end" value="21 Aug 2014 10:16" />
+		</div>					
+<pre>
+var startDateTextBox = $('#range_example_2_start');
+var endDateTextBox = $('#range_example_2_end');
+
+$.timepicker.datetimeRange(
+	startDateTextBox,
+	endDateTextBox,
+	{
+		minInterval: (1000*60*60), // 1hr
+		dateFormat: 'dd M yy', 
+		timeFormat: 'HH:mm',
+		start: {}, // start picker options
+		end: {} // end picker options					
+	}
+);
+</pre>
+	</div>
+
+		<!-- ============= example -->
+	<div class="example-container">
+		<p>To use only times for a time range use $.timepicker.timeRange():</p>
+		<div>
+	 		<input type="text" name="range_example_3_start" id="range_example_3_start" value="09:16" /> 
+	 		<input type="text" name="range_example_3_end" id="range_example_3_end" value="10:16" />
+		</div>					
+<pre>
+var startTimeTextBox = $('#range_example_3_start');
+var endTimeTextBox = $('#range_example_3_end');
+
+$.timepicker.timeRange(
+	startTimeTextBox,
+	endTimeTextBox,
+	{
+		minInterval: (1000*60*60), // 1hr
+		timeFormat: 'HH:mm',
+		start: {}, // start picker options
+		end: {} // end picker options
+	}
+);
+</pre>
+	</div>
+
+		<!-- ============= example -->
+	<div class="example-container">
+		<p>Even though this plugin focuses on datetime, it also provides a dateRange function:</p>
+		<div>
+	 		<input type="text" name="range_example_4_start" id="range_example_4_start" value="" /> 
+	 		<input type="text" name="range_example_4_end" id="range_example_4_end" value="" />
+		</div>					
+<pre>
+var startDateTextBox = $('#range_example_4_start');
+var endDateTextBox = $('#range_example_4_end');
+
+$.timepicker.dateRange(
+	startDateTextBox,
+	endDateTextBox,
+	{
+		minInterval: (1000*60*60*24*4), // 4 days
+		maxInterval: (1000*60*60*24*8), // 8 days
+		start: {}, // start picker options
+		end: {} // end picker options
+	}
+);
 </pre>
 	</div>
 
@@ -952,8 +1052,9 @@ $('#utility_example_3').text(JSON.stringify(
 
 
 		<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-		<script type="text/javascript" src="http://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="http://code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>
 		<script type="text/javascript" src="jquery-ui-timepicker-addon.js"></script>
+		<script type="text/javascript" src="i18n/jquery-ui-timepicker-addon-i18n.min.js"></script>
 		<script type="text/javascript" src="jquery-ui-sliderAccess.js"></script>
 
 		<script type="text/javascript">

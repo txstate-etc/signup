@@ -15,12 +15,22 @@ function hideRegPeriodArea() {
 }
 
 function addDatePicker(input, setTime) {
+
+  var value = new Date();
+  value.setHours(12, 0, 0, 0);
+  value = value.getTime();
+  value = new Date(value + 86400000);
+
   $(input).datetimepicker({
     dateFormat: "MM dd, yy",
     timeFormat: 'h:mm TT',
     hourText: 'Time: ',
     showTime: false,
-    stepMinute: 5
+    stepMinute: 5,
+    minDate: '+0D',
+    defaultDate: +1,
+    hour: 12,
+    minute: 0
   });
 
   if(setTime && !input.value) {
