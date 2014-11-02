@@ -22,7 +22,7 @@ function addDatePicker(input, setTime) {
   value = new Date(value + 86400000);
 
   $(input).datetimepicker({
-    dateFormat: "MM dd, yy",
+    dateFormat: "MM d, yy",
     timeFormat: 'h:mm TT',
     hourText: 'Time: ',
     showTime: false,
