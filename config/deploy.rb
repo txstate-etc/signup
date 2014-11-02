@@ -13,6 +13,9 @@ set :user, 'rubyapps'
 
 set :ssh_options, { user: fetch(:user) }
 
+# Set rvm version to the same as we use in development
+set :rvm1_ruby_version, "#{IO.read('.ruby-version').chomp}@#{IO.read('.ruby-gemset').chomp}"
+
 # Default deploy_to directory is /var/www/my_app
 set :deploy_to, "/home/#{fetch(:user)}/#{fetch(:application)}"
 
@@ -42,7 +45,7 @@ set :linked_dirs, %w{backups log tmp/pids public/system}
 
 before 'deploy', 'rvm1:install:rvm'
 before 'deploy', 'rvm1:install:ruby'
-before 'deploy', 'rvm1:alias:create'
+before 'deploy', 'rvm_local:alias:create'
 
 after 'deploy:publishing', 'delayed_job:restart'
 
