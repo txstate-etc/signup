@@ -85,7 +85,8 @@ class User < ActiveRecord::Base
   end
 
   def name
-    "#{first_name} #{last_name}".strip 
+    dr = name_prefix.strip.sub(/([^.])$/) { $1 + '.' } if name_prefix =~ /dr|doc/i  
+    "#{dr} #{first_name} #{last_name}".strip 
   end
 
   def directory_url
