@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
-ruby '2.1.4'
-gem 'rails', '~> 4.1.7'
+ruby '2.1.5'
+gem 'rails', '~> 4.1.8'
 gem 'sass-rails', '~> 4.0.3'
 gem 'uglifier', '>= 2.5.3'
 gem 'jquery-rails', '~> 3.1.2'
@@ -75,6 +75,7 @@ gem 'rack-mini-profiler', '~> 0.9.2'
 
 # Shows stacktraces with amount of time spent in each function
 # add ?pp=flamegraph to display
+gem 'stackprof', '~> 0.2.7'
 gem 'flamegraph', '~> 0.0.5'
 
 group :development do
@@ -82,10 +83,10 @@ group :development do
   gem 'binding_of_caller', :platforms=>[:mri_21]
   gem 'quiet_assets'
   gem 'rails_layout'
-  gem 'capistrano', '~> 3.0', require: false
+  gem 'capistrano', '~> 3.3.3', require: false
   # gem 'capistrano-rvm', '~> 0.1', require: false
-  gem 'capistrano-rails', '~> 1.1', require: false
-  gem 'capistrano-bundler', '~> 1.1', require: false
+  gem 'capistrano-rails', '~> 1.1.2', require: false
+  gem 'capistrano-bundler', '~> 1.1.3', require: false
   gem 'capistrano-passenger', '~> 0.0.1', require: false
   gem 'rvm1-capistrano3', require: false
   gem 'traceroute'
