@@ -59,11 +59,20 @@ namespace :data do
       puts "importing into local database"
       `rake db:fromdump`
       `rake db:migrate`
-      set :agree, ask('Delete local dump file?', 'y')
-      if (fetch(:agree).downcase =~ /y/) == 0
+      
+      keep_dump = ENV.key? 'KEEPDUMP'
+
+      if keep_dump
+        delete = false
+      else
+        set :agree, ask('Delete local dump file?', 'y')
+        delete = (fetch(:agree).downcase =~ /y/) == 0
+      end
+
+      if delete
         FileUtils.rm_rf("tmp/#{sql_dump_file}")
         FileUtils.rm_rf("tmp/#{documents_dump_file}")
-      else
+      elsif !keep_dump
         FileUtils.mv("tmp/#{sql_dump_file}", "tmp/"+Time.now.strftime("%Y%m%d%H%M%S")+".#{sql_dump_file}")
         FileUtils.mv("tmp/#{documents_dump_file}", "tmp/"+Time.now.strftime("%Y%m%d%H%M%S")+".#{documents_dump_file}")
       end

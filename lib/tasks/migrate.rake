@@ -3,14 +3,14 @@ namespace :migrate do
   ## How to import data from production to dev and staging ##
   # * make sure lib/tasks/mysqldump.rake is on production and staging (Rails 2 app)
   # * on dev (Rails 2 app):
-  #     - run `cap production data:import`
-  #     - Type 'n' when prompted to not delete the downloaded data
-  #     - rename files to remove the timestamp
+  #     - run `KEEPDUMP=1 cap production data:import`
   #     - run `cap staging data:send_dump`
   # * on dev (new app): 
-  #     - run `OLD_RAILS_ROOT="<path to rails 2 app>" rake migrate:all`
+  #     - run `OLD_RAILS_ROOT="<full absolute path to rails 2 app>" rake migrate:all`
   # * on staging (new app):
   #     - run `RAILS_ENV=staging bundle exec rake migrate:all`
+  #     - run Rails.cache.clear in a console
+  #     - run `RAILS_ENV=staging bundle exec rake cache:warm`
 
   desc "Migrate database and documents"
   task all: [:environment, 'migrate:data', 'migrate:documents']
