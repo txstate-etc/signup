@@ -1,4 +1,4 @@
-<%= simple_form_for(form_object) do |f| %>
+<%= simple_form_for(form_object, data: {prevent_double_submit: ''}) do |f| %>
   <%= model_error_messages(@session) %>
   <%= f.hidden_field :topic_id %>
 

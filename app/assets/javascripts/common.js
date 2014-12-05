@@ -18,6 +18,30 @@ jQuery.fn.flash = function() {
               // CSS3 transition or longer (or you'll mess up the transition)
 }
 
+// Prevent double submission of forms
+// http://technoesis.net/prevent-double-form-submission-using-jquery/
+jQuery.fn.preventDoubleSubmission = function() {
+  $(this).on('submit',function(e){
+    var $form = $(this);
+ 
+    if ($form.data('submitted') === true) {
+      // Previously submitted - don't submit again
+      e.preventDefault();
+    } else {
+      // Mark it so that the next submit can be ignored
+      $form.data('submitted', true);
+    }
+  });
+ 
+  // Keep chainability
+  return this;
+};
+
+$(function() {
+  $('[data-prevent-double-submit]').preventDoubleSubmission();
+});
+
+
 // FIXME: this doesn't work because the page changes before the request can complete.
 // FIXME: also, what if things are downloaded outside of the browser, like an email or calendar app?
 

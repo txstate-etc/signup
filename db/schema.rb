@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141101211731) do
+ActiveRecord::Schema.define(version: 20141205000001) do
 
   create_table "auth_sessions", force: true do |t|
     t.string   "credentials", null: false
@@ -88,6 +88,7 @@ ActiveRecord::Schema.define(version: 20141101211731) do
     t.datetime "updated_at"
   end
 
+  add_index "reservations", ["session_id", "user_id"], name: "index_reservations_on_session_id_and_user_id", unique: true, using: :btree
   add_index "reservations", ["session_id"], name: "index_reservations_on_session_id", using: :btree
   add_index "reservations", ["user_id"], name: "index_reservations_on_user_id", using: :btree
 
@@ -134,7 +135,7 @@ ActiveRecord::Schema.define(version: 20141101211731) do
     t.datetime "updated_at"
   end
 
-  add_index "survey_responses", ["reservation_id"], name: "index_survey_responses_on_reservation_id", using: :btree
+  add_index "survey_responses", ["reservation_id"], name: "index_survey_responses_on_reservation_id", unique: true, using: :btree
 
   create_table "taggings", force: true do |t|
     t.integer  "tag_id"

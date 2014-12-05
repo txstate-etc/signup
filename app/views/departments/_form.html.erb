@@ -1,4 +1,4 @@
-<%= simple_form_for(@department) do |f| %>
+<%= simple_form_for(@department, data: {prevent_double_submit: ''}) do |f| %>
   <%= model_error_messages @department %>
   
   <div class="form-inputs">

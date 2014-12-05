@@ -1,4 +1,4 @@
-<%= simple_form_for(@survey_response) do |f| %>
+<%= simple_form_for(@survey_response, data: {prevent_double_submit: ''}) do |f| %>
   <%= model_error_messages(@survey_response) %>
 
   <div class="content-section">

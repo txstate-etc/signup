@@ -1,4 +1,4 @@
-<%= simple_form_for(@reservation) do |f| %>
+<%= simple_form_for(@reservation, data: {prevent_double_submit: ''}) do |f| %>
   <%= model_error_messages(@reservation) %>
 
   <div class="form-inputs content-section">
