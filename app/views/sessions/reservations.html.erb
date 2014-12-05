@@ -136,7 +136,7 @@
 
 <div class="content-section">
   <h2>Enroll Another Person</h2>
-  <%= form_tag :controller => :reservations, :action => :create, :session_id => @session.id %>
+  <%= form_tag({:controller => :reservations, :action => :create, :session_id => @session.id}, data: {prevent_double_submit: ''} ) %>
     <%= label_tag "user_login", "Login ID:" %>
     <%= text_field_tag "user_login", nil, :size => 7 %>
     <%= submit_tag "Enroll" %>

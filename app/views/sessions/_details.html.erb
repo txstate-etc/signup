@@ -93,7 +93,7 @@
         <%  if current_user %>
           <% if session.space_is_available? %>
             <div class="register-button">
-              <%= form_tag(session_reservations_path( session )) do %>
+              <%= form_tag(session_reservations_path( session ), data: {prevent_double_submit: ''}) do %>
                 <%= submit_tag "Register Now", :class => 'register-button' %>
               <% end %>
             </div>
@@ -104,7 +104,7 @@
               registered and notified by email.
             </div>
             <div class="register-button">
-              <%= form_tag(session_reservations_path( session )) do %>
+              <%= form_tag(session_reservations_path( session ), data: {prevent_double_submit: ''}) do %>
                 <%= submit_tag "Add to Waiting List", :class => 'register-button' %>
               <% end %>
             </div>
