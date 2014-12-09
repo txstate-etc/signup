@@ -4,7 +4,11 @@
 
   <p>This topic has been held <%= pluralize(@topic.past_sessions.size, 'time') %>.</p>
   
-  <%= link_to "Delete This Topic", @topic, :method => :delete, :confirm => "Are you sure you want to delete this topic?", :class => 'delete-button register-button' %>
+  <%= link_to "Delete This Topic", @topic, 
+        method: :delete,
+        data: { confirm: "Are you sure you want to delete this topic?" }, 
+        class: 'delete-button register-button' 
+  %>
   
   <%= link_to "Cancel", @topic, :class => "register-button" %>
   

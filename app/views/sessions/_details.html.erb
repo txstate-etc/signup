@@ -84,7 +84,10 @@
           <%- if @reservation.session.in_future? -%>
             <%= link_to_edit_reservation(@reservation) %>
             <div class="delete-link">
-              <%= link_to "Cancel Reservation", @reservation, :method => :delete, :confirm => "Are you sure you want to cancel your reservation for \"" + @reservation.session.topic.name + "\"?" %>
+              <%= link_to "Cancel Reservation", @reservation, 
+                  method: :delete, 
+                  data: { confirm: "Are you sure you want to cancel your reservation for \"#{@reservation.session.topic.name}\"?" }
+              %>
             </div>
           <%- end -%>
         <% end %> 
