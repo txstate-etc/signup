@@ -176,4 +176,24 @@ class TopicTest < ActiveSupport::TestCase
     assert_equal "two-words", topic.sorted_tags.last.name
   end
 
+  test 'Should delete topic with no sessions' do
+    topics( :topic_to_delete ).deactivate!
+    assert_not Topic.exists?(topics( :topic_to_delete ))
+  end
+
+  test 'Should mark topic with past sessions as inactive' do
+    topics( :topic_to_make_inactive ).deactivate!
+    assert Topic.exists?(topics( :topic_to_make_inactive ))
+    assert topics( :topic_to_make_inactive ).inactive
+  end
+
+  test 'Should NOT delete topic with upcoming sessions' do
+    exception = assert_raises ActiveRecord::RecordInvalid do
+      topics( :tracs ).deactivate!
+    end
+    assert_match /cannot delete a topic with upcoming sessions/, exception.message
+    assert Topic.exists?(topics( :tracs ))
+    topics( :tracs ).reload
+    assert_not topics( :tracs ).inactive
+  end
 end

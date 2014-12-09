@@ -9,7 +9,6 @@ namespace :migrate do
   #     - run `OLD_RAILS_ROOT="<full absolute path to rails 2 app>" rake migrate:all`
   # * on staging (new app):
   #     - run `RAILS_ENV=staging bundle exec rake migrate:all`
-  #     - run Rails.cache.clear in a console
   #     - run `RAILS_ENV=staging bundle exec rake cache:warm`
 
   desc "Migrate database and documents"
@@ -70,7 +69,12 @@ namespace :migrate do
 
     # initialize association count cache
     Reservation.counter_culture_fix_counts
+    ActsAsTaggableOn::Tag.reset_column_information
+    ActsAsTaggableOn::Tag.find_each do |tag|
+      ActsAsTaggableOn::Tag.reset_counters(tag.id, :taggings)
+    end
 
+    Rails.cache.clear
   end
 
   task update_active_user_count: [:environment] do

@@ -48,6 +48,8 @@ class TopicsControllerTest < ActionController::TestCase
     put :destroy, :id => topics( :gato )
     assert_response :redirect
     assert_redirected_to "/auth/cas?url=#{@request.url}"
+    assert Topic.exists?(topics( :gato ))
+    assert_not topics( :gato ).inactive
   end
 
   test "Admins should be able to do anything." do
@@ -88,6 +90,9 @@ class TopicsControllerTest < ActionController::TestCase
     assert_match(/has been deleted/, flash[:notice])
     assert_response :redirect
     assert_redirected_to manage_topics_path
+    topics( :topic_to_make_inactive ).reload
+    assert Topic.exists?(topics( :topic_to_make_inactive ))
+    assert topics( :topic_to_make_inactive ).inactive
   end
 
   test "Editors should be able to do anything in their departments." do
@@ -134,6 +139,9 @@ class TopicsControllerTest < ActionController::TestCase
     assert_match(/has been deleted/, flash[:notice])
     assert_response :redirect
     assert_redirected_to manage_topics_path
+    topics( :topic_to_make_inactive ).reload
+    assert Topic.exists?(topics( :topic_to_make_inactive ))
+    assert topics( :topic_to_make_inactive ).inactive
   end
 
   test "Editors should NOT be able to do anything in other departments." do
@@ -156,6 +164,8 @@ class TopicsControllerTest < ActionController::TestCase
     assert_no_match(/has been deleted/, flash[:notice])
     assert_response :redirect
     assert_redirected_to root_path
+    assert Topic.exists?(topics( :topic_to_delete ))
+    assert_not topics( :topic_to_delete ).inactive
   end
 
   test "Once logged as instructor, should be able to view topics, but not modify them." do
@@ -196,7 +206,8 @@ class TopicsControllerTest < ActionController::TestCase
     delete :destroy, :id => topics( :topic_to_make_inactive )
     assert_response :redirect
     assert_redirected_to root_path
-    assert_equal false, topics( :topic_to_make_inactive ).inactive
+    assert Topic.exists?(topics( :topic_to_make_inactive ))
+    assert_not topics( :topic_to_make_inactive ).inactive
   end
 
   test "Once logged as nobody special, should be able to view topics, but not modify them." do
@@ -222,7 +233,8 @@ class TopicsControllerTest < ActionController::TestCase
     delete :destroy, :id => topics( :topic_to_make_inactive )
     assert_response :redirect
     assert_redirected_to root_path
-    assert_equal false, topics( :topic_to_make_inactive ).inactive
+    assert Topic.exists?(topics( :topic_to_make_inactive ))
+    assert_not topics( :topic_to_make_inactive ).inactive
   end
   
   test "Should be able to download a topic's calendar" do

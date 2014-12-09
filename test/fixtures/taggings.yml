@@ -11,3 +11,17 @@ gato_its:
   taggable_id: <%= ActiveRecord::FixtureSet.identify :gato %>
   taggable_type: Topic
   context: tags
+
+to_make_inactive_gato:
+  id: <%= ActiveRecord::FixtureSet.identify :to_make_inactive_gato %>
+  tag_id: <%= ActiveRecord::FixtureSet.identify :gato %>
+  taggable_id: <%= ActiveRecord::FixtureSet.identify :topic_to_make_inactive %>
+  taggable_type: Topic
+  context: tags
+
+to_delete_gato:
+  id: <%= ActiveRecord::FixtureSet.identify :to_delete_gato %>
+  tag_id: <%= ActiveRecord::FixtureSet.identify :gato %>
+  taggable_id: <%= ActiveRecord::FixtureSet.identify :topic_to_delete %>
+  taggable_type: Topic
+  context: tags
