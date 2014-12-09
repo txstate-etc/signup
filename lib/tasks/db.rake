@@ -52,6 +52,7 @@ namespace :db do
       config = Rails.configuration.database_configuration[Rails.env]
       `mysql -u #{config['username']} --password=#{config['password']} -e "DROP DATABASE IF EXISTS #{config['database']}; CREATE DATABASE #{config['database']}"`
       `mysql -u #{config['username']} --password=#{config['password']} #{config['database']} < #{Rails.root}/tmp/dump.signup.sql`
+      `mkdir -p #{Rails.root}/public/system`
       `tar zxvf #{Rails.root}/tmp/documents.signup.tar.gz -C #{Rails.root}/public/system`
     end
   end
