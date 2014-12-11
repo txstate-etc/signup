@@ -66,8 +66,13 @@ class SessionsController < ApplicationController
   # PATCH/PUT /sessions/1.json
   def update
     respond_to do |format|
-      if @session.update(session_params)
-        format.html { redirect_to(request.referrer || @session, notice: 'Session was successfully updated.') }
+      attributes = session_params
+      if @session.update(attributes)
+        format.html do
+          # If we just updated attendance info, go back to session#reservations. Otherwise, go to session#show
+          next_page = attributes.key?(:reservations_attributes) ? sessions_reservations_path(@session) : @session
+          redirect_to(next_page, notice: 'Session was successfully updated.') 
+        end
         format.json { render :show, status: :ok, location: @session }
       else
         format.html { render :edit }
