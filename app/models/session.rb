@@ -39,7 +39,7 @@ class Session < ActiveRecord::Base
   end
 
   def valid_registration_period
-    return unless registration_period_defined?
+    return unless registration_period_defined? && self.time
 
     reg_start_time = (self.reg_start.blank? ? self.created_at : self.reg_start) || Time.now
     reg_end_time = self.reg_end.blank? ? self.time : self.reg_end

@@ -11,7 +11,7 @@ module SessionsHelper
   end
 
   def default_reg_end(val, session_end)
-    val = val || session_end ? session_end.beginning_of_day : Date.tomorrow + 1.day
+    val ||= session_end ? session_end.beginning_of_day : Date.tomorrow + 1.day
     val.to_time
   end
 
