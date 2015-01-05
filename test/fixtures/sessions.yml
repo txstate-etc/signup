@@ -37,6 +37,7 @@ gato:
   instructors: instructor1
   topic: gato
   location: Alkek 155
+  location_url: http://gato.its.txstate.edu
   site: sanmarcos
   cancelled: false
   seats: 20

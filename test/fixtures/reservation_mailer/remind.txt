@@ -15,7 +15,7 @@ What:
 When:
 - Saturday, June 2, 2035, 7:00AM - 8:00AM
 Where:
-- Alkek 155 (San Marcos)
+- Alkek 155 (San Marcos) (http://gato.its.txstate.edu)
 Who:
 - Plain User1
 Description:

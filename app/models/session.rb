@@ -87,6 +87,7 @@ class Session < ActiveRecord::Base
     send_update = !in_past? && (
       @need_update || 
       location_changed? || 
+      location_url_changed? || 
       site_id_changed? || 
       occurrences.any? { |o| o.changed? }
     )

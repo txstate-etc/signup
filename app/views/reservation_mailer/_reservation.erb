@@ -14,7 +14,11 @@
       <%- end -%>
       <%- unless (except.include? :where) -%>
         <dt>Where:</dt>
-        <dd><%=h session.loc_with_site %></dd>
+        <%- if session.location_url.present? -%>
+          <dd><%= link_to session.loc_with_site, session.location_url %></dd>
+        <%- else -%>
+          <dd><%= auto_link( h(session.loc_with_site) ) %></dd>
+        <%- end -%>
       <%- end -%>
       <%- unless (except.include? :who) -%>
       <dt>Who:</dt>
