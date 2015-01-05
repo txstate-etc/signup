@@ -15,6 +15,16 @@ function hideRegPeriodArea() {
 }
 
 function addDatePicker(input, setTime) {
+  var dateFormat = 'MM d, yy';
+  var timeFormat = 'h:mm TT';
+
+  var tryParse = function(dateText) {
+    try {
+        return $.datepicker.parseDateTime( dateFormat, timeFormat, dateText, null, {'timeFormat':timeFormat} );
+      } catch(err) {
+        return false;
+      }
+  }
 
   var value = new Date();
   value.setHours(12, 0, 0, 0);
@@ -22,9 +32,15 @@ function addDatePicker(input, setTime) {
   value = new Date(value + 86400000);
 
   $(input).datetimepicker({
-    dateFormat: "MM d, yy",
-    timeFormat: 'h:mm TT',
+    dateFormat: dateFormat,
+    timeFormat: timeFormat,
     hourText: 'Time: ',
+    onClose: function(dateText, picker) {
+      if (!tryParse(dateText)) {
+        $(this).val("")
+        $(this).datetimepicker('setDate', null)
+      }
+    },
     showTime: false,
     stepMinute: 5,
     minDate: '+0D',
