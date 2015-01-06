@@ -41,7 +41,7 @@ class Topic < ActiveRecord::Base
 
   def deactivate!
     # if this is a brand new topic (no non-cancelled sessions), just go ahead and delete it
-    if sessions.blank?
+    if sessions.unscope(where: :cancelled).count == 0
       return self.destroy!
     end
     
