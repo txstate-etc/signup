@@ -52,10 +52,9 @@ after 'deploy:publishing', 'delayed_job:restart'
 after 'deploy:finished', 'static:generate'
 
 # Deploy to training after successfully deploying to production
-# FIXME: This doesn't work. Fix it! bugid: 6376
-# if fetch(:stage) == :production
-#   after 'deploy:finished' do
-#     puts "Deploying to 'training'"
-#     exec "cap training deploy"
-#   end
-# end
+if fetch(:stage) == :production
+  after 'deploy:finished', 'deploy_to_training' do
+    puts "Deploying to 'training'"
+    exec "cap training deploy"
+  end
+end
