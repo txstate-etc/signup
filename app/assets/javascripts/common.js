@@ -48,7 +48,7 @@ $(function() {
 // Generate Google Analytics events for link clicks
 $(function() {
   $('a').click(function() {
-    if (ga) {
+    if (typeof ga !== 'undefined') {
       var linkAddress = $(this).href;
       var linkName = $(this).text;
       var thisPageAddress = window.location;
