@@ -47,6 +47,8 @@ before 'deploy', 'rvm1:install:rvm'
 before 'deploy', 'rvm1:install:ruby'
 before 'deploy', 'rvm_local:alias:create'
 
+after 'deploy:symlink:linked_files', 'files:link_initializers'
+
 after 'deploy:publishing', 'delayed_job:restart'
 
 after 'deploy:finished', 'static:generate'
