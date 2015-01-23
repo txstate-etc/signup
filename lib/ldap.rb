@@ -94,7 +94,7 @@ class Ldap
     query = '(&'
     query << '(objectCategory=CN=Person,CN=Schema,CN=Configuration,DC=matrix,DC=txstate,DC=edu)'
     
-    terms.split.each do |term|
+    terms.gsub(/[()]/, '').split.each do |term|
       query << '(|'
       query << "(sAMAccountName=#{term}*)"
       query << "(givenName=#{term}*)"
