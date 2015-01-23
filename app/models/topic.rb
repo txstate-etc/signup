@@ -28,6 +28,7 @@ class Topic < ActiveRecord::Base
   SURVEY_EXTERNAL = 2
 
   def self.upcoming
+    # FIXME: ORDER BY doesn't work with GROUP BY. The caller will have to sort by whatever order 
     Topic.joins(sessions: :occurrences).merge(Occurrence.upcoming.order(:time)).group(:name)
   end
 
@@ -75,6 +76,10 @@ class Topic < ActiveRecord::Base
 
   def past_sessions
     @past_sessions ||= sessions.select { |s| s.started? }
+  end
+
+  def next_time
+    upcoming_sessions.first.try(:time)
   end
 
   def sorted_tags

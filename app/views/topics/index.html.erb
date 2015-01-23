@@ -1,5 +1,5 @@
 <% cache("#{date_slug}/topics/by-date", :tag => 'session-info', expires_in: 1.day)  do %>
-  <% @topics = Topic.upcoming %>
+  <% @topics = Topic.upcoming.includes(:sessions) %>
   <% if @topics.blank? %>
     <div class="empty-list">
       <p>Sorry, there are no upcoming sessions at this time. Please check again later!</p>

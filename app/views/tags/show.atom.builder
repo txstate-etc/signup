@@ -1,22 +1,22 @@
 cache(["#{date_slug}/tags/show/upcoming/atom", @tag], :tag => 'session-info', expires_in: 1.day) do
   atom_feed(:root_url => tag_url(@tag)) do |feed|
     feed.title(t(:'.atom_title_prefix') + @page_title)
+
+    @topics = Topic.upcoming.tagged_with(@tag).includes(:sessions)
     updated = @topics.max { |a, b| a.upcoming_sessions[0].updated_at <=> b.upcoming_sessions[0].updated_at } rescue nil
     feed.updated(updated ? updated.upcoming_sessions[0].updated_at : Time.now)
 
-    @topics = Topic.upcoming.tagged_with(@tag)
     if @topics.present?
-      @topics.each do |topic|
+      @topics.sort_by(&:next_time).each do |topic|
         cache(["#{date_slug}/tags/show/upcoming/atom", topic], :tag => topic.cache_key, expires_in: 1.day) do
           next unless topic.upcoming_sessions.present?
-          published = topic.upcoming_sessions.max { |a, b| a.updated_at <=> b.updated_at } rescue nil
-          feed.entry(topic, :published => published.updated_at) do |entry|
+          feed.entry(topic, :published => topic.next_time) do |entry|
             entry.title(topic.name)
             
             summary = []
             
             topic.upcoming_sessions.first(2).each do |session|
-              summary << link_to(session_info(session), session_url(session, :only_path => false))
+              summary << link_to("#{session_info(session)} - #{session.site.name}", session_url(session, :only_path => false))
             
               # FIXME: add topic description, instructor, location, etc
               #entry.content(session_info(session))
