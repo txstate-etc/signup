@@ -1,10 +1,29 @@
-# Sample localization file for English. Add more files in this directory for other locales.
-# See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+# Files in the config/locales directory are used for internationalization
+# and are automatically loaded by Rails. If you want to use locales other
+# than English, add the necessary files in this directory.
+#
+# To use the locales, use `I18n.t`:
+#
+#     I18n.t 'hello'
+#
+# In views, this is aliased to just `t`:
+#
+#     <%= t('hello') %>
+#
+# To use a different locale, set it with `I18n.locale`:
+#
+#     I18n.locale = :es
+#
+# This would use the information in config/locales/es.yml.
+#
+# To learn more, please read the Rails Internationalization guide
+# available at http://guides.rubyonrails.org/i18n.html.
 
 en:
   hello: "Hello world"
-  footer_text: "The Signup Reservation System is a tool developed by the Texas State Education Technology Center.</br> Details regarding the system are available at the <a href='http://www.its.txstate.edu/departments/etc/signup.html'>Signup website</a>."
-  organization: ""
+  site_title: " : Signup Reservation System"
+  site_name: "Signup Reservation System"
+  footer_text_html: "The Signup Reservation System is a tool developed by the Texas State Educational Technology Center.</br> Details regarding the system are available at the <a href='http://www.its.txstate.edu/departments/etc/signup.html'>Signup website</a>."
   activerecord:
     attributes:
       session:
@@ -16,18 +35,78 @@ en:
         item_file_size: "Document size"
   file_icon:
     type: "%{type} file"
+  departments:
+    index:
+      title: "Departments Offering Training"
+    edit:
+      title: "Update Department Details"
+    update:
+      title: "Update Department Details"
+    new:
+      title: "Create New Department"
+    create:
+      title: "Create New Department"
+    manage:
+      title: "Manage Departments"
+    show:
+      atom_title_prefix: "Upcoming Sessions for "
   topics:
+    title: "Available Topics"
     index:
       title: "Available Topics"
       by_site: "group by site"
+    edit:
+      title: "Update Topic Details"
+    update:
+      title: "Update Topic Details"
+    new:
+      title: "Create New Topic"
+    create:
+      title: "Create New Topic"
+    manage:
+      title: "Manage Topics"
     show:
       atom_title_prefix: "Upcoming Sessions for "
+  reservations:
+    edit:
+      title: "Update Reservation Details"
+    update:
+      title: "Update Reservation Details"
   sessions:
     edit:
-      site_label: "Site:"
-  departments:
-    show:
-      atom_title_prefix: "Upcoming Sessions for "
+      site_label: 'Site:'
+  users:
+    index:
+      title: "Manage Users"
+    new:
+        title: "Create New User"
+    create:
+        title: "Create New User"
+    edit:
+        title: "Update User Details"
+    update:
+        title: "Update User Details"
+  helpers:
+    submit:
+      create: "Create %{model}"
+      update: "Make Changes"
   tags:
     show:
       atom_title_prefix: "Upcoming Sessions for "
+  static:
+    error_404:
+      title: "The page you were looking for doesn't exist (404)"
+      header: "The page you were looking for doesn't exist."
+      message: "You may have mistyped the address or the page may have moved."
+    error_413:
+      title: "The change you wanted was rejected (413)"
+      header: "The change you wanted was rejected."
+      message: "You attempted to upload a file that was too large."
+    error_422:
+      title: "The change you wanted was rejected (422)"
+      header: "The change you wanted was rejected."
+      message: "Maybe you tried to change something you didn't have access to."
+    error_500:
+      title: "We're sorry, but something went wrong (500)"
+      header: "We're sorry, but something went wrong."
+      message: "We've been notified about this issue and we'll take a look at it shortly."

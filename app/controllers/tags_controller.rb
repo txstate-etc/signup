@@ -7,16 +7,11 @@ class TagsController < ApplicationController
   end
 
   def show
-    begin
-      tag_param = params[:id]
-      if tag_param =~ /^\d+/
-        @tag = ActsAsTaggableOn::Tag.find( tag_param )
-      else
-        @tag = ActsAsTaggableOn::Tag.find_by_name!( tag_param )
-      end
-    rescue ActiveRecord::RecordNotFound
-      render(:file => 'shared/404.erb', :status => 404, :layout => true) unless @tag
-      return
+    tag_param = params[:id]
+    if tag_param =~ /^\d+/
+      @tag = ActsAsTaggableOn::Tag.find( tag_param )
+    else
+      @tag = ActsAsTaggableOn::Tag.find_by_name!( tag_param )
     end
 
     @page_title = "Topics Tagged With '" + @tag.name + "'"
@@ -25,9 +20,7 @@ class TagsController < ApplicationController
       format.atom
       if authorized? @tag
         format.csv do
-          key = fragment_cache_key(['tags/csv', @tag])
-          data = Rails.cache.fetch(key) do 
-            Cashier.store_fragment(key, 'session-info')
+          data = cache(['tags/csv', @tag], tag: 'session-info') do 
             topics = Topic.tagged_with(@tag).active
             Topic.to_csv(topics)
           end

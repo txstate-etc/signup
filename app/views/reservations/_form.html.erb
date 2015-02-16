@@ -1,0 +1,32 @@
+<%= simple_form_for(@reservation, data: {prevent_double_submit: ''}) do |f| %>
+  <%= model_error_messages(@reservation) %>
+
+  <div class="form-inputs content-section">
+      <dl>
+        <dt>Topic:</dt>
+        <dd><%=h @reservation.session.topic.name %></dd>
+        <dt>Time:</dt>
+        <% if @reservation.session.multiple_occurrences? %>
+          <dd>This session meets <%= @reservation.session.occurrences.count %> times:</dd>
+        <% end %>
+        <% @reservation.session.occurrences.each do |o| %>
+          <dd><%=h formatted_time_range(o.time, @reservation.session.topic.minutes) %></dd>
+        <% end %>
+        <dt>Your Contact Information:</dt>
+        <dd><%=h current_user.name %> (<%=h current_user.email %>)</dd>
+        <dt>Special Accommodations Needed (optional):</dt>
+        <dd>
+          Include details on what sort of special accommodations you require here.
+          <br/>They will be emailed to your instructor.
+          <div id="special-accommodations-field">
+            <%= f.input :special_accommodations, label: false %>
+          </div>
+        </dd>
+      </dl>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+    <%= link_to 'Cancel', @reservation.session %>
+  </div>
+<% end %>

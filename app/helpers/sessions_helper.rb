@@ -1,8 +1,18 @@
 module SessionsHelper
   def registration_period(session)
-    start_time = session.reg_start.blank? ? session.created_at : session.reg_start
-    end_time = session.reg_end.blank? ? "the start of class." : session.reg_end
+    start_time = session.reg_start.blank? ? 'now' : session.reg_start
+    end_time = session.reg_end.blank? ? 'the start of class.' : session.reg_end
     return "From #{start_time} until #{end_time}"
+  end
+
+  def default_reg_start(val)
+    val = val || Date.tomorrow
+    val.to_time
+  end
+
+  def default_reg_end(val, session_end)
+    val ||= session_end ? session_end.beginning_of_day : Date.tomorrow + 1.day
+    val.to_time
   end
 
   def mailto_all(session, outlook=false)

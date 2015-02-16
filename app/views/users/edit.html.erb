@@ -1,7 +1,1 @@
-<div class="user-details" class="content-section">
-	<% form_for( @user, :url => { :action => "update" } ) do |f| %>
-		<%= render :partial => "form_fields", :locals => { :f => f }%>	
-		<br/><%= submit_tag "Make Changes" %>
-		<%= link_to "Cancel", users_path %>
-	<% end %>
-</div>
+<%= render 'form', user: @user %>

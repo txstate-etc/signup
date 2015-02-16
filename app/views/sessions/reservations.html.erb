@@ -1,0 +1,151 @@
+<%= render partial: "details", locals: {session: @session} %>
+
+<% if @session.confirmed_reservations.present? %>
+  <div class='attendance-links'>
+    <%= link_to 'Print Attendance Sheet', 
+      sessions_reservations_path(format: :pdf) %>
+    <div class='download-link download-csv'>
+      <%= link_to 'Download Attendance Details', 
+        sessions_reservations_path(format: :csv) %>
+    </div>
+    <%= link_to 'Email All Participants', '#', 
+      id: 'email-dialog-link', class: 'mailto-link' %>
+    <%= link_to '(use desktop mail client)', mailto_all(@session),
+       class: 'mailto-link' %>
+    <%= link_to '(use outlook)', mailto_all(@session, true), 
+       class: 'mailto-link' %>
+  </div>
+
+  <div class="content-section attendance-list">
+    <h2>Confirmed Reservations</h2>
+    <div class="radio-all-wrap">
+      <span class="radio-all-label">Mark all:</span>
+      <span class="radio-span">
+        <input type="radio" id="radio-all-unknown" name="radio-all" value="<%= Reservation::ATTENDANCE_UNKNOWN %>">
+        <label for="radio-all-unknown">?</label>
+      </span>
+      <span class="radio-span">
+        <input type="radio" id="radio-all-attended" name="radio-all" value="<%= Reservation::ATTENDANCE_ATTENDED %>">
+        <label for="radio-all-attended">Attended</label>
+      </span>
+      <span class="radio-span">
+        <input type="radio" id="radio-all-missed" name="radio-all" value="<%= Reservation::ATTENDANCE_MISSED %>">
+        <label for="radio-all-missed">Missed</label>
+      </span>
+    </div>
+    <%= simple_form_for @session, :url => { :action => "update" } do |f| %>
+      <table id="confirmed-reservations" class="attendance-list" >
+        <thead>
+          <tr>
+            <th scope="col" class="attendance-user">Reservation Details</th>
+            <th scope="col" class="attendance-actions">Actions</th> 
+            <th scope="col" class="attendance-radios">Attendance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%= f.simple_fields_for :reservations, 
+            @session.confirmed_reservations_by_last_name do |rf| %>
+          <% reservation = rf.object %>
+          <tr class="<%= cycle("even", "odd") %>">
+            <td class="attendance-user">  
+              <%= link_to_user_directory(reservation.user) %>
+              <span class="user-info">
+                <%= reservation.user.title_and_department %>
+              </span>
+              <% if !reservation.special_accommodations.blank? %>
+                <p class="special-accommodations collapsed" 
+                  title="<%= reservation.special_accommodations %>">
+                  <%= reservation.special_accommodations %>
+                </p>
+              <% end %>
+            </td>
+            <td class="attendance-actions">
+              <% if @session.in_future? %>
+                <%= link_to 'cancel', reservation, 
+                  title: 'Cancel reservation', 
+                  class: "cancel-link", 
+                  method: :delete, 
+                  data: { confirm: "Are you sure you want to cancel this reservation?" }
+                %>
+              <% end %>
+              <% if @session.not_finished? %>
+                <%= link_to 'remind', send_reminder_reservation_path(reservation), {
+                  title: 'Send reminder', 
+                  class: "remind-link", 
+                  data: { confirm: "Are you sure you want to send an email reminder to #{reservation.user.name}?" }
+                } %>
+              <% end %>
+              <%= link_to 'email', "mailto:#{reservation.user.email}", 
+                :title => 'Send email', 
+                :class => "email-link" 
+              %>
+            </td>
+            <td class="attendance-radios">
+              <span class="radio-span">
+                <%= rf.input :attended, 
+                  label: false,
+                  as: :radio_buttons, 
+                  collection: [
+                    ['?', Reservation::ATTENDANCE_UNKNOWN], 
+                    ['Attended', Reservation::ATTENDANCE_ATTENDED], 
+                    ['Missed', Reservation::ATTENDANCE_MISSED]
+                ] %>
+              </span>
+            </td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <%= submit_tag "Record Attendance", :class => "attendance-submit" %>
+    <% end %>
+  </div>
+<% end %>
+
+<% if @session.waiting_list.size > 0 %>
+  <div class="content-section">
+    <h2>Waiting List</h2>
+    <table id="waiting-list" class="attendance-list" >
+      <thead class="hidden">
+        <tr>
+          <th scope="col" class="attendance-user">Reservation Details</th>
+          <th scope="col" class="attendance-actions">Actions</th> 
+      </thead>
+      <tbody>
+        <!-- Not sorting by last name here because we want to see who is next to be promoted if someone cancels -->
+        <% @session.waiting_list.each do |reservation| %>
+        <tr class="<%= cycle("even", "odd") %>">
+            <td class="attendance-user">  
+              <%= link_to reservation.user.name, 'mailto:' + reservation.user.email %>
+              <%=h ', ' + reservation.user.department if !reservation.user.department.blank? %>
+              <% if !reservation.special_accommodations.blank? %>
+                <p class="special-accommodations collapsed" title="<%=h reservation.special_accommodations %>"><%=h reservation.special_accommodations %></p>
+              <% end %>
+            </td>
+            <td class="attendance-actions">
+              <% if @session.in_future? %>
+                <%= link_to 'cancel', reservation, 
+                    title: 'Cancel reservation', 
+                    class: "cancel-link", 
+                    method: :delete, 
+                    data: { confirm: "Are you sure you want to cancel this reservation?" }
+                %>
+              <% end %>
+              <%= link_to 'email', "mailto:#{reservation.user.email}", :title => 'Send email', :class => "email-link" %>
+            </td>
+          </tr>
+        <% end%>
+      </tbody>
+    </table>
+  </div>
+<% end %>
+
+<div class="content-section">
+  <h2>Enroll Another Person</h2>
+  <%= form_tag({:controller => :reservations, :action => :create, :session_id => @session.id}, data: {prevent_double_submit: ''} ) %>
+    <%= label_tag "user_login", "Login ID:" %>
+    <%= text_field_tag "user_login", nil, :size => 7 %>
+    <%= submit_tag "Enroll" %>
+  </form>
+</div>
+
+<%= render :partial => "email_dialog", :locals => { :session => @session }%>

@@ -1,91 +1,94 @@
-require 'fastercsv'
-
 class Topic < ActiveRecord::Base
+  include SessionInfoObserver
+  belongs_to :department
+  has_many :sessions, -> { where(cancelled: false).includes([:topic, :occurrences, :site]).order('occurrences.time') }, :dependent => :destroy
+  has_many :survey_responses, through: :sessions
+  include SurveyAggregates
+  has_many :documents, :dependent => :destroy
+  accepts_nested_attributes_for :documents, :allow_destroy => true, :reject_if => :all_blank
+  has_paper_trail
+  acts_as_taggable
+
+  scope :active, -> { where inactive: false }
+
+  validates :name, :description, :department, presence: true
+  validates :minutes, presence: true, numericality: { only_integer: true }
+  validates_associated :department
+  validates :survey_url, presence: { message: "must be specified to use an external survey." }, if: Proc.new{ |topic| topic.survey_type == SURVEY_EXTERNAL }
+  validate :inactive_with_no_upcoming_sessions
+
+  after_validation :delete_new_documents_on_error
+
+  def inactive_with_no_upcoming_sessions
+    errors[:base] << "You cannot delete a topic with upcoming sessions. Cancel the sessions first." if inactive? && upcoming_sessions.present?
+  end
+
   SURVEY_NONE = 0
   SURVEY_INTERNAL = 1
   SURVEY_EXTERNAL = 2
 
-  belongs_to :department
-  has_many :sessions, :dependent => :destroy
-  has_many :documents, :dependent => :destroy
-  accepts_nested_attributes_for :documents, :allow_destroy => true, :reject_if => lambda { |t| t['item'].nil? }
-  validates_presence_of :name, :description, :minutes, :department
-  validates_associated :department
-  validates_presence_of :survey_url, :if => Proc.new{ |topic| topic.survey_type == SURVEY_EXTERNAL }, :message => "must be specified to use an external survey."
-  validate :inactive_with_no_upcoming_sessions
-  default_scope :order => 'topics.name'
-  named_scope :active, :conditions => { :inactive => false }
-  has_paper_trail
-  acts_as_taggable
-
-  def inactive_with_no_upcoming_sessions
-    errors.add_to_base("You cannot delete a topic with upcoming sessions. Cancel the sessions first.") if inactive? && upcoming_sessions.present?
+  def self.upcoming
+    # FIXME: ORDER BY doesn't work with GROUP BY. The caller will have to sort by whatever order 
+    Topic.joins(sessions: :occurrences).merge(Occurrence.upcoming.order(:time)).group(:name)
   end
-  
-  def after_validation
+
+  def delete_new_documents_on_error
     if !self.errors.empty?
       # delete any documents that were just uploaded, since they will have to be uploaded again
-      documents.delete_if { |d| d.destroy if d.new_record? }
+      documents.destroy(documents.select(&:new_record?))
     end
     true
   end
 
-  def before_create
-    normalize_tag_names
-  end
-
-  def before_update
-    normalize_tag_names
-  end
-  
-  def self.upcoming_tagged_with(tag)
-    Topic.tagged_with(tag).find(:all, :conditions => ["occurrences.time > ? AND sessions.cancelled = false", Time.now], :joins => {:sessions => :occurrences}, :group => :name)
-  end
-
-  def self.upcoming
-    Topic.find(:all, :conditions => ["occurrences.time > ? AND sessions.cancelled = false", Time.now], :joins => {:sessions => :occurrences}, :group => :name)
-  end
-    
-  def to_param
-    "#{id}-#{name.parameterize}"
-  end
-  
-  def <=>(other)
-    self.name.downcase <=> other.name.downcase
-  end
-  
-  def sorted_tags
-    tags.sort { |a,b| a.name <=> b.name }
-  end
-
-  def sorted_tag_list
-    tag_list.sort
-  end
-
-  def active_sessions
-    @_active_sessions || lazy_load_sessions && @_active_sessions
-  end
-
-  def upcoming_sessions
-    @_upcoming_sessions || lazy_load_sessions && @_upcoming_sessions
-  end
-  
-  def past_sessions
-    @_past_sessions || lazy_load_sessions && @_past_sessions
-  end
-  
   def deactivate!
     # if this is a brand new topic (no non-cancelled sessions), just go ahead and delete it
-    if upcoming_sessions.blank? && past_sessions.blank?
-      return self.destroy
+    if sessions.unscope(where: :cancelled).count == 0
+      return self.destroy!
     end
     
     self.inactive = true
-    self.save
+    self.save!
   end
-  
+
+  def <=>(other)
+    self.name.downcase <=> other.name.downcase
+  end
+
+  def to_param
+    "#{id}-#{name.parameterize}"
+  end
+
+  # Work around issue where has_many through removes includes but keeps order
+  def survey_responses
+    super.reorder(nil).order('created_at DESC')
+  end
+
+  # Use this when you just care if there are any upcoming sessions, but don't need the details
+  # If you do need the details at some point in the current request, use upcoming_sessions.length
+  # or upcoming_sessions.present? if you don't need the exact count
+  def upcoming_count
+    @upcoming_count ||= @upcoming_sessions.try(:length) || Session.upcoming.where(topic: self).count
+  end
+
+  def upcoming_sessions
+    @upcoming_sessions ||= sessions - past_sessions
+  end
+
+  def past_sessions
+    @past_sessions ||= sessions.select { |s| s.started? }
+  end
+
+  def next_time
+    upcoming_sessions.first.try(:time)
+  end
+
+  def sorted_tags
+    #FIXME: can we have a default sort order?
+    tags.sort { |a,b| a.name <=> b.name }
+  end
+
   def self.to_csv(topics)
-    FasterCSV.generate do |csv|
+    CSV.generate do |csv|
       csv << Session::CSV_HEADER
       topics.each do |topic|
         topic.csv_rows.each { |row| csv << row }
@@ -95,9 +98,9 @@ class Topic < ActiveRecord::Base
 
   def to_csv
     key = "to_csv/#{cache_key}"
-    Rails.cache.fetch(key) do
-      Cashier.store_fragment(key, cache_key)
-      FasterCSV.generate do |csv|
+    Rails.cache.fetch(key, tag: cache_key) do
+      logger.debug { "in to_csv for #{name}" }
+      CSV.generate do |csv|
         csv << Session::CSV_HEADER
         csv_rows.each { |row| csv << row }
       end
@@ -106,39 +109,9 @@ class Topic < ActiveRecord::Base
   
   def csv_rows
     key = "csv_rows/#{cache_key}"
-    Rails.cache.fetch(key) do
-      Cashier.store_fragment(key, cache_key)
-      sessions.map { |session| session.csv_rows }.flatten(1)
+    Rails.cache.fetch(key, tag: cache_key) do
+      sessions.unscope(where: :cancelled).map { |session| session.csv_rows }.flatten(1)
     end
   end    
-
-  def survey_responses
-    Reservation.all(:joins => [ :survey_response, :session ], 
-      :include => [ :survey_response, :session ], 
-      :conditions => [ 'topic_id = ?', self ] ).collect{|reservation| reservation.survey_response}.sort{|a,b| b.created_at <=> a.created_at}
-  end
-  
-  def average_instructor_rating
-    survey_responses.inject(0.0) { |sum, rating| sum + rating.instructor_rating } / survey_responses.size
-  end
-  
-  def average_rating
-    survey_responses.inject(0.0) { |sum, rating| sum + rating.class_rating } / survey_responses.size
-  end
-  
-  def average_applicability_rating
-    ratings = survey_responses.reject { |rating| rating.applicability.nil? }
-    ratings.inject(0.0) { |sum, rating| sum +rating.applicability } / ratings.size
-  end
-
-  private
-  def lazy_load_sessions
-    @_active_sessions, @_upcoming_sessions, @_past_sessions = Session.lazy_load_sessions(self)
-  end
-
-  def normalize_tag_names
-    # Coerce tag_list to be all lower-case with no special chars
-    self.tag_list = self.tag_list.join(' ').split(/\s*[,;]\s*|\s+/).map {|s| s.titleize.parameterize.to_s}
-  end
 
 end

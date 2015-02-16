@@ -1,0 +1,20 @@
+$serif: Palatino, 'Palatino Linotype', Times, 'Times New Roman', 'URW Bookman L', serif;
+$sans-serif: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', sans-serif;
+
+$primary-color: #501214;
+$secondary-color: #695627;
+$text-color: #000;  
+$border-color: #c6c6c6;
+$dark-border-color: #4b4b4b;
+$gray-bg: #f6f6f6;
+
+@mixin sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}

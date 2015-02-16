@@ -1,14 +1,66 @@
-= Register Me =
+Signup
+========================
 
-This is a straightforward training class reservation system,
-developed initially at Texas State University -- San Marcos
-to serve the needs of the campus community there.
+This application was generated with the rails_apps_composer gem:
+https://github.com/RailsApps/rails_apps_composer
+provided by the RailsApps Project:
+http://railsapps.github.io/
 
-== Installation ==
+________________________
 
-Install the RiCal gem:
+Recipes:
 
-gem install ri_cal
+* controllers
+* core
+* deployment
+* email
+* extras
+* frontend
+* gems
+* git
+* init
+* learn_rails
+* models
+* prelaunch
+* rails_bootstrap
+* rails_devise
+* rails_devise_pundit
+* rails_foundation
+* rails_omniauth
+* rails_signup_download
+* railsapps
+* readme
+* routes
+* saas
+* setup
+* testing
+* tests4
+* views
 
-After that, it's just a plain old Rails app and shouldn't
-need anything special.
+Preferences:
+
+* git: true
+* apps4: rails-devise
+* authentication: devise
+* authorization: false
+* better_errors: true
+* deployment: none
+* local_env_file: false
+* pry: false
+* quiet_assets: true
+* starter_app: false
+* dev_webserver: thin
+* prod_webserver: passenger
+* database: mysql
+* templates: erb
+* tests: none
+* frontend: none
+* email: smtp
+* devise_modules: default
+* form_builder: simple_form
+* rvmrc: true
+* ban_spiders: true
+
+________________________
+
+License

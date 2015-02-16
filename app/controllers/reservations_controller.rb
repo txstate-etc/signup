@@ -1,34 +1,75 @@
 class ReservationsController < ApplicationController
-  before_filter :authenticate, :except => :download
-  
-  def create
-    unless current_user
-      redirect_to root_url
+  before_filter :authenticate, :except => :show
+  before_action :set_reservation, only: [:show, :edit, :update, :destroy, :certificate, :send_reminder]
+
+  # GET /reservations
+  # GET /reservations.json
+  def index
+    admin_is_viewing_someone_else = params[ :user_login ] && current_user.admin?
+    login = admin_is_viewing_someone_else ? params[ :user_login ] : current_user
+    @user = User.find_or_lookup_by_login( login )
+    if @user.nil?
+      flash[:alert] = "Could not find user with Login ID #{params[ :user_login ]}" if admin_is_viewing_someone_else
+      redirect_to request.referrer || root_url
       return
     end
 
-    user = if params[ :user_login ]
-      User.find_by_login( params[ :user_login ] )
+    if admin_is_viewing_someone_else
+      @page_title = "Reservations for #{@user.name}"
     else
-      current_user
+      @page_title = "Your Reservations"
+    end
+
+    reservations = @user.reservations.includes(:survey_response, :user, session: [:occurrences, :topic])
+    current_reservations = reservations.find_all{ |reservation| !reservation.session.in_past? }.sort {|a,b| a.session.next_time <=> b.session.next_time}
+    @past_reservations = reservations.find_all{ |reservation| reservation.session.in_past? && reservation.attended != Reservation::ATTENDANCE_MISSED }
+    @confirmed_reservations, @waiting_list_signups = current_reservations.partition { |r| r.confirmed? }
+
+  end
+
+  def show
+    respond_to do |format|
+      format.html { redirect_to reservations_path }
+      format.ics do
+        send_data @reservation.session.to_cal, 
+          :type => 'text/calendar', 
+          :disposition => 'inline; filename=training.ics', :filename=>'training.ics'
+      end
+    end
+  end
+
+  # GET /reservations/1/edit
+  def edit
+  end
+
+  # POST /reservations
+  # POST /reservations.json
+  def create
+    session = Session.find( params[ :session_id ] )
+    admin_is_enrolling_someone_else = params[ :user_login ] && session && authorized?(session)
+    login = admin_is_enrolling_someone_else ? params[ :user_login ] : current_user
+    user = User.find_or_lookup_by_login( login )
+    if user.nil?
+      flash[:alert] = "Could not find user with Login ID #{params[ :user_login ]}" if admin_is_enrolling_someone_else
+      redirect_to request.referrer || root_url
+      return
     end
 
     @reservation = Reservation.find_by_user_id_and_session_id(user.id, params[ :session_id ])
     unless @reservation
-      @reservation = Reservation.new( params[ :reservation ] )
-      @reservation.session = Session.find( params[ :session_id ] )
+      @reservation = Reservation.new(reservation_params)
+      @reservation.session = session
       @reservation.user = user
     end
 
-    admin_is_enrolling_someone_else = params[ :user_login ] && authorized?(@reservation)
     if admin_is_enrolling_someone_else
       if @reservation.user.nil?
-        flash[ :error ] = "Could not find user with Login ID #{params[ :user_login ]}"
-        redirect_to attendance_path(@reservation.session)
+        flash[:alert] = "Could not find user with Login ID #{params[ :user_login ]}"
+        redirect_to sessions_reservations_path(@reservation.session)
         return
       end
     elsif !@reservation.session.in_registration_period?
-      flash[ :error ] = "Registration is closed for this session."
+      flash[:alert] = "Registration is closed for this session."
       redirect_to @reservation.session 
       return
     end
@@ -39,12 +80,13 @@ class ReservationsController < ApplicationController
       @reservation.save
     end
     
+    @reservation.reload
     if success && @reservation.confirmed?
-      ReservationMailer.delay.deliver_confirm( @reservation ) 
+      ReservationMailer.delay.confirm( @reservation ) 
  
       if @reservation.session.next_time.today?
         @reservation.session.instructors.each do |instructor|
-          ReservationMailer.delay.deliver_confirm_instructor( @reservation, instructor )
+          ReservationMailer.delay.confirm_instructor( @reservation, instructor )
         end
       end
     end
@@ -58,9 +100,9 @@ class ReservationsController < ApplicationController
         end
       else
         errors = @reservation.errors.full_messages.join(" ")
-        flash[ :error ] = "Unable to make reservation for " + params[ :user_login ] + ". " + errors
+        flash[:alert] = "Unable to make reservation for " + params[ :user_login ] + ". " + errors
       end
-      redirect_to attendance_path(@reservation.session) 
+      redirect_to sessions_reservations_path(@reservation.session) 
     else
       if success
         if @reservation.confirmed?
@@ -70,71 +112,35 @@ class ReservationsController < ApplicationController
         end
       else
         errors = @reservation.errors.full_messages.join(" ")
-        flash[ :error ] = "Unable to make reservation. " + errors
+        flash[:alert] = "Unable to make reservation. " + errors
       end
       redirect_to @reservation.session 
     end
   end
-  
-  def edit
-    begin
-      @reservation = Reservation.find( params[:id] )
-    rescue ActiveRecord::RecordNotFound
-      render(:file => 'shared/404.erb', :status => 404, :layout => true) unless @reservation
-      return
-    end
 
-    superuser =  authorized? @reservation
-    
-    if @reservation.user == current_user || superuser
-      @page_title = "Update Reservation Details"
-    else
-      redirect_to root_url
-    end
-  end
-  
+  # PATCH/PUT /reservations/1
+  # PATCH/PUT /reservations/1.json
   def update
-    @reservation = Reservation.find( params[:id] )
-    if @reservation.user == current_user || authorized?(@reservation)
-      success = @reservation.update_attributes( params[ :reservation ] )
-      if success
-        flash[ :notice ] = "The reservation's data has been updated."
-        redirect_to @reservation.session
+    respond_to do |format|
+      if @reservation.update(reservation_params)
+        format.html { redirect_to @reservation.session, notice: 'Reservation was successfully updated.' }
+        format.json { render :show, status: :ok, location: @reservation }
       else
-        @page_title = "Update Reservation Details"
-        flash.now[ :error ] = "There were problems updating this reservation."
-        render :action => 'edit'
+        format.html { render :edit }
+        format.json { render json: @reservation.errors, status: :unprocessable_entity }
       end
-    else
-      redirect_to root_url
     end
   end
-  
-  def index
-    admin_is_viewing_someone_else = params[ :user_login ] && current_user.admin?
-    if admin_is_viewing_someone_else
-      @user = User.find_by_login( params[ :user_login ] )
-      @page_title = "Reservations for #{@user.name}"
-    else
-      @user = current_user
-      @page_title = "Your Reservations"
-    end
-    
-    reservations = Reservation.active.find( :all, :conditions => ["user_id = ? AND sessions.cancelled = false", @user.id ], :include => [ :session ] )
-    current_reservations = reservations.find_all{ |reservation| !reservation.session.in_past? }.sort {|a,b| a.session.next_time <=> b.session.next_time}
-    @past_reservations = reservations.find_all{ |reservation| reservation.session.in_past? && reservation.attended != Reservation::ATTENDANCE_MISSED }
-    @confirmed_reservations = current_reservations.find_all{ |reservation| reservation.confirmed? }
-    @waiting_list_signups = current_reservations.find_all{ |reservation| reservation.on_waiting_list? }
-  end
-  
+
+  # DELETE /reservations/1
+  # DELETE /reservations/1.json
   def destroy
-    @reservation = Reservation.find( params[ :id ] )
     superuser =  authorized? @reservation
     
     if @reservation.user != current_user && !superuser
-      flash[ :error ] = "Reservations can only be cancelled by their owner, an admin, or an instructor."
+      flash[:alert] = "Reservations can only be cancelled by their owner, an admin, or an instructor."
     elsif @reservation.session.started? && !superuser
-      flash[ :error ] = "Reservations cannot be cancelled once the session has begun."      
+      flash[:alert] = "Reservations cannot be cancelled once the session has begun."      
     else
       @reservation.cancel!
       if @reservation.user == current_user
@@ -147,63 +153,17 @@ class ReservationsController < ApplicationController
     if request.referrer.present?
       redirect_to request.referrer
     elsif superuser
-      redirect_to attendance_path( @reservation.session )
+      redirect_to survey_results_session_path( @reservation.session )
     else
       redirect_to reservations_path
     end
   end
-  
-  # send an email reminder to the student
-  def send_reminder
-    @reservation = Reservation.find( params[ :id ] )
-    superuser =  authorized? @reservation
-    
-    if @reservation.user != current_user && !superuser
-      flash[ :error ] = "Reminders can only be sent by their owner, an admin, or an instructor."
-    elsif @reservation.session.in_past? && !superuser
-      flash[ :error ] = "Reminders cannot be sent once the session has ended."      
-    else
-      @reservation.send_reminder
-      flash[ :notice ] = "A reminder has been sent to #{@reservation.user.name}."
-    end
-    
-    if @reservation.user == current_user
-      redirect_to reservations_path
-    else
-      redirect_to attendance_path( @reservation.session )
-    end
-  end
-  
-  # send an email reminder to the student
-  def send_followup
-    @reservation = Reservation.find( params[ :id ] )
-    superuser =  authorized? @reservation
-    
-    if @reservation.user != current_user && !superuser
-      flash[ :error ] = "Survey reminders can only be sent by their owner, an admin, or an instructor."
-    else
-      @reservation.send_followup
-      flash[ :notice ] = "A survey reminder has been sent to #{@reservation.user.name}."
-    end
-    
-    if @reservation.user == current_user
-      redirect_to reservations_path
-    else
-      redirect_to attendance_path( @reservation.session )
-    end
-  end
-  
-  def download
-    reservation = Reservation.find( params[ :id ] )
-    send_data(reservation.session.to_cal, :type => 'text/calendar', :disposition => 'inline; filename=training.ics', :filename=>'training.ics')
-  end
-  
+
   def certificate
-    @reservation = Reservation.find( params[ :id ] )
     superuser =  authorized? @reservation
 
     if @reservation.user != current_user && !superuser
-      flash[ :error ] = "Certificates can only be downloaded by their owner, an admin, or an instructor."
+      flash[ :alert ] = "Certificates can only be downloaded by their owner, an admin, or an instructor."
       if request.referrer.present?
         redirect_to request.referrer
       else
@@ -217,4 +177,38 @@ class ReservationsController < ApplicationController
 
     send_analytics('dt' => "Download Certificate - #{@reservation.session.topic.name}")
   end
+
+  # send an email reminder to the student
+  def send_reminder
+    superuser =  authorized? @reservation
+    
+    if @reservation.user != current_user && !superuser
+      flash[ :alert ] = "Reminders can only be sent by their owner, an admin, or an instructor."
+    elsif @reservation.session.in_past? && !superuser
+      flash[ :alert ] = "Reminders cannot be sent once the session has ended."      
+    else
+      @reservation.send_reminder
+      flash[ :notice ] = "A reminder has been sent to #{@reservation.user.name}."
+    end
+    
+    if @reservation.user == current_user
+      redirect_to reservations_path
+    elsif superuser
+      redirect_to sessions_reservations_path( @reservation.session )
+    else
+      redirect_to root_url
+    end
+  end
+
+  private
+    # Use callbacks to share common setup or constraints between actions.
+    def set_reservation
+      @reservation = Reservation.find(params[:id])
+    end
+
+    # Never trust parameters from the scary internet, only allow the white list through.
+    def reservation_params
+      params.key?(:reservation) ? 
+        params.require(:reservation).permit(:special_accommodations) : {}
+    end
 end

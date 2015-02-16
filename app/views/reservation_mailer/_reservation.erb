@@ -14,7 +14,11 @@
       <%- end -%>
       <%- unless (except.include? :where) -%>
         <dt>Where:</dt>
-        <dd><%=h session.loc_with_site %></dd>
+        <%- if session.location_url.present? -%>
+          <dd><%= link_to session.loc_with_site, session.location_url %></dd>
+        <%- else -%>
+          <dd><%= auto_link( h(session.loc_with_site) ) %></dd>
+        <%- end -%>
       <%- end -%>
       <%- unless (except.include? :who) -%>
       <dt>Who:</dt>
@@ -24,13 +28,15 @@
         <dt>Description:</dt>
         <dd class="topic-description"><%= auto_link( simple_format( h( session.topic.description ) ) ) %></dd>
         <% if !session.topic.tags.blank? %>
+        
           <dt>Tags:</dt>
           <dd>
             <%= session.topic.sorted_tags.map do |t| 
                   link_to t, ReservationMailer.absolute_url(tag_path(t))
-                end.join(', ') 
+                end.join(', ').html_safe
             %>
           </dd>
+        
         <% end %>
       <%- end -%>
       <%- if !except.include?(:documents) && session.topic.documents.present? -%>

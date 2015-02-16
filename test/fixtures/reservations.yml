@@ -1,7 +1,15 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 plainuser1:
   user: plainuser1
+  session: gato
+
+plainuser2_gato:
+  user: plainuser2
+  session: gato
+
+plainuser3_gato:
+  user: plainuser3
   session: gato
 
 plainuser2:

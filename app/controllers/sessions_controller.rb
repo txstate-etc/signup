@@ -1,20 +1,32 @@
-require 'ri_cal'
-
 class SessionsController < ApplicationController
   before_filter :authenticate, :except => [ :download, :show ]
-  
+  before_action :set_session, only: [
+    :show, 
+    :edit, 
+    :update, 
+    :destroy, 
+    :reservations,
+    :survey_results,
+    :email
+  ]
+  before_filter :ensure_authorized, except: [:download, :new, :create, :show]
+
   def show
-    begin
-      @session = Session.find( params[:id] )
-    rescue ActiveRecord::RecordNotFound
-      render(:file => 'shared/404.erb', :status => 404, :layout => 'application') unless @session
-      return
+    respond_to do |format|
+      format.html
+      format.csv
+      if authorized?(@session) || (current_user && current_user.editor?(@session))
+        format.csv do
+          data = cache(['sessions/csv', @session], tag: @session.cache_key) do 
+            @session.to_csv
+          end
+          send_csv data, @session 
+        end
+      end
     end
-        
-    @page_title = @session.topic.name
-    @reservation = Reservation.active.find_by_user_id_and_session_id( current_user.id, @session.id ) if current_user
   end
-  
+
+  # GET /sessions/new
   def new
     topic = Topic.find( params[ :topic_id ] )
     if authorized? topic
@@ -25,70 +37,62 @@ class SessionsController < ApplicationController
       @page_title = @session.topic.name
     else
       redirect_to topic
-    end
-  end
-  
-  def edit
-    begin
-      @session = Session.find( params[ :id ] )
-    rescue ActiveRecord::RecordNotFound
-      render(:file => 'shared/404.erb', :status => 404, :layout => 'application') unless @session
-      return
-    end
-
-    if authorized? @session
-      @page_title = @session.topic.name
-    else
-      redirect_to @session
-    end
+    end  
   end
 
+  # POST /sessions
+  # POST /sessions.json
   def create
-    @session = Session.new( params[ :session ] )
-    if authorized? @session
-      if @session.save
-        flash[ :notice ] = "Session added."
-        redirect_to @session
-      else
-        @session.occurrences.build
-        @session.instructors.build
-        @page_title = @session.topic.name
-        render :action => 'new'
+    @session = Session.new(session_params)
+    if authorized? @session.topic
+      respond_to do |format|
+        if @session.save
+          format.html { redirect_to @session, notice: 'Session was successfully created.' }
+          format.json { render :show, status: :created, location: @session }
+        else
+          @session.occurrences.build unless @session.occurrences.present?
+          @session.instructors.build unless @session.instructors.present?
+          @page_title = @session.topic.name
+          format.html { render :new }
+          format.json { render json: @session.errors, status: :unprocessable_entity }
+        end
       end
     else
-      redirect_to root_url
+      redirect_to root_path
     end
   end
-  
+
+  # PATCH/PUT /sessions/1
+  # PATCH/PUT /sessions/1.json
   def update
-    @session = Session.find( params[ :id ] )
-    if authorized? @session
-      if @session.update_attributes( params[ :session ] )
-        flash[ :notice ] = "The Session's data has been updated."
-        redirect_to @session
-      else        
-        @page_title = @session.topic.name
-        render :action => 'edit'
+    respond_to do |format|
+      attributes = session_params
+      if @session.update(attributes)
+        format.html do
+          # If we just updated attendance info, go back to session#reservations. Otherwise, go to session#show
+          next_page = attributes.key?(:reservations_attributes) ? sessions_reservations_path(@session) : @session
+          redirect_to(next_page, notice: 'Session was successfully updated.') 
+        end
+        format.json { render :show, status: :ok, location: @session }
+      else
+        format.html { render :edit }
+        format.json { render json: @session.errors, status: :unprocessable_entity }
       end
-    else
-      redirect_to @session
     end
   end
-  
+
+  # DELETE /sessions/1
+  # DELETE /sessions/1.json
   def destroy
-    session = Session.find( params[ :id ] )
-    if authorized? session
-      session.cancel!( params[:custom_message] )
-    else
+    @session.cancel!( params[:custom_message] )
+    respond_to do |format|
+      format.html { redirect_to @session.topic, notice: 'The session has been cancelled and the attendees notified.' }
+      format.json { head :no_content }
     end
-    flash[ :notice ] = "The session has been cancelled and the attendees notified."
-    redirect_to session.topic
   end
-  
+
   def download
-    key = fragment_cache_key("#{date_slug}/sessions/download")
-    data = Rails.cache.fetch(key) do 
-      Cashier.store_fragment(key, 'session-info')
+    data = cache("#{date_slug}/sessions/download", tag: 'session-info', expires_in: 1.day) do 
       calendar = RiCal.Calendar
       calendar.add_x_property 'X-WR-CALNAME', 'All Upcoming Sessions'
       Session.upcoming.each do |session|
@@ -99,38 +103,58 @@ class SessionsController < ApplicationController
     send_data(data, :type => 'text/calendar')
   end
 
-  def attendance
-    @session = Session.find( params[ :id ] )
-    if authorized? @session
-      @page_title = @session.topic.name
-      respond_to do |format|
-        format.html
-        format.csv { send_csv @session.to_csv, @session.to_param }
-        format.pdf { send_data AttendanceReport.new.to_pdf(@session), :disposition => 'inline', :type => 'application/pdf' }
-      end
-    else
-      redirect_to @session
+  def reservations
+    respond_to do |format|
+      format.html
+      format.csv { send_csv @session.to_csv, @session.to_param }
+      format.pdf { send_data AttendanceReport.new.to_pdf(@session), :disposition => 'inline', :type => 'application/pdf' }
     end
   end
 
-  def survey_results
-    @session = Session.find( params[ :id ] )
-    if authorized? @session
-      @page_title = @session.topic.name
-    else
-      redirect_to @session
-    end
-  end
-  
   def email
-    session = Session.find( params[ :id ] )
-    if authorized? session
-      session.email_all(params[:message_text])
-      flash[ :notice ] = "Your email has been sent."
-      redirect_to attendance_path(session)
-    else
-      redirect_to session
-    end
+    @session.email_all(params[:message_text])
+    flash[ :notice ] = "Your email has been sent."
+    redirect_to sessions_reservations_path(@session)
   end
   
+  private
+    # Use callbacks to share common setup or constraints between actions.
+    def set_session
+      @session = Session.find(params[:id])
+      @page_title = @session.topic.name
+    end
+
+    def ensure_authorized
+      redirect_to root_path unless authorized? @session
+    end
+
+    # Never trust parameters from the scary internet, only allow the white list through.
+    def session_params
+      fix_occurrences(params)
+      params.require(:session).permit(
+        :topic_id, 
+        :cancelled, 
+        :location, 
+        :location_url, 
+        :site_id, 
+        :seats,
+        :reg_start, 
+        :reg_end, 
+        :survey_sent,
+        occurrences_attributes: [:id, :time, :_destroy],
+        reservations_attributes: [:id, :attended],
+        instructors_attributes: [:id, :name_and_login, :_destroy]
+        )
+    end
+
+    # Some ActiveRecord bug is making times look like they have changed 
+    # when they really haven't, causing unnecessary db writes.
+    # Parsing the time before passing it to update() seems to fix it.
+    def fix_occurrences(params)
+      params.tap do |p|
+        p['session']['occurrences_attributes'].each do |_,o|
+          o['time'] = Time.parse(o['time']) rescue ''
+        end if p['session'] && p['session']['occurrences_attributes']
+      end
+    end
 end

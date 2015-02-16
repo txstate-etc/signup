@@ -1,0 +1,38 @@
+@import 'variables.scss';
+
+.download-link, .edit-reservation-link, .delete-link, div.certificate-link, div.survey-link {
+  background-repeat: no-repeat;
+  background-position: 0px 50%;
+}
+
+.download-link a, .edit-reservation-link a, .delete-link a, .certificate-link a, .survey-link a {
+  font-family: $sans-serif;
+  padding-left: 25px;
+}
+
+.delete-link {
+  background-image: image-url('delete.png');
+  a {
+    color: $primary-color;
+  }
+}
+
+.edit-reservation-link {
+  background-image: image-url('email_go.png');
+}
+
+.download-calendar {
+  background-image: image-url('cal.gif');
+}
+
+.download-csv {
+  background-image: image-url('csv.gif');
+}
+
+div.certificate-link {
+  background-image: image-url('certificate.png');
+}
+
+div.survey-link {
+  background-image: image-url('survey.png');
+}

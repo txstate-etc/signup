@@ -1,0 +1,93 @@
+@import 'variables.scss';
+
+/* Make sure the datepicker is not behind the banner */ 
+.datetimepicker {
+  position: relative; 
+  z-index:100;
+}
+
+.ui-datepicker {
+  background: $gray-bg;
+
+  .ui-datepicker-header.ui-widget-header {
+    border: none;
+    background: $gray-bg;
+  }
+  
+  table {
+    background: $gray-bg;
+  }
+}
+
+.ui-timepicker-div {
+  text-align: center;
+
+  .ui_tpicker_minute_label {
+    @include sr-only;
+  }
+
+  dt, dd {
+    display: inline;
+    margin: 0 0.25em;
+
+    div {
+      display: inline;
+    }
+  }
+
+  dd {
+    &.ui_tpicker_second, &.ui_tpicker_millisec, &.ui_tpicker_microsec {
+      display: none;
+    }
+  }
+}
+
+.ui-autocomplete.ui-menu {
+  padding: 2px 0;
+
+  .ui-menu-item a {
+    border: none;
+    margin: 0;
+  }
+}
+
+.disclaimer {
+  background-color: $gray-bg;
+  border: 1px solid $border-color;
+  padding: 6px;
+  font-family: $sans-serif;
+  font-size: 0.9em;
+  
+  p {
+    margin: 0;
+  }
+}
+
+span.site {
+  margin-left: 0.5em;
+  font-family: $sans-serif;
+  color: #335B67;
+}
+
+dd span.site {
+  font-size: 0.95em;
+}
+
+.flash {
+  animation: flash 1s ease-out;
+  animation-iteration-count: 1;
+  -webkit-animation: flash 1s ease-out;
+  -webkit-animation-iteration-count: 1;
+}
+
+@-webkit-keyframes flash {
+    0% { background-color:none;}
+    50% { background-color:#fbf8b2;}        
+    100% {background-color:none;}
+}
+
+@keyframes flash {
+    0% { background-color:none;}
+    50% { background-color:#fbf8b2;}        
+    100% {background-color:none;}
+}

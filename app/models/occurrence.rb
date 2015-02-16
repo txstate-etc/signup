@@ -1,12 +1,16 @@
 class Occurrence < ActiveRecord::Base
-  belongs_to :session
-  default_scope :order => 'time'  
-  validates_presence_of :time
-  validates_uniqueness_of :time, :scope => :session_id
+  include SessionInfoObserver
+  belongs_to :session, -> { where(cancelled: false) }
   has_paper_trail
 
+  default_scope { order :time }
+  scope :upcoming, -> { where('time > ?', Time.now) }
+  scope :in_past, -> { where('time < ?', Time.now) }
+
+  validates :time, presence: true, uniqueness: { scope: :session_id }
+  
   def self.in_range(first, last)
-    Occurrence.find( :all, :joins => :session, :conditions => [ "occurrences.time >= ? AND occurrences.time <= ? AND sessions.cancelled = false", first.to_time, last.to_time ] )
+    Occurrence.joins(:session).where(time: first.to_time..last.to_time)
   end
 
   def self.in_month(month)

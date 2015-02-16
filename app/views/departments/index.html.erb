@@ -1,6 +1,6 @@
 <% cache("departments/index", :tag => 'department-list')  do %>
   <ul id="department-list">
-    <% Department.active.each do |department| %>
+    <% Department.active.by_name.each do |department| %>
       <li>
         <%= link_to department.name, department %>
       </li>

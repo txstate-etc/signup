@@ -1,35 +1,33 @@
 class UsersController < ApplicationController
   before_filter :authenticate
+  before_action :set_user, only: [:new, :create, :show, :edit, :update, :destroy]
+  before_filter :ensure_authorized, except: [:autocomplete_search, :show]
 
-  def search
-    return if params[ :search ].blank?
-    conditions = ["inactive = 0"]
-    values = []
-    params[ :search ].split(/\s+/).each do |word|
-      conditions << "(first_name LIKE ? OR last_name LIKE ? OR login LIKE ?)"
-      3.times { values << "%#{word}%" }
-    end
-    @users = User.all(:select => "name_prefix, first_name, last_name, login", :conditions => [conditions.join(" AND ")] + values)
+  def autocomplete_search
+    users = User.directory_search(params[:term])
+    users += User.active.manual.limit(10).search(params[:term])
+    render json: users.map { |u| 
+      name_and_login = User.name_and_login(u)
+      { 
+        :id => u[:login], 
+        :label => name_and_login, 
+        :value => name_and_login
+      } 
+    }.tap { |json|
+      json << {
+        :id => 'add-new', 
+        :label => 'Add new...'
+      }
+    }
   end
 
   def index
     @users = User.manual.active
-    if authorized? @users
-      @page_title = "Manage Users"
-    else
-      redirect_to root_url
-    end
+    redirect_to root_url unless authorized? @users
   end
-  
+
   def show
     redirect_to root_url and return unless authorized? #Not editing, just viewing. Any authorization level is OK.
-
-    begin
-      @user = User.find( params[:id] )
-    rescue ActiveRecord::RecordNotFound
-      render(:file => 'shared/404.erb', :status => 404, :layout => true) unless @user
-      return
-    end
 
     # Currently, the 'show' page is only useful for viewing 
     # sessions that an instructor has taught. Out of paranoiac 
@@ -39,92 +37,79 @@ class UsersController < ApplicationController
     @page_title = @user.name
 
     @topics = Hash.new { |h,k| h[k] = Array.new }
-    @user.active_sessions.each do |session|
+    @user.sessions.each do |session|
       @topics[session.topic] << session
     end
-
-  end 
-
-  def new
-    @user = User.new
-    if authorized? @user
-      @page_title = "Create New User"
-    else
-      redirect_to root_url
-    end
   end
 
-  def edit
-    begin
-      @user = User.find( params[:id] )
-    rescue ActiveRecord::RecordNotFound
-      render(:file => 'shared/404.erb', :status => 404, :layout => true) unless @user
-      return
-    end
-
-    if authorized? @user
-      @page_title = "Update User Details"
-    else
-      redirect_to root_url
-    end
-  end
-
+  # POST /users
+  # POST /users.json
   def create
-    @user = User.new( params[ :user ] )
-    redirect_to root_url and return unless authorized? @user
-
+    @user = User.new(user_params)
+    
     # use email for login if they didn't supply one 
     # (login is not currently supported for manually created users)
     @user.login ||= @user.email
     @user.manual = true
-    
-    success = @user.save
-    
+
     respond_to do |format|
-      format.html do
-        if success
-          flash[ :notice ] = "User \"#{@user.name}\" added."
-          redirect_to users_path
-        else
-          @page_title = "Create New User"
-          render :action => 'new'
-        end
+      if @user.save
+        format.html { redirect_to users_path, notice: 'User was successfully created.' }
+        format.json { render :show, status: :created, location: @user }
+      else
+        format.html { render :new }
+        format.json { render json: @user.errors, status: :unprocessable_entity }
       end
-      
-      format.js # render the view
     end
   end
 
+  # PATCH/PUT /topics/1
+  # PATCH/PUT /topics/1.json
   def update
-    @user = User.find( params[ :id ] )
-    if authorized? @user
-      success = @user.update_attributes( params[ :user ] )
-      if success
-        flash[ :notice ] = "The user \"#{@user.name}\" has been updated."
-        redirect_to users_path
+    respond_to do |format|
+      if @user.update(user_params)
+        format.html { redirect_to users_path, notice: 'User was successfully updated.' }
+        format.json { render :show, status: :ok, location: @user }
       else
-        flash.now[ :error ] = "There were problems updating this user."
-        @page_title = "Update User Details"
-        render :action => 'edit'
+        format.html { render :edit }
+        format.json { render json: @user.errors, status: :unprocessable_entity }
       end
-    else
-      redirect_to root_url
-    end
-  end
-  
-  def destroy
-    user = User.find( params[ :id ] )
-    if authorized? user
-      if user.deactivate!
-        flash[ :notice ] = "The user \"#{user.name}\" has been deleted."
-      else
-        errors = user.errors.full_messages.join(" ")
-        flash[ :error ] = "Unable to delete user \"#{user.name}\". " + errors
-      end
-      redirect_to users_path
-    else
-      redirect_to root_url
     end
   end
 
+# DELETE /users/1
+  # DELETE /users/1.json
+  def destroy
+    @user.destroy
+    respond_to do |format|
+      format.html { redirect_to users_url, notice: 'User was successfully deleted.' }
+      format.json { head :no_content }
+    end
+  end
+
+  private
+    # Use callbacks to share common setup or constraints between actions.
+    def set_user
+      if action_name == 'new' || action_name == 'create'
+        @user = User.new
+      else
+        @user = User.find_or_lookup_by_id(params[:id])
+      end
+    end
+
+    # Never trust parameters from the scary internet, only allow the white list through.
+    def user_params
+      params.require(:user).permit(
+        :name_prefix, 
+        :first_name,
+        :last_name,
+        :email,
+        :department, 
+        :title
+      )
+    end
+
+    def ensure_authorized
+      redirect_to root_path unless authorized? @user
+    end
 end

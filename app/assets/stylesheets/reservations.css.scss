@@ -1,0 +1,50 @@
+// Place all the styles related to the reservations controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+@import 'variables.scss';
+
+label.admin-netid-label {
+  font-size: .875em;
+  font-family: $sans-serif;
+}
+
+div.reservation-group {
+  a.topic {
+    display: block;
+  }
+
+  a.date {
+    display: block;
+    color: #000;
+    font-size: .8em;
+    margin-bottom: 1em;
+  }
+
+  .reservation-actions {
+    margin-bottom: 1em;
+    a {
+      font-size: .85em;
+    }
+  }
+
+  ul.reservation-list {
+    margin-left: 0px;
+    padding-left: 0px;
+    list-style-type: none;
+    font-family: $sans-serif;
+    font-size: 1em;
+    
+    li {
+      text-decoration: none;
+      border-bottom-width: 1px;
+      border-bottom-style: dotted;
+      border-bottom-color: $secondary-color;
+      padding-bottom: .5em;
+      margin-top: .75em;
+      margin-bottom: 1em;
+      &:last-child {
+        border: none;
+      } 
+    }
+  }
+}

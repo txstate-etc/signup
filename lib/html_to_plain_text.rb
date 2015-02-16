@@ -18,13 +18,18 @@ module HtmlToPlainText
 
   # Returns the text in UTF-8 format with all HTML tags removed
   #
-  # TODO: add support for DL, OL
+  # TODO: add support for OL
   def convert_to_text(html, line_length = 65, from_charset = 'UTF-8')
-
-    # decode HTML entities
-    he = HTMLEntities.new
-    txt = he.decode(html)
     
+    # The gsubs will fail if html is a SafeBuffer, so we 
+    # have to convert it to an actual String object.
+    # http://makandracards.com/makandra/11171-how-to-fix-gsub-on-safebuffer-objects
+    txt = html.to_str
+
+    # to_str may or may not have created a new string
+    # Ensure it here, since we will be modifying it in place.
+    txt = txt.dup if txt.equal? html
+
     # remove head tag
     txt.gsub!(/<head.*<\/head>/mi, '')
 
@@ -121,6 +126,9 @@ module HtmlToPlainText
     # end
 
     txt.lstrip!
+
+    # decode HTML entities
+    txt = HTMLEntities.new.decode(txt)
 
     txt << "\n" unless txt.last == "\n"
 

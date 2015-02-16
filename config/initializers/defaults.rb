@@ -1,2 +1,1 @@
-DIRECTORY_URL_BASE = 'http://peoplesearch.txstate.edu/peoplesearch.pl?srchmode=search&query=##LOGIN##'
-DEFAULT_SITE = 1
+DIRECTORY_URL_BASE = 'http://peoplesearch.txstate.edu/peoplesearch.pl?srchmode=search&query=userid%3D##LOGIN##'

@@ -1,0 +1,125 @@
+<div id="session-details" class="content-section">
+  <h2>Session Details</h2>
+  <dl>
+    <dt>Time:</dt>
+    <% if session.multiple_occurrences? %>
+      <% meets_met = session.in_past? ? "met" : "meets" %>          
+      <dd>This session <%= meets_met %> <%= session.occurrences.length %> times:</dd>
+    <% end %>
+    <% session.occurrences.each do |o| %>
+      <dd><%=h formatted_time_range(o.time, session.topic.minutes) %></dd>
+    <% end %>
+    <% if session.cancelled? %>
+      <dd class="in-past">This session was cancelled.</dd>
+    <% elsif session.in_past? %>
+      <dd class="in-past">This session has already taken place.</dd>
+    <% elsif session.started? %>
+      <dd class="in-past">This session has already commenced.</dd>
+    <% end %>
+    <% if session.topic.upcoming_count > 1 %>
+      <dd><%= link_to 'Need to look for another session?', session.topic %></dd>
+    <% end %>
+    <% if session.registration_period_defined? %>
+      <dt>Registration Period:</dt>
+      <dd><%=h registration_period(session) %></dd>
+    <% end %>
+    <dt>Location:</dt>
+    <dd>
+      <span class="location">
+        <% if session.location_url.present? %>
+          <%= link_to session.location, session.location_url %>
+        <% else %>
+          <%= auto_link( h(session.location) ) %>
+        <% end %>
+      </span>
+      <span class="site">
+        <%=h session.site.name if session.site %>
+      </span>
+    </dd>
+    <% if session.instructors.length > 1 %>
+      <dt>Instructors:</dt>
+    <% else %>
+      <dt>Instructor:</dt>
+    <% end %>
+    <dd>
+      <ul class="instructor-list">
+        <% session.instructors.each do |instructor| %>
+          <li>
+            <span class="instructor-name"><%= link_to_user_directory(instructor) %></span>
+            <span class="instructor-info"><%= instructor.title_and_department %></span>
+          </li>
+        <% end %>
+      </ul>
+    </dd>
+    <dt>Registration:</dt>
+    <dd>
+      <%=h session.confirmed_count %>
+      <% if session.seats %>
+        / <%=h session.seats %>
+      <% end %> 
+      registered
+      <% if session.waiting_list_count > 0 %>
+        (<%=h session.waiting_list_count %> waiting)
+      <% end %>
+      
+      <% @reservation = Reservation.active.find_by_user_id_and_session_id( current_user.id, @session.id ) if current_user %>
+      <% if @reservation %>
+        <% if @reservation.attended == Reservation::ATTENDANCE_ATTENDED %>
+          <p>You attended this session.</p>
+          <%= certificate_link(@reservation) %>
+          <%= survey_link(@reservation) %>
+        <% elsif @reservation.attended == Reservation::ATTENDANCE_MISSED %>
+          <p>You registered for this session, but were marked absent. </p>
+        <% else %>
+          <% are_were = session.in_past? ? "were" : "are" %>
+          <% if @reservation.confirmed? %>
+            <p>You <%= are_were %> registered for this session. <%= survey_link(@reservation) %></p>
+          <% else %>
+            <p>You <%= are_were %> on the waiting list for this session.</p>
+          <% end %>
+          <div class="download-link download-calendar">
+            <%= link_to "Add reservation to calendar",
+              reservation_path(@reservation, format: :ics) %>
+          </div>
+          <%- if @reservation.session.in_future? -%>
+            <%= link_to_edit_reservation(@reservation) %>
+            <div class="delete-link">
+              <%= link_to "Cancel Reservation", @reservation, 
+                  method: :delete, 
+                  data: { confirm: "Are you sure you want to cancel your reservation for \"#{@reservation.session.topic.name}\"?" }
+              %>
+            </div>
+          <%- end -%>
+        <% end %> 
+      <% elsif session.in_registration_period? %>    
+
+        <%  if current_user %>
+          <% if session.space_is_available? %>
+            <div class="register-button">
+              <%= form_tag(session_reservations_path( session ), data: {prevent_double_submit: ''}) do %>
+                <%= submit_tag "Register Now", :class => 'register-button' %>
+              <% end %>
+            </div>
+
+          <% else %>
+            <div class="notice">NOTICE: This class is full! However, you can still put yourself on the waiting
+              list. If space becomes available in the class, you will be automatically
+              registered and notified by email.
+            </div>
+            <div class="register-button">
+              <%= form_tag(session_reservations_path( session ), data: {prevent_double_submit: ''}) do %>
+                <%= submit_tag "Add to Waiting List", :class => 'register-button' %>
+              <% end %>
+            </div>
+          <% end %>
+        <% else %>
+          <div class="login-link">
+            <%= link_to "Log in to register", login_path %>
+          </div>
+        <% end %>
+      <% else %>
+        <p>Registration is closed for this session.</p>
+      <% end %>
+    </dd>
+  </dl>
+</div>

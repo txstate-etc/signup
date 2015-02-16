@@ -1,7 +1,7 @@
 class FileIcon
   
   BASE_ICON_PATH = 'fileicons'
-  DIR_PATH = "#{Rails.root}/public/images/#{BASE_ICON_PATH}"
+  DIR_PATH = "#{Rails.root}/app/assets/images/#{BASE_ICON_PATH}"
   ICON_PATH_TEMPLATE = "#{BASE_ICON_PATH}/%s.png"
   DEFAULT_ICON_TYPE = 'file'
   DEFAULT_ICON_PATH = ICON_PATH_TEMPLATE % DEFAULT_ICON_TYPE

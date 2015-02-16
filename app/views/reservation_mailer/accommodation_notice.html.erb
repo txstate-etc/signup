@@ -5,9 +5,9 @@
 </head>
 <body>
 
-<p>Hi there <%=h @reservation.session.topic.name %> instructors,</p>
+<p>Hi there <%= reservation.session.topic.name %> instructors,</p>
 
-<%- if @reservation.special_accommodations.present? -%>
+<%- if reservation.special_accommodations.present? -%>
   <%- message = "has requested special accommodations for his/her needs:" -%>
   <%- addendum = "If you have any questions about this request" -%>
 <%- else -%>
@@ -16,16 +16,16 @@
 <%- end -%>
 
 <p>
-  <%=h @reservation.user.name %>, one of the students in your upcoming "<%=h @reservation.session.topic.name %>" 
-  class on <%=h formatted_time_range(@reservation.session.time, @reservation.session.topic.minutes) %>, 
+  <%= reservation.user.name %>, one of the students in your upcoming "<%= reservation.session.topic.name %>" 
+  class on <%= formatted_time_range(reservation.session.time, reservation.session.topic.minutes) %>, 
   <%= message %>
 </p>
 
-<p><%=h @reservation.special_accommodations %></p>
+<p><%= reservation.special_accommodations %></p>
 
 <p><%= addendum %>, you can reach 
-  <%=h @reservation.user.name %> at 
-  <a href="mailto:<%=h @reservation.user.email %>"><%=h @reservation.user.email %></a>.
+  <%= reservation.user.name %> at 
+  <a href="mailto:<%= reservation.user.email %>"><%= reservation.user.email %></a>.
 </p>
 
 </body>

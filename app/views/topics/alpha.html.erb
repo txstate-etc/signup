@@ -1,13 +1,13 @@
-<% cache("#{date_slug}/topics/alpha", :tag => 'session-info')  do %>
+<% cache("#{date_slug}/topics/alpha", :tag => 'session-info', expires_in: 1.day)  do %>
   <% @topics = Topic.upcoming %>
-  <% if @topics.count == 0 %>
+  <% if @topics.blank? %>
     <div class="empty-list">
       <p>Sorry, there are no upcoming sessions at this time. Please check again later!</p>
     </div>
   <% else %>
     <ul class="topic-list">
       <% @topics.sort_by {|a| a.name.downcase }.each do |topic| %>
-        <% cache(["#{date_slug}/topics/alpha", topic], :tag => topic.cache_key) do %>
+        <% cache(["#{date_slug}/topics/alpha", topic], :tag => topic.cache_key, expires_in: 1.day) do %>
           <li>
             <%= link_to topic.name, topic %>
             <% if topic.upcoming_sessions.present? %>

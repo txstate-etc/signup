@@ -5,21 +5,21 @@
 </head>
 <body>
 
-<p>Hi there <%= @user.name %>,</p>
+<p>Hi there <%= user.name %>,</p>
 
 <p>The following message was sent to all registered attendees of the session of
-   "<%= @session.topic.name %>" that you are teaching:</p>
+   "<%= session.topic.name %>" that you are teaching:</p>
 
-<p><%= @message %></p>
+<p><%=raw message %></p>
   
 <%= render :partial => "reservation", :locals => {
-  :session => @session,
-  :user => @user,
+  :session => session,
+  :user => user,
   :title => "Session Details",
   :except => [:who]
   } -%>
 
-<p>You may view or update the details of this session <%= link_to "here", session_url(@session), :only_path => false %>.</p>
+<p>You may view or update the details of this session <%= link_to "here", session_url(session), :only_path => false %>.</p>
 
 </body>
 </html>

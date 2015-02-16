@@ -5,15 +5,15 @@
 </head>
 <body>
 
-<p>Hi there <%= @user.name %>,</p>
+<p>Hi there <%= user.name %>,</p>
 
-<p>The session on "<%= @session.topic.name %>" for which you
+<p>The session on "<%= session.topic.name %>" for which you
   had signed up has had some of its details changed. Please review the
   updated class information below.</p>
   
 <%= render :partial => "reservation", :locals => {
-  :session => @session,
-  :user => @user,
+  :session => session,
+  :user => user,
   :title => "Your Updated Reservation"
   } -%>
 
@@ -21,7 +21,7 @@
 reservation <%= link_to "here", :controller => "reservations", :only_path => false %>.
 
 <p>If you'd like to sign up to take the class at a different time, you can
-see a list of times it is offered  <%= link_to "here", :action => "show", :controller => "topics", :id => @session.topic.id, :only_path => false %>. (Be sure to cancel your existing
+see a list of times it is offered  <%= link_to "here", :action => "show", :controller => "topics", :id => session.topic.id, :only_path => false %>. (Be sure to cancel your existing
 reservation first!)</p>
 
 </body>

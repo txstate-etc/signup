@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+admin1:
+  credentials: admin1-credentials-1
+  user: admin1
+
+plainuser1:
+  credentials: plainuser1-credentials-2
+  user: plainuser1 

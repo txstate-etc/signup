@@ -1,95 +1,151 @@
-require 'net/ldap'
+require 'ldap'
 
 class User < ActiveRecord::Base
+  has_many :auth_sessions
   has_many :permissions
   has_many :departments, :through => :permissions
-  has_and_belongs_to_many :sessions
+  has_many :reservations, -> { joins(:session).where(cancelled: false, sessions: { cancelled: false }) }
+  has_and_belongs_to_many :sessions, -> { where(cancelled: false).includes([:topic, :occurrences]).order('occurrences.time') }
+  has_many :topics, through: :departments
   has_paper_trail
-  
-  validates_presence_of :last_name, :login, :email
-  validates_uniqueness_of :login
-  
-  named_scope :active, :conditions => { :inactive => false }
-  named_scope :manual, :conditions => { :manual => true }
-  
-  [:first_name, :last_name, :name_prefix, :title, :department].each do |field|
-    define_method(field) do
-      s = super
-      # if the title is all uppercase or all lowercase, titleize it
-      # if there is at least 1 upper and 1 lower case letter, leave it alone
-      # and assume the user knew what they wanted.
-      s =~ /(?=.*[\p{Upper}])(?=.*[\p{Lower}])/u ? s : s.titleize if s
+
+  scope :active, -> { where inactive: false }
+  scope :manual, -> { where manual: true }
+
+  validates :last_name, :email, presence: true
+  validates :login, presence: true, uniqueness: true
+
+  # SELECT id, name_prefix, first_name, last_name, login FROM `users`  
+  # WHERE ((first_name LIKE 'a%' OR last_name LIKE 'a%' OR login LIKE 'a%')
+  # AND (first_name LIKE 'b%' OR last_name LIKE 'b%' OR login LIKE 'b%'))
+  def self.search(query)
+    logger.debug { "in search: query = #{query}" }
+    return none unless query.present?
+
+    conditions = []
+    values = []
+    query.split(/\s+/).each do |word|
+      conditions << "(first_name LIKE ? OR last_name LIKE ? OR login LIKE ?)"
+      3.times { values << "#{word}%" }
+    end
+    
+    logger.debug { "in search: conditions = #{conditions}" }
+
+    User.select("id, name_prefix, first_name, last_name, login").
+      where(conditions.join(" AND "), *values)
+  end
+
+  def self.directory_search(query)
+    logger.debug { "in directory_search: query = #{query}" }
+    return [] unless query.present?
+
+    begin
+      Ldap.search(query)
+    rescue Ldap::ConnectError, Net::LDAP::LdapError => e
+      logger.error("There was a problem importing the data from LDAP. " + e.to_s)
+      return []
     end
   end
+
+  def self.extract_login(name_and_login)
+    name_and_login.split(/[(|)]/).last rescue nil
+  end
+
+  def self.find_or_lookup_by_id(id)
+    User.lookup(User.find(id))
+  end
+
+  def self.find_or_lookup_by_name_and_login(name)
+    User.find_or_lookup_by_login(User.extract_login(name))
+  end
+
+  def self.find_or_lookup_by_login(login)
+    return nil unless login.present?
+    User.lookup(login.is_a?(User) ? login : (User.find_by_login(login) || login))
+  end
   
-  def <=>(other)
-    [self.last_name, self.first_name] <=> [other.last_name, other.first_name]
+  def self.lookup(user)
+    if !user.is_a?(User) || user.need_update?
+      # try to find in ldap
+      begin
+        login = user.is_a?(User) ? user.login : user
+        ldap_user = Ldap.import_user(login)
+        user = ldap_user if ldap_user
+      rescue Ldap::ConnectError, Net::LDAP::LdapError => e
+        logger.error("There was a problem importing the data from LDAP. " + e.to_s)
+      end
+    end
+    
+    user.is_a?(User) ? user : nil
+  end
+
+  def self.name_and_login(user)
+    return user.name_and_login if user.respond_to? :name_and_login
+    "#{user[:firstname]} #{user[:lastname]} (#{user[:login]})" if user.is_a? Hash
   end
 
   def name
     dr = name_prefix.strip.sub(/([^.])$/) { $1 + '.' } if name_prefix =~ /dr|doc/i  
-    [dr, first_name, last_name].join(" ").strip
+    "#{dr} #{first_name} #{last_name}".strip 
   end
-  
-  def name_and_login
-     return nil unless name && login
-     name + " (" + login + ")"
-  end
-  
-  def title_and_department
-    return title unless department.present?
-    return department unless title.present?
-    [title, department].join(", ")
-  end
-  
+
   def directory_url
     #FIXME: what if the people search has no results?
     DIRECTORY_URL_BASE.gsub(/##LOGIN##/, login) unless manual?
   end
-    
+
   def email_header
     "\"#{name}\" <#{email}>"
   end
-  
-  def self.find_by_name_and_login( name )
-    return nil if name.blank?
-    elements = name.split(/[(|)]/)
-    if elements.size > 1
-      User.find_by_login( elements.last )
-    else
-      User.find_by_login( elements[0] )
-    end
+
+  def name_and_login
+     return nil unless name && login
+     name + " (" + login + ")"
   end
-  
-  def self.find_or_lookup_by_login(login)
-    return nil unless login.present?
-    
-    user = User.find(:first, :conditions => ['login = ?', login ] )
-    if user.blank?
-      # try to find in ldap
-      begin
-        import_users(login)
-      rescue Net::LDAP::LdapError => e
-        logger.error("There was a problem importing the data from LDAP. " + e)
-      end
-      user = User.find(:first, :conditions => ['login = ?', login ] )
-    end
-    
-    user
+
+  def title_and_department
+    return title unless department.present?
+    return department unless title.present?
+    "#{title}, #{department}"
   end
-  
-  def deactivate!
-    # if this is a brand new user (no sessions, reservations, departments), just go ahead and delete it
-    if Reservation.count(:all, :conditions => { :user_id => self.id }) == 0 &&
-       Permission.count(:all, :conditions => { :user_id => self.id }) == 0 &&
-       Session.count(:all, :joins => :instructors, :conditions => {:sessions_users => {:user_id => self.id}}) == 0 
-      return self.destroy
-    end
-    
-    self.inactive = true
-    self.save
+
+  def upcoming_sessions
+    @upcoming_sessions ||= sessions - past_sessions
   end
-  
+
+  def past_sessions
+    @past_sessions ||= sessions.select { |s| s.started? }.reverse
+  end
+
+  def need_update? 
+    !self.manual? && self.updated_at < 5.minutes.ago
+  end
+
+  # return true if the user has permissions on one or more departments (and item==nil)
+  # if a Department is provided, return true if he is an editor for that topic
+  # if a Topic is provided, return true if he is an editor for that topic's department
+  # if a Session is provided, return true if he is an editor for that session's topic's department
+  def editor?(item=nil)
+    defined?(@_is_editor) or @_is_editor = self.departments.present?
+    return @_is_editor unless item
+    return departments.include?(item) if item.is_a? Department
+    return departments.include?(item.department) if item.is_a?(Topic) && !item.new_record?
+    return departments.include?(item.topic.department) if item.is_a?(Session) && !item.new_record?
+    false
+  end
+
+  # return true if the user is an instructor for any session (even in the past) [and item==nil]
+  # if a Topic is provided, return true if he is an instructor for any session for that topic
+  # if a Session is provided, return true if he is an instructor for that session
+  def instructor?(item=nil)
+    defined?(@_is_instructor) or @_is_instructor = self.sessions.present?
+    return @_is_instructor unless item
+    return sessions.any? { |s| s.topic_id == item.id } if item.is_a? Topic
+    return sessions.include?(item) if item.is_a? Session
+    false
+  end
+
+
   def authorized?(item=nil)
     
     # Admins can do anything
@@ -98,7 +154,7 @@ class User < ActiveRecord::Base
     # Editors can only edit things in their own departments.
     # Instructors can edit sessions they are the instructor of.
     # Regular users (i.e., students) can't do anything.
-    return false if !self.editor? && !instructor?
+    return false if !self.editor? && !self.instructor?
     
     # Return true if we are just being asked about general editing permissions.
     return true if item.nil?
@@ -140,167 +196,5 @@ class User < ActiveRecord::Base
 
     # Default deny.
     return false
-  end
-  
-  # return true if the user has permissions on one or more departments (and item==nil)
-  # if a Department is provided, return true if he is an editor for that topic
-  # if a Topic is provided, return true if he is an editor for that topic's department
-  # if a Session is provided, return true if he is an editor for that session's topic's department
-  def editor?(item=nil)
-    defined?(@_is_editor) or @_is_editor = self.departments.present?
-    return @_is_editor unless item
-    return departments.include?(item) if item.is_a? Department
-    return departments.include?(item.department) if item.is_a?(Topic) && !item.new_record?
-    return departments.include?(item.topic.department) if item.is_a?(Session) && !item.new_record?
-    false
-  end
-  
-  # return true if the user is an instructor for any session (even in the past) [and item==nil]
-  # if a Topic is provided, return true if he is an instructor for any session for that topic
-  # if a Session is provided, return true if he is an instructor for that session
-  def instructor?(item=nil)
-    defined?(@_is_instructor) or @_is_instructor = self.active_sessions.present?
-    return @_is_instructor unless item
-    return active_sessions.any? { |s| s.topic_id == item.id } if item.is_a? Topic
-    return active_sessions.include?(item) if item.is_a? Session
-    false
-  end
-  
-  def active_topics
-    Topic.active.find(:all, :conditions => ["permissions.user_id = ?", self.id], :include => { :department => :permissions }, :group => 'topics.name')
-  end
- 
-  def upcoming_topics
-    Topic.find(:all, :conditions => ["permissions.user_id = ? AND occurrences.time > ? AND sessions.cancelled = false", self.id, Time.now], :include => {:sessions => :occurrences, :department => :permissions }, :group => 'topics.name')
-  end
-
-  def active_sessions
-    @_active_sessions || lazy_load_sessions && @_active_sessions
-  end
-
-  def upcoming_sessions
-    @_upcoming_sessions || lazy_load_sessions && @_upcoming_sessions
-  end
-  
-  def past_sessions
-    @_past_sessions || lazy_load_sessions && @_past_sessions
-  end
-
-  def self.import_all
-    import_users(nil)
-  end
-
-  # This method is resonsible for populating the User table with the
-  # login, name, and email of anybody who might be using the system.
-  # The included sample code is to pull in data from Texas State's
-  # LDAP system. You'll need to customize this for your institution.
-  def self.import_users(logins)
-    ldap_servers = ['ads1.matrix.txstate.edu','ads2.matrix.txstate.edu']
-    base_dn = 'ou=TxState Users,dc=matrix,dc=txstate,dc=edu'
-    
-    filter = '(&'
-    filter <<   '(objectCategory=CN=Person,CN=Schema,CN=Configuration,DC=matrix,DC=txstate,DC=edu)'
-    if logins.present?
-      if logins.is_a? Array
-        filter << '(|' << logins.map{|login| "(sAMAccountName=#{login})" }.join('') << ')'
-      else
-        filter << "(sAMAccountName=#{logins})"
-      end
-    else
-      filter <<   '(|(memberOf=CN=students,OU=Txstate Conscribed Lists,DC=matrix,DC=txstate,DC=edu)'
-      filter <<     '(memberOf=CN=staff,OU=Txstate Conscribed Lists,DC=matrix,DC=txstate,DC=edu)'
-      filter <<     '(memberOf=CN=faculty,OU=Txstate Conscribed Lists,DC=matrix,DC=txstate,DC=edu)'
-      filter <<   ')'
-    end
-    filter << ')'
-    logger.debug("LDAP filter = #{filter}")
-    
-    bind_dn = 'cn=itsldap,ou=TxState Service Accounts,dc=matrix,dc=txstate,dc=edu'
-    bind_pass = begin LDAP_PASSWORD rescue "" end
-    
-    logger.info("Starting import from LDAP: " + Time.now.to_s )
-
-    server_index = 0
-    begin
-      ldap = Net::LDAP.new
-      ldap.host = ldap_servers[server_index]
-      ldap.auth bind_dn, bind_pass
-      ldap.bind
-    rescue 
-      server_index += 1
-      if server_index < ldap_servers.size
-        retry
-      else
-        raise
-      end
-    end
-
-    begin
-      # Build the list
-      records = records_updated = new_records = 0
-      ldap.search(:base => base_dn, :filter => filter, :return_result => false ) do |entry|
-        if !(entry.respond_to?( :givenName ) && entry.respond_to?( :sn ) && entry.respond_to?( :name ))
-          # logger.debug("Missing fields from following entry:")
-          # entry.each do |attribute, values|
-          #   logger.debug "   #{attribute}:"
-          #   values.each do |value|
-          #     logger.debug "      --->#{value}"
-          #   end
-          # end
-          next
-        end
-        first_name = entry.givenName.to_s.strip
-        last_name = entry.sn.to_s.strip
-        login = entry.name.to_s.strip
-        email = login + "@txstate.edu"
-        name_prefix = entry.personalTitle.to_s if entry.respond_to?( :personalTitle )
-        department = entry.department.to_s if entry.respond_to?( :department )
-        title = entry.title.to_s if entry.respond_to?( :title )
-        
-        # Strip name_prefix from first_name if it's there
-        first_name.gsub!(/^\s*#{name_prefix}\s*/, '')
-
-        user = User.find_or_initialize_by_login(login)
-
-        user.email = email
-        user.first_name = first_name
-        user.last_name = last_name
-        user.name_prefix = name_prefix
-        user.department = department
-        user.title = title
-
-        if user.new_record?
-          user.save!
-          new_records += 1
-        elsif user.changed?
-          user.save!
-          logger.info( "Updated: " + email )
-          records_updated += 1
-        else
-          # update timestamp so that we can delete old records later
-          user.active = true
-          user.save
-        end
-        records += 1
-      end
-      
-      # mark inactive records that haven't been updated for 7 days
-      records_deleted = User.update_all( 'active = false', ["updated_at < ?", Date.today - 7 ] ).size
-      
-      logger.info( "LDAP Import Complete: " + Time.now.to_s )
-      logger.info( "Total Records Processed: " + records.to_s )
-      logger.info( "New Records: " + new_records.to_s )
-      logger.info( "Updated Records: " + records_updated.to_s ) 
-      logger.info( "Deleted Records: " + records_deleted.to_s )
-    rescue
-      logger.error("There was a problem importing the data from LDAP.")
-      raise
-    end
-    
-  end
-
-  private
-  def lazy_load_sessions
-    @_active_sessions, @_upcoming_sessions, @_past_sessions = Session.lazy_load_sessions(self)
   end
 end

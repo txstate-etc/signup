@@ -1,78 +1,62 @@
-# Filters added to this controller apply to all controllers in the application.
-# Likewise, all the methods added will be available for all controllers.
-require 'cashier'
-require 'net/http'
-require 'uuidtools'
-
 class ApplicationController < ActionController::Base
-  include Cashier::ControllerHelper
-  include ExceptionNotification::Notifiable
-  before_filter :cas_setup
-  helper :all # include all helpers, all the time
-  protect_from_forgery # See ActionController::RequestForgeryProtection for details
-  
+  # Prevent CSRF attacks by raising an exception.
+  # For APIs, you may want to use :null_session instead.
+  protect_from_forgery with: :exception
+  before_action :enable_mini_profiler
+
   GOOGLE_ANALYTICS_URL = URI('http://www.google-analytics.com/collect')
 
+  helper_method :current_user
+  helper_method :auth_user
+  helper_method :authorized?
+  helper_method :login_path
+  helper_method :date_slug
+
+  # this is responible for putting the login ID of the current
+  # user into session[ :user ]. It's set up to work with OmniAuth, 
+  # which should be configured in config/initializers/omniauth.rb
+  protected 
   def info_for_paper_trail
     { :ip => request.remote_ip, :user_agent => request.user_agent }
   end
 
-  def user_for_paper_trail
-    current_user ? current_user : 'anonymous'
-  end
-
-  # Scrub sensitive parameters from your log
-  # filter_parameter_logging :password
-  
-  # this is responible for putting the login ID of the current
-  # user into session[ :user ]. It's set up to work with CAS, 
-  # but should be easily tweaked to support other login systems.
-  protected 
   def authenticate
-    return true if session[ :user ]
-    
-    if session[ :cas_user ]
-      user = User.find_or_lookup_by_login(session[ :cas_user ])
-      session[ :user ] = user.id if user
-    else
-      session[:cas_redirect] ||= request.url
-      return false unless CASClient::Frameworks::Rails::Filter.filter( self )
-      user = User.find_or_lookup_by_login(session[ :cas_user ]) if session[ :cas_user ] 
-      session[ :user ] = user.id if user
-    end
-    
-    if session[:user].blank?
-      flash[ :error ] = "Oops! We could not log you in. If you just received your login ID, you may need to wait 24 hours before it's available."
-      redirect_to root_url
-      return false 
-    end
-    
-    return true
+    return true if current_user.is_a? User
+
+    # redirect to omniauth provider
+    redirect_to "#{login_path}?url=#{request.url}"
+    return false    
   end
 
-  # hard to generate the login URL in the config file where we set up
-  # all the other CAS options
-  # So we set it here and put it in a filter
-  def cas_setup
-    CASClient::Frameworks::Rails::Filter.config[:service_url] = url_for :login
+  def authorized?(item=nil)
+    current_user && current_user.authorized?(item)
   end
-  
+
+  def login_path
+    '/auth/cas'
+  end
+
+ def date_slug(date=nil)
+    (date || Date.today).strftime('%Y-%m-%d')
+  end
+
   def send_csv(csv, filename)
     send_data csv,
-          :type => 'text/csv; charset=iso-8859-1; header=present',
-          :disposition => "attachment; filename=#{filename.to_param}.csv"
+          type: 'text/csv; charset=iso-8859-1; header=present',
+          filename: "#{filename.to_param}.csv"
   end
 
   def send_analytics(opts = {})
-    if defined?(GOOGLE_ANALYTICS_ACCOUNT)
+    tracking_id = Rails.application.secrets.google_analytics_tracking_id
+    if tracking_id.present?
       # random, anonymous client id; lifetime for the current session
-      @client_id ||= (session[:ga_client_id] ||= UUIDTools::UUID.random_create.to_s)
+      @client_id ||= (session[:ga_client_id] ||= SecureRandom.uuid)
 
       # Default to 'pageview' track type. See the docs for other types/params:
       # https://developers.google.com/analytics/devguides/collection/protocol/v1/reference
       params = {
         'v' => 1, # protocol version
-        'tid' => GOOGLE_ANALYTICS_ACCOUNT, # tracking/web_property id
+        'tid' => tracking_id, # tracking/web_property id
         'cid' => @client_id, # unique client id
         't' => 'pageview',
         'dh' => request.headers['HTTP_HOST'],
@@ -85,29 +69,22 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  helper_method :current_user
-  helper_method :cas_user
-  helper_method :authorized?
-  helper_method :date_slug
-
-  protected
-  def authorized?(item=nil)
-    current_user && current_user.authorized?(item)
-  end
-
-  def date_slug(date=nil)
-    (date || Date.today).strftime('%Y-%m-%d')
-  end
-
   private
   def current_user
-    @_current_user ||= session[ :user ] && User.find(session[ :user ])
+    unless defined? @_current_user
+      @_current_user = AuthSession.authenticated_user(session[:user], session[:credentials])
+    end
+    @_current_user
   end
 
-  def cas_user
-    session[ :cas_user ]
+  def auth_user
+    session[ :auth_user ]
   end
   
-  
-  
+  def enable_mini_profiler
+    # mini-profiler is enabled by default on development, this will switch it on in staging
+    if Rails.env.staging? && current_user.is_a?(User) && current_user.admin?
+      Rack::MiniProfiler.authorize_request
+    end
+  end
 end

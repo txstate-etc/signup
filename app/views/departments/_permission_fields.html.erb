@@ -1,11 +1,11 @@
-<div class="fields">
-  <%= f.text_field_with_auto_complete :name_and_login, 
-    { :size => 55 }, 
-    { :min_chars => 2,
-      :url => search_users_path( :js ), 
-      :method => :get, 
-      :with => "'search=' + element.value",
-      :after_update_element => "after_update_instructor"
-    } %>
-  <%= link_to_remove_fields "remove", f %>
+<div class="nested-fields">
+  <div class="input string foo">
+    <%= f.input :name_and_login, 
+      url: autocomplete_search_users_path, 
+      as: :autocomplete,
+      label: false, 
+      wrapper: false
+    %>
+    <%= link_to_remove_association "remove", f %>
+  </div>
 </div>

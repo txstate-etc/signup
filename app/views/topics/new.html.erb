@@ -1,7 +1,1 @@
-<div class="topic-details" class="content-section">
-	<% form_for( @topic, :html => { :multipart => true } ) do |f| %>
-		<%= render :partial => "form_fields", :locals => { :f => f }%>	
-		<br/><%= submit_tag "Create Topic" %>
-		<%= link_to "Cancel", topics_path %>
-	<% end %>
-</div>	
+<%= render 'form' %>

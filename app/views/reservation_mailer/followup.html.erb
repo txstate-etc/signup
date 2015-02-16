@@ -5,35 +5,35 @@
 </head>
 <body>
 
-<p>Hi there <%= @reservation.user.name %>,</p>
+<p>Hi there <%= reservation.user.name %>,</p>
 
 <div class="followup">
   <p>
-    <%- if @reservation.attended? -%>
-      Congratulations on completing the recent class "<%= @reservation.session.topic.name %>".
+    <%- if reservation.attended? -%>
+      Congratulations on completing the recent class "<%= reservation.session.topic.name %>".
     <%- else -%>
-      Our records show that you were registered for the recent class "<%= @reservation.session.topic.name %>".
+      Our records show that you were registered for the recent class "<%= reservation.session.topic.name %>".
     <%- end -%>
-    <%- if @reservation.need_survey? -%>
+    <%- if reservation.need_survey? -%>
       Now that the class has concluded, we'd love to get your feedback!
     <%- end -%>
   </p>
 
-  <%- if @reservation.need_survey? -%>
-    <%- if @reservation.session.topic.survey_type == Topic::SURVEY_INTERNAL -%>
+  <%- if reservation.need_survey? -%>
+    <%- if reservation.session.topic.survey_type == Topic::SURVEY_INTERNAL -%>
       <p>We've prepared a very quick, 5 question survey that won't take more than 3 minutes of your time --
-        we promise! Please <a href="<%= url_for :controller => "survey_responses", :action => "new", :only_path => false %>?reservation_id=<%= @reservation.id %>">click here</a> to take the survey, and accept our thanks.</p>
-    <%- elsif @reservation.session.topic.survey_type == Topic::SURVEY_EXTERNAL -%>  
+        we promise! Please <a href="<%= url_for :controller => "survey_responses", :action => "new", :only_path => false %>?reservation_id=<%= reservation.id %>">click here</a> to take the survey, and accept our thanks.</p>
+    <%- elsif reservation.session.topic.survey_type == Topic::SURVEY_EXTERNAL -%>  
       <p>The instructor for this course has set up a survey to collect feedback on this course. Please
-        <a href="<%=h @reservation.session.topic.survey_url%>">click here</a> 
+        <a href="<%=h reservation.session.topic.survey_url%>">click here</a> 
         to complete the survey if you haven't already done so. Thank you!</p>
     <%- end -%>
   <%- end -%>
 
-  <%- if @reservation.session.topic.certificate? -%>
+  <%- if reservation.session.topic.certificate? -%>
     <p>
-      <%- if @reservation.attended? -%>
-        <%- if @reservation.need_survey? -%>
+      <%- if reservation.attended? -%>
+        <%- if reservation.need_survey? -%>
           After completing the survey, be sure to 
         <%- else -%>
           You can now 
@@ -47,12 +47,12 @@
   <%- end -%>
 
   <p>
-    <%- if @reservation.need_survey? -%>
+    <%- if reservation.need_survey? -%>
       Thanks in advance for your feedback!
     <%- end -%>
     We really hope you enjoyed the class. To find more classes offered by 
-    <%= @reservation.session.topic.department.name %> or other departments,
-    check out the list of upcoming sessions <%= link_to "here", :controller => "topics", :only_path => false %>.
+    <%= reservation.session.topic.department.name %> or other departments,
+    check out the list of upcoming sessions <%= link_to "here", root_url %>.
   </p>
 
 </div>

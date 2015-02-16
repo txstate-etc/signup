@@ -1,0 +1,73 @@
+// Place all the styles related to the sessions controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+@import 'variables.scss';
+
+div#registration-period-field label {
+  margin-top: 0.25em;
+}
+
+div.location-block {
+  height: 80px;
+}
+
+div.session_location, div.session_site, div.session_location_url {
+  float: left;
+  padding-right: 1em;
+  input.string {
+    width: 15em;
+  }
+}
+
+ul.instructor-list {
+  padding-left: 0;
+  margin: 0;
+  list-style: none;
+ 
+  li {
+    margin-bottom: 0.5em;
+   .instructor-info {
+      display: block;
+      font-family: $sans-serif;
+      font-size: 0.85em;
+      line-height: 1.61803399;
+    }
+  }
+}
+
+.ui-dialog-titlebar {
+  display: none;
+}
+
+#cancel-session-dialog {
+  h3 { 
+    font-size: 1em; 
+    margin-bottom: 0;
+  }
+
+  .cancel-session-instructions {
+    margin-top: 0;
+  }
+
+  input.btn {
+    margin-top: 1em;
+  }
+
+  label[for=custom_message] {
+    @include sr-only;
+  }
+
+  textarea#custom_message {
+    width: 35em;
+    height: 8em;
+    font-size: 0.9em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+  }
+}
+
+#email-dialog {
+  label {
+    font-size: 1em;
+  }
+}

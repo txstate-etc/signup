@@ -1,5 +1,4 @@
 module TopicsHelper
-
   def session_info(session, opts={})
     print_date = !(opts[:print_date] == false) #default to true unless explicitly set to false    
     session_info = ""
@@ -22,12 +21,10 @@ module TopicsHelper
   
   def session_site(session)
     if session.site 
-      s = '<span class="site'
-      s << ' default' if session.site.default?
-      s << '">'
+      s = '<span class="site">'
       s << session.site.name 
       s << '</span>'
-      s
+      raw s
     end
   end
 
@@ -35,7 +32,7 @@ module TopicsHelper
     # strftime doesn't have the formats we want on OSX. We'll
     # have to do this the hard way
     time = session.time
-    "#{time.month}/#{time.day}/#{time.strftime('%Y&nbsp;%l:%M%p')}"
+    "#{time.month}/#{time.day}/#{time.strftime('%Y&nbsp;%l:%M%p')}".html_safe
   end
 
   def session_reservations_short(session)
@@ -51,14 +48,26 @@ module TopicsHelper
     
     expandible_list list, 12
   end
-  
-  def department_select(f)
-    # for existing topics, only admins can modify dept
-    # for new topics, limit selection to user's departments (for editors. Admins can select any dept).
-    disabled = !(current_user.admin? || f.object.new_record?)
-    departments = current_user.admin? ? Department.active : current_user.departments
-    include_blank = f.object.new_record? && departments.size > 1
-    f.collection_select :department_id, departments, :id, :name, { :include_blank => include_blank }, { :disabled => disabled }
+
+  def link_to_document(d, opts = {})
+    url = opts.delete(:url) || d.item.url
+    url_proc = opts.delete(:url_proc)
+    url = url_proc.call(url) unless url_proc.nil?
+
+    text = file_icon_image_tag(d.item.original_filename, :url_proc => url_proc)
+    text << ' ' << d.friendly_name
+    link_to(text, url, opts)
+  end
+
+  def file_icon_image_tag(filename, opts={})
+    file_icon = FileIcon.new(filename)
+
+    url = opts.delete(:url) || file_icon.icon_path
+    url_proc = opts.delete(:url_proc)
+    url = url_proc.call(image_path(url)) unless url_proc.nil? 
+
+    opts = { :alt => t(:'file_icon.type', :type => (file_icon.type || filename)) }.merge opts
+    image_tag(url, opts)
   end
 
   def grouped_by_date(topics)
@@ -111,5 +120,20 @@ module TopicsHelper
     end
 
     occurrences
+  end
+
+  def department_select(f)
+    # for existing topics, only admins can modify dept
+    # for new topics, limit selection to user's departments (for editors. Admins can select any dept).
+    disabled = !(current_user.admin? || f.object.new_record?)
+    departments = current_user.admin? ? Department.active.by_name : current_user.departments.by_name
+    include_blank = f.object.new_record? && departments.size > 1
+    f.association :department,
+      label: 'Department:', 
+      collection: departments, 
+      value_method: :id, 
+      label_method: :name, 
+      :include_blank => include_blank, 
+      :disabled => disabled
   end
 end

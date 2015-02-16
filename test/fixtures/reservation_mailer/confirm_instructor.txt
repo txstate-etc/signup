@@ -1,0 +1,37 @@
+Hi there Instructor1,
+
+A late reservation for Introduction to Gato has just been made.
+Because this session is happening today, we wanted to give you
+a heads up in case you need to print extra course materials or
+make any other preparations. The reservation details are below.
+As always, you can view the current list of confirmed
+reservations here
+(http://localhost:3000/sessions/419328395-introduction-to-gato/reservations).
+
+----------------
+Your Reservation
+----------------
+
+What:
+- Introduction to Gato
+When:
+- Saturday, June 2, 2035, 7:00AM - 8:00AM
+Where:
+- Alkek 155 (San Marcos) (http://gato.its.txstate.edu)
+Who:
+- Plain User1
+Description:
+- All about our Content Management System.
+
+Tags:
+- gato (http://localhost:3000/tags/gato), its
+(http://localhost:3000/tags/its)
+Download Class Materials:
+- txt file Gato Document 1
+(http://localhost:3000/system/documents/items/777/370/824/original/gato_document_1.txt)
+- txt file Gato Document 2
+(http://localhost:3000/system/documents/items/928/836/992/original/gato_document_2.txt)
+
+You can use the attached ICS file to add the session to
+your calendar software.
+

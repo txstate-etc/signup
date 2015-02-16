@@ -1,4 +1,4 @@
-cache(["#{date_slug}/topics/show/upcoming/atom", @topic], :tag => @topic.cache_key) do
+cache(["#{date_slug}/topics/show/upcoming/atom", @topic], :tag => @topic.cache_key, expires_in: 1.day) do
   atom_feed(:root_url => topic_url(@topic)) do |feed|
     feed.title(t(:'.atom_title_prefix') + @page_title)
     sessions = @topic.upcoming_sessions

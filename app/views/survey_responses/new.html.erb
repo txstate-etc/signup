@@ -1,93 +1,40 @@
-<%= error_messages_for 'survey_response' %>
+<%= simple_form_for(@survey_response, data: {prevent_double_submit: ''}) do |f| %>
+  <%= model_error_messages(@survey_response) %>
 
-<div class="content-section">
-<% form_for( @survey_response ) do |f| %>
-	<h2>Course Evaluation Survey</h2>
-	<%= f.hidden_field :reservation_id %>
-	<div class="survey-question">
-		<label class="field-label">Please rate your instructor. If multiple instructors, provide an overall rating.</label>
-		<span class="radio-span">
-			<%= f.radio_button :instructor_rating, 4 %>
-			<%= f.label :instructor_rating_4, '4 - Excellent' %>
-		</span>
-		
-		<span class="radio-span">
-			<%= f.radio_button :instructor_rating, 3 %>
-			<%= f.label :instructor_rating_3, '3 - Good' %>
-		</span>
-		
-		<span class="radio-span">
-			<%= f.radio_button :instructor_rating, 2 %>
-			<%= f.label :instructor_rating_2, '2 - Fair' %>
-		</span>
-	
-		<span class="radio-span">
-			<%= f.radio_button :instructor_rating, 1 %>
-			<%= f.label :instructor_rating_1, '1 - Poor' %>
-		</span>
+  <div class="content-section">
+    <h2>Course Evaluation Survey</h2>
 
-	</div>
-	
-	<div class="survey-question">
-		<label class="field-label">Rate the applicability of workshop content to your needs.</label>
-		<span class="radio-span">
-			<%= f.radio_button :applicability, 4 %>
-			<%= f.label :applicability_4, '4 - Excellent' %>
-		</span>
-		
-		<span class="radio-span">
-			<%= f.radio_button :applicability, 3 %>
-			<%= f.label :applicability_3, '3 - Good' %>
-		</span>
-		
-		<span class="radio-span">
-			<%= f.radio_button :applicability, 2 %>
-			<%= f.label :applicability_2, '2 - Fair' %>
-		</span>
-	
-		<span class="radio-span">
-			<%= f.radio_button :applicability, 1 %>
-			<%= f.label :applicability_1, '1 - Poor' %>
-		</span>
+    <div class="form-inputs">
+      <%= f.hidden_field :reservation_id %>
+      
+      <div class="survey-question">
+        <%= f.input :instructor_rating, 
+          rating_radios('Please rate your instructor. If multiple instructors, provide an overall rating.') %>
+      </div>
+      
+      <div class="survey-question">
+        <%= f.input :applicability, 
+          rating_radios('Rate the applicability of workshop content to your needs.') %>
+      </div>
+      
+      <div class="survey-question">
+        <%= f.input :class_rating, 
+          rating_radios('What is your overall impression of this workshop?') %>
+      </div>
+      
+      <div class="survey-question">
+        <%= f.input :most_useful, label: 'What did you find most useful about this workshop?' %>
+      </div>
+      
+      <div class="survey-question">
+        <%= f.input :comments, label: 'Add your comments regarding the instructor(s), the pace of the workshop, the time allowed, and any other feedback.' %>
+      </div>
+    
+    </div>
 
-	</div>
-	
-	<div class="survey-question">
-		<label class="field-label">What is your overall impression of this workshop?</label>
-		<span class="radio-span">
-			<%= f.radio_button :class_rating, 4 %>
-			<%= f.label :class_rating_4, '4 - Excellent' %>
-		</span>
-		
-		<span class="radio-span">
-			<%= f.radio_button :class_rating, 3 %>
-			<%= f.label :class_rating_3, '3 - Good' %>
-		</span>
-		
-		<span class="radio-span">
-			<%= f.radio_button :class_rating, 2 %>
-			<%= f.label :class_rating_2, '2 - Fair' %>
-		</span>
-	
-		<span class="radio-span">
-			<%= f.radio_button :class_rating, 1 %>
-			<%= f.label :class_rating_1, '1 - Poor' %>
-		</span>
-
-	</div>
-	
-	<div class="survey-question">
-		<%= f.label :most_useful, "What did you find most useful about this workshop?", :class => 'field-label' %>
-		<%= f.text_area :most_useful, :cols => 60, :rows => 4 %>
-	</div>
-
-	<div class="survey-question">
-		<%= f.label :comments, "Add your comments regarding the instructor(s), the pace of the workshop, the time allowed, and any other feedback.", :class => 'field-label' %>
-		<%= f.text_area :comments, :cols => 60, :rows => 10 %>
-	</div>
-	
-	<br/><br/>
-	
-	<%= submit_tag "Submit Survey Response" %>
+    <div class="form-actions">
+      <%= f.button :submit, 'Submit survey response' %>
+      <%= link_to 'Cancel', reservations_path %>
+    </div>
+  </div>
 <% end %>
-</div>

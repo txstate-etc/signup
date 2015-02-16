@@ -1,22 +1,29 @@
 <ul class="instructor-details">
   <li>
-    <span class="instructor-info"><%= link_to_user_directory(@user, :text => @user.title_and_department)%></span>
+    <span class="instructor-info">
+      <%= link_to_user_directory(@user, text: @user.title_and_department)%>
+    </span>
   </li>
   <li>
     <span class="instructor-info">
-      <%= link_to @user.email, "mailto:#{@user.email}", :title => 'Send email', :class => "email-link" %>
+      <%= link_to @user.email, "mailto:#{@user.email}", 
+        title: 'Send email', 
+        class: 'email-link' 
+      %>
     </span>
   </li>
 </ul>
 
-<% if @user.active_sessions.present? %>
+<% if @user.sessions.present? %>
 <div id="session-details" class="instructor-session-list session-list content-section">
   <h2>Instructor Sessions</h2>
   <% @topics.keys.sort.each do |topic| %>
     <div class="instructor-session-list">
-      <h3><%= link_to topic.name, topic, :class => 'topic' %></h3>
+      <h3><%= link_to topic.name, topic, class: 'topic' %></h3>
       <%= expandible_list(@topics[topic].map do |session| 
-            link_to formatted_time_range(session.time, session.topic.minutes), session, :class => 'date' 
+            link_to formatted_time_range(session.time, session.topic.minutes), 
+            session, 
+            class: 'date' 
           end)
       %>
     </div>

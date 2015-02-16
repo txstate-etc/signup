@@ -1,14 +1,17 @@
-# Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
-  
+
+  def page_title(opts={})
+    @page_title ||
+      t(:title, opts.merge( scope: [controller_name, action_name], raise: true ))
+  rescue
+    t(:title, opts.merge( scope: [controller_name] ))
+  end
+
+  # Like ActionView::Helpers::TextHelper::pluralize, but without the number
   def pluralize_word(count, singular, plural = nil)
     ((count == 1 || count == '1') ? singular : (plural || singular.pluralize))
   end
-  
-  def pluralize_word_with_count(count, singular, plural = nil)
-    "#{count} #{pluralize_word(count, singular, plural)}"
-  end
-  
+
   def friendly_time(time)
     if (time.hour == 12 && time.min == 0) 
       "Noon"
@@ -31,38 +34,16 @@ module ApplicationHelper
     start = date.beginning_of_month
     last =  date.end_of_month
 
-    # FIXME: Rails thinks that the beginning_of_week is Monday and end_of_week is Sunday.
-    #        At least this is configurable in Rails >= 3.2
-    # start = start.beginning_of_week(:sunday)
-    # last = last.end_of_week(:sunday)
-    
-    # Make the first date we return be a Sunday so we return full weeks.
-    start = start.beginning_of_week - 1 unless start.wday == 0
-    
-    # For the same reason, make the last date we return be a Saturday. This one's trickier:
-    # ex. last = Sunday; last+1 = Monday; (last+1).end_of_week - 1 = Saturday
-    # if we don't add 1, then last would already be end_of_week, so end_of_week-1 would be the previous day.
-    last = (last+1).end_of_week - 1 unless last.wday == 6
-    
+    start = start.beginning_of_week(:sunday)
+    last = last.end_of_week(:sunday)
+        
     (start..last).to_a
   end
-  
+
   def date_class(date, cur)
     (date.today? ? 'today ' : '') << ((date.month == cur.month && date.year == cur.year) ? 'cur-month' : '')
   end
-  
-  def link_to_remove_fields(name, f, options={})
-    f.hidden_field(:_destroy) + link_to_function(name, "remove_fields(this)", options)
-  end
-  
-  def link_to_add_fields(name, f, association)
-    new_object = f.object.class.reflect_on_association(association).klass.new
-    fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
-      render(association.to_s.singularize + "_fields", :f => builder)
-    end
-    link_to_function(name, h("add_fields(this, \"#{association}\", \"#{escape_javascript(fields)}\", \"set_initial_#{association.to_s.singularize}_value\")"))
-  end
-  
+
   def survey_link(reservation, opts = {})
     return '' if reservation.cancelled? ||
       reservation.session.not_finished? || 
@@ -72,9 +53,9 @@ module ApplicationHelper
       current_user.nil? ||
       current_user != reservation.user
     
-    if reservation.session.topic.survey_type == 1
+    if reservation.session.topic.survey_type == Topic::SURVEY_INTERNAL
       url = new_survey_response_url + "?reservation_id=#{reservation.id}"
-    elsif reservation.session.topic.survey_type == 2
+    elsif reservation.session.topic.survey_type == Topic::SURVEY_EXTERNAL
       url = reservation.session.topic.survey_url
     end
 
@@ -83,8 +64,7 @@ module ApplicationHelper
       link_to('Take the survey!', url, :class => 'survey-link'),
       :class => 'survey-link'
     )
-
-  end
+end
   
   def certificate_link(reservation, opts = {})
     return '' if reservation.cancelled? ||
@@ -96,41 +76,56 @@ module ApplicationHelper
  
     content_tag(
       opts[:tag] || :div,
-      link_to('Download Certificate', certificate_url(reservation, :format => :pdf), :class => 'certificate-link'),
+      link_to('Download Certificate', certificate_reservation_url(reservation, :format => :pdf), :class => 'certificate-link'),
       :class => 'certificate-link'
     )
- end
+  end
 
   def expandible_list(items, visible=5)
-    ret = '<ul>'
+    ret = '<div class="expandible-container"><ul>'
     items[0..(visible-1)].each do |item| 
       ret << "<li>#{item}</li>"
     end 
     ret << '</ul>'
     
     if items.size > visible
-      ret << '<ul style="display:none;">'
+      ret << '<ul class="expandible" style="display:none;">'
       items.drop(visible).each do |item|
         ret << "<li>#{item}</li>"
       end
       ret << '</ul>'
       
-      ret << list_expand_collapse_links
-    end 
+      ret << '<a class="list-expand collapsed" style="display:block;" href="#">show more ▼</a>'
+    end
 
-    ret
-  end
-  
-  def list_expand_collapse_links()
-    ret = '<div class="list-expand" style="display:block;">'
-    ret << link_to_function("show more ▼", 'expand_list(this)')
     ret << '</div>'
-    ret << '<div class="list-collapse" style="display:none;">'
-    ret << link_to_function("show fewer ▲", 'collapse_list(this)')
-    ret << '</div>'
+    
+    raw ret
   end
 
   def default_cancellation_message(session)
     "Sad news: the session on \"#{session.topic.name}\" for which you had signed up has been cancelled."
   end
+
+  def model_error_messages(record, name=nil)
+    return unless record.errors.any?
+    name ||= record.class.model_name.human.downcase
+    
+    errors = record.errors.keys.map do |attr|
+      "#{record.class.human_attribute_name(attr).capitalize} #{record.errors[attr].first}."
+    end
+
+    ret = '<div id="error_explanation">'
+    ret << "<h2>#{pluralize(errors.count, "error")} prohibited this #{name} from being saved</h2>"
+    ret << '<p>There were problems with the following fields:</p>'
+    ret << '<ul>'
+    errors.each do |msg| 
+      ret << "<li>#{msg}</li>"
+    end
+    ret << '</ul>'
+    ret << '</div>'
+    raw ret
+
+  end
+
 end

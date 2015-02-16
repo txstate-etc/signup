@@ -1,4 +1,4 @@
-cache(["#{date_slug}/departments/show/upcoming/atom", @department], :tag => 'session-info') do
+cache(["#{date_slug}/departments/show/upcoming/atom", @department], :tag => 'session-info', expires_in: 1.day) do
   atom_feed(:root_url => department_url(@department)) do |feed|
     feed.title(t(:'.atom_title_prefix') + @page_title)
     @topics = @department.upcoming

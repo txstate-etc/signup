@@ -1,0 +1,36 @@
+<%= simple_form_for(@topic, data: {prevent_double_submit: ''}) do |f| %>
+  <%= model_error_messages @topic %>
+
+  <div class="form-inputs">
+    <%= f.input :name, label: 'Topic Name:' %>
+    <%= f.input :description, label: 'Description of Topic:' %>
+    <%= f.input :tag_list, label: 'Tags:' %>
+    <%= department_select(f) %>
+    <%= f.input :minutes, label: 'Class time in Minutes:' %>
+    <%= f.input :url, label: 'URL with More Information on Class:' %>
+    <%= f.input :survey_type, label: 'Post-Class Survey:',
+      as: :radio_buttons, 
+      collection: [
+        ['None', Topic::SURVEY_NONE], 
+        ['Automatic', Topic::SURVEY_INTERNAL], 
+        ['External', Topic::SURVEY_EXTERNAL]
+      ] %>
+    <%= f.input :survey_url, label: 'External Survey URL:' %>
+    <%= f.input :certificate, label: 'Certificate of Completion:',
+      as: :radio_buttons %>
+    <div class="documents">
+      <%= f.label 'Workshop Materials:' %>
+      <%= f.simple_fields_for :documents do |document| %>
+        <%= render 'document_fields', :f => document %>
+      <% end %>
+      <div class='add-fields'>
+        <%= link_to_add_association 'upload new material', f, :documents %>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+    <%= link_to 'Cancel', (@topic.new_record? ? topics_path : @topic) %>
+  </div>
+<% end %>

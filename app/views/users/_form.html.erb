@@ -1,0 +1,21 @@
+<% opts = (modal ||= false) ? { remote: true, format: :json } : {} %>
+
+<%= simple_form_for(user, opts) do |f| %>
+  <div id="error-wrap">
+    <%= model_error_messages(user) %>
+  </div>
+
+  <div class="form-inputs">
+    <%= f.input :name_prefix, label: 'Title (e.g., Dr):' %>
+    <%= f.input :first_name, label: 'First Name:' %>
+    <%= f.input :last_name, label: 'Last Name:' %>
+    <%= f.input :email, label: 'Email Address:' %>
+    <%= f.input :department, label: 'Organization:' %>
+    <%= f.input :title, label: 'Job title:' %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit, data: { disable_with: "Submitting..."} %>
+    <%= link_to 'Cancel', users_path, id: 'cancel-link' %>
+  </div>
+<% end %>

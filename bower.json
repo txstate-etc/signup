@@ -1,0 +1,24 @@
+{
+  "name": "Signup",
+  "version": "1.0.0",
+  "authors": [
+    "Charles Jones <cbj3@chuckbjones.com>"
+  ],
+  "description": "Training Reservation System from Texas State University",
+  "license": "Apache",
+  "homepage": "http://www.its.txstate.edu/departments/etc/signup.html",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "vendor/assets/components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "normalize-css": "~3.0.1",
+    "jquery-ui": "~1.10.4",
+    "jqueryui-timepicker-addon": "~1.5.0"
+  }
+}

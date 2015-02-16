@@ -13,20 +13,20 @@
         <li>
           <% if @upcoming -%>
             Showing only topics with upcoming sessions. 
-            <%= link_to "Show all topics.", '/topics/filter/topics/all' %>
+            <%= link_to "Show all topics.", manage_topics_path(topics: :all) %>
           <% else -%>
             Showing all topics.
-            <%= link_to "Show only topics with upcoming sessions.", '/topics/filter/topics/upcoming' %>
+            <%= link_to "Show only topics with upcoming sessions.", manage_topics_path(topics: :upcoming) %>
           <% end -%>
         </li>
         <% if current_user.admin? && current_user.editor? %>
           <li>
             <% if @all_depts -%>
               Showing topics in all departments.
-              <%= link_to "Show only topics in your #{pluralize_word(current_user.departments.size, 'department')}.", '/topics/filter/departments/user' %>
+              <%= link_to "Show only topics in your #{pluralize_word(current_user.departments.size, 'department')}.", manage_topics_path(departments: :user) %>
             <% else -%>
               Showing only topics in your <%= pluralize_word(current_user.departments.size, 'department') %>. 
-              <%= link_to "Show all departments.", '/topics/filter/departments/all' %>
+              <%= link_to "Show all departments.", manage_topics_path(departments: :all) %>
             <% end -%>
           </li>
         <% end %>
@@ -34,7 +34,7 @@
     </div>
   <% end %>
   
-  <% if @topics.blank? %>
+  <% if @departments.blank? %>
     <div class="content-section">
       <h2>No topics found</h2>
       <div class="empty-list">
@@ -43,9 +43,9 @@
     </div>
   <% else %>
   
-    <% @topics.keys.sort_by(&:name).each do |department| %>
+    <% @departments.each do |department| %>
       <% authorized = authorized?(department) || current_user.editor?(department) %>
-      <% cache(["#{date_slug}/topics/manage/#{@upcoming ? 'upcoming' : 'all'}", department, "#{authorized ? '' : 'not-'}authorized"], :tag => department.cache_key) do %>
+      <% cache(["#{date_slug}/topics/manage/#{@upcoming ? 'upcoming' : 'all'}", department, "#{authorized ? '' : 'not-'}authorized"], :tag => department.cache_key, expires_in: 1.day) do %>
         <div class="content-section">
           <h2><%= department.name %>
               <%= link_to("Subscribe to the XML feed for this department",
@@ -58,7 +58,7 @@
               </p>
             <% end %>
           </div>
-          <% topics = @topics[department] %>
+          <% topics = @topics[department.id] %>
           <% if topics.blank? %>
             <div class="empty-list">
               <p>There are no topics <%= @upcoming ? ' with upcoming sessions ' : '' %> in this department.</p>
@@ -74,10 +74,10 @@
               </thead>
               <tbody>
                 <% topics.each do |topic| %>
-                  <% cache(["#{date_slug}/topics/manage/#{@upcoming ? 'upcoming' : 'all'}", topic], :tag => topic.cache_key) do %>
+                  <% cache(["#{date_slug}/topics/manage/#{@upcoming ? 'upcoming' : 'all'}", topic], :tag => topic.cache_key, expires_in: 1.day) do %>
                     <tr class="<%= cycle("even", "odd") %>">
                     <td class="topic-name">
-                      <%= link_to topic.name, manage_topic_path(topic) %>
+                      <%= link_to topic.name, history_topic_path(topic) %>
                     </td>
                     <td class="topic-date">
                       <% if topic.upcoming_sessions.present? %>       

@@ -1,0 +1,100 @@
+<html>
+<head>
+  <title>Reservation Confirmation</title>
+  <style type="text/css">
+
+  div.custom-message p, div.followup p {
+    margin-top: 1em;
+    margin-bottom: 1em;
+  }
+
+  div.reservationCard {
+    background-color: #eeeeaa;
+    color: #000000;
+    padding: 1em;
+    margin-bottom: 1em;
+  }
+  
+  div.reservationCard h2 {
+    font-family: Palatino, serif;
+    font-style: italic;
+    text-align: center;
+    margin-top: 0px;
+    font-size: 200%;
+    font-weight: bold;
+  }
+
+  div.reservationCard dd {
+    padding-bottom: 0.5em;
+  }
+
+  div.reservationContainer {
+    margin-top: 1em;
+    margin-left: 0.1em;
+    margin-right: 0.1em;
+  }
+
+  div.reservationContainer input {
+    width: 100%;
+    height: 3em;
+    color: white;
+    font-weight: bold;
+    margin-bottom: 1em;
+    font-size: 1em;
+    font-weight: bold;
+    border: 3px outset black;
+    cursor: pointer;
+  }
+
+  dd.topic-description p {
+    margin-bottom: 1em;
+  }
+
+</style>
+
+</head>
+<body>
+
+<p>Hi there Instructor1,</p>
+
+<p>A late reservation for Introduction to Gato has just been made. Because this session
+  is happening today, we wanted to give you a heads up in case you need to print extra course materials
+  or make any other preparations. The reservation details are below. As always, you can view the current list of
+  confirmed reservations <a href="http://localhost:3000/sessions/419328395-introduction-to-gato/reservations">here</a>.</p>
+
+<div class="reservationContainer">
+  <div class="reservationCard">
+    <h2>Your Reservation</h2>
+    <dl>
+      <dt>What:</dt>
+      <dd>Introduction to Gato</dd>
+      <dt>When:</dt>
+        <dd>Saturday, June  2, 2035,  7:00AM -  8:00AM</dd>
+        <dt>Where:</dt>
+          <dd><a href="http://gato.its.txstate.edu">Alkek 155 (San Marcos)</a></dd>
+      <dt>Who:</dt>
+      <dd>Plain User1</dd>
+        <dt>Description:</dt>
+        <dd class="topic-description"><p>All about our Content Management System.</p></dd>
+        
+          <dt>Tags:</dt>
+          <dd>
+            <a href="http://localhost:3000/tags/gato">gato</a>, <a href="http://localhost:3000/tags/its">its</a>
+          </dd>
+        
+        <dt>Download Class Materials:</dt>
+          <dd>
+            <a href="http://localhost:3000/system/documents/items/777/370/824/original/gato_document_1.txt"><img alt="txt file" src="http://localhost:3000/assets/fileicons/txt.png" /> Gato Document 1</a>
+          </dd>
+          <dd>
+            <a href="http://localhost:3000/system/documents/items/928/836/992/original/gato_document_2.txt"><img alt="txt file" src="http://localhost:3000/assets/fileicons/txt.png" /> Gato Document 2</a>
+          </dd>
+    </dl>
+  </div>
+</div>
+
+<p>You can use the attached ICS file to add the session to your calendar software.</p>
+
+</body>
+</html>
+

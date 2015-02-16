@@ -1,13 +1,4 @@
 <div id="session-details" class="content-section">
-	<h2>Create New Session</h2>
-	<% form_for( [ @session.topic, @session ] ) do |f| %>
-		<%= render :partial => "form_fields", :locals => { :f => f }%>
-	
-		<br/>
-	
-		<%= submit_tag "Create Session"%>
-		<%= link_to "Cancel", @session.topic %>
-	<% end %>
+  <h2>Create New Session</h2>
+  <%= render partial: 'form', locals: { form_object: [@session.topic, @session] } %>
 </div>
-
-<%= render :partial => "users/new_instructor_dialog", :locals => { :item => @session }%>

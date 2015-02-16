@@ -1,6 +1,6 @@
 class SurveyResponsesController < ApplicationController
   before_filter :authenticate
-  
+
   def new
     reservation = Reservation.find( params[ :reservation_id ] )
     @survey_response = SurveyResponse.new
@@ -13,7 +13,7 @@ class SurveyResponsesController < ApplicationController
   end
 
   def create
-    @survey_response = SurveyResponse.new( params[ :survey_response ] )
+    @survey_response = SurveyResponse.new( survey_response_params )
     if authorized? @survey_response
       if @survey_response.save
         flash[ :notice ] = "Your survey results have been recorded. Thank you for your input!"
@@ -27,10 +27,6 @@ class SurveyResponsesController < ApplicationController
     end
   end
   
-  def index
-  end
-
-
   protected
   def authorized?(item=nil)
     # All users can create survey responses only for sessions they attended
@@ -45,4 +41,9 @@ class SurveyResponsesController < ApplicationController
     super
   end
 
+  private
+    # Never trust parameters from the scary internet, only allow the white list through.
+    def survey_response_params
+      params.require(:survey_response).permit(:reservation_id, :class_rating, :instructor_rating, :applicability, :most_useful, :comments)
+    end
 end

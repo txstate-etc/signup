@@ -1,57 +1,151 @@
-require 'ri_cal'
-require 'prawn/core'
-require 'prawn/layout'
-
 class Session < ActiveRecord::Base
-  has_many :reservations, :conditions => { :cancelled => false }, :dependent => :destroy
-  has_many :occurrences, :dependent => :destroy
-  accepts_nested_attributes_for :occurrences, :reject_if => lambda { |a| a[:time].blank? }, :allow_destroy => true
+  include SessionInfoObserver
   belongs_to :topic
   belongs_to :site
+  has_many :reservations, -> { order(:created_at).where(cancelled: false).includes(:user) }, :dependent => :destroy
+  accepts_nested_attributes_for :reservations
+  has_many :occurrences, :dependent => :destroy, after_add: :mark_dirty, after_remove: :mark_dirty
+  accepts_nested_attributes_for :occurrences, :reject_if => :all_blank, :allow_destroy => true
   has_and_belongs_to_many :instructors, :class_name => "User", :uniq => true
   accepts_nested_attributes_for :instructors, :reject_if => lambda { |a| true }, :allow_destroy => false
-  validate :at_least_one_occurrence, :at_least_one_instructor, :valid_instructor
-  validates_presence_of :topic_id, :location, :site
-  validates_numericality_of :seats, :only_integer => true, :allow_nil => true
-  validate :enough_seats
-  validate :valid_registration_period
-  after_validation :reload_if_invalid
-  accepts_nested_attributes_for :reservations  
+  has_many :survey_responses, -> { order 'created_at DESC'}, through: :reservations
   has_paper_trail
 
+  include SurveyAggregates
+  scope :active, -> { where cancelled: false }
+
+  validates :topic, :occurrences, presence: true
+  validate :valid_registration_period
+  validates :instructors, presence: true, unless: :invalid_instructor
+  validates :seats, numericality: { only_integer: true, allow_nil: true }
+  validate :enough_seats
+  validates :location, :site, presence: true
+  after_validation :reload_if_invalid
+
+  around_update :send_update_notifications
+
+  def invalid_instructor
+    if @invalid_instructor
+      errors[:instructor_id] << 'must be a valid user'
+      true
+    end  
+  end
+
+  def enough_seats
+    old_seats = seats_was || 0
+    if seats && seats < old_seats && seats < reservations.count
+      errors[:seats] << 'can\'t be fewer than the number of current reservations'
+    end
+  end
+
+  def valid_registration_period
+    return unless registration_period_defined? && self.time
+
+    reg_start_time = (self.reg_start.blank? ? self.created_at : self.reg_start) || Time.now
+    reg_end_time = self.reg_end.blank? ? self.time : self.reg_end
+    
+    if reg_start_time > reg_end_time
+      errors[:reg_start] << 'must be earlier than end time.'
+    end
+    
+    if reg_end_time > self.time
+      errors[:reg_end] << 'must be earlier than the session time.'
+    end
+  end
+
+  def reload_if_invalid
+    #bring back any instructors that were deleted
+    self.reload unless (self.new_record? || self.errors.empty?)
+  end
+
   CSV_HEADER = [ "Topic", "Session ID", "Session Date", "Session Time", "Session Cancelled", "Attendee Name", "Attendee Login", "Attendee Email", "Attendee Title", "Attendee Department", "Reservation Confirmed?", "Attended?" ]  
+
+  def self.upcoming
+    Session.active.joins(:occurrences).merge(Occurrence.upcoming.order(:time))
+  end
+
+  def initialize(attributes = nil)    
+    # use our local method to add/remove instructors
+    attributes.merge!(build_instructors_attributes(false, attributes.delete(:instructors_attributes))) unless attributes.nil?
+    super(attributes)
+  end
+  
+  def update(attributes)
+    # use our local method to add/remove instructors
+    attributes.merge!(build_instructors_attributes(true, attributes.delete(:instructors_attributes))) unless attributes.nil?
+    super(attributes)
+  end
+  
+  def mark_dirty(not_used)
+    @need_update = true
+  end
+
+  # around_update callback. The actual update is done in the `yield`
+  def send_update_notifications
+    logger.info("in send_update_notifications, @need_update = #{@need_update}")
+    
+    send_update = !in_past? && (
+      @need_update || 
+      location_changed? || 
+      location_url_changed? || 
+      site_id_changed? || 
+      occurrences.any? { |o| o.changed? }
+    )
+    
+    yield
+
+    if send_update
+      instructors.each do |instructor|
+        ReservationMailer.delay.update_notice_instructor( self, instructor )
+      end
+      confirmed_reservations.each do |reservation|
+        ReservationMailer.delay.update_notice( self, reservation.user )
+      end
+    end
+
+    @need_update = false
+
+  end
+
+  def cancel!(custom_message = '')
+    self.cancelled = true
+    self.save
+    if !in_past?
+      instructors.each do |instructor|
+        ReservationMailer.delay.cancellation_notice_instructor( self, instructor, custom_message )
+      end
+      confirmed_reservations.each do |reservation|
+        ReservationMailer.delay.cancellation_notice( self, reservation.user, custom_message )
+      end
+    end
+  end
+
+  def to_param
+    "#{id}-#{topic.name.parameterize}"
+  end
 
   def loc_with_site
     site.present? ? "#{location} (#{site.name})" : location
   end
-  
-  def <=>(other)
-    [self.time, self.topic.minutes] <=> [other.time, other.topic.minutes]
+
+  def loc_with_site_and_url
+    s = site.present? ? "#{location} (#{site.name})" : location
+    location_url.present? ? "#{s}. #{location_url}" : s
   end
-  
+
   def time
-    if occurrences.present?
-      occurrences[0].time
-    else
-      nil
-    end
+    occurrences.first.time if occurrences.present?
   end
 
   def next_time
     if occurrences.present?
-      o = occurrences.detect {|o| o.time > Time.now}
+      o = occurrences.detect { |o| o.time > Time.now }
       return (o.nil?? time : o.time)
-    else
-      nil
     end
   end
 
   def last_time
-    if occurrences.present?
-      occurrences.last.time
-    else
-      nil
-    end
+    occurrences.last.time if occurrences.present?
   end
 
   def in_past?
@@ -72,182 +166,30 @@ class Session < ActiveRecord::Base
     !in_past?
   end
 
-  def self.upcoming 
-    @upcoming ||= Session.find( :all, :conditions => ['occurrences.time >= ? AND cancelled = 0', DateTime.now ], :order => "occurrences.time", :include => :occurrences )
-  end
-
-  ##
-  # Used by many-to-many associations to properly load the correct 
-  # sessions in the correct order
-  # NB: for our purposes, "past" sessions are ones that have already started
-  # If they have multiple occurrences, we only care that the first one has started
-  # in order to consider it "in the past"
-  # This is relatively arbitrary, so it may change, but this is how it has always been done
-  def self.lazy_load_sessions(model)
-    now = Time.now
-    active_sessions = model.sessions.find( :all, :conditions => {:cancelled => false}, :order => "occurrences.time", :include => [:occurrences]) 
-    past_sessions, upcoming_sessions = active_sessions.partition { |s| s.started? }
-    past_sessions.reverse!
-
-    [active_sessions, upcoming_sessions, past_sessions]
-  end
-
-  def multiple_occurrences?
-    occurrences.present? && occurrences.count > 1
-  end
-
-  def enough_seats
-    old_seats = seats_was || 0
-    if seats && seats < old_seats && seats < reservations.count
-      self.errors.add(:seats, 'can\'t be fewer than the number of current reservations')
-    end
-  end
-
-  def at_least_one_occurrence
-    if self.occurrences.blank? || self.occurrences.all?{|o|o.marked_for_destruction?}
-      self.errors.add(:occurrences, 'can\'t be blank')
-    end
-  end
-  
-
-  def instructor?( user )
-    instructors.include? user
-  end
-  
-  def valid_instructor
-    if @invalid_instructor
-      self.errors.add(:instructor_id, 'must be a valid user')
-    end  
-  end
-  
-  def at_least_one_instructor
-    if self.instructors.blank? && !@invalid_instructor
-      self.errors.add(:instructor_id, 'can\'t be blank')
-    end
-  end
-  
-  def reload_if_invalid
-    #bring back any instructors that were deleted
-    self.reload unless (self.new_record? || self.errors.empty?)
-  end
-  
-  def to_param
-    "#{id}-#{topic.name.parameterize}"
-  end
-  
-  def initialize(attributes = nil)    
-    # use our local method to add/remove instructors
-    attributes.merge!(build_instructors_attributes(false, attributes.delete(:instructors_attributes))) unless attributes.nil?
-    super(attributes)
-  end
-  
-  def update_attributes(attributes)
-    # use our local method to add/remove instructors
-    attributes.merge!(build_instructors_attributes(true, attributes.delete(:instructors_attributes))) unless attributes.nil?
-    super(attributes)
-  end
-  
-  def before_update
-    # Have to check if occurrences changed here because the dirty flag is reset by the time after_update is called.
-    @occurrences_dirty = occurrences.present? && ( occurrences.changed? || occurrences.any?{ |o| o.changed? } )
-    logger.info("in before_update, dirty = #{@occurrences_dirty}")
-    return true
-  end
-  
-  def after_update
-    send_update = !in_past? && (@occurrences_dirty || location_changed? || site_id_changed?)
-    if send_update
-      instructors.each do |instructor|
-        ReservationMailer.delay.deliver_update_notice_instructor( self, instructor )
-      end
-      confirmed_reservations.each do |reservation|
-        ReservationMailer.delay.deliver_update_notice( self, reservation.user )
-      end
-    end
-
-    res_count(true)
-  end
-  
-  def cancel!(custom_message = '')
-    self.cancelled = true
-    self.save
-    if !in_past?
-      instructors.each do |instructor|
-        ReservationMailer.delay.deliver_cancellation_notice_instructor( self, instructor, custom_message )
-      end
-      confirmed_reservations.each do |reservation|
-        ReservationMailer.delay.deliver_cancellation_notice( self, reservation.user, custom_message )
-      end
-    end
-  end
-
-  def email_all(message)
-    instructors.each do |instructor|
-      ReservationMailer.delay.deliver_session_message_instructor( self, instructor, message )
-    end
-    confirmed_reservations.each do |reservation|
-      ReservationMailer.delay.deliver_session_message( self, reservation.user, message )
-    end
-  end
-  
-  def valid_registration_period
-    return unless registration_period_defined?
-
-    reg_start_time = (self.reg_start.blank? ? self.created_at : self.reg_start) || Time.now
-    reg_end_time = self.reg_end.blank? ? self.time : self.reg_end
-    
-    if reg_start_time > reg_end_time
-      self.errors.add(:reg_start, 'must be earlier than end time.')
-    end
-    
-    if reg_end_time > self.time
-      self.errors.add(:reg_end, 'must be earlier than the session time.')
-    end
-  end
-  
-  def registration_period_defined?
-    reg_start.present? || reg_end.present?
-  end
-  
-  def in_registration_period?
-    reg_start_time = self.reg_start.blank? ? self.created_at : self.reg_start
-    reg_end_time = self.reg_end.blank? ? self.time : self.reg_end
-    return reg_start_time <= Time.now && reg_end_time >= Time.now
-  end
-
-  def res_count(force=false)
-    return 0 if new_record?
-    @@res_count ||= {}
-    if force || !@@res_count.key?(self.id)
-      @@res_count[self.id] = reservations.count
-    end
-    @@res_count[self.id]
-  end
-
   def confirmed_count
-    count = res_count
+    count = reservations_count
     seats && count > seats ? seats : count
   end
 
   def waiting_list_count
     return 0 unless seats
-    count = res_count
+    count = reservations_count
     count > seats ? count - seats : 0
   end
-
+  
   def seats_remaining
     seats - confirmed_count if seats
   end
   
   def space_is_available?
-    self.seats ? seats_remaining > 0 : true
+    seats ? seats_remaining > 0 : true
   end
-  
+
   # Returns the list of confirmed reservations (ie those not on the waiting list)
   # in order of when they signed up. Certain logic regarding the waiting list requires
   # this order, so no sorting here.
   def confirmed_reservations
-    self.seats ? reservations[ 0, self.seats ] : reservations
+    space_is_available? ? reservations : reservations[ 0, self.seats ]
   end
 
   # Returns the list of confirmed reservations (ie those not on the waiting list)
@@ -278,6 +220,24 @@ class Session < ActiveRecord::Base
     waiting_list.include?(reservation)
   end
   
+  def multiple_occurrences?
+    occurrences.length > 1
+  end
+
+  def registration_period_defined?
+    reg_start.present? || reg_end.present?
+  end
+
+  def in_registration_period?
+    reg_start_time = self.reg_start.blank? ? self.created_at : self.reg_start
+    reg_end_time = self.reg_end.blank? ? self.time : self.reg_end
+    return reg_start_time <= Time.now && reg_end_time >= Time.now
+  end
+
+  def instructor?(user)
+    instructors.include? user
+  end
+
   def to_cal
     calendar = RiCal.Calendar
     self.to_event.each { |event| calendar.add_subcomponent( event ) }
@@ -286,11 +246,10 @@ class Session < ActiveRecord::Base
   
   def to_event
     key = "to_event/#{cache_key}"
-    Rails.cache.fetch(key) do
-      Cashier.store_fragment(key, cache_key)
-      description = topic.description + "\n\nInstructor(s): " << instructors.collect{|i| i.name}.join(", ")
+    Rails.cache.fetch(key, tag: cache_key) do
+      description = "#{topic.description}\n\nInstructor(s): #{instructors.map(&:name).join(", ")}"
       if topic.tag_list.present?
-        description << "\n\nTags: " << topic.sorted_tag_list.join(", ")
+        description << "\n\nTags: #{topic.sorted_tags.join(", ")}"
       end
 
       occurrences.map do |o|
@@ -300,14 +259,14 @@ class Session < ActiveRecord::Base
         event.dtstart = o.time
         event.dtend = o.time + topic.minutes * 60
         event.url = topic.url
-        event.location = loc_with_site
+        event.location = loc_with_site_and_url
         event
       end
     end
   end
- 
+
   def to_csv
-    FasterCSV.generate do |csv|
+    CSV.generate do |csv|
       csv << CSV_HEADER
       csv_rows.each { |row| csv << row }
     end
@@ -315,8 +274,7 @@ class Session < ActiveRecord::Base
 
   def csv_rows
     key = "csv_rows/#{cache_key}"
-    Rails.cache.fetch(key) do
-      Cashier.store_fragment(key, cache_key)
+    Rails.cache.fetch(key, tag: cache_key) do
       reservations_by_last_name.map do |reservation|
         attended = ""
         if reservation.attended == Reservation::ATTENDANCE_MISSED
@@ -328,10 +286,24 @@ class Session < ActiveRecord::Base
       end
     end
   end
-  
+
+  def email_all(message)
+    instructors.each do |instructor|
+      ReservationMailer.delay.session_message_instructor( self, instructor, message )
+    end
+    confirmed_reservations.each do |reservation|
+      ReservationMailer.delay.session_message( self, reservation.user, message )
+    end
+  end
+
   def self.send_reminders( start_time, end_time, only_first_occurrence = false )
     logger.info "#{DateTime.now.strftime("%F %T")}: Sending session reminders for #{start_time.strftime("%F %T")}..."
-    session_list = Session.find( :all, :conditions => ['occurrences.time >= ? AND occurrences.time <= ? AND cancelled = 0', start_time, end_time ], :order => "occurrences.time", :include => :occurrences )
+    
+    session_list = 
+      Session.active.joins(:occurrences).merge(
+        Occurrence.in_range(start_time, end_time).order(:time)
+      )
+
     session_list.each do |session|
       session.reload #Force it to load in all occurrences
       # Skip sessions that have already had their first occurrence if specified
@@ -339,28 +311,36 @@ class Session < ActiveRecord::Base
 
       # send a reminder to each student
       session.confirmed_reservations.each do |reservation|
-        ReservationMailer.delay.deliver_remind( session, reservation.user )
+        ReservationMailer.delay.remind( session, reservation.user )
       end
       # now send one to each instructor
       session.instructors.each do |instructor|
-        ReservationMailer.delay.deliver_remind_instructor( session, instructor )
+        ReservationMailer.delay.remind_instructor( session, instructor )
       end
     end
   end
   
   def self.send_followups
     logger.info "#{DateTime.now.strftime("%F %T")}: Sending followups..."
-    session_list = Session.all( :joins => :topic, :conditions => ['occurrences.time < ? AND survey_sent = ? AND cancelled = ?', DateTime.now, false, false ], :readonly => false, :order => "occurrences.time", :include => :occurrences )
+    
+    session_list = 
+      Session.active
+        .where(survey_sent: false)
+        .joins(:occurrences)
+        .merge(Occurrence.in_past.order(:time))
+        .group(:id)
+        .readonly(false)
+
     session_list.each do |session|
       session.reload #Force it to load in all occurrences
       next if session.not_finished? #wait until the last occurrance
       session.instructors.each do |instructor|
-        ReservationMailer.delay.deliver_followup_instructor( session, instructor )
+        ReservationMailer.delay.followup_instructor( session, instructor )
       end
       if session.topic.certificate? || session.topic.survey_type != Topic::SURVEY_NONE
         session.confirmed_reservations.each do |reservation|
           if (reservation.attended? && session.topic.certificate?) || reservation.need_survey?
-            ReservationMailer.delay.deliver_followup( reservation ) 
+            ReservationMailer.delay.followup( reservation ) 
           end
         end
       end
@@ -368,27 +348,8 @@ class Session < ActiveRecord::Base
       session.save
     end
   end
-  
-  def survey_responses
-    Reservation.all( :joins => :survey_response, :include => :survey_response,
-     :conditions => [ 'session_id = ?', self ] ).collect{|reservation| reservation.survey_response}.sort{|a,b| b.created_at <=> a.created_at}
-  end
-  
-  def average_instructor_rating
-    survey_responses.inject(0.0) { |sum, rating| sum + rating.instructor_rating } / survey_responses.size
-  end
-  
-  def average_rating
-    survey_responses.inject(0.0) { |sum, rating| sum + rating.class_rating } / survey_responses.size
-  end
-
-  def average_applicability_rating
-    ratings = survey_responses.reject { |rating| rating.applicability.nil? }
-    ratings.inject(0.0) { |sum, rating| sum + rating.applicability } / ratings.size
-  end
-  
+    
   private
-  
   def build_instructors_attributes(update, attributes)
     return {} if attributes.blank?
     
@@ -409,7 +370,7 @@ class Session < ActiveRecord::Base
       if(update && attr.include?("id") && instructors.find(attr["id"]).name_and_login == attr["name_and_login"])
         ids << attr["id"]        
       elsif attr["name_and_login"].present?
-        user = find_instructor(attr["name_and_login"])
+        user = User.find_or_lookup_by_name_and_login(attr["name_and_login"])
         if user.nil? 
           @invalid_instructor = true
         else
@@ -420,9 +381,5 @@ class Session < ActiveRecord::Base
     
     return { "instructor_ids" => ids }
   end
-  
-  def find_instructor( name )
-    User.find_by_name_and_login( name )
-  end
-  
+
 end

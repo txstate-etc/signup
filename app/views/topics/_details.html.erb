@@ -1,0 +1,29 @@
+<div id="topic-details" class="content-section">
+  <h2>Topic Details</h2>
+  <dl>
+    <% if local_assigns[:show_name] %>
+    <dt>Topic:</dt>
+    <dd><%= link_to topic.name, topic %></dd>
+    <% end %>
+    <dt>Description:</dt>
+    <dd class="topic-description"><%= auto_link( simple_format( h( topic.description ) ) ) %></dd>
+    <% if !topic.tags.blank? %>
+      <dt>Tags:</dt>
+      <dd><%= topic.sorted_tags.map { |t| link_to t, tag_path(t) }.join(', ').html_safe %></dd>
+    <% end %>
+    <dt>Duration:</dt>
+    <dd><%=h topic.minutes %> minutes</dd>
+    <dt>Department:</dt>
+    <dd><%=link_to topic.department.name, topic.department %></dd>
+    <% if !topic.url.blank? %>
+      <dt>Additional Info:</dt>
+      <dd><%= link_to topic.url, topic.url %></dd>
+    <% end %>
+    <% if !topic.documents.blank? %>
+      <dt>Workshop Materials:</dt>
+      <% topic.documents.each do |document| %>
+        <dd><%= link_to_document(document) %></dd>
+      <% end %>
+    <% end %>
+  </dl>
+</div>

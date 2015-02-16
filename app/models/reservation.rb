@@ -1,37 +1,44 @@
 class Reservation < ActiveRecord::Base
+  include SessionInfoObserver
+  belongs_to :user
+  belongs_to :session
+  counter_culture :session, 
+      :column_name => Proc.new {|model| model.cancelled? ? nil : 'reservations_count' },
+      :column_names => {
+          ["reservations.cancelled = ?", 'false'] => 'reservations_count'
+      }
+  has_one :survey_response
+  has_paper_trail
+
+  scope :active, -> { where cancelled: false }
+
+  validates :user_id, presence: { message: 'not recognized.' }, 
+    uniqueness: { scope: :session_id, message: 'has already registered for this session.' }
+  validates :session_id, presence: true
+  validate :session_not_cancelled, on: :create
   
+  after_save :send_accommodation_notice
+
+  def session_not_cancelled
+    errors[:base] << 'You cannot register for this session, as it has been cancelled.' if session.cancelled
+  end
+
+  def send_accommodation_notice
+    return if session.in_past?
+
+    if (new_record? && special_accommodations.blank?) || special_accommodations_changed?
+      ReservationMailer.delay.accommodation_notice( self )
+    end
+  end
+
   ATTENDANCE_UNKNOWN = 0
   ATTENDANCE_MISSED = 1
   ATTENDANCE_ATTENDED = 2
-  
-  belongs_to :session
-  belongs_to :user
-  validates_presence_of :user_id, :message => "not recognized"
-  validates_presence_of :session_id
-  validates_uniqueness_of :user_id, :scope => [ :session_id ], :message => "has already registered for this session."
-  validate_on_create :session_not_cancelled
-  has_one :survey_response
-  named_scope :active, :conditions => { :cancelled => false }
-  has_paper_trail
-  
-  # The default order must be created_at. This is how we determine who gets promoted to
-  # the waiting list when someone cancels.
-  default_scope :order => "reservations.created_at"
-  
-  def session_not_cancelled
-    errors.add_to_base("You cannot register for this session, as it has been cancelled.") if session.cancelled
-  end
-  
-  def after_create
-    ReservationMailer.delay.deliver_accommodation_notice( self ) if !special_accommodations.blank? && !session.in_past?
-    session.res_count(true)
+
+  def to_param
+    "#{id}-#{session.topic.name.parameterize}"
   end
 
-  def after_update
-    ReservationMailer.delay.deliver_accommodation_notice( self ) if special_accommodations_changed? && !session.in_past?
-    session.res_count(true)
-  end
-  
   def confirmed?
     session.confirmed?(self)
   end
@@ -63,10 +70,10 @@ class Reservation < ActiveRecord::Base
       session.reload
       if was_confirmed && !session.space_is_available? && !session.in_past?
         new_confirmed_reservation = session.confirmed_reservations.last
-        ReservationMailer.delay.deliver_promotion_notice( new_confirmed_reservation )
+        ReservationMailer.delay.promotion_notice( new_confirmed_reservation )
         if session.next_time.today?
           session.instructors.each do |instructor|
-            ReservationMailer.delay.deliver_promotion_notice_instructor( new_confirmed_reservation, instructor )
+            ReservationMailer.delay.promotion_notice_instructor( new_confirmed_reservation, instructor )
           end
         end
       end
@@ -88,11 +95,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def send_reminder
-    ReservationMailer.delay.deliver_remind( session, user )
+    ReservationMailer.delay.remind( session, user )
   end
-  
-  def send_followup
-    ReservationMailer.delay.deliver_followup( self )
-  end
-  
+
 end

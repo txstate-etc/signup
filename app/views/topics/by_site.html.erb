@@ -1,6 +1,6 @@
-<% cache("#{date_slug}/topics/by_site", :tag => 'session-info')  do %>
-  <% @topics = Topic.upcoming %>
-  <% if @topics.count == 0 %>
+<% cache("#{date_slug}/topics/by_site", :tag => 'session-info', expires_in: 1.day)  do %>
+  <% @topics = Topic.upcoming.includes(:sessions) %>
+  <% if @topics.blank? %>
     <div class="empty-list">
       <p>Sorry, there are no upcoming sessions at this time. Please check again later!</p>
     </div>
@@ -10,7 +10,7 @@
         <h2><%= site.name %></h2>
         <ul class="topic-list">
           <% sessions.keys.sort_by {|a| a.name.downcase }.each do |topic| %>
-            <% cache(["#{date_slug}/topics/by_site", topic], :tag => topic.cache_key) do %>
+            <% cache(["#{date_slug}/topics/by_site", topic], :tag => topic.cache_key, expires_in: 1.day) do %>
               <li>
                 <%= link_to topic.name, topic %>
                 <div class="session-info">

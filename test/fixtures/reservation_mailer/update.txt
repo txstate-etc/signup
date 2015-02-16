@@ -13,7 +13,7 @@ What:
 When:
 - Saturday, June 2, 2035, 7:00AM - 8:00AM
 Where:
-- Alkek 155 (San Marcos)
+- Alkek 155 (San Marcos) (http://gato.its.txstate.edu)
 Who:
 - Plain User1
 Description:
@@ -24,9 +24,9 @@ Tags:
 (http://localhost:3000/tags/its)
 Download Class Materials:
 - txt file Gato Document 1
-(http://localhost:3000/system/items/777370824/original/gato_document_1.txt)
+(http://localhost:3000/system/documents/items/777/370/824/original/gato_document_1.txt)
 - txt file Gato Document 2
-(http://localhost:3000/system/items/928836992/original/gato_document_2.txt)
+(http://localhost:3000/system/documents/items/928/836/992/original/gato_document_2.txt)
 
 If you're unable to attend the class for any reason, please
 cancel your reservation here

@@ -1,4 +1,14 @@
-<div class="fields">
-  <%= f.calendar_date_select :time, :time => true, :default_time => Date.tomorrow.to_time.advance(:hours => 12) %>
-  <%= link_to_remove_fields "remove", f %>
+<div class="nested-fields">
+  <div class="input string">
+    <%= f.input :time, 
+      label: false, 
+      as: :string, 
+      wrapper: false,
+      input_html: { 
+        class: 'datetimepicker', 
+        value: f.object.time
+      } 
+    %>
+    <%= link_to_remove_association "remove", f %>
+  </div>
 </div>

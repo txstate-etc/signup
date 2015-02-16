@@ -1,0 +1,79 @@
+<%= simple_form_for(form_object, data: {prevent_double_submit: ''}) do |f| %>
+  <%= model_error_messages(@session) %>
+  <%= f.hidden_field :topic_id %>
+
+  <div id="occurrences"  <%= 'class=field_with_errors' if @session.errors['occurrences'].any? %> >
+    <%= f.label :occurrences, "Session Time(s):", class: 'field-label' %>
+    <%= f.simple_fields_for :occurrences do |occurrence| %>
+      <%= render "occurrence_fields", :f => occurrence %>
+    <% end %>
+    <div class='add-fields'>
+      <%= link_to_add_association 'add another time for multi-part sessions', 
+        f, :occurrences %>
+    </div>
+  </div>
+
+  <div class='field-label'>Do you want to limit the Registration Period? [ 
+    <%= radio_button_tag :reg_period_needed, "Yes", 
+      @session.registration_period_defined?, 
+      :onclick => "revealRegPeriodArea();"
+    %>
+    <%= label_tag :reg_period_needed_yes, "Yes" %> 
+
+    <%= radio_button_tag :reg_period_needed, "No", 
+      !@session.registration_period_defined?, 
+      :onclick => "hideRegPeriodArea();" 
+    %>
+    <%= label_tag :reg_period_needed_no, "No" %>
+
+    ]
+  </div>  
+  <div id="registration-period-field" style="<%= @session.registration_period_defined? ? '' : 'display:none' %>">
+    <%= f.input :reg_start, label: 'Registration Period Begins:', 
+      as: :string, 
+      input_html: { 
+        class: 'datetimepicker', 
+        value: f.object.reg_start,
+        :'data-default' => default_reg_start(f.object.reg_start)
+      } 
+    %>
+
+    <%= f.input :reg_end, label: 'Registration Period Ends:', 
+      as: :string, 
+      input_html: { 
+        class: 'datetimepicker', 
+        value: f.object.reg_end,
+        :'data-default' => default_reg_end(f.object.reg_start, f.object.time)
+      } 
+    %>
+  </div>
+
+  <div id="instructors" <%= 'class=field_with_errors' if @session.errors['instructors'].any? %> >
+    <%= f.label :instructors, "Instructor(s):", class: 'field-label' %>
+    <%= f.simple_fields_for :instructors do |instructor| %>
+      <%= render "instructor_fields", :f => instructor %>
+    <% end %>
+    <div class='add-fields'>
+      <%= link_to_add_association 'add another instructor', f, :instructors %>
+    </div>
+  </div>
+
+  <%= f.input :seats, label: 'Seats Available (blank for no limit):' %>
+
+  <div class="location-block">
+    <%= f.input :location, label: 'Location:' %>
+    <%= f.association :site, label: t(:'sessions.edit.site_label'), prompt: false %>
+    <%= f.input :location_url, label: 'Location Url (optional):' %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+    <%= link_to 'Cancel', (@session.new_record? ? @session.topic : @session) %>
+  </div>
+
+<% end %>
+
+<div id="user-modal" class="content-section" style="display:none;">
+  <h2>Add New Instructor</h2>
+  <%= render 'users/form', user: User.new, modal: true %>
+</div>
