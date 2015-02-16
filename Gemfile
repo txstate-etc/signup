@@ -32,7 +32,7 @@ gem 'cocoon', '~> 1.2.6'
 
 # CAS authentication - need github branch for single signout support
 #gem 'omniauth-cas', :github => 'dlindahl/omniauth-cas', :ref => '43ee3f25'
-gem 'omniauth-cas', :github => 'chuckbjones/omniauth-cas', :branch => 'master'
+gem 'omniauth-cas', :github => 'txstate-etc/omniauth-cas', :ref => 'c2c538c371'
 
 # LDAP user lookups
 gem 'net-ldap', '~> 0.9.0'
@@ -45,7 +45,7 @@ gem 'rails3-jquery-autocomplete', '~> 1.0.14'
 gem 'htmlentities', '~> 4.3.2'
 
 # rical library for generating ics files
-gem 'ri_cal', :github => 'chuckbjones/ri_cal', :branch => 'master'
+gem 'ri_cal', :github => 'txstate-etc/ri_cal', :ref => '5891733ef1'
 
 # Use tags instead of keys to expire large swaths of cached pages/fragments at once
 gem 'cashier', '~> 0.4.1'
