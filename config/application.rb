@@ -22,6 +22,7 @@ module Signup
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
+    config.i18n.load_path += Dir[Rails.root.join('config', 'skin', 'locales', '*.{rb,yml}').to_s]
 
     # we don't want the generator to create coffee script files 
     config.generators do |g|

@@ -1,1 +1,9 @@
+<%- if (File.exists?("#{Rails.root}/app/assets/images/logo.jpg")) -%>
+  <%= link_to image_tag('logo.jpg', alt: t(:logo_alt)), ORG_URL, title: t(:logo_title), class: 'topbanner-homelink' %>
+<%- end -%>
+
 <a class="topbanner-sitename" href="/"><%=t :site_name %></a>
+
+<%- if (File.exists?("#{Rails.root}/app/views/layouts/_search.html.erb")) -%>
+  <%= render 'layouts/search' %>
+<%- end -%>
