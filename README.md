@@ -1,75 +1,12 @@
 Signup
 =========
 
+The Signup tool allows users to signup for a workshop, presentation, meeting, or any other event requiring a reservation. Users will be sent automatic reminders about the event and allowed to cancel their reservation if needed.
+
+Events in Signup can also contain a maximum participant limit. If the limit is reached users are automatically added to a waiting list. If an already confirmed user cancels the reservation, the people on the waiting list are confirmed as participants and sent a notification.
+
 This application was generated with the [rails_apps_composer](https://github.com/RailsApps/rails_apps_composer) gem
 provided by the [RailsApps Project](http://railsapps.github.io/).
-
-Diagnostics
------------
-
-This application was built with recipes that are NOT known to work together.
-
-This application was built with preferences that are NOT known to work
-together.
-
-If the application doesn’t work as expected, please [report an issue](https://github.com/RailsApps/rails_apps_composer/issues)
-and include these diagnostics:
-
-We’d also like to know if you’ve found combinations of recipes or
-preferences that do work together.
-
-Recipes:
-
-* controllers
-* core
-* deployment
-* email
-* extras
-* frontend
-* gems
-* git
-* init
-* learn_rails
-* models
-* prelaunch
-* rails_bootstrap
-* rails_devise
-* rails_devise_pundit
-* rails_foundation
-* rails_omniauth
-* rails_signup_download
-* railsapps
-* readme
-* routes
-* saas
-* setup
-* testing
-* tests4
-* views
-
-Preferences:
-
-* git: true
-* apps4: rails-devise
-* authentication: devise
-* authorization: false
-* better_errors: true
-* deployment: none
-* local_env_file: false
-* pry: false
-* quiet_assets: true
-* starter_app: false
-* dev_webserver: thin
-* prod_webserver: passenger
-* database: mysql
-* templates: erb
-* tests: none
-* frontend: none
-* email: smtp
-* devise_modules: default
-* form_builder: simple_form
-* rvmrc: true
-* ban_spiders: true
 
 Ruby on Rails
 -------------
@@ -91,11 +28,8 @@ Development
 
 -   Template Engine: ERB
 -   Testing Framework: Test::Unit
--   Front-end Framework: None
 -   Form Builder: SimpleForm
--   Authentication: Devise
--   Authorization: None
--   Admin: None
+-   Authentication: Omniauth ([CAS](http://jasig.github.io/cas/4.0.x/index.html) support built-in. Other services can be added as needed.)
 
 Email
 -----
@@ -104,45 +38,27 @@ The application is configured to send email using a SMTP account.
 
 Email delivery is disabled in development.
 
-Getting Started
----------------
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-
-Documentation and Support
--------------------------
-
-This is the only documentation.
-
-#### Issues
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-
-Similar Projects
-----------------
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 Contributing
 ------------
 
-If you make improvements to this application, please share with others.
+We encourage you to contribute to Signup! Here's how:
 
 -   Fork the project on GitHub.
 -   Make your feature addition or bug fix.
 -   Commit with Git.
--   Send the author a pull request.
+-   Send us a pull request.
 
-If you add functionality to this application, create an alternative
+If you add functionality to Signup, create an alternative
 implementation, or build an application that is similar, please contact
-me and I’ll add a note to the README so that others can find your work.
+us and we’ll add a note to the README so that others can find your work.
 
 Credits
 -------
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+Signup is developed by the Texas State University [Educational Technology Center](http://www.its.txstate.edu/departments/etc/signup.html).
 
 License
 -------
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+Signup is released under the Apache License Version 2.0. See the LICENSE.txt file for details.
