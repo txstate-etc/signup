@@ -113,8 +113,10 @@ end
     
     errors = record.errors.keys.map do |attr|
       msg = record.errors[attr].first
+      msg += "." unless /[.!?]$/.match(msg)
+
       # Prepend the field name unless the first char of the msg is upper case. 
-      /\A\p{Lu}/.match(msg) ? msg : "#{record.class.human_attribute_name(attr).capitalize} #{msg}."
+      /\A\p{Lu}/.match(msg) ? msg : "#{record.class.human_attribute_name(attr).capitalize} #{msg}"
     end
 
     ret = '<div id="error_explanation">'
