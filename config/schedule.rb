@@ -19,11 +19,13 @@
 
 # Learn more: http://github.com/javan/whenever
 
+job_type :bin,  "cd :path && :environment_variable=:environment :bundle_command bin/:task :output"
+
 set :output, "log/cron_log.log"
 
 # start the delayed_job daemon when the system reboots
 every :reboot do
-  script "delayed_job start"
+  bin "delayed_job start"
 end
 
 # restart the delayed_job daemon if it looks like it is not responding
