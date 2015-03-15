@@ -4,7 +4,7 @@ class DelayedJobUtil
     if count > 0
       # restart delayed_job and send an email
       Rails.logger.error("There are #{count} outstanding delayed_jobs. restarting daemon.")
-      ExceptionNotifier::Notifier.background_exception_notification(Exception.new('delayed_job error')).deliver if Rails.env == "production"
+      ExceptionNotifier.notify_exception(Exception.new('delayed_job error')) if Rails.env == "production"
       Rails.logger.info `/usr/bin/env RAILS_ENV=#{Rails.env} bundle exec bin/delayed_job restart`
     end
   end

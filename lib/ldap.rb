@@ -53,7 +53,7 @@ class Ldap
 
   rescue => e
     @logger.error("There was a problem importing the user data from LDAP.")
-    ExceptionNotifier::Notifier.background_exception_notification(e).deliver if Rails.env == "production"
+    ExceptionNotifier.notify_exception(e) if Rails.env == "production"
     raise
   end
 
