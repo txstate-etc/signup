@@ -14,7 +14,7 @@ set :user, 'rubyapps'
 set :ssh_options, { user: fetch(:user) }
 
 # Set rvm version to the same as we use in development
-set :rvm1_ruby_version, "#{IO.read('.ruby-version').chomp}@#{IO.read('.ruby-gemset').chomp}"
+set :rvm1_ruby_version, "ruby-#{IO.read('Gemfile').match(/^ruby '([^']+)'$/)[1]}@#{IO.read('.ruby-gemset').chomp}"
 
 # Default deploy_to directory is /var/www/my_app
 set :deploy_to, "/home/#{fetch(:user)}/#{fetch(:application)}"
