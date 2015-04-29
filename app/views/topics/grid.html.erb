@@ -1,4 +1,4 @@
-<% cache("topics/grid/#{date_slug(@cur_month)}", :tag => 'session-info')  do %>
+<% cache("topics/grid/#{date_slug(@cur_month)}", :tag => 'session-info', expires_in: 1.day)  do %>
   <table id="topic-grid">
     <caption>
       <%= link_to "◄", "/topics/grid/#{@cur_month.prev_month.year}/#{@cur_month.prev_month.month}" %>
