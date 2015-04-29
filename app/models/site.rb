@@ -1,5 +1,4 @@
 class Site < ActiveRecord::Base
-  include SessionInfoObserver
   has_many :sessions
   has_paper_trail
 

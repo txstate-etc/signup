@@ -11,6 +11,8 @@ class ApplicationController < ActionController::Base
   helper_method :authorized?
   helper_method :login_path
   helper_method :date_slug
+  helper_method :sites_key
+  helper_method :sess_key
 
   # this is responible for putting the login ID of the current
   # user into session[ :user ]. It's set up to work with OmniAuth, 
@@ -36,8 +38,16 @@ class ApplicationController < ActionController::Base
     '/auth/cas'
   end
 
- def date_slug(date=nil)
+  def date_slug(date=nil)
     (date || Date.today).strftime('%Y-%m-%d')
+  end
+
+  def sites_key
+    @sites_key ||= Site.order(:updated_at).last.cache_key rescue 'nosites'
+  end
+
+  def sess_key
+    @sess_key ||= Department.order(:updated_at).last.cache_key rescue 'nodepts'
   end
 
   def send_csv(csv, filename)

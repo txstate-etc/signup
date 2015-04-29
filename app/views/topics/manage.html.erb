@@ -45,7 +45,7 @@
   
     <% @departments.each do |department| %>
       <% authorized = authorized?(department) || current_user.editor?(department) %>
-      <% cache(["#{date_slug}/topics/manage/#{@upcoming ? 'upcoming' : 'all'}", department, "#{authorized ? '' : 'not-'}authorized"], :tag => department.cache_key, expires_in: 1.day) do %>
+      <% cache(["#{date_slug}/topics/manage/#{@upcoming ? 'upcoming' : 'all'}", department, "#{authorized ? '' : 'not-'}authorized"], expires_in: 1.day) do %>
         <div class="content-section">
           <h2><%= department.name %>
               <%= link_to("Subscribe to the XML feed for this department",
@@ -74,7 +74,7 @@
               </thead>
               <tbody>
                 <% topics.each do |topic| %>
-                  <% cache(["#{date_slug}/topics/manage/#{@upcoming ? 'upcoming' : 'all'}", topic], :tag => topic.cache_key, expires_in: 1.day) do %>
+                  <% cache(["#{date_slug}/topics/manage/#{@upcoming ? 'upcoming' : 'all'}", topic], expires_in: 1.day) do %>
                     <tr class="<%= cycle("even", "odd") %>">
                     <td class="topic-name">
                       <%= link_to topic.name, history_topic_path(topic) %>

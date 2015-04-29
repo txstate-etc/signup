@@ -1,6 +1,5 @@
 class Topic < ActiveRecord::Base
-  include SessionInfoObserver
-  belongs_to :department
+  belongs_to :department, touch: true
   has_many :sessions, -> { where(cancelled: false).includes([:topic, :occurrences, :site]).order('occurrences.time') }, :dependent => :destroy
   has_many :survey_responses, through: :sessions
   include SurveyAggregates
@@ -97,19 +96,15 @@ class Topic < ActiveRecord::Base
   end
 
   def to_csv
-    key = "to_csv/#{cache_key}"
-    Rails.cache.fetch(key, tag: cache_key) do
-      logger.debug { "in to_csv for #{name}" }
-      CSV.generate do |csv|
-        csv << Session::CSV_HEADER
-        csv_rows.each { |row| csv << row }
-      end
+    logger.debug { "in to_csv for #{name}" }
+    CSV.generate do |csv|
+      csv << Session::CSV_HEADER
+      csv_rows.each { |row| csv << row }
     end
   end
   
   def csv_rows
-    key = "csv_rows/#{cache_key}"
-    Rails.cache.fetch(key, tag: cache_key) do
+    Rails.cache.fetch(["csv_rows", self]) do
       sessions.unscope(where: :cancelled).map { |session| session.csv_rows }.flatten(1)
     end
   end    

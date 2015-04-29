@@ -1,4 +1,4 @@
-<% cache("#{date_slug}/topics/by-date", :tag => 'session-info', expires_in: 1.day)  do %>
+<% cache("#{sess_key}/#{date_slug}/#{sites_key}/topics/by-date", expires_in: 1.day)  do %>
   <% @topics = Topic.upcoming.includes(:sessions) %>
   <% if @topics.blank? %>
     <div class="empty-list">
@@ -10,7 +10,7 @@
         <h2><%= date.strftime('%A, %B %e, %Y') %></h2>
         <ul class="topic-list">
           <% sessions.each do |session| %>
-            <% cache(["topics/by-date", session], :tag => session.cache_key) do %>
+            <% cache(["#{sites_key}/topics/by-date", session.topic, session]) do %>
               <li>
                 <%= link_to session.topic.name, session.topic %>
                 <div class="session-info">

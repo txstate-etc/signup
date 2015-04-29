@@ -1,5 +1,4 @@
 class Department < ActiveRecord::Base
-  include SessionInfoObserver
   has_many :topics, -> { where inactive: false }
   has_many :permissions
   has_many :users, :through => :permissions
@@ -43,10 +42,7 @@ class Department < ActiveRecord::Base
   end
 
   def csv_rows
-    key = "csv_rows/#{cache_key}"
-    Rails.cache.fetch(key, tag: cache_key) do
-      topics.map { |topic| topic.csv_rows }.flatten(1)
-    end
+    topics.map { |topic| topic.csv_rows }.flatten(1)
   end
 
 end

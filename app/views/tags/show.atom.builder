@@ -1,4 +1,4 @@
-cache(["#{date_slug}/tags/show/upcoming/atom", @tag], :tag => 'session-info', expires_in: 1.day) do
+cache(["#{sess_key}/#{date_slug}/#{sites_key}/tags/show/upcoming/atom", @tag], expires_in: 1.day) do
   atom_feed(:root_url => tag_url(@tag)) do |feed|
     feed.title(t(:'.atom_title_prefix') + @page_title)
 
@@ -8,7 +8,7 @@ cache(["#{date_slug}/tags/show/upcoming/atom", @tag], :tag => 'session-info', ex
 
     if @topics.present?
       @topics.sort_by(&:next_time).each do |topic|
-        cache(["#{date_slug}/tags/show/upcoming/atom", topic], :tag => topic.cache_key, expires_in: 1.day) do
+        cache(["#{date_slug}/#{sites_key}/tags/show/upcoming/atom", topic], expires_in: 1.day) do
           next unless topic.upcoming_sessions.present?
           feed.entry(topic, :published => topic.next_time) do |entry|
             entry.title(topic.name)

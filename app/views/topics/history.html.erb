@@ -33,7 +33,7 @@
       <tbody>
         <% @topic.sessions.each do |session| %>
           <% authorized = authorized? session %>
-          <% cache(["topics/history", session, "#{authorized ? '' : 'not-'}authorized"], :tag => session.cache_key) do %>
+          <% cache(["#{sites_key}/topics/history", session, "#{authorized ? '' : 'not-'}authorized"]) do %>
             <tr class="<%= cycle("even", "odd") %>">
             <td class="topic-name">
               <%= link_to formatted_time_range(session.time, @topic.minutes), session, :class => 'date' %>

@@ -20,7 +20,7 @@ class TagsController < ApplicationController
       format.atom
       if authorized? @tag
         format.csv do
-          data = cache(['tags/csv', @tag], tag: 'session-info', expires_in: 1.day) do 
+          data = cache(['#{sess_key}/tags/csv', @tag], expires_in: 1.day) do
             topics = Topic.tagged_with(@tag).active
             Topic.to_csv(topics)
           end

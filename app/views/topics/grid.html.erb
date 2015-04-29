@@ -1,4 +1,4 @@
-<% cache("topics/grid/#{date_slug(@cur_month)}", :tag => 'session-info', expires_in: 1.day)  do %>
+<% cache("#{sess_key}/topics/grid/#{date_slug(@cur_month)}", expires_in: 1.day)  do %>
   <table id="topic-grid">
     <caption>
       <%= link_to "◄", "/topics/grid/#{@cur_month.prev_month.year}/#{@cur_month.prev_month.month}" %>
@@ -16,7 +16,7 @@
       <% @occurrences = in_month(@cur_month) %>
       <% full_month(@cur_month).in_groups_of(7).each do |week| %>
         <tr>
-          <% week.map do |day| %>
+          <% week.each do |day| %>
             <td class="<%= date_class(day, @cur_month) %>">
               <div class="day">
                 <%= day.day %>
@@ -25,7 +25,7 @@
                 <% if @occurrences.has_key? day %>
                   <% reset_cycle %>
                   <% @occurrences[day].each do |occurrence| %>
-                    <% cache(["topics/grid/#{date_slug(day)}", occurrence], :tag => occurrence.cache_key) do %>
+                    <% cache(["topics/grid/#{date_slug(day)}", occurrence.session.topic, occurrence.session, occurrence]) do %>
                       <div class="session <%= cycle("odd", "even") -%>">
                         <%= link_to occurrence.session.topic.name, occurrence.session, :title => occurrence.session.topic.name %>
                       </div>

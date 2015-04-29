@@ -23,7 +23,7 @@ class TopicsController < ApplicationController
       end
       if authorized? @topic
         format.csv do
-          data = cache(["#{date_slug}/topics/csv", @topic], tag: @topic.cache_key, expires_in: 1.day) do 
+          data = cache(["#{date_slug}/topics/csv", @topic], expires_in: 1.day) do
             logger.debug { "generating csv for #{@topic.name}" }
             @topic.to_csv
           end
@@ -34,7 +34,7 @@ class TopicsController < ApplicationController
   end
 
   def download
-    data = cache(["#{date_slug}/topics/download", @topic], tag: @topic.cache_key, expires_in: 1.day) do 
+    data = cache(["#{date_slug}/topics/download", @topic], expires_in: 1.day) do
       calendar = RiCal.Calendar
       calendar.add_x_property 'X-WR-CALNAME', @topic.name
       @topic.upcoming_sessions.each do |session|

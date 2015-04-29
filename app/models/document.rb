@@ -1,5 +1,5 @@
 class Document < ActiveRecord::Base
-  belongs_to :topic
+  belongs_to :topic, touch: true
   has_attached_file :item
   has_paper_trail
 

@@ -17,7 +17,7 @@ class SessionsController < ApplicationController
       format.csv
       if authorized?(@session) || (current_user && current_user.editor?(@session))
         format.csv do
-          data = cache(['sessions/csv', @session], tag: @session.cache_key) do 
+          data = cache(['sessions/csv', @session.topic, @session]) do
             @session.to_csv
           end
           send_csv data, @session 
@@ -92,10 +92,10 @@ class SessionsController < ApplicationController
   end
 
   def download
-    data = cache("#{date_slug}/sessions/download", tag: 'session-info', expires_in: 1.day) do 
+    data = cache("#{sess_key}/#{date_slug}/#{sites_key}/sessions/download", expires_in: 1.day) do
       calendar = RiCal.Calendar
       calendar.add_x_property 'X-WR-CALNAME', 'All Upcoming Sessions'
-      Session.upcoming.each do |session|
+      Session.upcoming.includes(:topic,:site).each do |session|
         session.to_event.each { |event| calendar.add_subcomponent( event ) }
       end
       calendar.export

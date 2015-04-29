@@ -6,7 +6,7 @@
   <% end %>
 <% end %>
 
-<% cache(["#{date_slug}/tags/show/upcoming", @tag], :tag => 'session-info', expires_in: 1.day)  do %>
+<% cache(["#{sess_key}/#{date_slug}/#{sites_key}/tags/show/upcoming", @tag], expires_in: 1.day) do %>
   <% @all_topics = Topic.tagged_with(@tag).active %>
   <% if @all_topics.size > 0 %>
     <div class="content-section">
@@ -20,7 +20,7 @@
       <% if @topics.present? %>
         <ul class="topic-list">
           <% @topics.sort_by(&:next_time).each do |topic| %>
-            <% cache(["#{date_slug}/tags/show/upcoming", topic], :tag => topic.cache_key, expires_in: 1.day) do %>
+            <% cache(["#{date_slug}/#{sites_key}/tags/show/upcoming", topic], expires_in: 1.day) do %>
               <li>
                 <%= link_to topic.name, topic %>
                 <% topic.upcoming_sessions.first(2).each do |session| %>
@@ -48,7 +48,7 @@
       <h2>All topics offered tagged with '<%= @tag.name %>'</h2>
       <ul class="topic-list">
         <% @all_topics.sort_by {|a| a.name.downcase }.each do |topic| %>
-          <% cache(["tags/show/all", topic], :tag => topic.cache_key) do %>
+          <% cache(["tags/show/all", topic]) do %>
             <li>
               <%= link_to topic.name, topic %>
             </li>

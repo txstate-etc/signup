@@ -4,7 +4,7 @@
   <% end %>
 <% end %>
 
-<% cache(["#{date_slug}/departments/show/upcoming", @department], :tag => 'session-info', expires_in: 1.day)  do %>
+<% cache(["#{sess_key}/#{date_slug}/#{sites_key}/departments/show/upcoming", @department], expires_in: 1.day)  do %>
   <% if @department.topics.present? %>
     <div class="content-section">
       <h2>Upcoming sessions
@@ -17,7 +17,7 @@
       <% if topics.present? %>
         <ul class="topic-list">
           <% topics.each do |topic| %>
-            <% cache(["#{date_slug}/departments/show/upcoming", topic], :tag => topic.cache_key, expires_in: 1.day) do %>
+            <% cache(["#{date_slug}/#{sites_key}/departments/show/upcoming", topic], expires_in: 1.day) do %>
               <li>
                 <%= link_to topic.name, topic %>
                 <% if topic.upcoming_sessions.present? %>       
@@ -36,12 +36,12 @@
       <% end %>
     </div>
 
-    <% cache(["departments/show/all", @department], :tag => @department.cache_key)  do %>
+    <% cache(["departments/show/all", @department]) do %>
       <div class="content-section">
         <h2>All topics offered by this department</h2>
         <ul class="topic-list">
           <% @department.topics.sort.each do |topic| %>
-            <% cache(["departments/show/all", topic], :tag => topic.cache_key) do %>
+            <% cache(["departments/show/all", topic]) do %>
               <li>
                 <%= link_to topic.name, topic %>
               </li>

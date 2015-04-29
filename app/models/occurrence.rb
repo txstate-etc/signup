@@ -1,6 +1,5 @@
 class Occurrence < ActiveRecord::Base
-  include SessionInfoObserver
-  belongs_to :session, -> { where(cancelled: false) }
+  belongs_to :session, -> { where(cancelled: false) }, touch: true
   has_paper_trail
 
   default_scope { order :time }
@@ -14,6 +13,6 @@ class Occurrence < ActiveRecord::Base
   end
 
   def self.in_month(month)
-    self.in_range(month.beginning_of_month, month.end_of_month.end_of_day)
+    self.in_range(month.beginning_of_month, month.end_of_month.end_of_day).includes(session: :topic)
   end
 end

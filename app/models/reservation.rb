@@ -1,7 +1,6 @@
 class Reservation < ActiveRecord::Base
-  include SessionInfoObserver
   belongs_to :user
-  belongs_to :session
+  belongs_to :session, touch: true
   counter_culture :session, 
       :column_name => Proc.new {|model| model.cancelled? ? nil : 'reservations_count' },
       :column_names => {

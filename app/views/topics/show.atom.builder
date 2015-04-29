@@ -1,4 +1,4 @@
-cache(["#{date_slug}/topics/show/upcoming/atom", @topic], :tag => @topic.cache_key, expires_in: 1.day) do
+cache(["#{date_slug}/#{sites_key}/topics/show/upcoming/atom", @topic], expires_in: 1.day) do
   atom_feed(:root_url => topic_url(@topic)) do |feed|
     feed.title(t(:'.atom_title_prefix') + @page_title)
     sessions = @topic.upcoming_sessions
@@ -7,7 +7,7 @@ cache(["#{date_slug}/topics/show/upcoming/atom", @topic], :tag => @topic.cache_k
 
     if sessions.size > 0
       sessions.each do |session|
-        cache(["topics/show/upcoming/atom", session], :tag => session.cache_key) do
+        cache(["#{sites_key}/topics/show/upcoming/atom", session]) do 
           feed.entry(session, :published => session.time) do |entry|
             title = "#{session_info(session)} — #{session.site.name}"
             entry.title(title)

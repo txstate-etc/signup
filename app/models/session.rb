@@ -1,12 +1,11 @@
 class Session < ActiveRecord::Base
-  include SessionInfoObserver
-  belongs_to :topic
+  belongs_to :topic, touch: true
   belongs_to :site
   has_many :reservations, -> { order(:created_at).where(cancelled: false).includes(:user) }, :dependent => :destroy
   accepts_nested_attributes_for :reservations
   has_many :occurrences, :dependent => :destroy, after_add: :mark_dirty, after_remove: :mark_dirty
   accepts_nested_attributes_for :occurrences, :reject_if => :all_blank, :allow_destroy => true
-  has_and_belongs_to_many :instructors, :class_name => "User", :uniq => true
+  has_and_belongs_to_many :instructors, :class_name => "User", :uniq => true, after_add: :mark_dirty, after_remove: :mark_dirty
   accepts_nested_attributes_for :instructors, :reject_if => lambda { |a| true }, :allow_destroy => false
   has_many :survey_responses, -> { order 'created_at DESC'}, through: :reservations
   has_paper_trail
@@ -76,8 +75,11 @@ class Session < ActiveRecord::Base
     super(attributes)
   end
   
-  def mark_dirty(not_used)
-    @need_update = true
+  def mark_dirty(assoc)
+    self.touch if self.persisted?
+    if assoc.is_a? Occurrence
+      @need_update = true
+    end
   end
 
   # around_update callback. The actual update is done in the `yield`
@@ -245,8 +247,7 @@ class Session < ActiveRecord::Base
   end
   
   def to_event
-    key = "to_event/#{cache_key}"
-    Rails.cache.fetch(key, tag: cache_key) do
+    Rails.cache.fetch(["to_event", self.site, self.topic, self]) do
       description = "#{topic.description}\n\nInstructor(s): #{instructors.map(&:name).join(", ")}"
       if topic.tag_list.present?
         description << "\n\nTags: #{topic.sorted_tags.join(", ")}"
@@ -273,8 +274,7 @@ class Session < ActiveRecord::Base
   end
 
   def csv_rows
-    key = "csv_rows/#{cache_key}"
-    Rails.cache.fetch(key, tag: cache_key) do
+    Rails.cache.fetch(["csv_rows", self.topic, self]) do
       reservations_by_last_name.map do |reservation|
         attended = ""
         if reservation.attended == Reservation::ATTENDANCE_MISSED

@@ -47,9 +47,6 @@ gem 'htmlentities', '~> 4.3.2'
 # rical library for generating ics files
 gem 'ri_cal', :github => 'txstate-etc/ri_cal', :ref => '5891733ef1'
 
-# Use tags instead of keys to expire large swaths of cached pages/fragments at once
-gem 'cashier', '~> 0.4.1'
-
 # render pdf documents from ruby code
 gem 'prawn', '~> 1.3.0'
 

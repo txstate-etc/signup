@@ -12,7 +12,7 @@ class DepartmentsController < ApplicationController
       format.atom
       if authorized?(@department) || (current_user && current_user.editor?(@department))
         format.csv do
-          data = cache(['departments/csv', @department], tag: @department.cache_key) do
+          data = cache(['departments/csv', @department]) do
             logger.debug { "Generating csv for department #{@department.name}" }
             @department.to_csv
           end
