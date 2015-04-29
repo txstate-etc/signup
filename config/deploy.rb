@@ -4,7 +4,7 @@ lock '3.3.3'
 set :application, 'signup'
 
 set :repo_url, 'https://projects.its.txstate.edu/hg/registerme'
-set :branch, 'rails-4'
+set :branch, 'default'
 
 # Default branch is :master
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
