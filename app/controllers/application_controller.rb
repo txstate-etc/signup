@@ -93,6 +93,7 @@ class ApplicationController < ActionController::Base
   
   def enable_mini_profiler
     # mini-profiler is enabled by default on development, this will switch it on in staging
+    # NB: mini-profiler appears to disable ETag support. We will never return a 304 with it enabled.
     if Rails.env.staging? && current_user.is_a?(User) && current_user.admin?
       Rack::MiniProfiler.authorize_request
     end
