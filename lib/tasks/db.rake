@@ -54,6 +54,15 @@ namespace :db do
       `mysql -u #{config['username']} --password=#{config['password']} #{config['database']} < #{Rails.root}/tmp/dump.signup.sql`
       `mkdir -p #{Rails.root}/public/system`
       `tar zxvf #{Rails.root}/tmp/documents.signup.tar.gz -C #{Rails.root}/public/system`
+
+      # reset association count caches and clear view caches
+      Reservation.counter_culture_fix_counts
+      ActsAsTaggableOn::Tag.reset_column_information
+      ActsAsTaggableOn::Tag.find_each do |tag|
+        ActsAsTaggableOn::Tag.reset_counters(tag.id, :taggings)
+      end
+
+      Rails.cache.clear
     end
   end
 end
