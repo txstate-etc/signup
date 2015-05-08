@@ -6,6 +6,11 @@ class SurveyResponse < ActiveRecord::Base
   validates :reservation, uniqueness: { message: 'A survey has already been submitted for this reservation.' }
   validate :validate_session_finished
 
+  # Alias for comments column with a more descriptive name
+  def general
+    comments
+  end
+
   def validate_session_finished
     if self.reservation.session.in_future?
       errors[:base] << "You can't provide feedback on a session that hasn't yet occurred" 

@@ -84,14 +84,14 @@ end
   def expandible_list(items, visible=5)
     ret = '<div class="expandible-container"><ul>'
     items[0..(visible-1)].each do |item| 
-      ret << "<li>#{item}</li>"
+      ret << "<li>#{strip_tags item}</li>"
     end 
     ret << '</ul>'
     
     if items.size > visible
       ret << '<ul class="expandible" style="display:none;">'
       items.drop(visible).each do |item|
-        ret << "<li>#{item}</li>"
+        ret << "<li>#{strip_tags item}</li>"
       end
       ret << '</ul>'
       

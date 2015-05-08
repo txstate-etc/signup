@@ -7,6 +7,7 @@ class SessionsController < ApplicationController
     :destroy, 
     :reservations,
     :survey_results,
+    :survey_comments,
     :email
   ]
   before_filter :ensure_authorized, except: [:download, :new, :create, :show]

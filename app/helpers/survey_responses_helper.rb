@@ -1,39 +1,35 @@
 module SurveyResponsesHelper
 
-def usefulness_comments(model_object)
-    comments = model_object.survey_responses.inject([]) do |list, response| 
-      next list if response.most_useful.blank?
-      break list if list.count >= 20 
-      list << response.most_useful
-    end
+  SURVEY_COMMENT_TYPES = { most_useful: 'What Attendees Found Most Useful', general: 'General Comments'}
+
+  def survey_comments(method, model_object, limit=nil)
+    return '' unless SURVEY_COMMENT_TYPES.key? method
     
-    if comments.size > 0
-      ret = '<div class="survey-comments">'
-      ret << '<h2>What Attendees Found Most Useful</h2>'    
-      ret << expandible_list(comments)
-      ret << '</div>'
-      ret.html_safe
-    else
-      ''
-    end
+    comments = model_object.survey_responses.map(&method).reject(&:blank?)
+    comments = comments.first(limit) if limit
+    
+    comment_list(SURVEY_COMMENT_TYPES[method], comments)
   end
 
-  def overall_comments(model_object)
-    comments = model_object.survey_responses.inject([]) do |list, response| 
-      next list if response.comments.blank?
-      break list if list.count >= 20 
-      list << response.comments
-    end
+  def comment_list(title, comments)
+    return '' if comments.blank?
     
-    if comments.size > 0
-      ret = '<div class="survey-comments">'
-      ret << '<h2>General Comments</h2>'
-      ret << expandible_list(comments)
-      ret << '</div>'
-      ret.html_safe
-    else
-      ''
-    end
+    ret = '<div class="survey-comments">'
+    ret << "<h2>#{title}</h2>"
+    ret << '<ul>'
+    comments.each { |comment| ret << "<li>#{strip_tags comment}</li>" }
+    ret << '</ul>'
+    ret << '</div>'
+    ret.html_safe
+  end
+
+  def link_to_comments(controller, model_object, which)
+    link_to "all comments ⟫", {
+      controller: controller, 
+      action: "survey_comments", 
+      id: model_object, 
+      which: which },
+      class: 'survey-comments-link'
   end
 
   def rating_radios(label)

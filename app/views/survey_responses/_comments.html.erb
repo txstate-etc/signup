@@ -1,0 +1,11 @@
+<%= link_to "⟪ back to survey results", {controller: controller_name, action: "survey_results", id: model_object}, class: 'survey-breadcrumb' %>
+<% content = survey_comments(which.to_sym, model_object) %>
+<% if content.present? %>
+  <div id="survey-all-comments" class="content-section">
+    <%= content %>
+  </div>
+<% else %>
+  <div class="empty-list">
+    <p>No survey results have been submitted.</p>
+  </div>
+<% end %>

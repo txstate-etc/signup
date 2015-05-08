@@ -1,8 +1,8 @@
 class TopicsController < ApplicationController
   NO_AUTH_ACTIONS = [ :show, :download, :index, :alpha, :by_department, :by_site, :upcoming, :grid ]
   before_filter :authenticate, :except => NO_AUTH_ACTIONS
-  before_action :set_topic, only: [:show, :new, :create, :edit, :download, :update, :delete, :destroy, :history, :survey_results]
-  before_action :set_title, only: [:show, :survey_results]
+  before_action :set_topic, only: [:show, :new, :create, :edit, :download, :update, :delete, :destroy, :history, :survey_results, :survey_comments]
+  before_action :set_title, only: [:show, :survey_results, :survey_comments]
   before_filter :ensure_authorized, except: NO_AUTH_ACTIONS + [:manage, :history]
   layout 'topic_collection', only: [:index, :by_department, :by_site, :alpha, :grid]
 

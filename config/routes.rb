@@ -31,11 +31,13 @@ Rails.application.routes.draw do
       end
       member do
         get 'survey_results'
+        get 'survey_comments/:which', to: 'sessions#survey_comments', which: /(most_useful|general)/
       end
     end
     member do
       get 'history'
       get 'survey_results'
+      get 'survey_comments/:which', to: 'topics#survey_comments', which: /(most_useful|general)/
       get 'delete'
     end
     collection do

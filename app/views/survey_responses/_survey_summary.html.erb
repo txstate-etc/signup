@@ -6,8 +6,12 @@
       <div class="survey-result">Average Content Rating: <%= "%.2f" % model_object.average_applicability_rating %></div>
     <% end %>
     <div class="survey-result">Average Overall Rating: <%= "%.2f" % model_object.average_rating %></div>
-    <%= usefulness_comments(model_object) %>
-    <%= overall_comments(model_object) %>
+    
+    <%= most_useful = survey_comments(:most_useful, model_object, 5) %>
+    <%= link_to_comments(controller_name, model_object, 'most_useful') if most_useful.present? %>
+    
+    <%= general = survey_comments(:general, model_object, 5) %>
+    <%= link_to_comments(controller_name, model_object, 'general') if general.present? %>
   </div>
 <% else %>
   <div class="empty-list">
