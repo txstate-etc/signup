@@ -109,4 +109,26 @@ class Topic < ActiveRecord::Base
     end
   end    
 
+  def survey_responses_to_csv
+    logger.debug { "in survey_responses_to_csv for #{name}" }
+    CSV.generate do |csv|
+      csv << Session::SURVEY_RESPONSES_CSV_HEADER
+      survey_responses_csv_rows.each { |row| csv << row }
+    end
+  end
+  
+  def survey_responses_csv_rows(opts={})
+    Rails.cache.fetch(["survey_responses_csv_rows", self, opts]) do
+      s = sessions
+      if opts[:start]
+        s = s.merge(Occurrence.where("time >= ?", opts[:start].to_date))
+      end
+      if opts[:end]
+        s = s.merge(Occurrence.where("time <= ?", opts[:end].to_date))
+      end
+      
+      s.map { |session| session.survey_responses_csv_rows }.flatten(1)
+    end
+  end    
+
 end

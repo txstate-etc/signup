@@ -45,4 +45,14 @@ class Department < ActiveRecord::Base
     topics.map { |topic| topic.csv_rows }.flatten(1)
   end
 
+  def survey_responses_to_csv(opts={})
+    CSV.generate do |csv|
+      csv << Session::SURVEY_RESPONSES_CSV_HEADER
+      survey_responses_csv_rows(opts).each { |row| csv << row }
+    end
+  end
+
+  def survey_responses_csv_rows(opts={})
+    topics.map { |topic| topic.survey_responses_csv_rows(opts) }.flatten(1)
+  end
 end

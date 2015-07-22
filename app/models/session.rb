@@ -58,6 +58,8 @@ class Session < ActiveRecord::Base
   end
 
   CSV_HEADER = [ "Topic", "Session ID", "Session Date", "Session Time", "Session Cancelled", "Attendee Name", "Attendee Login", "Attendee Email", "Attendee Title", "Attendee Department", "Reservation Confirmed?", "Attended?" ]  
+  
+  SURVEY_RESPONSES_CSV_HEADER = [ "Topic", "Session ID", "Session Date", "Session Time", "Instructor Rating", "Content Rating", "Overall Rating", "Most Useful", "General Comments" ]  
 
   def self.upcoming
     Session.active.joins(:occurrences).merge(Occurrence.upcoming.order(:time))
@@ -283,6 +285,21 @@ class Session < ActiveRecord::Base
           attended = "ATTENDED"
         end
         [ self.topic.name, self.id, self.time.strftime('%m/%d/%Y'), self.time.strftime('%I:%M %p'), self.cancelled, reservation.user.name, reservation.user.login, reservation.user.email, reservation.user.title, reservation.user.department, reservation.confirmed?, attended ]
+      end
+    end
+  end
+
+  def survey_responses_to_csv
+    CSV.generate do |csv|
+      csv << SURVEY_RESPONSES_CSV_HEADER
+      survey_responses_csv_rows.each { |row| csv << row }
+    end
+  end
+
+  def survey_responses_csv_rows
+    Rails.cache.fetch(["survey_responses_csv_rows", self.topic, self]) do
+      survey_responses.map do |sr|
+        [ self.topic.name, self.id, self.time.strftime('%m/%d/%Y'), self.time.strftime('%I:%M %p'), sr.instructor_rating, sr.applicability, sr.class_rating, sr.most_useful, sr.comments ]
       end
     end
   end
