@@ -46,7 +46,7 @@ module TopicsHelper
       "#{link_to_session(session)} #{session_site(session)}"
     end
     
-    expandible_list list, 12
+    expandible_list list, visible: 12, allow_html: true
   end
 
   def link_to_document(d, opts = {})

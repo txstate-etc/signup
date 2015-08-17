@@ -81,17 +81,19 @@ end
     )
   end
 
-  def expandible_list(items, visible=5)
+  def expandible_list(items, visible: 5, allow_html: false)
     ret = '<div class="expandible-container"><ul>'
-    items[0..(visible-1)].each do |item| 
-      ret << "<li>#{strip_tags item}</li>"
+    items[0..(visible-1)].each do |item|
+      item = strip_tags(item) unless allow_html
+      ret << "<li>#{item}</li>" 
     end 
     ret << '</ul>'
     
     if items.size > visible
       ret << '<ul class="expandible" style="display:none;">'
       items.drop(visible).each do |item|
-        ret << "<li>#{strip_tags item}</li>"
+        item = strip_tags(item) unless allow_html
+        ret << "<li>#{item}</li>"
       end
       ret << '</ul>'
       
