@@ -14,18 +14,25 @@ function hideRegPeriodArea() {
   $('#registration-period-field .datetimepicker').val('');
 }
 
-function addDatePicker(input, setTime) {
-  var dateFormat = 'MM d, yy';
-  var timeFormat = 'h:mm TT';
+var dateFormat = 'MM d, yy';
+var timeFormat = 'h:mm TT';
 
-  var tryParse = function(dateText) {
-    try {
-        return $.datepicker.parseDateTime( dateFormat, timeFormat, dateText, null, {'timeFormat':timeFormat} );
-      } catch(err) {
-        return false;
-      }
+var tryParse = function(dateText) {
+  try {
+      return $.datepicker.parseDateTime( dateFormat, timeFormat, dateText, null, {'timeFormat':timeFormat} );
+    } catch(err) {
+      return false;
+    }
+}
+
+var validateDate = function validateDate(el, dateText) {
+  if (!tryParse(dateText)) {
+    $(el).val("")
+    $(el).datetimepicker('setDate', null)
   }
+}
 
+function addDatePicker(input, setTime) {
   var value = new Date();
   value.setHours(12, 0, 0, 0);
   value = value.getTime();
@@ -36,10 +43,7 @@ function addDatePicker(input, setTime) {
     timeFormat: timeFormat,
     hourText: 'Time: ',
     onClose: function(dateText, picker) {
-      if (!tryParse(dateText)) {
-        $(this).val("")
-        $(this).datetimepicker('setDate', null)
-      }
+      validateDate(this, dateText);
     },
     showTime: false,
     stepMinute: 5,
@@ -47,6 +51,10 @@ function addDatePicker(input, setTime) {
     defaultDate: +1,
     hour: 12,
     minute: 0
+  });
+  
+  $(input).on('blur', function() {
+    validateDate(this, $(this).val());
   });
 
   if(setTime && !input.value) {
@@ -103,4 +111,9 @@ $(function() {
     new EmailAllDialog($('#email-dialog')).show();
   });
 
+  $('#new_session,#edit_session').on('submit', function validate(event, data) {
+    $('.datetimepicker').each(function(idx,el) {
+      validateDate(el, $(el).val());
+    });
+  });
 });
