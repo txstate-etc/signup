@@ -53,10 +53,6 @@ function addDatePicker(input, setTime) {
     minute: 0
   });
   
-  $(input).on('blur', function() {
-    validateDate(this, $(this).val());
-  });
-
   if(setTime && !input.value) {
     $(input).datetimepicker('setDate', getNextDateTime('#occurrences'));
   }
