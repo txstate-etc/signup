@@ -11,7 +11,7 @@ cache(["#{sess_key}/#{date_slug}/#{sites_key}/departments/show/upcoming/atom", @
         session = topic.upcoming_sessions[0]
         next unless session
         cache(["#{sites_key}/departments/show/upcoming/atom", session.topic, session]) do
-          feed.entry(session, :published => session.time) do |entry|
+          feed.entry(session, updated: session.time, published: session.time) do |entry|
             entry.title(topic.name)
             
             summary = "#{session_info(session)} — #{session.site.name}"

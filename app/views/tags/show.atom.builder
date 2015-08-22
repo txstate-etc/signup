@@ -10,7 +10,7 @@ cache(["#{sess_key}/#{date_slug}/#{sites_key}/tags/show/upcoming/atom", @tag], e
       @topics.sort_by(&:next_time).each do |topic|
         cache(["#{date_slug}/#{sites_key}/tags/show/upcoming/atom", topic], expires_in: 1.day) do
           next unless topic.upcoming_sessions.present?
-          feed.entry(topic, :published => topic.next_time) do |entry|
+          feed.entry(topic, updated: topic.next_time, published: topic.next_time) do |entry|
             entry.title(topic.name)
             
             summary = []

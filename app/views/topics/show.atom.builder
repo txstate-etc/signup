@@ -8,7 +8,7 @@ cache(["#{date_slug}/#{sites_key}/topics/show/upcoming/atom", @topic], expires_i
     if sessions.size > 0
       sessions.each do |session|
         cache(["#{sites_key}/topics/show/upcoming/atom", session]) do 
-          feed.entry(session, :published => session.time) do |entry|
+          feed.entry(session, updated: session.time, published: session.time) do |entry|
             title = "#{session_info(session)} — #{session.site.name}"
             entry.title(title)
 
