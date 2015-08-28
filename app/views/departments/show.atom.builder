@@ -7,8 +7,8 @@ cache(["#{sess_key}/#{date_slug}/#{sites_key}/departments/show/upcoming/atom", @
     feed.updated(time ? time : Time.now)
 
     if @topics.size > 0
-      @topics.each do |topic|
-        session = topic.upcoming_sessions[0]
+      @topics.sort_by(&:next_time).each do |topic|
+        session = topic.upcoming_sessions.first
         next unless session
         cache(["#{sites_key}/departments/show/upcoming/atom", session.topic, session]) do
           feed.entry(session, updated: session.time, published: session.time) do |entry|

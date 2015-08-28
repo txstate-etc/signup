@@ -16,7 +16,7 @@
       <% topics = @department.upcoming %>
       <% if topics.present? %>
         <ul class="topic-list">
-          <% topics.each do |topic| %>
+          <% topics.sort_by(&:next_time).each do |topic| %>
             <% cache(["#{date_slug}/#{sites_key}/departments/show/upcoming", topic], expires_in: 1.day) do %>
               <li>
                 <%= link_to topic.name, topic %>
