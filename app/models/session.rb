@@ -5,7 +5,7 @@ class Session < ActiveRecord::Base
   accepts_nested_attributes_for :reservations
   has_many :occurrences, :dependent => :destroy, after_add: :mark_dirty, after_remove: :mark_dirty
   accepts_nested_attributes_for :occurrences, :reject_if => :all_blank, :allow_destroy => true
-  has_and_belongs_to_many :instructors, :class_name => "User", :uniq => true, after_add: :mark_dirty, after_remove: :mark_dirty
+  has_and_belongs_to_many :instructors, -> { uniq }, :class_name => "User", after_add: :mark_dirty, after_remove: :mark_dirty
   accepts_nested_attributes_for :instructors, :reject_if => lambda { |a| true }, :allow_destroy => false
   has_many :survey_responses, -> { order 'created_at DESC'}, through: :reservations
   has_paper_trail
