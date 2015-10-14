@@ -2,7 +2,7 @@ require 'net-ldap'
 
 class Ldap
   TXST_BASE = "DC=matrix,DC=txstate,DC=edu"
-  BIND_DN = "cn=itsldap,ou=TxState Service Accounts,#{TXST_BASE}"
+  BIND_DN = "CN=sa-ldap-its,OU=Service Accounts,OU=TxState Objects,#{TXST_BASE}"
   BIND_PASS = Rails.application.secrets.ldap_password
   USER_BASE = "ou=TxState Users,#{TXST_BASE}"
 
