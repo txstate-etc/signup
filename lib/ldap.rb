@@ -65,9 +65,11 @@ class Ldap
 
     connected = false
     error = nil
-    ['ads1.matrix.txstate.edu','ads2.matrix.txstate.edu'].each do |ldap_server| 
+    ['ldap.txstate.edu'].each do |ldap_server| 
       begin
         @ldap.host = ldap_server
+        @ldap.port = 636
+        @ldap.encryption :simple_tls
         @ldap.auth BIND_DN, BIND_PASS
         connected = @ldap.bind
         @logger.debug("bind result: #{@ldap.get_operation_result}")
