@@ -90,6 +90,8 @@ class User < ActiveRecord::Base
   end
 
   def directory_url
+    return unless defined? DIRECTORY_URL_BASE
+
     #FIXME: what if the people search has no results?
     DIRECTORY_URL_BASE.gsub(/##LOGIN##/, login) unless manual?
   end

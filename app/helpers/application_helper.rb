@@ -7,6 +7,14 @@ module ApplicationHelper
     t(:title, opts.merge( scope: [controller_name] ))
   end
 
+  def logo_link_url
+    if defined? ORG_URL
+      ORG_URL
+    else
+      root_url
+    end
+  end
+
   # Like ActionView::Helpers::TextHelper::pluralize, but without the number
   def pluralize_word(count, singular, plural = nil)
     ((count == 1 || count == '1') ? singular : (plural || singular.pluralize))

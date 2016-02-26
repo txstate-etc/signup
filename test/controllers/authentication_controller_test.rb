@@ -51,7 +51,7 @@ class AuthenticationControllerTest < ActionController::TestCase
     
     get :destroy
     assert_response :redirect
-    assert_redirected_to "#{CAS_LOGOUT_URL}?url=#{CGI.escape(root_url)}"
+    assert_redirected_to "#{LOGOUT_URL}?url=#{CGI.escape(root_url)}"
    
     assert_equal nil, AuthSession.find_by(credentials: auth_session.credentials)
     assert_equal nil, session[:credentials]

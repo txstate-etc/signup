@@ -1,19 +1,22 @@
 require 'net-ldap'
 
 class Ldap
-  TXST_BASE = "DC=matrix,DC=txstate,DC=edu"
-  BIND_DN = "CN=sa-ldap-its,OU=Service Accounts,OU=TxState Objects,#{TXST_BASE}"
-  BIND_PASS = Rails.application.secrets.ldap_password
-  USER_BASE = "ou=TxState Users,#{TXST_BASE}"
+  # BASE_DN = "DC=matrix,DC=txstate,DC=edu"
+  # BIND_DN = "CN=sa-ldap-its,OU=Service Accounts,OU=TxState Objects,#{BASE_DN}"
+  # BIND_PASS = Rails.application.secrets.ldap_password
+  # USER_BASE = "ou=TxState Users,#{BASE_DN}"
+  # LDAP_SERVERS = ['ldap.txstate.edu']
 
   class ConnectError < IOError
   end
 
   def self.import_user(login)
+    return nil unless defined? LDAP_SERVERS
     Ldap.new.import_user(login)
   end
 
   def self.search(query)
+    return [] unless defined? LDAP_SERVERS
     Ldap.new.search(query)
   end
 
@@ -53,7 +56,7 @@ class Ldap
 
   rescue => e
     @logger.error("There was a problem importing the user data from LDAP.")
-    ExceptionNotifier.notify_exception(e) if Rails.env == "production"
+    # ExceptionNotifier.notify_exception(e) if Rails.env == "production"
     raise
   end
 
@@ -65,7 +68,7 @@ class Ldap
 
     connected = false
     error = nil
-    ['ldap.txstate.edu'].each do |ldap_server| 
+    LDAP_SERVERS.each do |ldap_server| 
       begin
         @ldap.host = ldap_server
         @ldap.port = 636

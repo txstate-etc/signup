@@ -54,8 +54,8 @@ Rails.application.routes.draw do
     end
   end
 
-  get '/auth/:provider/callback', to: 'authentication#create'
-  get '/logout', to: 'authentication#destroy', as: 'logout'
+  get '/auth/:provider/callback', to: 'auth_sessions#create'
+  get '/logout', to: 'auth_sessions#destroy', as: 'logout'
 
   root :to => 'topics#index'
 

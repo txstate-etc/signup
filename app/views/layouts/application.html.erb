@@ -5,8 +5,10 @@
     <%= page_title %>
     <%=t :site_title, default: '' %>
   </title>
-  <link href="<%= asset_path 'favicon.ico' %>" type="image/x-icon" rel="shortcut icon">
+  <link href="<%= asset_path 'favicon.png' %>" type="image/x-icon" rel="shortcut icon">
+  <%= stylesheet_link_tag 'signup', media: 'all' %>
   <%= stylesheet_link_tag 'application', media: 'all' %>
+  <%= javascript_include_tag 'signup' %>
   <%= javascript_include_tag 'application' %>
   <%= yield(:head) %>
   <%= csrf_meta_tags %>

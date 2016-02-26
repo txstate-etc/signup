@@ -26,7 +26,7 @@ class Reservation < ActiveRecord::Base
     return if session.in_past?
 
     if (new_record? && special_accommodations.blank?) || special_accommodations_changed?
-      ReservationMailer.delay.accommodation_notice( self )
+      ReservationMailer.accommodation_notice( self ).deliver_later
     end
   end
 
@@ -69,10 +69,10 @@ class Reservation < ActiveRecord::Base
       session.reload
       if was_confirmed && !session.space_is_available? && !session.in_past?
         new_confirmed_reservation = session.confirmed_reservations.last
-        ReservationMailer.delay.promotion_notice( new_confirmed_reservation )
+        ReservationMailer.promotion_notice( new_confirmed_reservation ).deliver_later
         if session.next_time.today?
           session.instructors.each do |instructor|
-            ReservationMailer.delay.promotion_notice_instructor( new_confirmed_reservation, instructor )
+            ReservationMailer.promotion_notice_instructor( new_confirmed_reservation, instructor ).deliver_later
           end
         end
       end
@@ -94,7 +94,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def send_reminder
-    ReservationMailer.delay.remind( session, user )
+    ReservationMailer.remind( session, user ).deliver_later
   end
 
 end

@@ -100,10 +100,10 @@ class Session < ActiveRecord::Base
 
     if send_update
       instructors.each do |instructor|
-        ReservationMailer.delay.update_notice_instructor( self, instructor )
+        ReservationMailer.update_notice_instructor( self, instructor ).deliver_later
       end
       confirmed_reservations.each do |reservation|
-        ReservationMailer.delay.update_notice( self, reservation.user )
+        ReservationMailer.update_notice( self, reservation.user ).deliver_later
       end
     end
 
@@ -116,10 +116,10 @@ class Session < ActiveRecord::Base
     self.save
     if !in_past?
       instructors.each do |instructor|
-        ReservationMailer.delay.cancellation_notice_instructor( self, instructor, custom_message )
+        ReservationMailer.cancellation_notice_instructor( self, instructor, custom_message ).deliver_later
       end
       confirmed_reservations.each do |reservation|
-        ReservationMailer.delay.cancellation_notice( self, reservation.user, custom_message )
+        ReservationMailer.cancellation_notice( self, reservation.user, custom_message ).deliver_later
       end
     end
   end
@@ -306,10 +306,10 @@ class Session < ActiveRecord::Base
 
   def email_all(message)
     instructors.each do |instructor|
-      ReservationMailer.delay.session_message_instructor( self, instructor, message )
+      ReservationMailer.session_message_instructor( self, instructor, message ).deliver_later
     end
     confirmed_reservations.each do |reservation|
-      ReservationMailer.delay.session_message( self, reservation.user, message )
+      ReservationMailer.session_message( self, reservation.user, message ).deliver_later
     end
   end
 
@@ -328,11 +328,11 @@ class Session < ActiveRecord::Base
 
       # send a reminder to each student
       session.confirmed_reservations.each do |reservation|
-        ReservationMailer.delay.remind( session, reservation.user )
+        ReservationMailer.remind( session, reservation.user ).deliver_later
       end
       # now send one to each instructor
       session.instructors.each do |instructor|
-        ReservationMailer.delay.remind_instructor( session, instructor )
+        ReservationMailer.remind_instructor( session, instructor ).deliver_later
       end
     end
   end
@@ -352,12 +352,12 @@ class Session < ActiveRecord::Base
       session.reload #Force it to load in all occurrences
       next if session.not_finished? #wait until the last occurrance
       session.instructors.each do |instructor|
-        ReservationMailer.delay.followup_instructor( session, instructor )
+        ReservationMailer.followup_instructor( session, instructor ).deliver_later
       end
       if session.topic.certificate? || session.topic.survey_type != Topic::SURVEY_NONE
         session.confirmed_reservations.each do |reservation|
           if (reservation.attended? && session.topic.certificate?) || reservation.need_survey?
-            ReservationMailer.delay.followup( reservation ) 
+            ReservationMailer.followup( reservation ).deliver_later
           end
         end
       end
