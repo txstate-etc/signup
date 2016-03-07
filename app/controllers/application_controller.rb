@@ -2,7 +2,6 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
-  before_action :enable_mini_profiler
 
   GOOGLE_ANALYTICS_URL = URI('http://www.google-analytics.com/collect')
 
@@ -89,13 +88,6 @@ class ApplicationController < ActionController::Base
 
   def auth_user
     session[ :auth_user ]
-  end
-  
-  def enable_mini_profiler
-    # mini-profiler is enabled by default on development, this will switch it on in staging
-    # NB: mini-profiler appears to disable ETag support. We will never return a 304 with it enabled.
-    if Rails.env.staging? && current_user.is_a?(User) && current_user.admin?
-      Rack::MiniProfiler.authorize_request
-    end
-  end
+  end  
+
 end

@@ -8,10 +8,10 @@ class CompletionCertificate < Prawn::Document
   def to_pdf(reservation)
 
     # top border
-    image "#{Rails.application.assets.resolve('certificate/topbar.jpg')}", :width => 749, :height => 20, :position => :center, :vposition => -15
+    image "#{asset_path('certificate/topbar.jpg')}", :width => 749, :height => 20, :position => :center, :vposition => -15
 
     # header
-    image "#{Rails.application.assets.resolve('certificate/certificate.jpg')}", :width => 688, :height => 46, :position => :center, :vposition => 28
+    image "#{asset_path('certificate/certificate.jpg')}", :width => 688, :height => 46, :position => :center, :vposition => 28
 
     # main body text
     line reservation.user.name, :ypos => 425, :height => 48, :size => 48, :style => :italic, :font => 'Times-Roman'
@@ -22,13 +22,13 @@ class CompletionCertificate < Prawn::Document
     line reservation.session.topic.department.name, :ypos => 100, :color => '75746D'
           
     # organization logo
-    logo_path = Rails.application.assets.resolve('certificate/logo.jpg')
+    logo_path = asset_path('certificate/logo.jpg')
     if logo_path
       image "#{logo_path}", :width => 139, :height => 36, :position => :center, :vposition => 485
     end
 
     # bottom border
-    image "#{Rails.application.assets.resolve('certificate/bottombar.jpg')}", :width => 749, :height => 20, :position => :center, :vposition => 535
+    image "#{asset_path('certificate/bottombar.jpg')}", :width => 749, :height => 20, :position => :center, :vposition => 535
 
     render
   end
@@ -68,4 +68,13 @@ class CompletionCertificate < Prawn::Document
     end
   end
   
+  def asset_path(file)
+    if path = Rails.application.assets_manifest.assets[file]
+      Rails.public_path.join(Rails.application.assets_manifest.directory, path)
+    elsif Rails.application.assets
+      Rails.application.assets.resolve(file)
+    else
+      nil
+    end
+  end
 end

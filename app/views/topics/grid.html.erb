@@ -1,3 +1,7 @@
+<% content_for :head do %>
+  <meta name="robots" content="noindex, nofollow">
+<% end %>
+
 <% cache("#{sess_key}/topics/grid/#{date_slug(@cur_month)}", expires_in: 1.day)  do %>
   <table id="topic-grid">
     <caption>

@@ -29,10 +29,6 @@ module Signup
       end)
     end
  
-    initializer "public dir" do |app|
-      app.middleware.insert_after(::ActionDispatch::Static, ::ActionDispatch::Static, "#{config.root}/public")
-    end
-
     config.autoload_paths += Dir["#{config.root}/lib/**/"]
   end
 end
