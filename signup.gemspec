@@ -56,9 +56,6 @@ Gem::Specification.new do |s|
   # render pdf documents from ruby code
   s.add_runtime_dependency 'prawn', '~> 1.3.0'
 
-  # generate static pages
-  s.add_runtime_dependency 'high_voltage', '~> 2.2.1'
-
   # audit model changes
   s.add_runtime_dependency 'paper_trail', '~> 3.0.6'
 
