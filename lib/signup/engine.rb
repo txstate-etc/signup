@@ -1,3 +1,6 @@
+# needed for csv exports of models
+require 'csv'
+
 module Signup
   class Engine < ::Rails::Engine
     # we don't want the generator to create coffee script files 
