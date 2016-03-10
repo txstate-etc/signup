@@ -24,7 +24,7 @@ class FileIcon
   end
   
   def icon_path
-    EXT_MAP[@extension] || DEFAULT_ICON_PATH
+    FileIcon.ext_map[@extension] || DEFAULT_ICON_PATH
   end
   
   private
@@ -42,10 +42,14 @@ class FileIcon
     VIDEO_EXTENSIONS.each { |ext| ext_map[ext] = ICON_PATH_TEMPLATE % 'video' }
     IMAGE_EXTENSIONS.each { |ext| ext_map[ext] = ICON_PATH_TEMPLATE % 'image' }
     fileicon_assets.each do |file|
-      ext = File.basename(file, '.png')
+      ext = File.basename(file, '.png').gsub(/-.*/,'')
       ext_map[ext] = ICON_PATH_TEMPLATE % ext
     end 
     ext_map     
   end
-  EXT_MAP = FileIcon.init_ext_map
+
+  def self.ext_map
+    @@ext_map ||= FileIcon.init_ext_map
+  end
+
 end
