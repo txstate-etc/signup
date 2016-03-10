@@ -41,7 +41,7 @@ class DepartmentTest < ActiveSupport::TestCase
   test "Deleting a department with NO topics actually deletes it" do
     departments(:department_to_be_deleted).deactivate!
     assert_raise ActiveRecord::RecordNotFound do
-      Department.find(departments(:department_to_be_deleted)) 
+      Department.find(departments(:department_to_be_deleted).id) 
     end
   end
 

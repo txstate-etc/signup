@@ -50,22 +50,16 @@ module TopicsHelper
   end
 
   def link_to_document(d, opts = {})
-    url = opts.delete(:url) || d.item.url
-    url_proc = opts.delete(:url_proc)
-    url = url_proc.call(url) unless url_proc.nil?
-
-    text = file_icon_image_tag(d.item.original_filename, :url_proc => url_proc)
+    text = file_icon_image_tag(d.item.original_filename)
     text << ' ' << d.friendly_name
-    link_to(text, url, opts)
+    link_to(text, asset_url(d.item.url), opts)
   end
 
   def file_icon_image_tag(filename, opts={})
     file_icon = FileIcon.new(filename)
 
-    url = opts.delete(:url) || file_icon.icon_path
-    url_proc = opts.delete(:url_proc)
-    url = url_proc.call(image_path(url)) unless url_proc.nil? 
-
+    url = file_icon.icon_path
+    
     opts = { :alt => t(:'file_icon.type', :type => (file_icon.type || filename)) }.merge opts
     image_tag(url, opts)
   end

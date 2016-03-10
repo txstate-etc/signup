@@ -8,26 +8,26 @@ class SessionTest < ActiveSupport::TestCase
   end
 
   test "Should determine whether space is available correctly" do
-    session = Session.find( sessions( :tracs_tiny ) )
+    session = Session.find( sessions( :tracs_tiny ).id )
     assert session.space_is_available?
 
-    session = Session.find( sessions( :tracs_tiny_full ) )
+    session = Session.find( sessions( :tracs_tiny_full ).id )
     assert !session.space_is_available?
 
-    session = Session.find( sessions( :gato_huge ) )
+    session = Session.find( sessions( :gato_huge ).id )
     assert session.space_is_available?    
   end
   
   test "Should distinguish waiting list vs. reservations correctly" do
-    session = Session.find( sessions( :gato_overbooked ) )
+    session = Session.find( sessions( :gato_overbooked ).id )
     assert_equal 2, session.confirmed_count, "Wrong number of reservations for Gato"
     assert_equal 1, session.waiting_list_count, "Wrong number on waiting list for Gato"
     
-    session = Session.find( sessions( :tracs ) )
+    session = Session.find( sessions( :tracs ).id )
     assert_equal 1, session.confirmed_count, "Wrong number of reservations for TRACS"
     assert_equal 0, session.waiting_list_count, "Wrong number on waiting list for TRACS"
     
-    session = Session.find( sessions( :gato_cancelled ) )
+    session = Session.find( sessions( :gato_cancelled ).id )
     assert_equal 1, session.confirmed_count, "Wrong number of reservations for cancelled class"
     assert_equal 0, session.waiting_list_count, "Wrong number on waiting list for cancelled class"
   end
@@ -38,7 +38,7 @@ class SessionTest < ActiveSupport::TestCase
     Reservation.counter_culture_fix_counts
     self.class.use_transactional_fixtures = false
 
-    session = Session.find( sessions( :gato_overbooked ) )
+    session = Session.find( sessions( :gato_overbooked ).id )
     assert_equal 3, session.reservations_count
     reservation = session.reservations.create!(:user => users(:plainuser4))
     session.reload
@@ -59,7 +59,7 @@ class SessionTest < ActiveSupport::TestCase
 
     reservation.destroy!
 
-    session = Session.find( sessions( :tracs ) )
+    session = Session.find( sessions( :tracs ).id )
     assert_equal 1, session.reservations_count
     reservation = session.reservations.create!(:user => users(:plainuser4))
     session.reload

@@ -10,7 +10,7 @@
 <p>Just a friendly reminder: the "<%= session.topic.name %>" class you signed up
 for is coming up! If your plans have changed and you can no longer make it to the class,
 or you need to cancel your reservation for any other reason, 
-please do so <%= link_to "here", :controller => "reservations", :only_path => false %>.</p>
+please do so <%= link_to "here", reservations_url %>.</p>
 
 <%= render :partial => "reservation", :locals => {
   :session => session,

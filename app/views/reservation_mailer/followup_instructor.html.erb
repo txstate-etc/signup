@@ -10,7 +10,7 @@
 <p> 
   Now that the "<%= session.topic.name %>" class you taught
   has ended it is a good time to record attendance, if you have not
-  already done so. You may view or update the attendance record <%= link_to "here", sessions_reservations_url(session), :only_path => false %>.
+  already done so. You may view or update the attendance record <%= link_to "here", sessions_reservations_url(session) %>.
   <%- if session.topic.certificate? -%>
     Note that students are only able to download certificates of completion if their attendance has been recorded.
   <%- end -%>
@@ -21,7 +21,7 @@
   <p>
     A link to the class survey has been sent to all attendees. 
     When completed, you will be able to view the results
-    <%= link_to "here", survey_results_session_url( session ), :only_path => false %>.
+    <%= link_to "here", survey_results_session_url( session ) %>.
   </p>
 <% when Topic::SURVEY_EXTERNAL %>
   <p>

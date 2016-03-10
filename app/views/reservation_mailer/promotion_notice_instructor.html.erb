@@ -10,7 +10,7 @@
 <p>A late reservation for <%= reservation.session.topic.name %> has just been promoted off of the waiting list.
   Because this session is happening today, we wanted to give you a heads up in case you need to print extra course materials
   or make any other preparations. The reservation details are below. As always, you can view the current list of
-  confirmed reservations <%= link_to "here", sessions_reservations_url(reservation.session), :only_path => false %>.</p>
+  confirmed reservations <%= link_to "here", sessions_reservations_url(reservation.session) %>.</p>
 
 <%= render :partial => "reservation", :locals => {
   :session => reservation.session,

@@ -27,13 +27,13 @@ class TopicTest < ActiveSupport::TestCase
   end
 
   test "Verify that upcoming sessions are computed correctly" do
-    upcoming_tracs = Topic.find( topics( :tracs ) ).upcoming_sessions
+    upcoming_tracs = Topic.find( topics( :tracs ).id ).upcoming_sessions
     assert_equal 4, upcoming_tracs.length, "TRACS should have 4 upcoming session"
     
-    upcoming_gato = Topic.find( topics( :gato ) ).upcoming_sessions
+    upcoming_gato = Topic.find( topics( :gato ).id ).upcoming_sessions
     assert_equal 4, upcoming_gato.length, "Gato should have 4 upcoming sessions"
 
-    upcoming_multi = Topic.find( topics( :multi_time_topic ) ).upcoming_sessions
+    upcoming_multi = Topic.find( topics( :multi_time_topic ).id ).upcoming_sessions
     assert_equal 1, upcoming_multi.length, "Multi Time Topic should have 1 upcoming session"
   end
   
@@ -82,7 +82,7 @@ class TopicTest < ActiveSupport::TestCase
     topic.minutes = nil
     assert_equal 2, topic.documents.size
     document = topic.documents.build
-    document.item = File.new("#{Rails.root}/test/fixtures/topics.yml")
+    document.item = File.new(__FILE__)
     assert document.new_record?
     assert_equal 3, topic.documents.size
     assert_equal false, topic.valid?
@@ -178,12 +178,12 @@ class TopicTest < ActiveSupport::TestCase
 
   test 'Should delete topic with no sessions' do
     topics( :topic_to_delete ).deactivate!
-    assert_not Topic.exists?(topics( :topic_to_delete ))
+    assert_not Topic.exists?(topics( :topic_to_delete ).id)
   end
 
   test 'Should mark topic with past sessions as inactive' do
     topics( :topic_to_make_inactive ).deactivate!
-    assert Topic.exists?(topics( :topic_to_make_inactive ))
+    assert Topic.exists?(topics( :topic_to_make_inactive ).id)
     assert topics( :topic_to_make_inactive ).inactive
   end
 
@@ -192,7 +192,7 @@ class TopicTest < ActiveSupport::TestCase
       topics( :tracs ).deactivate!
     end
     assert_match /cannot delete a topic with upcoming sessions/, exception.message
-    assert Topic.exists?(topics( :tracs ))
+    assert Topic.exists?(topics( :tracs ).id)
     topics( :tracs ).reload
     assert_not topics( :tracs ).inactive
   end

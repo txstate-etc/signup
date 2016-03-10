@@ -15,13 +15,13 @@ Gem::Specification.new do |s|
   s.license     = "Apache-2.0"
 
   s.files = Dir["{app,config,db,lib}/**/*", "LICENSE.txt", "Rakefile", "README.md"]
-  s.test_files = Dir["test/**/*"]
+  s.test_files = `git ls-files -- test/*`.split("\n")
 
   s.add_runtime_dependency "rails", "~> 4.2"
   s.add_runtime_dependency 'sass-rails'
   s.add_runtime_dependency 'jquery-rails'
   s.add_runtime_dependency 'jbuilder'
-  s.add_runtime_dependency 'simple_form', '~> 3.0.2'
+  s.add_runtime_dependency 'simple_form', '~> 3.2.1'
 
   # add cache of association counts
   # more flexibly than the builtin version
@@ -35,7 +35,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'acts-as-taggable-on', '~> 3.4.2'
 
   # Attachments/Documents
-  s.add_runtime_dependency 'paperclip', '~> 4.2.0'
+  s.add_runtime_dependency 'paperclip', '~> 4.3.5'
 
   # Nested form helpers (for attachments, instructors, etc)
   s.add_runtime_dependency 'cocoon', '~> 1.2.6'
@@ -45,7 +45,7 @@ Gem::Specification.new do |s|
 
   # Autocomplete for instructors, etc.
   # despite the name, works fine on rails 4
-  s.add_runtime_dependency 'rails3-jquery-autocomplete', '~> 1.0.14'
+  s.add_runtime_dependency 'rails-jquery-autocomplete', '~> 1.0.3'
 
   # used by HtmlToPlainText
   s.add_runtime_dependency 'htmlentities', '~> 4.3.2'
@@ -57,7 +57,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'prawn', '~> 1.3.0'
 
   # audit model changes
-  s.add_runtime_dependency 'paper_trail', '~> 3.0.6'
+  s.add_runtime_dependency 'paper_trail', '~> 4.1.0'
 
   s.add_development_dependency 'spring'
   s.add_development_dependency "mysql2", '~> 0.3.16'

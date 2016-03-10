@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class AuthenticationControllerTest < ActionController::TestCase
+class AuthSessionsControllerTest < ActionController::TestCase
   fixtures :users, :auth_sessions
 
   test "Should log users in with valid credentials" do
@@ -66,7 +66,7 @@ class AuthenticationControllerTest < ActionController::TestCase
     # There is no route defined for single_sign_out, so we can't call it the normal way
     # get :single_sign_out, session_index: auth_session.credentials
     @request.headers['QUERY_STRING'] = "session_index=#{auth_session.credentials}"
-    AuthenticationController.action(:single_sign_out).call @request.env
+    AuthSessionsController.action(:single_sign_out).call @request.env
 
     assert_response :success
     assert_equal 0, @response.body.length

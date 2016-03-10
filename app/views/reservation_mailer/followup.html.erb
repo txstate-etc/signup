@@ -22,7 +22,7 @@
   <%- if reservation.need_survey? -%>
     <%- if reservation.session.topic.survey_type == Topic::SURVEY_INTERNAL -%>
       <p>We've prepared a very quick, 5 question survey that won't take more than 3 minutes of your time --
-        we promise! Please <a href="<%= url_for :controller => "survey_responses", :action => "new", :only_path => false %>?reservation_id=<%= reservation.id %>">click here</a> to take the survey, and accept our thanks.</p>
+        we promise! Please <a href="<%= new_survey_response_url %>?reservation_id=<%= reservation.id %>">click here</a> to take the survey, and accept our thanks.</p>
     <%- elsif reservation.session.topic.survey_type == Topic::SURVEY_EXTERNAL -%>  
       <p>The instructor for this course has set up a survey to collect feedback on this course. Please
         <a href="<%=h reservation.session.topic.survey_url%>">click here</a> 
@@ -42,7 +42,7 @@
           Once the instructor records attendance, you will be able to 
       <%- end -%>
       download your certificate of completion from the 
-      <%= link_to "Your Reservations", :controller => "reservations", :only_path => false %> page!
+      <%= link_to "Your Reservations", reservations_url %> page!
     </p>
   <%- end -%>
 

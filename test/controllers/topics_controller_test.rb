@@ -48,7 +48,7 @@ class TopicsControllerTest < ActionController::TestCase
     put :destroy, :id => topics( :gato )
     assert_response :redirect
     assert_redirected_to "/auth/cas?url=#{@request.url}"
-    assert Topic.exists?(topics( :gato ))
+    assert Topic.exists?(topics( :gato ).id)
     assert_not topics( :gato ).inactive
   end
 
@@ -91,7 +91,7 @@ class TopicsControllerTest < ActionController::TestCase
     assert_response :redirect
     assert_redirected_to manage_topics_path
     topics( :topic_to_make_inactive ).reload
-    assert Topic.exists?(topics( :topic_to_make_inactive ))
+    assert Topic.exists?(topics( :topic_to_make_inactive ).id)
     assert topics( :topic_to_make_inactive ).inactive
   end
 
@@ -140,7 +140,7 @@ class TopicsControllerTest < ActionController::TestCase
     assert_response :redirect
     assert_redirected_to manage_topics_path
     topics( :topic_to_make_inactive ).reload
-    assert Topic.exists?(topics( :topic_to_make_inactive ))
+    assert Topic.exists?(topics( :topic_to_make_inactive ).id)
     assert topics( :topic_to_make_inactive ).inactive
   end
 
@@ -164,7 +164,7 @@ class TopicsControllerTest < ActionController::TestCase
     assert_no_match(/has been deleted/, flash[:notice])
     assert_response :redirect
     assert_redirected_to root_path
-    assert Topic.exists?(topics( :topic_to_delete ))
+    assert Topic.exists?(topics( :topic_to_delete ).id)
     assert_not topics( :topic_to_delete ).inactive
   end
 
@@ -206,7 +206,7 @@ class TopicsControllerTest < ActionController::TestCase
     delete :destroy, :id => topics( :topic_to_make_inactive )
     assert_response :redirect
     assert_redirected_to root_path
-    assert Topic.exists?(topics( :topic_to_make_inactive ))
+    assert Topic.exists?(topics( :topic_to_make_inactive ).id)
     assert_not topics( :topic_to_make_inactive ).inactive
   end
 
@@ -233,7 +233,7 @@ class TopicsControllerTest < ActionController::TestCase
     delete :destroy, :id => topics( :topic_to_make_inactive )
     assert_response :redirect
     assert_redirected_to root_path
-    assert Topic.exists?(topics( :topic_to_make_inactive ))
+    assert Topic.exists?(topics( :topic_to_make_inactive ).id)
     assert_not topics( :topic_to_make_inactive ).inactive
   end
   

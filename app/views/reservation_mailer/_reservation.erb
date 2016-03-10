@@ -32,7 +32,7 @@
           <dt>Tags:</dt>
           <dd>
             <%= session.topic.sorted_tags.map do |t| 
-                  link_to t, ReservationMailer.absolute_url(tag_path(t))
+                  link_to t, tag_url(t)
                 end.join(', ').html_safe
             %>
           </dd>
@@ -43,7 +43,7 @@
         <dt>Download Class Materials:</dt>
         <%- session.topic.documents.each do |d| -%>
           <dd>
-            <%= link_to_document d, :url_proc => Proc.new { |p| ReservationMailer.absolute_url p } %>
+            <%= link_to_document d %>
           </dd>
         <%- end -%>
       <%- end -%>

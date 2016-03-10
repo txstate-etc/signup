@@ -14,6 +14,10 @@ gemspec
 # rical library for generating ics files
 gem 'ri_cal', :github => 'txstate-etc/ri_cal', :ref => '5891733ef1'
 
+group :development, :test do
+  gem 'omniauth-cas', github: 'txstate-etc/omniauth-cas', ref: 'c2c538c371'
+end
+
 group :development do
   gem 'better_errors'
   gem 'quiet_assets'

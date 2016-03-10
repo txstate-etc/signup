@@ -16,7 +16,7 @@
 <%end%>
   
 <p>If you'd like to sign up to take the class at a different time, you can
-  see a list of times it is offered <%= link_to "here", :action => "show", :controller => "topics", :id => session.topic.id, :only_path => false %>.</p>
+  see a list of times it is offered <%= link_to "here", topic_url(session.topic.id) %>.</p>
 
 <%= render :partial => "reservation", :locals => {
   :session => session,

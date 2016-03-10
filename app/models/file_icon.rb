@@ -1,7 +1,6 @@
 class FileIcon
   
   BASE_ICON_PATH = 'fileicons'
-  DIR_PATH = "#{Rails.root}/app/assets/images/#{BASE_ICON_PATH}"
   ICON_PATH_TEMPLATE = "#{BASE_ICON_PATH}/%s.png"
   DEFAULT_ICON_TYPE = 'file'
   DEFAULT_ICON_PATH = ICON_PATH_TEMPLATE % DEFAULT_ICON_TYPE
@@ -29,12 +28,20 @@ class FileIcon
   end
   
   private
+  def self.fileicon_assets
+    files = Dir.glob("#{Rails.application.assets_manifest.directory}/#{BASE_ICON_PATH}/*.png")
+    if files.empty? && Rails.application.assets
+      files = Rails.application.assets.paths.map {|d| Dir.glob("#{d}/#{BASE_ICON_PATH}/*.png")}.flatten
+    end
+    files
+  end
+
   def self.init_ext_map
     ext_map = {}
     AUDIO_EXTENSIONS.each { |ext| ext_map[ext] = ICON_PATH_TEMPLATE % 'audio' }
     VIDEO_EXTENSIONS.each { |ext| ext_map[ext] = ICON_PATH_TEMPLATE % 'video' }
     IMAGE_EXTENSIONS.each { |ext| ext_map[ext] = ICON_PATH_TEMPLATE % 'image' }
-    Dir.glob("#{DIR_PATH}/*.png") do |file|
+    fileicon_assets.each do |file|
       ext = File.basename(file, '.png')
       ext_map[ext] = ICON_PATH_TEMPLATE % ext
     end 

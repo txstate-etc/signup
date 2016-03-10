@@ -1,15 +1,15 @@
 require 'test_helper'
 
 class ReservationMailerTest < ActionMailer::TestCase
-  def fixture_name(ext, full_path=false)
+  def fixture_name(ext, full_path=true)
     path = "#{method_name.sub(/test_/, '')}.#{ext}"
-    full_path ? "#{Rails.root}/test/fixtures/reservation_mailer/#{path}" : path
+    full_path ? File.expand_path("../../fixtures/reservation_mailer/#{path}", __FILE__) : path
   end
-  
+
   def read_combined_fixture
-    text = read_fixture("#{fixture_name('txt')}").join rescue nil
-    html = read_fixture("#{fixture_name('html')}").join rescue nil
-    ics = read_fixture("#{fixture_name('ics')}").join rescue nil
+    text = IO.readlines(fixture_name('txt')).join 
+    html = IO.readlines(fixture_name('html')).join
+    ics = IO.readlines(fixture_name('ics')).join rescue nil
     [text, html, ics]
   end
   

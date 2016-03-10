@@ -2,7 +2,7 @@ require 'test_helper'
 
 class OccurrenceTest < ActiveSupport::TestCase
   test "Occurences should be sorted by time by default" do
-    test_session = Session.find( sessions( :gato ) )
+    test_session = Session.find( sessions( :gato ).id )
     assert_difference 'test_session.occurrences.count', +2 do
       test_session.occurrences.create(:time => DateTime.parse('2025-04-29T12:00:00'))
       test_session.occurrences.create(:time => DateTime.parse('2025-04-27T15:00:00'))

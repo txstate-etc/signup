@@ -12,7 +12,7 @@
   class, and need take no additional action to attend.</p>
   
 <p> If you won't be able to make it to this session after all, you can cancel
-  your reservation <%= link_to "here", :controller => "reservations", :only_path => false %>.</p>
+  your reservation <%= link_to "here", reservations_url %>.</p>
 
 <%= render :partial => "reservation", :locals => {
   :session => reservation.session,

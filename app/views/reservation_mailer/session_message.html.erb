@@ -15,10 +15,10 @@
   } -%>
 
 <p>If you're unable to attend the class for any reason, please cancel your
-reservation <%= link_to "here", :controller => "reservations", :only_path => false %>.
+reservation <%= link_to "here", reservations_url %>.
 
 <p>If you'd like to sign up to take the class at a different time, you can
-see a list of times it is offered  <%= link_to "here", :action => "show", :controller => "topics", :id => session.topic.id, :only_path => false %>. (Be sure to cancel your existing
+see a list of times it is offered  <%= link_to "here", topic_url(session.topic.id) %>. (Be sure to cancel your existing
 reservation first!)</p>
 
 </body>
