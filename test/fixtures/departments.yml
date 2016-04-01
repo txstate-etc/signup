@@ -1,11 +1,11 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-its:
-  name: ITS
-
 tr:
   name: Technology Resources
   
+its:
+  name: ITS
+
 library:
   name: Library
 

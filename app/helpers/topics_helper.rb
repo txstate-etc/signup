@@ -85,7 +85,7 @@ module TopicsHelper
       groups[topic.department] << topic 
     end
     
-    groups.keys.sort.each do |department| 
+    groups.keys.sort_by {|a| a.name.downcase }.each do |department| 
       yield department, groups[department].sort_by {|a| a.name.downcase }
     end if block_given?
 

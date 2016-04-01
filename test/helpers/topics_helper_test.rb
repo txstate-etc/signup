@@ -16,7 +16,15 @@ class TopicsHelperTest < ActionView::TestCase
   end
 
   test "grouped_by_department" do
-    groups = grouped_by_department Topic.upcoming
+    sorted_departments = []
+
+    groups = grouped_by_department(Topic.upcoming) do |department, topics|
+      sorted_departments << department
+    end
+
+    assert_equal departments( :its ), sorted_departments[0]
+    assert_equal departments( :tr ), sorted_departments[1]
+
     assert_equal 2, groups.keys.length
     assert_equal 2, groups[departments( :its )].length
     assert_equal 1, groups[departments( :tr )].length
