@@ -9,7 +9,7 @@
 <div class="content-section">
   <div class="disclaimer">
     <p><strong>Note:</strong> Only users who have been manually added can be modified or deleted.</p>
-    <p>So, they are the only entries displayed here.</p>
+    <p>So they are the only entries displayed here.</p>
   </div>
 </div>
 
@@ -23,6 +23,7 @@
     <table class="user-list">
       <thead>
         <tr>
+          <th scope="col" class="user-login">Username</th>
           <th scope="col" class="user-name">Name</th>
           <th scope="col" class="user-email">Email</th> 
           <th scope="col" class="user-title">Title</th>
@@ -33,6 +34,9 @@
       <tbody>
         <% @users.each do |user| %>
           <tr class="<%= cycle("even", "odd") %>">
+            <td class="user-login">
+              <%= user.login %>
+            </td>
             <td class="user-name">
               <%= link_to_user_directory user %>
             </td>

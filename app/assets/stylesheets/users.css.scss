@@ -40,19 +40,19 @@ div#manage-users {
     background-color: $gray-bg;
   }
 
-  .user-name {
+  .user-login {
     padding: 1px 5px;
-    width: 23%;
+    width: 19%;
   }
 
-  .user-email, .user-title, .user-department {
-    width: 23%;
+  .user-name, .user-email, .user-title, .user-department {
+    width: 19%;
     border-left: 1px $border-color solid;
     padding-left: 3px;
   }
 
   .user-actions {
-    width: 8%;
+    width: 5%;
     border-left: 1px #C6C6C6 solid;
     padding-left: 3px;
   }
@@ -76,5 +76,22 @@ table.user-list {
 
   a.delete-link {
     background: image-url('delete.png') center no-repeat;
+  }
+}
+
+div#duplicate-user {
+  margin: 1em 0;
+  border: 2px solid $primary-color;
+  padding: .5em;
+
+  h3 {
+    font-size: 1.1em;
+    font-weight: normal;
+    margin: 0;
+    color: #b00;
+  }
+
+  a {
+    text-decoration: underline;
   }
 }

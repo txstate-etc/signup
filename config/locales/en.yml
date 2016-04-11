@@ -33,6 +33,8 @@ en:
         reg_end: "Registration end time"
       document:
         item_file_size: "Document size"
+      user:
+        login: "Username"
   file_icon:
     type: "%{type} file"
   departments:

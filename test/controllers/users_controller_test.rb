@@ -67,7 +67,7 @@ class UsersControllerTest < ActionController::TestCase
     get :edit, :id => users( :plainuser1 )
     assert_response :success
       
-    post :create, :user => { :first_name => 'John', :last_name => 'McClain', :email => 'yippiekiyay@nakatomi.com' }
+    post :create, :user => { :login => 'diehard', :first_name => 'John', :last_name => 'McClain', :email => 'yippiekiyay@nakatomi.com' }
     assert_response :redirect
     assert_redirected_to users_path
     
@@ -109,7 +109,7 @@ class UsersControllerTest < ActionController::TestCase
     assert_response :redirect
     assert_redirected_to root_url
     
-    post :create, :user => { :first_name => 'John', :last_name => 'McClain', :email => 'yippiekiyay@nakatomi.com' }
+    post :create, :user => { :login => 'diehard', :first_name => 'John', :last_name => 'McClain', :email => 'yippiekiyay@nakatomi.com' }
     assert_response :redirect
     assert_redirected_to users_path
    
@@ -151,7 +151,7 @@ class UsersControllerTest < ActionController::TestCase
     assert_response :redirect
     assert_redirected_to root_url
     
-    post :create, :user => { :first_name => 'John', :last_name => 'McClain', :email => 'yippiekiyay@nakatomi.com' }
+    post :create, :user => { :login => 'diehard', :first_name => 'John', :last_name => 'McClain', :email => 'yippiekiyay@nakatomi.com' }
     assert_response :redirect
     assert_redirected_to users_path
     

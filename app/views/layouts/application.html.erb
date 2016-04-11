@@ -7,9 +7,13 @@
   </title>
   <link href="<%= asset_path 'favicon.png' %>" type="image/x-icon" rel="shortcut icon">
   <%= stylesheet_link_tag 'signup', media: 'all' %>
-  <%= stylesheet_link_tag 'application', media: 'all' %>
+  <%- if (File.exists?("#{Rails.root}/app/assets/stylesheets/application.css")) -%>
+    <%= stylesheet_link_tag 'application', media: 'all' %>
+  <%- end -%>
   <%= javascript_include_tag 'signup' %>
-  <%= javascript_include_tag 'application' %>
+  <%- if (File.exists?("#{Rails.root}/app/assets/javascripts/application.js")) -%>
+    <%= javascript_include_tag 'application' %>
+  <%- end -%>
   <%= yield(:head) %>
   <%= csrf_meta_tags %>
   <meta name="viewport" content="width=device-width,user-scalable=yes">

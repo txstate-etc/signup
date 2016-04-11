@@ -6,6 +6,8 @@ class Ldap
   # BIND_PASS = Rails.application.secrets.ldap_password
   # USER_BASE = "ou=TxState Users,#{BASE_DN}"
   # LDAP_SERVERS = ['ldap.txstate.edu']
+  # QUERY_BASE = '(objectCategory=CN=Person,CN=Schema,CN=Configuration,DC=matrix,DC=txstate,DC=edu)'
+  # MAIL_DOMAIN = 'txstate.edu'
 
   class ConnectError < IOError
   end
@@ -27,6 +29,7 @@ class Ldap
   end
 
   def search(query)
+    start = Time.now
     query = build_search_query(query)
     results = []
     @ldap.search(:base => USER_BASE, :filter => query, :size => 10, :return_result => false ) do |entry|
@@ -34,12 +37,16 @@ class Ldap
         results << fields
       end
     end
+    finish = Time.now
+    @logger.info( "LDAP Search Complete: #{((finish - start) * 1000).to_i}ms" )
     results
   end
 
   def import_user(login)
     return nil unless login.present?
-    @logger.info("Starting user import from LDAP: #{Time.now}" )
+    
+    start = Time.now
+    @logger.info("Starting user import from LDAP: #{start}" )
 
     query = build_user_import_query(login)
 
@@ -50,7 +57,8 @@ class Ldap
       end
     end
     
-    @logger.info( "LDAP user Import Complete: #{Time.now}" )
+    finish = Time.now
+    @logger.info( "LDAP user Import Complete: #{finish} (#{((finish - start) * 1000).to_i}ms)" )
     
     user
 
@@ -97,13 +105,15 @@ class Ldap
   def build_search_query(terms)
     # givenName, sn, or sAMAccountName start with each term
     query = '(&'
-    query << '(objectCategory=CN=Person,CN=Schema,CN=Configuration,DC=matrix,DC=txstate,DC=edu)'
+    query << QUERY_BASE
     
     terms.gsub(/[()]/, '').split.each do |term|
       query << '(|'
       query << "(sAMAccountName=#{term}*)"
       query << "(givenName=#{term}*)"
       query << "(sn=#{term}*)"
+      query << "(mail=#{term}*)"
+      query << "(proxyaddresses=smtp:#{term}*)"
       query << ')'
     end
 
@@ -120,10 +130,19 @@ class Ldap
   #########################################
 
   def build_user_import_query(login)
-    query = '(&'
-    query <<   '(objectCategory=CN=Person,CN=Schema,CN=Configuration,DC=matrix,DC=txstate,DC=edu)'
-    query <<    "(sAMAccountName=#{login})"
-    query << ')'
+    # possible inputs:
+    #  cj32
+    #  cj32@txstate.edu
+    #  charlesjones@txstate.edu
+    #  cj32@otherdomain.com (coincidentally matches a netid, but isn't one)
+    address = Mail::Address.new(login) rescue nil
+    if address && address.domain == MAIL_DOMAIN && address.local.present?
+      query = "(|(sAMAccountName=#{address.local})(mail=#{login})(proxyaddresses=smtp:#{login}))"
+    else      
+      query = "(sAMAccountName=#{login})"
+    end
+    
+    query = "(&#{QUERY_BASE}#{query})"
     @logger.debug("LDAP query = #{query}")
 
     query
@@ -148,7 +167,7 @@ class Ldap
     full_name = "#{firstname} #{lastname}".strip
     name_prefix = entry.personalTitle.first.to_s if entry.respond_to?( :personalTitle )
     login = entry.name.first.to_s.strip
-    email = "#{login}@txstate.edu"
+    email = "#{login}@#{MAIL_DOMAIN}"
     title = entry.title.first.to_s.strip if entry.respond_to?( :title )
     department = entry.department.first.to_s if entry.respond_to?( :department )
 

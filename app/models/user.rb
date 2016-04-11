@@ -2,7 +2,7 @@ require 'ldap'
 
 class User < ActiveRecord::Base
   has_many :auth_sessions
-  has_many :permissions
+  has_many :permissions, dependent: :destroy
   has_many :departments, :through => :permissions
   has_many :reservations, -> { joins(:session).where(cancelled: false, sessions: { cancelled: false }) }
   has_and_belongs_to_many :sessions, -> { where(cancelled: false).includes([:topic, :occurrences]).order('occurrences.time') }
@@ -12,8 +12,31 @@ class User < ActiveRecord::Base
   scope :active, -> { where inactive: false }
   scope :manual, -> { where manual: true }
 
-  validates :last_name, :email, presence: true
+  validate :must_not_exist, if: :manual?
   validates :login, presence: true, uniqueness: true
+  validates :last_name, :email, presence: true
+
+  attr_reader :duplicate
+
+  def must_not_exist
+    if @duplicate = User.find_or_lookup_by_login(login)
+      if !@duplicate.manual?
+        errors.add(:login, 'Username already exists in LDAP. Do not create manually.')
+      elsif @duplicate.inactive?
+        errors.add(:login, 'User was previously deleted. Contact Support to reactivate.')
+      end
+    end
+  end
+
+  def deactivate!
+    # if this is a brand new user (no sessions or reservations), just go ahead and delete it
+    if sessions.unscope(where: :cancelled).count == 0 && Reservation.where(user_id: id).count == 0
+      return self.destroy!
+    end
+    
+    self.inactive = true
+    self.save!
+  end
 
   # SELECT id, name_prefix, first_name, last_name, login FROM `users`  
   # WHERE ((first_name LIKE 'a%' OR last_name LIKE 'a%' OR login LIKE 'a%')
@@ -25,14 +48,14 @@ class User < ActiveRecord::Base
     conditions = []
     values = []
     query.split(/\s+/).each do |word|
-      conditions << "(first_name LIKE ? OR last_name LIKE ? OR login LIKE ?)"
-      3.times { values << "#{word}%" }
+      conditions << "(first_name LIKE ? OR last_name LIKE ? OR login LIKE ? OR email LIKE ?)"
+      4.times { values << "#{word}%" }
     end
     
     logger.debug { "in search: conditions = #{conditions}" }
 
     User.select("id, name_prefix, first_name, last_name, login").
-      where(conditions.join(" AND "), *values)
+        where(conditions.join(" AND "), *values)
   end
 
   def self.directory_search(query)

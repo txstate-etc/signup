@@ -16,7 +16,8 @@ class UsersController < ApplicationController
     }.tap { |json|
       json << {
         :id => 'add-new', 
-        :label => 'Add new...'
+        :label => 'Add new...',
+        :value => 'add-new'
       }
     }
   end
@@ -45,12 +46,7 @@ class UsersController < ApplicationController
   # POST /users
   # POST /users.json
   def create
-    @user = User.new(user_params)
-    
-    # use email for login if they didn't supply one 
-    # (login is not currently supported for manually created users)
-    @user.login ||= @user.email
-    @user.manual = true
+    @user = User.new(user_params.merge(manual: true))
 
     respond_to do |format|
       if @user.save
@@ -58,7 +54,8 @@ class UsersController < ApplicationController
         format.json { render :show, status: :created, location: @user }
       else
         format.html { render :new }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
+        format.json { render json: errors_with_dup, status: :unprocessable_entity 
+        }
       end
     end
   end
@@ -72,15 +69,15 @@ class UsersController < ApplicationController
         format.json { render :show, status: :ok, location: @user }
       else
         format.html { render :edit }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
+        format.json { render json: errors_with_dup, status: :unprocessable_entity }
       end
     end
   end
 
-# DELETE /users/1
+  # DELETE /users/1
   # DELETE /users/1.json
   def destroy
-    @user.destroy
+    @user.deactivate!
     respond_to do |format|
       format.html { redirect_to users_url, notice: 'User was successfully deleted.' }
       format.json { head :no_content }
@@ -100,6 +97,7 @@ class UsersController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
       params.require(:user).permit(
+        :login,
         :name_prefix, 
         :first_name,
         :last_name,
@@ -111,5 +109,12 @@ class UsersController < ApplicationController
 
     def ensure_authorized
       redirect_to root_path unless authorized? @user
+    end
+
+    def errors_with_dup
+      { errors: @user.errors }.tap do |h|
+        dup = @user.duplicate
+        h[:duplicate] = dup.name_and_login if dup && !dup.inactive
+      end
     end
 end
