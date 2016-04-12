@@ -7,7 +7,7 @@ class ReservationsController < ApplicationController
   def index
     admin_is_viewing_someone_else = params[ :user_login ] && current_user.admin?
     login = admin_is_viewing_someone_else ? params[ :user_login ] : current_user
-    @user = User.find_or_lookup_by_login( login )
+    @user = User.find_or_lookup_by_login( login ) rescue nil
     if @user.nil?
       flash[:alert] = "Could not find user with Login ID #{params[ :user_login ]}" if admin_is_viewing_someone_else
       redirect_to request.referrer || root_url
@@ -48,7 +48,7 @@ class ReservationsController < ApplicationController
     session = Session.find( params[ :session_id ] )
     admin_is_enrolling_someone_else = params[ :user_login ] && session && authorized?(session)
     login = admin_is_enrolling_someone_else ? params[ :user_login ] : current_user
-    user = User.find_or_lookup_by_login( login )
+    user = User.find_or_lookup_by_login( login ) rescue nil
     if user.nil?
       flash[:alert] = "Could not find user with Login ID #{params[ :user_login ]}" if admin_is_enrolling_someone_else
       redirect_to request.referrer || root_url

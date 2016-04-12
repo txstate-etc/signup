@@ -3,7 +3,7 @@ class AuthSessionsController < ApplicationController
   
   def create
     session[:credentials] = auth_credentials[:ticket]
-    user = User.find_or_lookup_by_login(auth_user)
+    user = User.find_or_lookup_by_login(auth_user) rescue nil
 
     if user.blank?
       session[:auth_user] = auth_user

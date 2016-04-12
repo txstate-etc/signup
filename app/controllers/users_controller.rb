@@ -90,7 +90,7 @@ class UsersController < ApplicationController
       if action_name == 'new' || action_name == 'create'
         @user = User.new
       else
-        @user = User.find_or_lookup_by_id(params[:id])
+        @user = User.find_or_lookup_by_id(params[:id]) rescue nil
       end
     end
 

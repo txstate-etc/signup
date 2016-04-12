@@ -26,6 +26,8 @@ class User < ActiveRecord::Base
         errors.add(:login, 'User was previously deleted. Contact Support to reactivate.')
       end
     end
+  rescue
+    errors.add(:login, 'Could not validate Username. Please try again later.')
   end
 
   def deactivate!
@@ -96,6 +98,7 @@ class User < ActiveRecord::Base
         user = ldap_user if ldap_user
       rescue Ldap::ConnectError, Net::LDAP::LdapError => e
         logger.error("There was a problem importing the data from LDAP. " + e.to_s)
+        raise unless user.is_a?(User)
       end
     end
     
