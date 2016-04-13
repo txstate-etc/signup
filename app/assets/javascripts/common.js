@@ -58,7 +58,8 @@ $(function() {
         'hitType': 'event', 
         'eventCategory': 'Links', 
         'eventAction': thisPageTitle + " <" + thisPageAddress + ">",
-        'eventLabel': linkName + " <" + linkAddress + ">" 
+        'eventLabel': linkName + " <" + linkAddress + ">",
+        'transport': 'beacon'
       });
     }
   });
