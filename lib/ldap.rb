@@ -162,14 +162,14 @@ class Ldap
       return nil
     end
     
-    firstname = entry.givenName.first.to_s.strip
-    lastname = entry.sn.first.to_s.strip
+    firstname = entry.givenName.first.to_s.strip.force_encoding('UTF-8')
+    lastname = entry.sn.first.to_s.strip.force_encoding('UTF-8')
     full_name = "#{firstname} #{lastname}".strip
-    name_prefix = entry.personalTitle.first.to_s if entry.respond_to?( :personalTitle )
+    name_prefix = entry.personalTitle.first.to_s.force_encoding('UTF-8') if entry.respond_to?( :personalTitle )
     login = entry.name.first.to_s.strip
     email = "#{login}@#{MAIL_DOMAIN}"
-    title = entry.title.first.to_s.strip if entry.respond_to?( :title )
-    department = entry.department.first.to_s if entry.respond_to?( :department )
+    title = entry.title.first.to_s.strip.force_encoding('UTF-8') if entry.respond_to?( :title )
+    department = entry.department.first.to_s.force_encoding('UTF-8') if entry.respond_to?( :department )
 
     # Strip name_prefix from first_name if it's there
     firstname.gsub!(/^\s*#{name_prefix}\s*/, '')
