@@ -169,6 +169,7 @@ class ReservationsController < ApplicationController
       else
         redirect_to root_url
       end
+      return
     end
 
     respond_to do |format|
