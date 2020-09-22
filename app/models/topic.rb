@@ -74,7 +74,7 @@ class Topic < ActiveRecord::Base
   end
 
   def past_sessions
-    @past_sessions ||= sessions.select { |s| s.started? }
+    @past_sessions ||= sessions.select { |s| s.in_past? }
   end
 
   def next_time
